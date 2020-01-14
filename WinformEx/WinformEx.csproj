@@ -1,0 +1,433 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C5FEC705-661A-422E-A127-E86602B2FFA8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>System.Windows.Forms</RootNamespace>
+    <AssemblyName>WinformEx</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnimationBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BalloonToolTip.cs" />
+    <Compile Include="BorderHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Components\AbortableBackgroundWorker.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\ActionLock.cs" />
+    <Compile Include="CustomButton\RoundButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomForm\RoundedCornerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomForm\RoundedCornerForm.Designer.cs">
+      <DependentUpon>RoundedCornerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomForm\SlidePopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomForm\SlidePopup.designer.cs">
+      <DependentUpon>SlidePopup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomPanel\ClickThroughPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomPanel\ClickThroughFlowPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomForm\RenderHelper.cs" />
+    <Compile Include="CustomButton\CustomDropDownButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomTextBox\RoundTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomTextBox\RoundTextBox.Designer.cs">
+      <DependentUpon>RoundTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DoubleBufferedControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DropDownListControl\DropDownBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DropDownListControl\DropDownBox.Designer.cs">
+      <DependentUpon>DropDownBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomForm\WindowStyleEnums.cs" />
+    <Compile Include="CustomButton\CustomButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomScrollbar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DropDownListControl\DropDownList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DropDownListControl\DropDownList.Designer.cs">
+      <DependentUpon>DropDownList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DropDownListControl\DropDownListItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomForm\DropShadow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GradientLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomPanel\GradientPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ImagePlaceholder.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ImageButton\ImageButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomForm\NonFrameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomForm\NonFrameForm.Designer.cs">
+      <DependentUpon>NonFrameForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NonFlickerUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomTextBox\PaddingTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomTextBox\PaddingTextBox.Designer.cs">
+      <DependentUpon>PaddingTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoundNumberControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="QQControl\QQCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="QQControl\QQColorTable.cs" />
+    <Compile Include="QQControl\QQControlStates.cs" />
+    <Compile Include="QQControl\QQRadioButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DragDropInfo.cs" />
+    <Compile Include="IconSizeMode.cs" />
+    <Compile Include="IconModel.cs" />
+    <Compile Include="PortraitIcon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomForm\DpiScaleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImageComboBox\ComboEditWindow.cs" />
+    <Compile Include="ImageComboBox\DropDownDrawModes.cs" />
+    <Compile Include="ImageComboBox\DropDownImages.cs" />
+    <Compile Include="ImageComboBox\ImageComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ImageComboBox\ImageComboBoxItem.cs" />
+    <Compile Include="ImageComboBox\ImageComboBoxItemCollection.cs" />
+    <Compile Include="ImageComboBox\ImageComboItemConverter.cs" />
+    <Compile Include="ImageComboBox\ImageListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ImageComboBox\ItemImagesContainer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IconStackView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IconStackView.Designer.cs">
+      <DependentUpon>IconStackView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoundUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RoundUserControl.Designer.cs">
+      <DependentUpon>RoundUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Separator.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\CustomTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\NativeMethods.cs" />
+    <Compile Include="TabControl\TabStyle.cs" />
+    <Compile Include="TabControl\TabStyleProvider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\TabStyleProviders\TabStyleAngledProvider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\TabStyleProviders\TabStyleChromeProvider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\TabStyleProviders\TabStyleDefaultProvider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\TabStyleProviders\TabStyleIE8Provider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\TabStyleProviders\TabStyleNoneProvider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\TabStyleProviders\TabStyleRoundedProvider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\TabStyleProviders\TabStyleVisualStudioProvider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\TabStyleProviders\TabStyleVS2010Provider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControl\ThemedColors.cs" />
+    <Compile Include="TabStrip\SelectedTabChangedEventArgs.cs" />
+    <Compile Include="TabStrip\TabStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabStrip\TabStripButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabStrip\TabStripRenderer.cs" />
+    <Compile Include="TileIcon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TileIconList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Utils.UI\ControlExtension.cs" />
+    <Compile Include="Utils.UI\FontInfo.cs" />
+    <Compile Include="Utils.UI\FormManager.cs" />
+    <Compile Include="Utils.UI\GlobalHotkey.cs" />
+    <Compile Include="Utils.UI\GradientFill.cs" />
+    <Compile Include="Utils.UI\GraphicsExtension.cs" />
+    <Compile Include="Utils.UI\ImageTool.cs" />
+    <Compile Include="Utils.UI\Objects\Enums.cs" />
+    <Compile Include="Utils.UI\Objects\Structs.cs" />
+    <Compile Include="Utils.UI\RectangleEx.cs" />
+    <Compile Include="Utils.UI\ScrollBarEx.cs" />
+    <Compile Include="Utils.UI\Tween.cs" />
+    <Compile Include="Utils.UI\Win32.cs" />
+    <Compile Include="Utils.UI\Win32GDI.cs" />
+    <Compile Include="VisualElements\PictureElement.cs" />
+    <Compile Include="VisualElements\UIElement.cs" />
+    <Compile Include="VisualElements\UIElementCollection.cs" />
+    <Compile Include="VisualElements\UIFormCanvas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VisualElements\UIUserControlCanvas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="VisualElements\UIElementHost.cs" />
+    <EmbeddedResource Include="CustomForm\RoundedCornerForm.resx">
+      <DependentUpon>RoundedCornerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomForm\SlidePopup.resx">
+      <DependentUpon>SlidePopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomTextBox\RoundTextBox.resx">
+      <DependentUpon>RoundTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DropDownListControl\DropDownBox.resx">
+      <DependentUpon>DropDownBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DropDownListControl\DropDownList.resx">
+      <DependentUpon>DropDownList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImageComboBox\ImageComboBox.resx">
+      <DependentUpon>ImageComboBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImageComboBox\ImageListBox.resx">
+      <DependentUpon>ImageListBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImageComboBox\ItemImagesContainer.resx">
+      <DependentUpon>ItemImagesContainer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomForm\NonFrameForm.resx">
+      <DependentUpon>NonFrameForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomTextBox\PaddingTextBox.resx">
+      <DependentUpon>PaddingTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="IconStackView.resx">
+      <DependentUpon>IconStackView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QQControl\QQCheckBox.resx">
+      <DependentUpon>QQCheckBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QQControl\QQRadioButton.resx">
+      <DependentUpon>QQRadioButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fringe_bkg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ImageComboBox\ComboBMP.bmp" />
+    <EmbeddedResource Include="ImageComboBox\None.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ThumbBottom.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ThumbMiddle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ThumbSpanBottom.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ThumbSpanTop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\up_end.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\uparrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down_end.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\downarrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ThumbTop.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\btnMaximum.NormalImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnMinimum.DownImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnMinimum.HoverImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnMinimum.NormalImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnClose.DownImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnClose.HoverImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnClose.NormalImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnMaximum.DownImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btnMaximum.HoverImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restore_highlight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restore_normal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restore_down.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
