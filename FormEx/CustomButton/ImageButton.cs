@@ -249,19 +249,32 @@ namespace System.Windows.Forms
             if (_down)
             {
                 if ((_DownImage != null) && (Image != _DownImage))
+                {
                     Image = _DownImage;
+                    Invalidate();
+                }
             }
             else
+            {
                 if (_HoverImage != null)
+                {
                     Image = _HoverImage;
+                }
                 else
+                {
                     Image = _NormalImage;
+                }
+                Invalidate();
+            }
+
+
             base.OnMouseMove(e);
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
             _hover = false;
+
             Image = _NormalImage;
             base.OnMouseLeave(e);
         }
@@ -276,7 +289,10 @@ namespace System.Windows.Forms
                 //OnMouseUp(null);
                 _down = true;
                 if (_DownImage != null)
+                {
                     Image = _DownImage;
+                    Invalidate();
+                }
             }
             base.OnMouseDown(e);
         }
@@ -284,17 +300,25 @@ namespace System.Windows.Forms
         protected override void OnMouseUp(MouseEventArgs e)
         {
             _leftClick = false;
-            _down = false;
 
             if (e.Button == MouseButtons.Left)
             {
-                if (_hover)
+                if (_down)
                 {
-                    if (_HoverImage != null)
-                        Image = _HoverImage;
-                }
-                else
+                    _down = false;
                     Image = _NormalImage;
+                }
+                //else if (_hover)
+                //{
+                //    if (_HoverImage != null)
+                //        Image = _HoverImage;
+                //}
+                //else
+                //{
+                //    Image = _NormalImage;
+                //}
+
+                Invalidate();
             }
             base.OnMouseUp(e);
         }

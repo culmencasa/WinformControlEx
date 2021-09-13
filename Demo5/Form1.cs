@@ -15,6 +15,8 @@ namespace Demo
         public Form1()
         {
             InitializeComponent();
+
+            // 无实现. 仅测试在不同.net框架编译条件下FormEx项目可用
         }
 
     }

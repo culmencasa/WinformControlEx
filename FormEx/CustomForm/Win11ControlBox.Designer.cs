@@ -95,9 +95,8 @@ namespace System.Windows.Forms.CustomForm
             this.Controls.Add(this.btnMaximum);
             this.Controls.Add(this.btnClose);
             this.Margin = new System.Windows.Forms.Padding(0);
-            this.MinimumSize = new System.Drawing.Size(270, 54);
             this.Name = "Win11ControlBox";
-            this.Size = new System.Drawing.Size(729, 54);
+            this.Size = new System.Drawing.Size(270, 54);
             ((System.ComponentModel.ISupportInitialize)(this.btnMinimum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnMaximum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnClose)).EndInit();

@@ -21,13 +21,14 @@ namespace System.Windows.Forms
         [DefaultValue(typeof(Color), "Color.Empty")]
         public Color BorderColor { get; set; }
 
-        public Color BottomBorderColor { get; set; }
 
         [DefaultValue(typeof(FillDirection), "TopToBottom")]
         public FillDirection GradientDirection { get; set; }
 
-        public Int32 BorderWidth { get; set; }
-        public Int32 RoundBorderRadius { get; set; }
+        public int BorderWidth { get; set; }
+
+        public int RoundBorderRadius { get; set; }
+
         #endregion
 
         #region 构造
@@ -36,27 +37,24 @@ namespace System.Windows.Forms
         {
             this.GradientDirection = FillDirection.TopToBottom;
 
-            SetStyle(
-                ControlStyles.UserPaint |
-                ControlStyles.AllPaintingInWmPaint |
-                ControlStyles.OptimizedDoubleBuffer |
-                ControlStyles.ResizeRedraw |
-                ControlStyles.SupportsTransparentBackColor, true);
+			SetStyle(
+				ControlStyles.UserPaint |
+				ControlStyles.AllPaintingInWmPaint |
+				ControlStyles.OptimizedDoubleBuffer |
+				ControlStyles.ResizeRedraw |
+				ControlStyles.SupportsTransparentBackColor, true);
+			//this.DoubleBuffered = true;
+			UpdateStyles();
 
-            //this.DoubleBuffered = true;
-            UpdateStyles();
-
-            BorderWidth = 1;
+			this.BackColor = Color.Transparent;
+			BorderWidth = 1;
         }
 
-        #endregion
+		#endregion
 
-        protected override void OnPaintBackground(PaintEventArgs e)
+		protected override void OnPaintBackground(PaintEventArgs e)
         {
-            base.OnPaintBackground(e);
-
             Graphics g = e.Graphics;
-
 
             // 如果设置了渐变色
             if (this.FirstColor != Color.Empty && this.SecondColor != Color.Empty)
@@ -80,15 +78,29 @@ namespace System.Windows.Forms
                     GradientFill.Fill(g, this.ClientRectangle, this.FirstColor, this.SecondColor, this.GradientDirection);
                 }
             }
+            else
+            {
+                using (SolidBrush borderBrush = new SolidBrush(BackColor))
+                {
+                    if (RoundBorderRadius > 0)
+                    {
+                        g.FillRoundedRectangle(borderBrush, 0, 0, this.Width, this.Height, RoundBorderRadius);
+                    }
+                    else
+                    {
+                        g.FillRectangle(borderBrush, new Rectangle(0, 0, this.Width, this.Height));
+                    }
+                }
+            }
 
-            if (this.BorderColor != Color.Empty)
+            if (this.BorderColor != Color.Empty && BorderWidth > 0)
             {
                 if (RoundBorderRadius > 0)
                 {
                     // 画圆角边框   
                     using (Pen borderPen = new Pen(this.BorderColor, BorderWidth))
                     {
-                        g.DrawRoundedRectangle(borderPen, 0, 0, this.Width - 1, this.Height - 1, this.RoundBorderRadius);
+                        g.DrawRoundedRectangle(borderPen, 0, 0, this.Width - BorderWidth, this.Height - BorderWidth, this.RoundBorderRadius);
                     }
                 }
                 else
@@ -96,17 +108,7 @@ namespace System.Windows.Forms
                     // 画直角边框
                     using (Pen borderPen = new Pen(this.BorderColor, BorderWidth))
                     {
-                        g.DrawRectangle(borderPen, 0, 0, this.Width - 1, this.Height - 1);
-                    }
-                }
-            }
-            else
-            {
-                if (BottomBorderColor != Color.Empty)
-                {
-                    using (Pen borderPen = new Pen(this.BottomBorderColor, BorderWidth))
-                    {
-                        g.DrawLine(borderPen, 0, this.Height - 1, this.Width, this.Height - 1);
+                        g.DrawRectangle(borderPen, 0, 0, this.Width - BorderWidth, this.Height - BorderWidth);
                     }
                 }
             }
@@ -131,6 +133,7 @@ namespace System.Windows.Forms
 
             DidMouseReallyLeave(this, e);
         }
+
         private void DidMouseReallyLeave(object sender, EventArgs e)
         {
             // 鼠标在子控件内

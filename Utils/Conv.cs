@@ -424,17 +424,6 @@ namespace System.Windows
 
         #endregion
 
-        public static string IfStringEmpty(string value, string def)
-        {
-            string s = def;
-            if (string.IsNullOrEmpty(value))
-            {
-                return s;
-            }
-            else
-            {
-                return value;
-            }
-        }
+
     }
 }

@@ -88,7 +88,7 @@ namespace System.Windows.Forms
             base.MinimumSize = new Size(UpArrowImage.Width, UpArrowImage.Height + DownArrowImage.Height + GetThumbHeight());
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Behavior"), Description("LargeChange")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条属性"), Description("LargeChange")]
         public int LargeChange {
             get { return moLargeChange; }
             set { moLargeChange = value;
@@ -96,7 +96,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Behavior"), Description("SmallChange")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条属性"), Description("SmallChange")]
         public int SmallChange {
             get { return moSmallChange; }
             set { moSmallChange = value;
@@ -104,7 +104,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Behavior"), Description("Minimum")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条属性"), Description("Minimum")]
         public int Minimum {
             get { return moMinimum; }
             set { moMinimum = value;
@@ -112,7 +112,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Behavior"), Description("Maximum")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条属性"), Description("Maximum")]
         public int Maximum {
             get { return moMaximum; }
             set { moMaximum = value;
@@ -120,7 +120,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Behavior"), Description("Value")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条属性"), Description("Value")]
         public int Value {
             get { return moValue; }
             set { moValue = value;
@@ -158,50 +158,50 @@ namespace System.Windows.Forms
             }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Skin"), Description("Channel Color")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条样式"), Description("Channel Color")]
         public Color ChannelColor
         {
             get { return moChannelColor; }
             set { moChannelColor = value; }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Skin"), Description("Up Arrow Graphic")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条样式")]
         public Image UpArrowImage {
             get { return moUpArrowImage; }
             set { moUpArrowImage = value; }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Skin"), Description("Up Arrow Graphic")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条样式")]
         public Image DownArrowImage {
             get { return moDownArrowImage; }
             set { moDownArrowImage = value; }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Skin"), Description("Up Arrow Graphic")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条样式")]
         public Image ThumbTopImage {
             get { return moThumbTopImage; }
             set { moThumbTopImage = value; }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Skin"), Description("Up Arrow Graphic")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条样式")]
         public Image ThumbTopSpanImage {
             get { return moThumbTopSpanImage; }
             set { moThumbTopSpanImage = value; }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Skin"), Description("Up Arrow Graphic")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条样式")]
         public Image ThumbBottomImage {
             get { return moThumbBottomImage; }
             set { moThumbBottomImage = value; }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Skin"), Description("Up Arrow Graphic")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条样式")]
         public Image ThumbBottomSpanImage {
             get { return moThumbBottomSpanImage; }
             set { moThumbBottomSpanImage = value; }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("Skin"), Description("Up Arrow Graphic")]
+        [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条样式")]
         public Image ThumbMiddleImage {
             get { return moThumbMiddleImage; }
             set { moThumbMiddleImage = value; }
@@ -293,9 +293,7 @@ namespace System.Windows.Forms
 
         private void InitializeComponent() {
             this.SuspendLayout();
-            // 
-            // CustomScrollbar
-            // 
+
             this.Name = "CustomScrollbar";
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CustomScrollbar_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.CustomScrollbar_MouseMove);
@@ -472,8 +470,6 @@ namespace System.Windows.Forms
     }
 
     internal class ScrollbarControlDesigner : System.Windows.Forms.Design.ControlDesigner {
-
-        
 
         public override SelectionRules SelectionRules {
             get {

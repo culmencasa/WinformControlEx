@@ -15,14 +15,14 @@ namespace System
       int nHeight, IntPtr hObjSource, int nXSrc, int nYSrc, TernaryRasterOperations dwRop);
 
         [DllImport("gdi32.dll", SetLastError = true)]
-        internal static extern IntPtr GetDesktopWindow();
+        public static extern IntPtr GetDesktopWindow();
 
         [DllImport("gdi32.dll", SetLastError = true)]
-        internal static extern IntPtr GetWindowDC(IntPtr hWnd);
+        public static extern IntPtr GetWindowDC(IntPtr hWnd);
 
 
         [DllImport("gdi32.dll", SetLastError = true)]
-        internal static extern bool BitBlt(IntPtr hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, IntPtr hdcSrc, int nXSrc, int nYSrc, CopyPixelOperation dwRop);
+        public static extern bool BitBlt(IntPtr hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, IntPtr hdcSrc, int nXSrc, int nYSrc, CopyPixelOperation dwRop);
 
         [DllImport("gdi32.dll", SetLastError = true)]
         public static extern int BitBlt(IntPtr hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, IntPtr hdcSrc, int nXSrc, int nYSrc, uint dwRop);

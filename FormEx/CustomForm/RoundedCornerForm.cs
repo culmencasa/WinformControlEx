@@ -116,6 +116,7 @@ namespace System.Windows.Forms
         private bool _showTitle;
         private string _customTitleText;
         private int _borderSize = 2;
+        private bool _fullScreen = true;
 
         #endregion
 
@@ -263,6 +264,11 @@ namespace System.Windows.Forms
         /// </summary>
         public bool ShowTitleCenter { get; set; }
 
+        public Font TitleFont
+        {
+            get;
+            set;
+        }
         public int LogoSize { get; set; }
         public Image Logo { get; set; }
 
@@ -300,7 +306,7 @@ namespace System.Windows.Forms
         {
             InitializeComponent();
 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            //this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 
             SetStyle(
@@ -315,6 +321,8 @@ namespace System.Windows.Forms
             InitializeDefaultValues();
 
             // 2021-08-02 去掉最大化等按钮，与边框及Z-Index之间的关系无法控制，换成独立的Win11ControlBox控件。
+
+            TitleFont = new Font(this.Font.FontFamily.Name, 16f, FontStyle.Bold);
         }
 
 
@@ -430,60 +438,101 @@ namespace System.Windows.Forms
             base.WndProc(ref m);
         }
 
-        protected override void OnPaintBackground(PaintEventArgs e)
-        {
-            base.OnPaintBackground(e);
-            Graphics g = e.Graphics;
-            SmoothingMode smooth = g.SmoothingMode;
-            if (this.BackgroundImage == null)
-            {
-                DrawGradientBackground(e.Graphics);
-            }
-            g.SmoothingMode = smooth;
-        }
+		protected override void OnPaintBackground(PaintEventArgs e)
+		{
+			if (WindowState == FormWindowState.Normal)
+			{
+				Graphics g = e.Graphics;
+				SmoothingMode smooth = g.SmoothingMode;
+				if (this.BackgroundImage == null)
+				{
+					DrawGradientBackground(e.Graphics);
+				}
+				else
+				{
+					base.OnPaintBackground(e);
+				}
+				g.SmoothingMode = smooth;
+			}
+			else if (WindowState == FormWindowState.Maximized)
+			{
+				base.OnPaintBackground(e);
+			}
+		}
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            Graphics g = e.Graphics;
-            SmoothingMode smooth = g.SmoothingMode;
-            base.OnPaint(e);
+		protected override void OnPaint(PaintEventArgs e)
+		{
+			Graphics g = e.Graphics;
+			SmoothingMode smooth = g.SmoothingMode;
 
-            g.SmoothingMode = SmoothingMode.HighSpeed;
+			base.OnPaint(e);
 
-
-            DrawTitleBackground(g);
-
-            // 半径
-            int radius = RoundCornerDiameter / 2;
-            // 边框
-            using (Pen borderPen = new Pen(this.BorderColor, BorderSize))
-            {
-                g.DrawRoundedRectangle(borderPen, 0, 0, this.Width - BorderSize, this.Height - BorderSize, radius);
-
-            }
-
-            // 内边框
-            //Color innerBorder = Color.FromArgb(100, 157, 157, 157);
-            //using (Pen borderPen = new Pen(innerBorder, 2))
-            //{
-            //    g.DrawRoundedRectangle(borderPen, 1, 1, this.Width - 5, this.Height - 5, radius);
-            //}
+			g.SmoothingMode = SmoothingMode.HighSpeed;
 
 
-            // 画标题
-            DrawLogoAndTitle(g);
+			DrawTitleBackground(g);
 
-            g.SmoothingMode = smooth;
-        }
+			if (this.WindowState == FormWindowState.Normal)
+			{
+				// 半径
+				int radius = RoundCornerDiameter / 2;
+				// 边框
+				using (Pen borderPen = new Pen(this.BorderColor, BorderSize))
+				{
+					g.DrawRoundedRectangle(borderPen, 0, 0, this.Width - BorderSize, this.Height - BorderSize, radius);
 
-        protected override void OnResize(EventArgs e)
+				}
+			}
+
+			// 内边框
+			//Color innerBorder = Color.FromArgb(100, 157, 157, 157);
+			//using (Pen borderPen = new Pen(innerBorder, 2))
+			//{
+			//    g.DrawRoundedRectangle(borderPen, 1, 1, this.Width - 5, this.Height - 5, radius);
+			//}
+
+
+			// 画标题
+			DrawLogoAndTitle(g);
+
+			g.SmoothingMode = smooth;
+		}
+
+		protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
             // 注：不能写到Resize事件里
             if (IsHandleCreated && !DesignMode)
             {
-                UpdateFormRoundCorner(this.RoundCornerDiameter);
-                UpdateEdgePatching();
+                if (this.WindowState == FormWindowState.Normal)
+                {
+                    UpdateFormRoundCorner(this.RoundCornerDiameter);
+                    UpdateEdgePatching();
+                }
+                else
+                {
+                    UpdateFormRoundCorner(0);
+                }
+            }
+        }
+
+        public bool FullScreen
+        {
+            get
+            {
+                return _fullScreen;
+            }
+            set
+            {
+                _fullScreen = value;
+                if (value)
+                {
+                    MaximumSize = Screen.PrimaryScreen.Bounds.Size;
+                }
+                else
+                {
+                    MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
+                }
             }
         }
 
@@ -521,6 +570,8 @@ namespace System.Windows.Forms
             // 初始值
             this.SetColorSchema(ColorSchema.White);
 
+
+            FullScreen = true;
             this.RoundCornerDiameter = 16;
             this.AllowResize = false;
             this.AllowMove = true;
@@ -533,7 +584,6 @@ namespace System.Windows.Forms
             this.ShowTitleText = true;
             this.ShowLogo = true;
             this.LogoSize = 32;
-
         }
 
         /// <summary>
@@ -552,7 +602,10 @@ namespace System.Windows.Forms
             // 字体大小
             SizeF textSize = new SizeF();
             if (this.TitleText.Length > 0)
-                textSize = TextRenderer.MeasureText(this.TitleText, this.Font);
+            {
+                textSize = TextRenderer.MeasureText(this.TitleText, this.TitleFont);
+            }
+
 
             // 整体标题区域大小
             width = (ShowLogo ? LogoSize : 0) + (ShowTitleText ? (int)textSize.Width : 0) + padding;
@@ -577,9 +630,13 @@ namespace System.Windows.Forms
                 top = Padding.Top + (this.TitleBarHeight - (int)textSize.Height) / 2;
                 TextRenderer.DrawText(
                     g,
-                    this.TitleText,
-                    this.Font,
-                    new Rectangle(left + (ShowLogo ? LogoSize : 0), top - 1, width + (ShowLogo ? LogoSize : 0), height),
+                    TitleText,
+                    TitleFont,
+                    new Rectangle(
+                        left + (ShowLogo ? LogoSize : 0),
+                        top - 1,
+                        width + (ShowLogo ? LogoSize : 0),
+                        height),
                     TitleForeColor,
                     TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
             }
@@ -590,7 +647,7 @@ namespace System.Windows.Forms
 
 
         protected virtual void DrawGradientBackground(Graphics g)
-        {
+        { 
             int radius = RoundCornerDiameter / 2;
 
             using (LinearGradientBrush brush = new LinearGradientBrush(
@@ -704,12 +761,18 @@ namespace System.Windows.Forms
 
         protected void UpdateFormRoundCorner(int diameter)
         {
-
-            // 防止控件撑出窗体            
-            IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Width, Height, diameter / 2 + 4, diameter / 2 + 4);
-            Region = System.Drawing.Region.FromHrgn(hrgn);
-            this.Update();
-            Win32.DeleteObject(hrgn);
+            if (diameter == 0)
+            {
+                Region = new Region(new Rectangle(0, 0, MaximumSize.Width, MaximumSize.Height));
+            }
+            else
+            {
+                // 防止控件撑出窗体            
+                IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Width, Height, diameter / 2 + 4, diameter / 2 + 4);
+                Region = System.Drawing.Region.FromHrgn(hrgn);
+                this.Update();
+                Win32.DeleteObject(hrgn);
+            }
         }
 
         /// <summary>

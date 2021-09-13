@@ -45,6 +45,9 @@ namespace System.Windows.Forms
             }
         }
 
+        /// <summary>
+        /// 弃用
+        /// </summary>
         public class Natives
         {
 

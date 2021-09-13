@@ -12,7 +12,7 @@ namespace System.Windows.Forms
     /// <summary>
     /// 图标控件
     /// </summary>
-    public class PortraitIcon : NonFlickerUserControl
+    public class PortraitIcon : TransparentControl //NonFlickerUserControl
     {
         #region 字段
 
@@ -50,8 +50,9 @@ namespace System.Windows.Forms
         private int _mX = 0;
         private int _mY = 0;
 
-        Cursor _tempCursor = null;
+        private Cursor _tempCursor = null;
 
+        private int _FillDegree = 100;
 
         #endregion
 
@@ -222,23 +223,9 @@ namespace System.Windows.Forms
             {
                 _sizeMode = value;
                 _imageArea = this.GetImageArea();
-                Invalidate();
+                this.Refresh();
             }
         }
-
-        #endregion
-
-        #region 保护属性
-
-        protected Size ImageSize
-        {
-            get { return _imageSize; }
-        }
-
-
-        #endregion
-
-        private int _FillDegree = 100;
         public int FillDegree
         {
             get { return _FillDegree; }
@@ -268,6 +255,19 @@ namespace System.Windows.Forms
             }
         }
 
+
+        #endregion
+
+        #region 保护属性
+
+        protected Size ImageSize
+        {
+            get { return _imageSize; }
+        }
+
+
+        #endregion
+
         #region 构造方法
 
         /// <summary>
@@ -276,9 +276,6 @@ namespace System.Windows.Forms
         public PortraitIcon()
         {
             InitialDefaultValues();
-
-
-
         }
 
         #endregion
@@ -299,7 +296,7 @@ namespace System.Windows.Forms
             _imageArea = this.GetImageArea();
 
 
-            this.BackColor = Color.Transparent;
+            //this.BackColor = Color.Transparent;
             this.ForeColor = Color.Black;
             this.FirstColor = Color.White;
             this.SecondColor = Color.White;
@@ -366,29 +363,28 @@ namespace System.Windows.Forms
 
         protected override void OnGotFocus(EventArgs e)
         {
-            this.BackColor = this.FocusBackgroundColor;
+            //this.BackColor = this.FocusBackgroundColor;
             base.OnGotFocus(e);
         }
 
         protected override void OnLostFocus(EventArgs e)
         {
-            this.BackColor = Color.Transparent;
+            //this.BackColor = Color.Transparent;
             base.OnLostFocus(e);
         }
 
         protected override void OnResize(EventArgs eventargs)
         {
-            _imageArea = this.GetImageArea();
-            Invalidate();
+            _imageArea = this.GetImageArea();            
             base.OnResize(eventargs);
-
+            this.Refresh();
         }
 
         #region 鼠标
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            this.BackColor = this.HoverBackgroundColor;
+            //this.BackColor = this.HoverBackgroundColor;
             this._isHovering = true;
             this.Invalidate();
 
@@ -397,7 +393,7 @@ namespace System.Windows.Forms
         
         protected override void OnMouseLeave(EventArgs e)
         {
-            this.BackColor = Color.Transparent;
+            //this.BackColor = Color.Transparent;
             this._isHovering = false;
             this.Invalidate();
 
@@ -424,8 +420,11 @@ namespace System.Windows.Forms
             _isDragging = false;
             base.OnMouseUp(e);
 
-            _tempCursor.Dispose();
-            _tempCursor = null;
+            if (_tempCursor != null)
+            {
+                _tempCursor.Dispose();
+                _tempCursor = null;
+            }
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -523,12 +522,14 @@ namespace System.Windows.Forms
             base.OnDragEnter(drgevent);
         }
 
+
         #endregion
 
         #region 重绘
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            base.OnPaint(e);
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.None;
             g.InterpolationMode = InterpolationMode.NearestNeighbor;
@@ -537,11 +538,17 @@ namespace System.Windows.Forms
             {
 
                 if (_isDragging)
+                {
                     DrawSelectedBorder(g);
+                }
                 else if (_isHovering)
+                {
                     DrawSelectedBorder(g);
+                }
                 else
+                {
                     DrawImageFrame(g);
+                }
 
                 if (this.Image != null)
                 {
@@ -566,15 +573,23 @@ namespace System.Windows.Forms
                 }
 
             }
-            base.OnPaint(e);
 
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            base.OnPaintBackground(e);
+            if (!this.Enabled)
+                return;
 
-            DrawSelectedBackground(e.Graphics);
+            if (DrawSelectedBackground(e.Graphics))
+            {
+                DrawSelectedBorder(e.Graphics);
+            }
+            else
+            {
+                base.OnPaintBackground(e);
+            }
+
         }
 
         #endregion
@@ -596,14 +611,60 @@ namespace System.Windows.Forms
             this.Invalidate();
         }
 
-        protected virtual void DrawSelectedBackground(Graphics g)
+        protected virtual bool DrawSelectedBackground(Graphics g)
         {
-            if (this.IsSelected)
+            bool ok = false;
+            if (IsSelected)
             {
-                this.BackColor = this.FocusBackgroundColor;
-                DrawSelectedBorder(g);
+                Color backgroundColor = this.FocusBackgroundColor;
+                if (backgroundColor == Color.Empty || backgroundColor == Color.Transparent)
+                {
+                    backgroundColor = GetBackColor(this.Parent, Color.White);
+                }
+
+                using (SolidBrush sb = new SolidBrush(backgroundColor))
+                {
+                    g.FillRectangle(sb, this.ClientRectangle);
+                }
+
+                ok = true;
+            }
+            else if (_isHovering)
+            {
+                Color backgroundColor = HoverBackgroundColor;
+                if (backgroundColor == Color.Empty || backgroundColor == Color.Transparent)
+                {
+                    return ok;
+                }
+
+                using (SolidBrush sb = new SolidBrush(backgroundColor))
+                {
+                    g.FillRectangle(sb, this.ClientRectangle);
+                }
+
+                ok = false;
+            }
+
+            return ok;
+        }
+
+        private Color GetBackColor(Control parent, Color defaultColor)
+        {
+            if (parent == null)
+            {
+                return Color.White;
+            }
+
+            if (parent.BackColor == Color.Empty || parent.BackColor == Color.Transparent)
+            {
+                return GetBackColor(parent.Parent, defaultColor);
+            }
+            else
+            {
+                return parent.BackColor;
             }
         }
+
 
         // 绘制控件边框
         protected virtual void DrawSelectedBorder(Graphics g)
@@ -641,12 +702,16 @@ namespace System.Windows.Forms
                 //g.DrawRoundedRectangleAlpha(Color.LightBlue, Color.White, GetImageBorderBounds(), new Size(3, 3), 255);
 
                 g.DrawGradientRoundedRectangle(
-                    GetImageBorderBounds(), 
-                    backColorStart, 
+                    GetImageBorderBounds(),
+                    backColorStart,
                     backColorEnd,
-                    FillDirection.TopToBottom, 
+                    FillDirection.TopToBottom,
                     borderColor, 8);
                 //gx.DrawRoundedRectangle(Color.LightBlue, Color.FromArgb(225, 218, 193), GetBorderBounds(), new Size(2, 2));
+            }
+            else
+            { 
+
             }
         }
         
@@ -670,17 +735,21 @@ namespace System.Windows.Forms
             int x = 0, y = 0, width = 1, height = 1;
             if (_sizeMode == IconSizeMode.Stretch)
             {
+                RectangleF textarea = GetTextArea();
+
                 x = this.Padding.Left + _borderWidth;
                 y = this.Padding.Top + _borderWidth;
                 width = this.Width - this.Padding.Left - this.Padding.Right - _borderWidth * 2;
-                height = this.Height - this.Padding.Bottom - this.Padding.Top - Convert.ToInt32(this.GetTextArea().Height) - _borderWidth * 2 - _captionMargin.Bottom - _captionMargin.Top;
+                height = this.Height - this.Padding.Bottom - this.Padding.Top - (int)textarea.Height - _borderWidth * 2 - _captionMargin.Bottom - _captionMargin.Top;
             }
             else if (_sizeMode == IconSizeMode.Center)
             {
                 if (this.Image != null)
                 {
+                    RectangleF textarea = GetTextArea();
+
                     x = (this.Width - this.Image.Width) / 2;
-                    y = (this.Height - this.Image.Height) / 2;
+                    y = (this.Height - this.Image.Height - (int)textarea.Height - _borderWidth * 2 - _captionMargin.Bottom - _captionMargin.Top) / 2;
                     width = this.Image.Width;
                     height = this.Image.Height;
                 }
@@ -691,6 +760,31 @@ namespace System.Windows.Forms
                 y = this.Padding.Top + _borderWidth;
                 width = _imageSize.Width;
                 height = _imageSize.Height;
+            }
+            else if (_sizeMode == IconSizeMode.AutoResize)
+            {
+                RectangleF textarea = GetTextArea();
+                float newHeight = this.Height 
+                    - this.Padding.Bottom 
+                    - this.Padding.Top 
+                    - (int)textarea.Height 
+                    - _borderWidth * 2 
+                    - _captionMargin.Bottom
+                    - _captionMargin.Top;
+                float ratio = newHeight / Image.Height;
+
+                width = (int)(Image.Width * ratio);
+                height = (int)newHeight;
+
+                x = (this.Width - width) / 2;
+                y = (this.Height - height - (int)textarea.Height - _borderWidth * 2 - _captionMargin.Bottom - _captionMargin.Top) / 2;
+                //Image = ImageUtils.ResizeNearest((Bitmap)Image, ratio);
+                //width = Image.Width;
+                //height = Image.Height;
+            }
+            else
+            { 
+                
             }
 
             width = width > 0 ? width : 1;
@@ -760,6 +854,57 @@ namespace System.Windows.Forms
             }
 
             return rect;
+        }
+
+
+
+        public enum IconSizeMode
+        {
+            Normal = 0,
+            Stretch,
+            Center,
+            AutoResize
+        }
+
+
+        public abstract class IconModel
+        {
+            #region 属性
+
+            /// <summary>
+            ///  图标的宽度和高度.
+            /// </summary>
+            public Size CustomSize
+            {
+                get;
+                set;
+            }
+
+            public Padding Margin
+            {
+                get;
+                set;
+            }
+
+            /// <summary>
+            ///  获取或设置边框相对控件的边界
+            /// </summary>
+            public Padding Padding
+            {
+                get;
+                set;
+            }
+
+            /// <summary>
+            ///  图标的字体设置
+            /// </summary>
+            public Font IconFont
+            {
+                get;
+                set;
+            }
+
+            #endregion
         }
 
     }

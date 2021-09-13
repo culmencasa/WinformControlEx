@@ -25,8 +25,8 @@ namespace System.Windows.Forms
             this.SetStyles();
             InitializeComponent();
 
+            FullScreen = true;
             this.BorderColor = Color.Gray;
-            //this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
             this.CaptionFont = this.Font;
             this.CaptionShadowColor = Color.FromArgb(2, 0, 0, 0);
             this.CaptionForeColor = Color.FromArgb(255, 255, 255, 255);
@@ -37,20 +37,37 @@ namespace System.Windows.Forms
 
         #endregion
 
-        #region 常量
-
-        const int CS_DropSHADOW = 0x20000;
-
-        #endregion
-
         #region 字段
 
         protected Padding _iconMargin = new Padding(3);
         private bool _showText = true;
+        private bool _fullScreen;
 
         #endregion
 
         #region 属性
+
+
+        public bool FullScreen
+        {
+            get
+            {
+                return _fullScreen;
+            }
+            set
+            {
+                _fullScreen = value;
+                if (value)
+                {
+                    MaximumSize = Screen.PrimaryScreen.Bounds.Size;
+                }
+                else
+                {
+                    MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
+                }
+            }
+        }
+
 
         /// <summary>
         /// 边框颜色
@@ -150,8 +167,14 @@ namespace System.Windows.Forms
                 CreateParams cp = base.CreateParams;
                 if (!DesignMode)
                 {
-                    if (MaximizeBox) { cp.Style |= (int)WindowStyle.WS_MAXIMIZEBOX; }
-                    if (MinimizeBox) { cp.Style |= (int)WindowStyle.WS_MINIMIZEBOX; }
+                    if (MaximizeBox) 
+                    { 
+                        cp.Style |= (int)WindowStyle.WS_MAXIMIZEBOX; 
+                    }
+                    if (MinimizeBox) 
+                    { 
+                        cp.Style |= (int)WindowStyle.WS_MINIMIZEBOX; 
+                    }
                     cp.ExStyle |= (int)WindowStyle.WS_CLIPCHILDREN;  //防止因窗体控件太多出现闪烁
                     
                     if (UseDropShadow)
@@ -165,7 +188,6 @@ namespace System.Windows.Forms
                         {
                             int enabled = 0;
                             Win32.DwmIsCompositionEnabled(ref enabled);
-
                             IsAeroEnabled = (enabled == 1);
 
 
@@ -191,15 +213,21 @@ namespace System.Windows.Forms
             switch (m.Msg)
             {
                 case Win32.WM_ERASEBKGND:
-                    var os = Environment.OSVersion;
-                    if (os.Platform == PlatformID.Win32NT && os.Version.Major != 5)
-                    {
-                        return;
-                    }
-                    m.Result = IntPtr.Zero;
-                    break;
+					var os = Environment.OSVersion;
+					if (os.Platform == PlatformID.Win32NT && os.Version.Major != 5)
+					{
+						return;
+					}
+					m.Result = IntPtr.Zero;
+					break;
                 case Win32.WM_NCHITTEST:
-                    WmNcHitTest(ref m);
+                    {
+                        // 点击任意位置等于点击标题栏, 需要代码处理支持AeroSnap
+                        if (WindowState == FormWindowState.Normal)
+                        {
+                            WmNcHitTest(ref m);
+                        }
+                    }
                     return;
                 case Win32.WM_NCLBUTTONDBLCLK:
                     if (!this.MaximizeBox)
@@ -208,17 +236,18 @@ namespace System.Windows.Forms
                     }
                     break;
                 case Win32.WM_SYSCOMMAND:
-                    if (m.WParam.ToInt32() == Win32.SC_MAXMIZE) // 最大化
+                    // 最大化
+                    if (m.WParam.ToInt32() == Win32.SC_MAXMIZE) 
                     {
 
                     }
                     break;
                 case Win32.WM_NCPAINT:
-                    if (UseDropShadow && IsAeroEnabled)
+                    if (UseDropShadow && IsAeroEnabled && WindowState == FormWindowState.Normal)
                     {
                         var v = 2;
                         Win32.DwmSetWindowAttribute(this.Handle, 2, ref v, 4);
-                        MARGINS margins = new MARGINS()
+                        Win32.MARGINS margins = new Win32.MARGINS()
                         {
                             cyBottomHeight = 1,
                             cxLeftWidth = 1,
@@ -250,28 +279,28 @@ namespace System.Windows.Forms
 
                 //g.Clip = new Region(g.VisibleClipBounds);
 
-                if (BackgroundImage != null)
-                {
-                    switch (BackgroundImageLayout)
-                    {
-                        case ImageLayout.Stretch:
-                        case ImageLayout.Zoom:
-                            g.DrawImage(
-                                this.BackgroundImage,
-                                ClientRectangle, ClientRectangle, GraphicsUnit.Pixel);
-                            break;
-                        case ImageLayout.Center:
-                        case ImageLayout.None:
-                        case ImageLayout.Tile:
-                            {
+                //if (BackgroundImage != null)
+                //{
+                //    switch (BackgroundImageLayout)
+                //    {
+                //        case ImageLayout.Stretch:
+                //        case ImageLayout.Zoom:
+                //            g.DrawImage(
+                //                this.BackgroundImage,
+                //                ClientRectangle, ClientRectangle, GraphicsUnit.Pixel);
+                //            break;
+                //        case ImageLayout.Center:
+                //        case ImageLayout.None:
+                //        case ImageLayout.Tile:
+                //            {
 
-                                g.DrawImage(
-                                    this.BackgroundImage,
-                                    ClientRectangle, ClientRectangle, GraphicsUnit.Pixel);
-                            }
-                            break;
-                    }
-                }
+                //                g.DrawImage(
+                //                    this.BackgroundImage,
+                //                    ClientRectangle, ClientRectangle, GraphicsUnit.Pixel);
+                //            }
+                //            break;
+                //    }
+                //}
 
 
                 // 图标
@@ -304,12 +333,11 @@ namespace System.Windows.Forms
                 base.OnPaint(e);
 
                 // 画边框
-                Rectangle borderRect = new Rectangle(0, 0, this.Width - 1, this.Height - 1);
-                //g.DrawRoundedRectangleAlpha(this.BorderColor, Color.Transparent, borderRect, new Size(2, 2), 255);
-                using (Pen borderPen = new Pen(this.BorderColor))
-                {
-                    g.DrawRectangle(borderPen, borderRect);
-                }
+                //Rectangle borderRect = new Rectangle(0, 0, this.Width - 1, this.Height - 1);
+                //using (Pen borderPen = new Pen(this.BorderColor))
+                //{
+                //    g.DrawRectangle(borderPen, borderRect);
+                //}
                 //RenderHelper.DrawFormFringe(this, e.Graphics, System.Windows.Forms.Properties.Resources.fringe_bkg, 5);
 
             }
@@ -482,6 +510,7 @@ namespace System.Windows.Forms
         private void NoneBorderForm_Resize(object sender, EventArgs e)
         {
             this.flpControlBox.Location = new Point(this.Width - this.flpControlBox.Width, 0);
+            this.Refresh();
         }
 
         // 点击最小化按钮 

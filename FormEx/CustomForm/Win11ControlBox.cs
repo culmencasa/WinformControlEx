@@ -13,10 +13,9 @@ namespace System.Windows.Forms.CustomForm
     {
         public Win11ControlBox()
         {
-            InitializeComponent();
-            //this.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            InitializeComponent();       
 
-            this.ParentChanged += Win7ControlBox_ParentChanged;
+            this.ParentChanged += Win11ControlBox_ParentChanged;
 
             this.btnClose.Dock = DockStyle.Right;
             this.btnMaximum.Dock = DockStyle.Right;
@@ -24,8 +23,6 @@ namespace System.Windows.Forms.CustomForm
 
 
         }
-
-        //todo: 改实现
 
         private void Win11ControlBox_Load(object sender, EventArgs e)
         {
@@ -47,7 +44,7 @@ namespace System.Windows.Forms.CustomForm
 
         public Form ParentForm { get; set; }
 
-        private void Win7ControlBox_ParentChanged(object sender, EventArgs e)
+        private void Win11ControlBox_ParentChanged(object sender, EventArgs e)
         {
             ParentForm = this.Parent as Form;
             if (ParentForm != null)
@@ -64,10 +61,10 @@ namespace System.Windows.Forms.CustomForm
             }
             else
             {
-                btnClose.Click -= new EventHandler(this.btnClose_Click);
-                btnMaximum.Click -= new EventHandler(this.btnMaximum_Click);
-                btnMinimum.Click -= new EventHandler(this.btnMinimum_Click);
-                ParentForm.StyleChanged -= ParentForm_StyleChanged;
+                //btnClose.Click -= new EventHandler(this.btnClose_Click);
+                //btnMaximum.Click -= new EventHandler(this.btnMaximum_Click);
+                //btnMinimum.Click -= new EventHandler(this.btnMinimum_Click);
+                //ParentForm.StyleChanged -= ParentForm_StyleChanged;
             }
         }
 

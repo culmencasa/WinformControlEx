@@ -94,6 +94,8 @@ namespace System.Windows.Forms
             }
         }
         [Category("样式")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
         public override string Text
         {
             get
@@ -234,6 +236,8 @@ namespace System.Windows.Forms
             //}
 
             Graphics g = e.Graphics;
+            g.SetSlowRendering();
+
             if (ShowImage)
             {
                 DrawImage(g);

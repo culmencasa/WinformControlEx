@@ -62,6 +62,7 @@ namespace System
         public const int SRCCOPY = 0xcc0020;
         public const int TRANSPARENT = 1;
 
+        public const int CS_DropSHADOW = 0x20000;
 
         // new
         public const int WM_KEYDOWN = 0x0100;

@@ -33,6 +33,8 @@ namespace System.Windows.Forms.CustomForm
 
                 parentForm.StyleChanged -= ParentForm_StyleChanged;
                 parentForm.StyleChanged += ParentForm_StyleChanged;
+
+                this.Anchor = AnchorStyles.Top | AnchorStyles.Right;
                 
             }
         }

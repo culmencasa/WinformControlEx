@@ -4,7 +4,7 @@
     <TargetFrameworks>net40;net46;net48;net5.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <LangVersion>preview</LangVersion>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup Condition="('$(TargetFramework)'=='net5.0-windows')">
@@ -13,6 +13,18 @@
 
   <ItemGroup Condition="('$(TargetFramework)'=='net40')  Or ('$(TargetFramework)'=='net46')  Or ('$(TargetFramework)'=='net48')">
     <Reference Include="System.Management" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <PackageReference Include="System.Drawing.Common">
+      <Version>5.0.2</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0-windows'">
+    <PackageReference Include="System.Drawing.Common">
+      <Version>5.0.2</Version>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

@@ -31,7 +31,11 @@ namespace System.Windows.Forms
     ///      较复杂的窗体布局可能不正常. 特殊控件也未做处理. 
     ///      显示器切换的情况未考虑.
     ///      仅作参考.
-    ///      对于.NET framework 4.7以上Winform 关于DPI的处理, 参见文章 https://docs.telerik.com/devtools/winforms/telerik-presentation-framework/dpi-support?_ga=2.20289336.1856590203.1623301720-198642324.1623301720
+    ///      
+    /// 对于.NET framework 4.7以上Winform 关于DPI的处理, 参见文章 https://docs.telerik.com/devtools/winforms/telerik-presentation-framework/dpi-support?_ga=2.20289336.1856590203.1623301720-198642324.1623301720
+    /// 更多: https://www.telerik.com/blogs/winforms-scaling-at-large-dpi-settings-is-it-even-possible-
+    /// 
+    /// 
     /// </summary>
     public class DpiScaleForm : Form
     {
@@ -125,6 +129,7 @@ namespace System.Windows.Forms
             // 2.缩小测试：设计时系统DPI为200%，窗体的AutoScaleMode为DPI, 添加manifest设置，在100%，150%显示的Win7和Win10系统下能正常显示。
             // 3.
 
+            //AutoScaleDimensions记录的是设计时, IContainer使用某一种字体时的宽高比, 不同字体该属性的值不一样
 
             CurrentScaleFactor = new SizeF(0, 0);
         }
@@ -165,6 +170,9 @@ namespace System.Windows.Forms
 
         protected virtual void OnApplyAutoDpiScale()
         {
+            if (DesignMode)
+                return;
+
             if (AutoDpiScale)
             {
                 // Font模式下, 使用Window的缩放
@@ -181,14 +189,16 @@ namespace System.Windows.Forms
                         bool dpiAwareSupport = Environment.OSVersion.Version.Major >= 6;
                         if (dpiAwareSupport)
                         {
-                            DesignFactor = factor;
+                            SetProcessDPIAware();
+                            //SetThreadAwarenessContext();
+                            //SetProcessDpiAwareness(PROCESS_DPI_AWARENESS.PROCESS_SYSTEM_DPI_AWARE);
                         }
                         else
                         {
                             DesignFactor = AutoScaleDimensions.Width / 96;
+                            UseDpiScale = true;
                         }
 
-                        UseDpiScale = true;
                     }                    
 
                 }
@@ -197,45 +207,40 @@ namespace System.Windows.Forms
 
         protected virtual void OnApplyUseDpiScale()
         {
+            if (DesignMode)
+                return;
+
             if (UseDpiScale)
             {
-                // 更改AutoScaleMode属性会触发窗体的ScaleControl方法
-                //this.AutoScaleMode = AutoScaleMode.Dpi;
+				// 更改AutoScaleMode属性会触发窗体的ScaleControl方法
+				//this.AutoScaleMode = AutoScaleMode.Dpi;
 
-                var factor = GetCurrentScaleFactor();
+				//if (!this.IsHandleCreated)
+				//{
+				//	this.HandleCreated += (a, b) => { OnApplyUseDpiScale(); };
+				//	return;
+				//}
 
-                if (DesignFactor == factor)
-                {
-                    // 使用系统
-                    SetThreadAwarenessContext();
-                    return;
-                }
-                else
-                {
-                    factor = (factor / DesignFactor);
-                    CurrentScaleFactor = new SizeF(factor, factor);
 
-                    //SetScaleDimension(CurrentScaleFactor);
+				var factor = GetCurrentScaleFactor();
+                factor = (DesignFactor / factor);
+                CurrentScaleFactor = new SizeF(factor, factor);
 
-                    this.Scale(CurrentScaleFactor);
-                    this.ScaleFonts(factor);
-                    this.ScaleSpecialControl(this, factor);
-                    return;
-                }
+                //SetScaleDimension(CurrentScaleFactor);
 
+                this.Scale(CurrentScaleFactor);
+                this.ScaleFonts(factor);
+                this.ScaleSpecialControl(this, factor);
             }
-            //else
-            //{
-            //    this.AutoScaleMode = AutoScaleMode.None;
-            //}
         }
+         
 
-        #endregion
+		#endregion
 
 
-        #region 调整控件字体及大小
+		#region 调整控件字体及大小
 
-        protected override void WndProc(ref Message m)
+		protected override void WndProc(ref Message m)
         {
             switch (m.Msg)
             {
@@ -578,9 +583,9 @@ namespace System.Windows.Forms
         public enum DPI_AWARENESS
         {
             DPI_AWARENESS_INVALID = -1,
-            DPI_AWARENESS_UNAWARE = 0,
-            DPI_AWARENESS_SYSTEM_AWARE = 1,
-            DPI_AWARENESS_PER_MONITOR_AWARE = 2
+            DPI_AWARENESS_UNAWARE = 0,                  // 对应DPI_AWARENESS_CONTEXT_UNAWARE
+            DPI_AWARENESS_SYSTEM_AWARE = 1,             // 对应DPI_AWARENESS_CONTEXT_SYSTEM_AWARE 
+            DPI_AWARENESS_PER_MONITOR_AWARE = 2         // 对应DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE
         }
 
 
@@ -636,18 +641,31 @@ namespace System.Windows.Forms
             {
                 var context = DPI_AWARENESS_CONTEXT.DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2;
                 context = SetThreadDpiAwarenessContext(context);
+
+                //if ((int)context == -2147459056)
+                //{
+                //    uint? windowDpi = null;
+
+                //    if (Process.GetCurrentProcess().MainWindowHandle != IntPtr.Zero)
+                //    {
+                //        windowDpi = GetDpiForWindow(Process.GetCurrentProcess().MainWindowHandle);
+                //    }
+
+                //}
+
+
                 var awarenss = GetAwarenessFromDpiAwarenessContext(context);
-                if (awarenss == DPI_AWARENESS.DPI_AWARENESS_INVALID)
+                if (awarenss == DPI_AWARENESS.DPI_AWARENESS_INVALID || awarenss == DPI_AWARENESS.DPI_AWARENESS_UNAWARE)
                 {
                     context = DPI_AWARENESS_CONTEXT.DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE;
                     context = SetThreadDpiAwarenessContext(context);
                     awarenss = GetAwarenessFromDpiAwarenessContext(context);
-                    if (awarenss == DPI_AWARENESS.DPI_AWARENESS_INVALID)
+                    if (awarenss == DPI_AWARENESS.DPI_AWARENESS_INVALID || awarenss == DPI_AWARENESS.DPI_AWARENESS_UNAWARE)
                     {
                         context = DPI_AWARENESS_CONTEXT.DPI_AWARENESS_CONTEXT_SYSTEM_AWARE;
                         context = SetThreadDpiAwarenessContext(context);
                         awarenss = GetAwarenessFromDpiAwarenessContext(context);
-                        if (awarenss == DPI_AWARENESS.DPI_AWARENESS_INVALID)
+                        if (awarenss == DPI_AWARENESS.DPI_AWARENESS_INVALID || awarenss == DPI_AWARENESS.DPI_AWARENESS_UNAWARE)
                         {
                             context = DPI_AWARENESS_CONTEXT.DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED;
                             context = SetThreadDpiAwarenessContext(context);
@@ -655,6 +673,7 @@ namespace System.Windows.Forms
                         }
                     }
                 }
+                
 
                 return awarenss;
             }
@@ -665,8 +684,41 @@ namespace System.Windows.Forms
         }
 
 
+        [DllImport("user32.dll")]
+        internal static extern uint GetDpiForWindow(IntPtr hWnd);
+
+
         #endregion
 
+        #region MyRegion
+
+
+        public enum PROCESS_DPI_AWARENESS
+        {
+            PROCESS_DPI_UNAWARE = 0,
+            PROCESS_SYSTEM_DPI_AWARE = 1,
+            PROCESS_PER_MONITOR_DPI_AWARE = 2
+        }
+
+        [DllImport("SHcore.dll")]
+        internal static extern int GetProcessDpiAwareness(IntPtr hWnd, out PROCESS_DPI_AWARENESS value);
+        [DllImport("Shcore.dll", ExactSpelling = true)]
+        internal static extern int SetProcessDpiAwareness(PROCESS_DPI_AWARENESS value);
+
+        private void UpdateDpiAwareness()
+        {
+            PROCESS_DPI_AWARENESS dpiAwareness;
+            int hr = GetProcessDpiAwareness(Process.GetCurrentProcess().MainWindowHandle, out dpiAwareness);
+            if (hr != 0)
+                MessageBox.Show(this, Marshal.GetExceptionForHR(hr).Message, "Error in GetProcessDpiAwareness!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //comboBox1.SelectedItem = dpiAwareness;
+        }
+        #endregion
+
+
+
+        [DllImport("user32.dll")]
+        public static extern bool SetProcessDPIAware();
 
         public void SetScaleDimension(SizeF fieldValue)
         {
