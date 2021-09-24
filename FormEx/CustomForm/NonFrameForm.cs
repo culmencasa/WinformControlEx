@@ -173,8 +173,11 @@ namespace System.Windows.Forms
                     }
                     if (MinimizeBox) 
                     { 
-                        cp.Style |= (int)WindowStyle.WS_MINIMIZEBOX; 
+                        cp.Style |= (int)WindowStyle.WS_MINIMIZEBOX;
                     }
+
+
+                    // Win11下去掉这段代码, 窗体移动起来似乎较流畅
                     cp.ExStyle |= (int)WindowStyle.WS_CLIPCHILDREN;  //防止因窗体控件太多出现闪烁
                     
                     if (UseDropShadow)
@@ -186,12 +189,13 @@ namespace System.Windows.Forms
                         }
                         else
                         {
+                            // Win11下去掉这段代码, 窗体移动起来似乎较流畅
                             int enabled = 0;
-                            Win32.DwmIsCompositionEnabled(ref enabled);
-                            IsAeroEnabled = (enabled == 1);
+							Win32.DwmIsCompositionEnabled(ref enabled);
+							IsAeroEnabled = (enabled == 1);
 
 
-                        }
+						}
                     }
 
                 }
@@ -223,10 +227,7 @@ namespace System.Windows.Forms
                 case Win32.WM_NCHITTEST:
                     {
                         // 点击任意位置等于点击标题栏, 需要代码处理支持AeroSnap
-                        if (WindowState == FormWindowState.Normal)
-                        {
-                            WmNcHitTest(ref m);
-                        }
+                        WmNcHitTest(ref m);
                     }
                     return;
                 case Win32.WM_NCLBUTTONDBLCLK:

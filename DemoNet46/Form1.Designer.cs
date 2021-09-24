@@ -33,6 +33,7 @@ namespace DemoNet46
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.pnlTaskbar = new System.Windows.Forms.GradientPanel();
 			this.gradientPanel1 = new System.Windows.Forms.GradientPanel();
+			this.lblTime = new System.Windows.Forms.GradientLabel();
 			this.btnStart = new System.Windows.Forms.ImageButton();
 			this.tileIcon1 = new System.Windows.Forms.TileIcon();
 			this.portraitIcon1 = new System.Windows.Forms.PortraitIcon();
@@ -47,7 +48,6 @@ namespace DemoNet46
 			this.portraitIcon2 = new System.Windows.Forms.PortraitIcon();
 			this.portraitIcon3 = new System.Windows.Forms.PortraitIcon();
 			this.portraitIcon4 = new System.Windows.Forms.PortraitIcon();
-			this.lblTime = new System.Windows.Forms.GradientLabel();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.pnlTaskbar.SuspendLayout();
 			this.gradientPanel1.SuspendLayout();
@@ -65,11 +65,12 @@ namespace DemoNet46
 			this.pnlTaskbar.Controls.Add(this.btnStart);
 			this.pnlTaskbar.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.pnlTaskbar.FirstColor = System.Drawing.Color.Gray;
-			this.pnlTaskbar.Location = new System.Drawing.Point(0, 398);
+			this.pnlTaskbar.Location = new System.Drawing.Point(0, 597);
+			this.pnlTaskbar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.pnlTaskbar.Name = "pnlTaskbar";
 			this.pnlTaskbar.RoundBorderRadius = 0;
 			this.pnlTaskbar.SecondColor = System.Drawing.Color.Black;
-			this.pnlTaskbar.Size = new System.Drawing.Size(800, 52);
+			this.pnlTaskbar.Size = new System.Drawing.Size(1200, 78);
 			this.pnlTaskbar.TabIndex = 1;
 			// 
 			// gradientPanel1
@@ -80,12 +81,29 @@ namespace DemoNet46
 			this.gradientPanel1.Controls.Add(this.lblTime);
 			this.gradientPanel1.Dock = System.Windows.Forms.DockStyle.Right;
 			this.gradientPanel1.FirstColor = System.Drawing.Color.Black;
-			this.gradientPanel1.Location = new System.Drawing.Point(713, 0);
+			this.gradientPanel1.Location = new System.Drawing.Point(1070, 0);
+			this.gradientPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.gradientPanel1.Name = "gradientPanel1";
 			this.gradientPanel1.RoundBorderRadius = 0;
 			this.gradientPanel1.SecondColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.gradientPanel1.Size = new System.Drawing.Size(87, 52);
+			this.gradientPanel1.Size = new System.Drawing.Size(130, 78);
 			this.gradientPanel1.TabIndex = 1;
+			// 
+			// lblTime
+			// 
+			this.lblTime.BorderColor = System.Drawing.Color.Empty;
+			this.lblTime.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.lblTime.FirstColor = System.Drawing.Color.Empty;
+			this.lblTime.Font = new System.Drawing.Font("Microsoft YaHei UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.lblTime.ForeColor = System.Drawing.Color.White;
+			this.lblTime.Location = new System.Drawing.Point(0, 0);
+			this.lblTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.lblTime.Name = "lblTime";
+			this.lblTime.SecondColor = System.Drawing.Color.Empty;
+			this.lblTime.Size = new System.Drawing.Size(130, 78);
+			this.lblTime.TabIndex = 0;
+			this.lblTime.Text = "Time";
+			this.lblTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// btnStart
 			// 
@@ -95,10 +113,11 @@ namespace DemoNet46
 			this.btnStart.DownImage = global::DemoNet46.Properties.Resources.Win7Pressed;
 			this.btnStart.HoverImage = global::DemoNet46.Properties.Resources.Win7Hover;
 			this.btnStart.Location = new System.Drawing.Point(0, 0);
+			this.btnStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.btnStart.Name = "btnStart";
 			this.btnStart.NormalImage = global::DemoNet46.Properties.Resources.Win7Normal;
 			this.btnStart.ShowFocusLine = false;
-			this.btnStart.Size = new System.Drawing.Size(60, 52);
+			this.btnStart.Size = new System.Drawing.Size(90, 78);
 			this.btnStart.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
 			this.btnStart.TabIndex = 0;
 			this.btnStart.Text = "imageButton1";
@@ -111,11 +130,11 @@ namespace DemoNet46
 			this.tileIcon1.DefaultImage = null;
 			this.tileIcon1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tileIcon1.Image = null;
-			this.tileIcon1.Location = new System.Drawing.Point(1, 1);
+			this.tileIcon1.Location = new System.Drawing.Point(2, 2);
 			this.tileIcon1.Margin = new System.Windows.Forms.Padding(0);
 			this.tileIcon1.Name = "tileIcon1";
-			this.tileIcon1.Padding = new System.Windows.Forms.Padding(5);
-			this.tileIcon1.Size = new System.Drawing.Size(198, 51);
+			this.tileIcon1.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+			this.tileIcon1.Size = new System.Drawing.Size(297, 76);
 			this.tileIcon1.TabIndex = 3;
 			// 
 			// portraitIcon1
@@ -133,7 +152,7 @@ namespace DemoNet46
 			this.portraitIcon1.HoverBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(224)))), ((int)(((byte)(243)))));
 			this.portraitIcon1.Image = global::DemoNet46.Properties.Resources.bigo;
 			this.portraitIcon1.IsSelected = true;
-			this.portraitIcon1.Location = new System.Drawing.Point(124, 16);
+			this.portraitIcon1.Location = new System.Drawing.Point(186, 24);
 			this.portraitIcon1.Margin = new System.Windows.Forms.Padding(0);
 			this.portraitIcon1.Name = "portraitIcon1";
 			this.portraitIcon1.Opacity = 100;
@@ -142,7 +161,7 @@ namespace DemoNet46
 			this.portraitIcon1.ShowCaption = true;
 			this.portraitIcon1.ShowGrayImage = false;
 			this.portraitIcon1.ShowIconBorder = false;
-			this.portraitIcon1.Size = new System.Drawing.Size(101, 91);
+			this.portraitIcon1.Size = new System.Drawing.Size(152, 136);
 			this.portraitIcon1.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.Center;
 			this.portraitIcon1.TabIndex = 1000;
 			// 
@@ -160,11 +179,12 @@ namespace DemoNet46
 			this.pnlStart.Controls.Add(this.portraitIcon2);
 			this.pnlStart.Controls.Add(this.portraitIcon1);
 			this.pnlStart.FirstColor = System.Drawing.Color.Empty;
-			this.pnlStart.Location = new System.Drawing.Point(2, 72);
+			this.pnlStart.Location = new System.Drawing.Point(3, 108);
+			this.pnlStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.pnlStart.Name = "pnlStart";
 			this.pnlStart.RoundBorderRadius = 12;
 			this.pnlStart.SecondColor = System.Drawing.Color.Empty;
-			this.pnlStart.Size = new System.Drawing.Size(529, 328);
+			this.pnlStart.Size = new System.Drawing.Size(794, 492);
 			this.pnlStart.TabIndex = 1001;
 			this.pnlStart.Visible = false;
 			// 
@@ -181,10 +201,11 @@ namespace DemoNet46
 			this.tileIconList1.Controls.Add(this.tileIcon4);
 			this.tileIconList1.Controls.Add(this.tileIcon2);
 			this.tileIconList1.Controls.Add(this.tileIcon5);
-			this.tileIconList1.Location = new System.Drawing.Point(251, 16);
+			this.tileIconList1.Location = new System.Drawing.Point(376, 24);
+			this.tileIconList1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.tileIconList1.Name = "tileIconList1";
-			this.tileIconList1.Padding = new System.Windows.Forms.Padding(1);
-			this.tileIconList1.Size = new System.Drawing.Size(263, 256);
+			this.tileIconList1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.tileIconList1.Size = new System.Drawing.Size(394, 384);
 			this.tileIconList1.TabIndex = 1002;
 			// 
 			// tileIcon3
@@ -193,11 +214,11 @@ namespace DemoNet46
 			this.tileIcon3.DefaultImage = null;
 			this.tileIcon3.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tileIcon3.Image = ((System.Drawing.Image)(resources.GetObject("tileIcon3.Image")));
-			this.tileIcon3.Location = new System.Drawing.Point(1, 52);
+			this.tileIcon3.Location = new System.Drawing.Point(2, 78);
 			this.tileIcon3.Margin = new System.Windows.Forms.Padding(0);
 			this.tileIcon3.Name = "tileIcon3";
-			this.tileIcon3.Padding = new System.Windows.Forms.Padding(5);
-			this.tileIcon3.Size = new System.Drawing.Size(198, 51);
+			this.tileIcon3.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+			this.tileIcon3.Size = new System.Drawing.Size(297, 76);
 			this.tileIcon3.TabIndex = 5;
 			// 
 			// tileIcon4
@@ -206,11 +227,11 @@ namespace DemoNet46
 			this.tileIcon4.DefaultImage = null;
 			this.tileIcon4.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tileIcon4.Image = ((System.Drawing.Image)(resources.GetObject("tileIcon4.Image")));
-			this.tileIcon4.Location = new System.Drawing.Point(1, 103);
+			this.tileIcon4.Location = new System.Drawing.Point(2, 154);
 			this.tileIcon4.Margin = new System.Windows.Forms.Padding(0);
 			this.tileIcon4.Name = "tileIcon4";
-			this.tileIcon4.Padding = new System.Windows.Forms.Padding(5);
-			this.tileIcon4.Size = new System.Drawing.Size(198, 51);
+			this.tileIcon4.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+			this.tileIcon4.Size = new System.Drawing.Size(297, 76);
 			this.tileIcon4.TabIndex = 6;
 			// 
 			// tileIcon2
@@ -219,11 +240,11 @@ namespace DemoNet46
 			this.tileIcon2.DefaultImage = null;
 			this.tileIcon2.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tileIcon2.Image = ((System.Drawing.Image)(resources.GetObject("tileIcon2.Image")));
-			this.tileIcon2.Location = new System.Drawing.Point(1, 154);
+			this.tileIcon2.Location = new System.Drawing.Point(2, 230);
 			this.tileIcon2.Margin = new System.Windows.Forms.Padding(0);
 			this.tileIcon2.Name = "tileIcon2";
-			this.tileIcon2.Padding = new System.Windows.Forms.Padding(5);
-			this.tileIcon2.Size = new System.Drawing.Size(198, 51);
+			this.tileIcon2.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+			this.tileIcon2.Size = new System.Drawing.Size(297, 76);
 			this.tileIcon2.TabIndex = 7;
 			// 
 			// tileIcon5
@@ -232,11 +253,11 @@ namespace DemoNet46
 			this.tileIcon5.DefaultImage = null;
 			this.tileIcon5.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tileIcon5.Image = ((System.Drawing.Image)(resources.GetObject("tileIcon5.Image")));
-			this.tileIcon5.Location = new System.Drawing.Point(1, 205);
+			this.tileIcon5.Location = new System.Drawing.Point(2, 306);
 			this.tileIcon5.Margin = new System.Windows.Forms.Padding(0);
 			this.tileIcon5.Name = "tileIcon5";
-			this.tileIcon5.Padding = new System.Windows.Forms.Padding(5);
-			this.tileIcon5.Size = new System.Drawing.Size(198, 51);
+			this.tileIcon5.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+			this.tileIcon5.Size = new System.Drawing.Size(297, 76);
 			this.tileIcon5.TabIndex = 8;
 			// 
 			// btnLogoff
@@ -247,13 +268,14 @@ namespace DemoNet46
 			this.btnLogoff.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.btnLogoff.ForeColor = System.Drawing.Color.SaddleBrown;
 			this.btnLogoff.GradientMode = false;
-			this.btnLogoff.Location = new System.Drawing.Point(413, 278);
+			this.btnLogoff.Location = new System.Drawing.Point(620, 417);
+			this.btnLogoff.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.btnLogoff.Name = "btnLogoff";
 			this.btnLogoff.RoundCorners = ((System.Windows.Forms.Corners)((((System.Windows.Forms.Corners.TopLeft | System.Windows.Forms.Corners.TopRight) 
             | System.Windows.Forms.Corners.BottomLeft) 
             | System.Windows.Forms.Corners.BottomRight)));
 			this.btnLogoff.ShadeMode = false;
-			this.btnLogoff.Size = new System.Drawing.Size(101, 41);
+			this.btnLogoff.Size = new System.Drawing.Size(152, 62);
 			this.btnLogoff.TabIndex = 1001;
 			this.btnLogoff.Text = "注销";
 			// 
@@ -264,13 +286,14 @@ namespace DemoNet46
 			this.btnShutdown.CornerRadius = 12;
 			this.btnShutdown.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.btnShutdown.GradientMode = true;
-			this.btnShutdown.Location = new System.Drawing.Point(306, 278);
+			this.btnShutdown.Location = new System.Drawing.Point(459, 417);
+			this.btnShutdown.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.btnShutdown.Name = "btnShutdown";
 			this.btnShutdown.RoundCorners = ((System.Windows.Forms.Corners)((((System.Windows.Forms.Corners.TopLeft | System.Windows.Forms.Corners.TopRight) 
             | System.Windows.Forms.Corners.BottomLeft) 
             | System.Windows.Forms.Corners.BottomRight)));
 			this.btnShutdown.ShadeMode = false;
-			this.btnShutdown.Size = new System.Drawing.Size(101, 41);
+			this.btnShutdown.Size = new System.Drawing.Size(152, 62);
 			this.btnShutdown.TabIndex = 1001;
 			this.btnShutdown.Text = "关机";
 			// 
@@ -288,7 +311,7 @@ namespace DemoNet46
 			this.portraitIcon2.HoverBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(224)))), ((int)(((byte)(243)))));
 			this.portraitIcon2.Image = global::DemoNet46.Properties.Resources.bigo;
 			this.portraitIcon2.IsSelected = false;
-			this.portraitIcon2.Location = new System.Drawing.Point(12, 16);
+			this.portraitIcon2.Location = new System.Drawing.Point(18, 24);
 			this.portraitIcon2.Margin = new System.Windows.Forms.Padding(0);
 			this.portraitIcon2.Name = "portraitIcon2";
 			this.portraitIcon2.Opacity = 100;
@@ -297,7 +320,7 @@ namespace DemoNet46
 			this.portraitIcon2.ShowCaption = true;
 			this.portraitIcon2.ShowGrayImage = true;
 			this.portraitIcon2.ShowIconBorder = false;
-			this.portraitIcon2.Size = new System.Drawing.Size(101, 91);
+			this.portraitIcon2.Size = new System.Drawing.Size(152, 136);
 			this.portraitIcon2.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.Center;
 			this.portraitIcon2.TabIndex = 1000;
 			// 
@@ -315,7 +338,7 @@ namespace DemoNet46
 			this.portraitIcon3.HoverBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(224)))), ((int)(((byte)(243)))));
 			this.portraitIcon3.Image = global::DemoNet46.Properties.Resources.Recycle;
 			this.portraitIcon3.IsSelected = false;
-			this.portraitIcon3.Location = new System.Drawing.Point(683, 281);
+			this.portraitIcon3.Location = new System.Drawing.Point(1024, 422);
 			this.portraitIcon3.Margin = new System.Windows.Forms.Padding(0);
 			this.portraitIcon3.Name = "portraitIcon3";
 			this.portraitIcon3.Opacity = 100;
@@ -324,7 +347,7 @@ namespace DemoNet46
 			this.portraitIcon3.ShowCaption = true;
 			this.portraitIcon3.ShowGrayImage = true;
 			this.portraitIcon3.ShowIconBorder = false;
-			this.portraitIcon3.Size = new System.Drawing.Size(101, 91);
+			this.portraitIcon3.Size = new System.Drawing.Size(152, 136);
 			this.portraitIcon3.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
 			this.portraitIcon3.TabIndex = 1004;
 			// 
@@ -343,7 +366,7 @@ namespace DemoNet46
 			this.portraitIcon4.HoverBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(224)))), ((int)(((byte)(243)))));
 			this.portraitIcon4.Image = global::DemoNet46.Properties.Resources.bigo;
 			this.portraitIcon4.IsSelected = false;
-			this.portraitIcon4.Location = new System.Drawing.Point(582, 281);
+			this.portraitIcon4.Location = new System.Drawing.Point(873, 422);
 			this.portraitIcon4.Margin = new System.Windows.Forms.Padding(0);
 			this.portraitIcon4.Name = "portraitIcon4";
 			this.portraitIcon4.Opacity = 100;
@@ -352,24 +375,9 @@ namespace DemoNet46
 			this.portraitIcon4.ShowCaption = true;
 			this.portraitIcon4.ShowGrayImage = false;
 			this.portraitIcon4.ShowIconBorder = false;
-			this.portraitIcon4.Size = new System.Drawing.Size(101, 91);
+			this.portraitIcon4.Size = new System.Drawing.Size(152, 136);
 			this.portraitIcon4.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.Center;
 			this.portraitIcon4.TabIndex = 1005;
-			// 
-			// lblTime
-			// 
-			this.lblTime.BorderColor = System.Drawing.Color.Empty;
-			this.lblTime.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.lblTime.FirstColor = System.Drawing.Color.Empty;
-			this.lblTime.Font = new System.Drawing.Font("Microsoft YaHei UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.lblTime.ForeColor = System.Drawing.Color.White;
-			this.lblTime.Location = new System.Drawing.Point(0, 0);
-			this.lblTime.Name = "lblTime";
-			this.lblTime.SecondColor = System.Drawing.Color.Empty;
-			this.lblTime.Size = new System.Drawing.Size(87, 52);
-			this.lblTime.TabIndex = 0;
-			this.lblTime.Text = "Time";
-			this.lblTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// timer1
 			// 
@@ -378,15 +386,17 @@ namespace DemoNet46
 			// 
 			// Form1
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackgroundImage = global::DemoNet46.Properties.Resources.earth_mountain;
 			this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.ClientSize = new System.Drawing.Size(1200, 675);
 			this.Controls.Add(this.portraitIcon4);
 			this.Controls.Add(this.portraitIcon3);
 			this.Controls.Add(this.pnlStart);
 			this.Controls.Add(this.pnlTaskbar);
+			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.MaximumSize = new System.Drawing.Size(3360, 2100);
 			this.Name = "Form1";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "窗口标题";
