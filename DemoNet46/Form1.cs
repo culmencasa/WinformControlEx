@@ -158,6 +158,14 @@ namespace DemoNet46
             Form2 f = new Form2();
             f.Show();
 		}
+
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+            lblTime.Text =
+                DateTime.Now.ToString("HH:mm") +
+                Environment.NewLine +
+                DateTime.Now.ToString("yyyy/MM/dd");
+		}
 	}
 
 
