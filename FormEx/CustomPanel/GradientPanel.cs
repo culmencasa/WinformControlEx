@@ -29,6 +29,8 @@ namespace System.Windows.Forms
 
         public int RoundBorderRadius { get; set; }
 
+        public Color InnerBackColor { get; set; }
+
         #endregion
 
         #region 构造
@@ -47,16 +49,19 @@ namespace System.Windows.Forms
 			UpdateStyles();
 
 			this.BackColor = Color.Transparent;
-			BorderWidth = 1;
+            this.InnerBackColor = Color.Transparent;
+            BorderWidth = 1;
         }
 
 		#endregion
 
-		protected override void OnPaintBackground(PaintEventArgs e)
+		protected override void OnPaint(PaintEventArgs e)
         {
+            base.OnPaint(e);
             Graphics g = e.Graphics;
 
-            // 如果设置了渐变色
+            #region 如果设置了渐变色
+
             if (this.FirstColor != Color.Empty && this.SecondColor != Color.Empty)
             {
                 if (RoundBorderRadius > 0)
@@ -78,22 +83,30 @@ namespace System.Windows.Forms
                     GradientFill.Fill(g, this.ClientRectangle, this.FirstColor, this.SecondColor, this.GradientDirection);
                 }
             }
-            else
-            {
-                using (SolidBrush borderBrush = new SolidBrush(BackColor))
-                {
-                    if (RoundBorderRadius > 0)
-                    {
-                        g.FillRoundedRectangle(borderBrush, 0, 0, this.Width, this.Height, RoundBorderRadius);
-                    }
-                    else
-                    {
-                        g.FillRectangle(borderBrush, new Rectangle(0, 0, this.Width, this.Height));
-                    }
-                }
-            }
 
-            if (this.BorderColor != Color.Empty && BorderWidth > 0)
+			#endregion
+
+			#region 没有渐变色
+
+			else
+			{
+				using (SolidBrush borderBrush = new SolidBrush(BackColor))
+				{
+					if (RoundBorderRadius > 0)
+					{
+						g.FillRoundedRectangle(borderBrush, BorderWidth, BorderWidth, this.Width - BorderWidth * 2, this.Height - BorderWidth * 2, RoundBorderRadius);
+					}
+					else
+					{
+						g.FillRectangle(borderBrush, new Rectangle(BorderWidth, BorderWidth, this.Width - BorderWidth * 2, this.Height - BorderWidth * 2));
+					}
+				}
+
+			}
+
+			#endregion
+
+			if (this.BorderColor != Color.Empty && BorderWidth > 0)
             {
                 if (RoundBorderRadius > 0)
                 {
@@ -144,5 +157,19 @@ namespace System.Windows.Forms
 
             base.OnMouseLeave(e);
         }
+
+		protected override void OnResize(EventArgs eventargs)
+		{
+			base.OnResize(eventargs);
+
+            if (this.RoundBorderRadius > 0)
+            {
+                // 圆角背景效果不好
+                //IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Width, Height, RoundBorderRadius + 5 , RoundBorderRadius + 5);
+                //Region = System.Drawing.Region.FromHrgn(hrgn);
+
+            }
+        }
+
     }
 }

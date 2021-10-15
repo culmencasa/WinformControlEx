@@ -29,11 +29,9 @@ namespace DemoNet46
         /// </summary>
         private void InitializeComponent()
         {
-			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.pnlTaskbar = new System.Windows.Forms.GradientPanel();
 			this.gradientPanel1 = new System.Windows.Forms.GradientPanel();
-			this.lblTime = new System.Windows.Forms.GradientLabel();
 			this.btnStart = new System.Windows.Forms.ImageButton();
 			this.tileIcon1 = new System.Windows.Forms.TileIcon();
 			this.portraitIcon1 = new System.Windows.Forms.PortraitIcon();
@@ -48,9 +46,7 @@ namespace DemoNet46
 			this.portraitIcon2 = new System.Windows.Forms.PortraitIcon();
 			this.portraitIcon3 = new System.Windows.Forms.PortraitIcon();
 			this.portraitIcon4 = new System.Windows.Forms.PortraitIcon();
-			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.pnlTaskbar.SuspendLayout();
-			this.gradientPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.btnStart)).BeginInit();
 			this.pnlStart.SuspendLayout();
 			this.tileIconList1.SuspendLayout();
@@ -78,7 +74,6 @@ namespace DemoNet46
 			this.gradientPanel1.BackColor = System.Drawing.Color.Transparent;
 			this.gradientPanel1.BorderColor = System.Drawing.Color.Empty;
 			this.gradientPanel1.BorderWidth = 0;
-			this.gradientPanel1.Controls.Add(this.lblTime);
 			this.gradientPanel1.Dock = System.Windows.Forms.DockStyle.Right;
 			this.gradientPanel1.FirstColor = System.Drawing.Color.Black;
 			this.gradientPanel1.Location = new System.Drawing.Point(1070, 0);
@@ -88,22 +83,6 @@ namespace DemoNet46
 			this.gradientPanel1.SecondColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
 			this.gradientPanel1.Size = new System.Drawing.Size(130, 78);
 			this.gradientPanel1.TabIndex = 1;
-			// 
-			// lblTime
-			// 
-			this.lblTime.BorderColor = System.Drawing.Color.Empty;
-			this.lblTime.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.lblTime.FirstColor = System.Drawing.Color.Empty;
-			this.lblTime.Font = new System.Drawing.Font("Microsoft YaHei UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.lblTime.ForeColor = System.Drawing.Color.White;
-			this.lblTime.Location = new System.Drawing.Point(0, 0);
-			this.lblTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblTime.Name = "lblTime";
-			this.lblTime.SecondColor = System.Drawing.Color.Empty;
-			this.lblTime.Size = new System.Drawing.Size(130, 78);
-			this.lblTime.TabIndex = 0;
-			this.lblTime.Text = "Time";
-			this.lblTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// btnStart
 			// 
@@ -169,8 +148,7 @@ namespace DemoNet46
 			// 
 			this.pnlStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.pnlStart.AutoScroll = true;
-			this.pnlStart.BackColor = System.Drawing.Color.Black;
-			this.pnlStart.BackgroundImage = global::DemoNet46.Properties.Resources.bg;
+			this.pnlStart.BackColor = System.Drawing.Color.Transparent;
 			this.pnlStart.BorderColor = System.Drawing.Color.White;
 			this.pnlStart.BorderWidth = 2;
 			this.pnlStart.Controls.Add(this.tileIconList1);
@@ -178,12 +156,12 @@ namespace DemoNet46
 			this.pnlStart.Controls.Add(this.btnShutdown);
 			this.pnlStart.Controls.Add(this.portraitIcon2);
 			this.pnlStart.Controls.Add(this.portraitIcon1);
-			this.pnlStart.FirstColor = System.Drawing.Color.Empty;
+			this.pnlStart.FirstColor = System.Drawing.Color.Black;
 			this.pnlStart.Location = new System.Drawing.Point(3, 108);
 			this.pnlStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.pnlStart.Name = "pnlStart";
 			this.pnlStart.RoundBorderRadius = 12;
-			this.pnlStart.SecondColor = System.Drawing.Color.Empty;
+			this.pnlStart.SecondColor = System.Drawing.Color.Gray;
 			this.pnlStart.Size = new System.Drawing.Size(794, 492);
 			this.pnlStart.TabIndex = 1001;
 			this.pnlStart.Visible = false;
@@ -379,11 +357,6 @@ namespace DemoNet46
 			this.portraitIcon4.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.Center;
 			this.portraitIcon4.TabIndex = 1005;
 			// 
-			// timer1
-			// 
-			this.timer1.Enabled = true;
-			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -406,7 +379,6 @@ namespace DemoNet46
 			this.Controls.SetChildIndex(this.portraitIcon3, 0);
 			this.Controls.SetChildIndex(this.portraitIcon4, 0);
 			this.pnlTaskbar.ResumeLayout(false);
-			this.gradientPanel1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.btnStart)).EndInit();
 			this.pnlStart.ResumeLayout(false);
 			this.tileIconList1.ResumeLayout(false);
@@ -433,8 +405,6 @@ namespace DemoNet46
 		private System.Windows.Forms.CustomButton btnShutdown;
 		private System.Windows.Forms.PortraitIcon portraitIcon3;
 		private System.Windows.Forms.PortraitIcon portraitIcon4;
-		private System.Windows.Forms.GradientLabel lblTime;
-		private System.Windows.Forms.Timer timer1;
 	}
 }
 
