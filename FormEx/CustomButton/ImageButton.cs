@@ -165,7 +165,7 @@ namespace System.Windows.Forms
         public new bool TabStop
         {
             get
-            { 
+            {
                 return base.TabStop;
             }
             set
@@ -178,7 +178,7 @@ namespace System.Windows.Forms
         public new int TabIndex
         {
             get
-            { 
+            {
                 return base.TabIndex;
             }
             set
@@ -188,6 +188,23 @@ namespace System.Windows.Forms
         }
 
         #endregion
+
+
+        private bool _buttonKeepPressed;
+        public bool ButtonKeepPressed { get
+            {
+                return _buttonKeepPressed;
+            }
+            set
+            {
+                _buttonKeepPressed = value;
+                if (value == false)
+                {
+                    Image = NormalImage;
+                    Invalidate();
+                }
+            }
+        }
 
         #endregion
 
@@ -230,6 +247,20 @@ namespace System.Windows.Forms
         public new bool WaitOnLoad { get { return base.WaitOnLoad; } set { base.WaitOnLoad = value; } }
         #endregion
 
+        public void KeepPress()
+        {
+            ButtonKeepPressed = true;
+            Image = DownImage;
+            Invalidate();
+        }
+
+        public void Release()
+        {
+            ButtonKeepPressed = false;
+            Image = NormalImage;
+            Invalidate();
+        }
+
         #region override
 
         protected override void OnMouseEnter(EventArgs e)
@@ -246,6 +277,13 @@ namespace System.Windows.Forms
         protected override void OnMouseMove(MouseEventArgs e)
         {
             _hover = true;
+
+            if (ButtonKeepPressed)
+            {
+                base.OnMouseMove(e);
+                return;
+            }
+
             if (_down)
             {
                 if ((_DownImage != null) && (Image != _DownImage))
@@ -275,8 +313,15 @@ namespace System.Windows.Forms
         {
             _hover = false;
 
-            Image = _NormalImage;
+            if (ButtonKeepPressed)
+            {
+            }
+            else
+            {
+                Image = _NormalImage;
+            }
             base.OnMouseLeave(e);
+        
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -288,6 +333,13 @@ namespace System.Windows.Forms
                 _leftClick = true;
                 //OnMouseUp(null);
                 _down = true;
+
+                if (ButtonKeepPressed)
+                {
+                    Release();
+                    return;
+                }
+
                 if (_DownImage != null)
                 {
                     Image = _DownImage;
@@ -303,10 +355,18 @@ namespace System.Windows.Forms
 
             if (e.Button == MouseButtons.Left)
             {
+                if (ButtonKeepPressed)
+                {
+                    base.OnMouseUp(e);
+                    return;
+                }
+
+
                 if (_down)
                 {
                     _down = false;
                     Image = _NormalImage;
+                    Invalidate();
                 }
                 //else if (_hover)
                 //{
@@ -318,7 +378,6 @@ namespace System.Windows.Forms
                 //    Image = _NormalImage;
                 //}
 
-                Invalidate();
             }
             base.OnMouseUp(e);
         }
@@ -400,7 +459,6 @@ namespace System.Windows.Forms
                 {
                     pe.Graphics.DrawString(base.Text, base.Font, drawBrush, drawPoint);
                 }
-
             }
 
             // 3.让PictureBox支持焦点

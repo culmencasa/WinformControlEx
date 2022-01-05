@@ -93,16 +93,6 @@ namespace DemoNet46.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        internal static System.Drawing.Bitmap FIREFOXactive {
-            get {
-                object obj = ResourceManager.GetObject("FIREFOXactive", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
         internal static System.Drawing.Bitmap kisspng_start_menu_windows_7_button_microsoft_5afc309b0e4577_2804259415264769550585 {
             get {
                 object obj = ResourceManager.GetObject("kisspng_start_menu_windows_7_button_microsoft_5afc309b0e4577_28042594152647695505" +

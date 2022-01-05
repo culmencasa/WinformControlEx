@@ -173,29 +173,31 @@ namespace System.Windows.Forms
                     }
                     if (MinimizeBox) 
                     { 
-                        cp.Style |= (int)WindowStyle.WS_MINIMIZEBOX;
+                        cp.Style |= (int)WindowStyle.WS_MINIMIZEBOX; 
                     }
 
-
-                    // Win11下去掉这段代码, 窗体移动起来似乎较流畅
-                    cp.ExStyle |= (int)WindowStyle.WS_CLIPCHILDREN;  //防止因窗体控件太多出现闪烁
+                    //cp.ExStyle |= (int)WindowStyle.WS_CLIPCHILDREN;  //防止因窗体控件太多出现闪烁
                     
                     if (UseDropShadow)
                     {
                         // XP及以下，简单阴影
-                        if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major < 6)
+                        WindowsNames windowsNames = EnvironmentEx.GetCurrentOSName();
+                        if (windowsNames <= WindowsNames.WindowsXP)
                         {
-                            cp.ClassStyle |= CS_DropSHADOW;  
+                            cp.ClassStyle |= CS_DropSHADOW;
+                        }
+                        else if (windowsNames < WindowsNames.Windows8)
+                        {
+                            // 使用Aero阴影
+                            int enabled = 0;
+                            Win32.DwmIsCompositionEnabled(ref enabled);
+                            IsAeroEnabled = (enabled == 1);
                         }
                         else
                         {
-                            // Win11下去掉这段代码, 窗体移动起来似乎较流畅
-                            int enabled = 0;
-							Win32.DwmIsCompositionEnabled(ref enabled);
-							IsAeroEnabled = (enabled == 1);
+                            //todo: 自绘阴影
 
-
-						}
+                        }
                     }
 
                 }
@@ -227,7 +229,10 @@ namespace System.Windows.Forms
                 case Win32.WM_NCHITTEST:
                     {
                         // 点击任意位置等于点击标题栏, 需要代码处理支持AeroSnap
-                        WmNcHitTest(ref m);
+                        if (WindowState == FormWindowState.Normal)
+                        {
+                            WmNcHitTest(ref m);
+                        }
                     }
                     return;
                 case Win32.WM_NCLBUTTONDBLCLK:
@@ -280,28 +285,28 @@ namespace System.Windows.Forms
 
                 //g.Clip = new Region(g.VisibleClipBounds);
 
-                //if (BackgroundImage != null)
-                //{
-                //    switch (BackgroundImageLayout)
-                //    {
-                //        case ImageLayout.Stretch:
-                //        case ImageLayout.Zoom:
-                //            g.DrawImage(
-                //                this.BackgroundImage,
-                //                ClientRectangle, ClientRectangle, GraphicsUnit.Pixel);
-                //            break;
-                //        case ImageLayout.Center:
-                //        case ImageLayout.None:
-                //        case ImageLayout.Tile:
-                //            {
+                if (BackgroundImage != null)
+                {
+                    switch (BackgroundImageLayout)
+                    {
+                        case ImageLayout.Stretch:
+                        case ImageLayout.Zoom:
+                            g.DrawImage(
+                                this.BackgroundImage,
+                                ClientRectangle, ClientRectangle, GraphicsUnit.Pixel);
+                            break;
+                        case ImageLayout.Center:
+                        case ImageLayout.None:
+                        case ImageLayout.Tile:
+                            {
 
-                //                g.DrawImage(
-                //                    this.BackgroundImage,
-                //                    ClientRectangle, ClientRectangle, GraphicsUnit.Pixel);
-                //            }
-                //            break;
-                //    }
-                //}
+                                g.DrawImage(
+                                    this.BackgroundImage,
+                                    ClientRectangle, ClientRectangle, GraphicsUnit.Pixel);
+                            }
+                            break;
+                    }
+                }
 
 
                 // 图标
@@ -334,11 +339,11 @@ namespace System.Windows.Forms
                 base.OnPaint(e);
 
                 // 画边框
-                //Rectangle borderRect = new Rectangle(0, 0, this.Width - 1, this.Height - 1);
-                //using (Pen borderPen = new Pen(this.BorderColor))
-                //{
-                //    g.DrawRectangle(borderPen, borderRect);
-                //}
+                Rectangle borderRect = new Rectangle(0, 0, this.Width - 1, this.Height - 1);
+                using (Pen borderPen = new Pen(this.BorderColor))
+                {
+                    g.DrawRectangle(borderPen, borderRect);
+                }
                 //RenderHelper.DrawFormFringe(this, e.Graphics, System.Windows.Forms.Properties.Resources.fringe_bkg, 5);
 
             }

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,8 @@ namespace Utils.UI
     /// </summary>
     public class NetworkChecker
     {
+        #region 枚举
+
         [Flags]
         enum InternetConnectionState : int
         {
@@ -28,34 +31,11 @@ namespace Utils.UI
             INTERNET_CONNECTION_CONFIGURED = 0x40
         }
 
+        #endregion
 
 
-        /// <summary>
-        /// 判断是否存在网络连接（Modem或LAN)
-        /// </summary>
-        /// <returns>返回False表示无网络连接。
-        /// 返回True，表示存在网络连接，但并不保证能与某特定主机建立连接。</returns>
-        public static bool ConnectionAvailable()
-        {
-            bool isConnected = false;
-            try
-            {
-                int desc = 0;
-                isConnected = Win32.InternetGetConnectedState(out desc, 0);
-            }
-            catch
-            { }
+        #region 属性
 
-            return isConnected;
-        }
-
-        static InternetConnectionState GetInternetState()
-        {
-            int desc = 0;
-            bool result = Win32.InternetGetConnectedState(out desc, 0);
-
-            return (InternetConnectionState)desc;
-        }
 
         /// <summary>
         /// Local system has a valid connection to the Internet, but it might or might not be currently connected.
@@ -91,7 +71,7 @@ namespace Utils.UI
             }
         }
         /// <summary>
-        /// Local system is in offline mode.
+        /// 本地系统是否离线
         /// </summary>
         public static bool IsOffline
         {
@@ -101,8 +81,9 @@ namespace Utils.UI
                 return (flag & InternetConnectionState.INTERNET_CONNECTION_OFFLINE) != 0;
             }
         }
+
         /// <summary>
-        /// Local system uses a proxy server to connect to the Internet.
+        /// 本地系统已启用代理
         /// </summary>
         public static bool IsProxyUsed
         {
@@ -112,8 +93,10 @@ namespace Utils.UI
                 return (flag & InternetConnectionState.INTERNET_CONNECTION_PROXY) != 0;
             }
         }
+
+
         /// <summary>
-        /// Local system has RAS installed.
+        /// 远程访问服务
         /// </summary>
         public static bool IsRasEnabled
         {
@@ -125,10 +108,42 @@ namespace Utils.UI
         }
 
 
-        public static bool HasInternetConnectionWithPing()
+
+        #endregion
+
+
+        /// <summary>
+        /// 判断是否存在网络连接
+        /// </summary>
+        /// <returns>返回False表示无网络连接。
+        /// 返回True，表示存在网络连接，但并不保证能与某特定主机建立连接。</returns>
+        public static bool ConnectionAvailable()
+        {
+            bool isConnected = false;
+            try
+            {
+                int desc = 0;
+                isConnected = Win32.InternetGetConnectedState(out desc, 0);
+            }
+            catch
+            { }
+
+            return isConnected;
+        }
+
+        static InternetConnectionState GetInternetState()
+        {
+            int desc = 0;
+            bool result = Win32.InternetGetConnectedState(out desc, 0);
+
+            return (InternetConnectionState)desc;
+        }
+
+
+        public static bool TestInternetConnectionWithPing(string host= "dns.baidu.com")
         {
             Ping myPing = new Ping();
-            String host = "dns.baidu.com";//"131.107.255.255"; //dns.msftncsi.com
+            //String host = "dns.baidu.com";//"131.107.255.255"; //dns.msftncsi.com
             byte[] buffer = new byte[32];
             int timeout = 1000;
             PingOptions pingOptions = new PingOptions();
@@ -150,8 +165,21 @@ namespace Utils.UI
             }
         }
 
+        public static bool TestTcpConnection(string hostName, int port)
+        {
+            bool result = false;            
+            using (TcpClient client = new TcpClient())
+            {
+                var asyncResult = client.BeginConnect(hostName, port, null, null);
 
-        public static bool HasInternetConnectionWithStream()
+                result = asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+            }
+
+            return result;
+        }
+
+
+        public static bool TestInternetConnectionWithStream()
         {
             try
             {
@@ -198,23 +226,21 @@ namespace Utils.UI
 
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
-                // discard because of standard reasons
                 if ((ni.OperationalStatus != OperationalStatus.Up) ||
                     (ni.NetworkInterfaceType == NetworkInterfaceType.Loopback) ||
                     (ni.NetworkInterfaceType == NetworkInterfaceType.Tunnel))
                     continue;
 
-                // this allow to filter modems, serial, etc.
-                // I use 10000000 as a minimum speed for most cases
+                // 跳过比指定速度更小的网络接口
                 if (ni.Speed < minimumSpeed)
                     continue;
 
-                // discard virtual cards (virtual box, virtual pc, etc.)
+                // 跳过虚拟机的网卡
                 if ((ni.Description.IndexOf("virtual", StringComparison.OrdinalIgnoreCase) >= 0) ||
                     (ni.Name.IndexOf("virtual", StringComparison.OrdinalIgnoreCase) >= 0))
                     continue;
 
-                // discard "Microsoft Loopback Adapter", it will not show as NetworkInterfaceType.Loopback but as Ethernet Card.
+                // 跳过"Microsoft Loopback Adapter"
                 if (ni.Description.Equals("Microsoft Loopback Adapter", StringComparison.OrdinalIgnoreCase))
                     continue;
 
@@ -222,6 +248,8 @@ namespace Utils.UI
             }
             return false;
         }
+
+
     }
 
 

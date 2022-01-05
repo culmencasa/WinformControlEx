@@ -16,7 +16,10 @@ namespace System.Windows.Forms
         {
             //SetStyles();  //bug: win7下会闪烁，xp下却需要。
 
-            SetStyles();
+            if (EnvironmentEx.GetCurrentOSName() <= WindowsNames.WindowsXP)
+            {
+                SetStyles();
+            }
             this.AutoScroll = true;
             this.BorderColor = Color.FromArgb(207, 212, 216);
             this.BorderSize = 1;
@@ -103,14 +106,28 @@ namespace System.Windows.Forms
         {
             base.OnHandleCreated(e);
             Win32.ShowScrollBar(this.Handle, 0, false);
+
+
+            if (this.VerticalScroll.Maximum > this.Height)
+            {
+                int scrollBarWidth = 20;
+                foreach (var item in this.Controls.OfType<TileIcon>())
+                {
+                    item.Width = this.Width - this.Padding.Left - this.Padding.Right - scrollBarWidth;
+                }
+            }
+            else
+            {
+                foreach (var item in this.Controls.OfType<TileIcon>())
+                {
+                    item.Width = this.Width - this.Padding.Left - this.Padding.Right;
+                }
+            }
+
         }
-
-
 
         protected override void OnControlAdded(ControlEventArgs e)
         {
-            base.OnControlAdded(e);
-
             TileIcon newItem = e.Control as TileIcon;
             if (newItem == null)
             {
@@ -118,17 +135,13 @@ namespace System.Windows.Forms
                 return;
             }
 
+            base.OnControlAdded(e);
             newItem.Width = this.Width - this.Padding.Left - this.Padding.Right;
-            newItem.Dock = DockStyle.Top;
+
+
+            newItem.MouseWheel -= new MouseEventHandler(newItem_MouseWheel);
             newItem.MouseWheel += new MouseEventHandler(newItem_MouseWheel);
 
-            if (this.VerticalScroll.Maximum > this.Height)
-            {
-                foreach (var item in this.Controls.OfType<TileIcon>())
-                {
-                    item.Width = this.Width - this.Padding.Left - this.Padding.Right - 20;
-                }
-            }
         }
 
         protected override void OnControlRemoved(ControlEventArgs e)

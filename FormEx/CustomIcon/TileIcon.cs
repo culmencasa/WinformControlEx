@@ -19,6 +19,7 @@ namespace System.Windows.Forms
         protected bool _defaultImageDefined;
         protected Color _lastBackColor;
         protected Color _activedBackColor;
+        protected string _iconText;
 
         #endregion
 
@@ -89,25 +90,44 @@ namespace System.Windows.Forms
             set
             {
                 _defaultImage = value;
-                
+
                 _defaultImageDefined = (_defaultImage != null);
             }
         }
+
+        /// <summary>
+        /// bug: 这个Text属性无法在设计器中保存下来
+        /// </summary>
         [Category("样式")]
-        [Browsable(true)]
+        [Browsable(true)] 
         [EditorBrowsable(EditorBrowsableState.Always)]
         public override string Text
         {
             get
             {
-                return base.Text;
+                return _iconText;
             }
             set
             {
-                base.Text = value;
+                _iconText = value;
                 Invalidate();
             }
         }
+
+        [Category("样式")]
+        public string IconText
+        {
+            get
+            {
+                return _iconText;
+            }
+            set
+            {
+                _iconText = value;
+                Invalidate();
+            }
+        }
+
 
         [DefaultValue(typeof(Boolean), "True")]
         public bool ShowImage
@@ -122,7 +142,7 @@ namespace System.Windows.Forms
         #endregion
 
         #region 私有方法
-        
+
         #endregion
 
         #region 传承的方法
@@ -165,24 +185,24 @@ namespace System.Windows.Forms
         }
 
         protected virtual void DrawText(Graphics g)
-        { 
-                using (Brush textBrush = new SolidBrush(this.ForeColor))
-                using (StringFormat textFormat = new StringFormat())
-                {
-                    textFormat.LineAlignment = StringAlignment.Center;
+        {
+            using (Brush textBrush = new SolidBrush(this.ForeColor))
+            using (StringFormat textFormat = new StringFormat())
+            {
+                textFormat.LineAlignment = StringAlignment.Center;
 
-                    int x, y, width, height;
-                    x = this.Padding.Left + (this.Height - this.Padding.Top - this.Padding.Bottom) + this.Padding.Left;
-                    if (!ShowImage)
-                    {
-                        x = this.Padding.Left;
-                    }
-                    y  = 0;
-                    width = this.Width - this.Padding.Right - x;
-                    height  = this.Height;
-                    Rectangle textArea = new Rectangle(x, y, width, height);
-                    g.DrawString(this.Text, this.Font, textBrush, textArea, textFormat);
+                int x, y, width, height;
+                x = this.Padding.Left + (this.Height - this.Padding.Top - this.Padding.Bottom) + this.Padding.Left;
+                if (!ShowImage)
+                {
+                    x = this.Padding.Left;
                 }
+                y = 0;
+                width = this.Width - this.Padding.Right - x;
+                height = this.Height;
+                Rectangle textArea = new Rectangle(x, y, width, height);
+                g.DrawString(this.IconText, this.Font, textBrush, textArea, textFormat);
+            }
         }
 
         protected virtual void DrawSplitter(Graphics g)
@@ -249,7 +269,7 @@ namespace System.Windows.Forms
             if (ShowSplitter)
                 DrawSplitter(g);
 
-
+            g.SetFastRendering();
             base.OnPaint(e);
 
         }

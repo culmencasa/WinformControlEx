@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace DemoNet46
 {
-    public partial class Form1 : NonFrameForm
+    public partial class MainForm : NonFrameForm
     {
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
 
@@ -31,7 +31,11 @@ namespace DemoNet46
             popoffTimer = new Timer();
             popoffTimer.Interval = 1;
 			popoffTimer.Tick += PopoffTimer_Tick;
+
         }
+
+
+        #region 开始菜单弹出
 
         private Timer popupTimer;
         private Timer popoffTimer;
@@ -42,6 +46,8 @@ namespace DemoNet46
             Opened = 2,
             Closing = 3
         }
+
+
         private StartMenuStates startMenuState;
 
         private void PopoffTimer_Tick(object sender, EventArgs e)
@@ -78,23 +84,6 @@ namespace DemoNet46
 
         }
 
-		private void PnlStart_GotFocus(object sender, EventArgs e)
-		{
-            ActiveControl = pnlStart;
-		}
-
-		private void PnlStart_LostFocus(object sender, EventArgs e)
-        {
-            /* 麻烦...
-			if (startMenuState != StartMenuStates.Opened)
-			{
-                return;
-			}
-            startMenuState = StartMenuStates.Closing;
-            popoffTimer.Start();
-            */
-        }
-
 		private void PopupTimer_Tick(object sender, EventArgs e)
         {
             if (startMenuState == StartMenuStates.Opened)
@@ -118,6 +107,7 @@ namespace DemoNet46
            
             if (pnlStart.Location.Y <= pnlTaskbar.Top - pnlStart.Height)
             {
+                pnlStart.BringToFront();
                 popupTimer.Stop();
                 pnlStart.Location = new Point(pnlStart.Left, pnlTaskbar.Top - pnlStart.Height);
 
@@ -128,13 +118,31 @@ namespace DemoNet46
                 pnlStart.LostFocus += PnlStart_LostFocus;
             }
             else
-            { 
+            {
+                pnlStart.BringToFront();
                 pnlStart.Location = new Point(
                     pnlStart.Left,
                     pnlStart.Top - 30
                 );
             }
 
+        }
+
+		private void PnlStart_GotFocus(object sender, EventArgs e)
+		{
+            ActiveControl = pnlStart;
+		}
+
+		private void PnlStart_LostFocus(object sender, EventArgs e)
+        {
+            /* 麻烦... 未实现
+			if (startMenuState != StartMenuStates.Opened)
+			{
+                return;
+			}
+            startMenuState = StartMenuStates.Closing;
+            popoffTimer.Start();
+            */
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -152,21 +160,97 @@ namespace DemoNet46
         }
 
 
+        #endregion
 
-        private void button1_Click(object sender, EventArgs e)
-		{
-            Form2 f = new Form2();
-            f.Show();
-		}
 
-		private void timer1_Tick(object sender, EventArgs e)
-		{
-            lblTime.Text =
-                DateTime.Now.ToString("HH:mm") +
-                Environment.NewLine +
-                DateTime.Now.ToString("yyyy/MM/dd");
-		}
-	}
+        private void sysTimer_Tick(object sender, EventArgs e)
+        {
+            lblTime.Text = DateTime.Now.ToString("HH:mm:ss");
+
+        }
+
+        private void btnShutdown_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnShowTestForm_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                TestButtonForm form = FormManager.Single<TestButtonForm>();
+                form.StartPosition = FormStartPosition.CenterParent;
+                
+
+                AddChildWindow(form);
+
+            }
+        }
+
+        private void btnRecycle_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Form f = new Form();
+                f.TopLevel = false;
+                f.FormBorderStyle = FormBorderStyle.None;
+
+                f.Location = new Point(300, 300);
+                this.Controls.Add(f);
+
+                f.Show();
+
+            }
+        }
+
+
+        #region 子窗体鼠标操作
+
+        private bool mouseDown;
+        private Point lastLocation;
+
+        public void AddChildWindow(Form form)
+        {
+            form.TopLevel = false;
+            form.FormBorderStyle = FormBorderStyle.None;
+
+            form.MouseDown -= ChildWindow_MouseDown;
+            form.MouseDown += ChildWindow_MouseDown;
+            form.MouseMove -= ChildWindow_MouseMove;
+            form.MouseMove += ChildWindow_MouseMove;
+            form.MouseUp -= ChildWindow_MouseUp;
+            form.MouseUp += ChildWindow_MouseUp;
+
+            this.Controls.Add(form);
+            form.BringToFront();
+
+
+            form.Show();
+        }
+
+        private void ChildWindow_MouseDown(object sender, MouseEventArgs e)
+        {
+            mouseDown = true; 
+            lastLocation = e.Location;
+        }
+        private void ChildWindow_MouseMove(object sender, MouseEventArgs e)
+        {
+            Form form = sender as Form;
+            if (mouseDown)
+            {
+                form.Location = new Point((form.Location.X - lastLocation.X) + e.X, (form.Location.Y - lastLocation.Y) + e.Y);
+                //control.Update();
+            }
+        }
+
+        private void ChildWindow_MouseUp(object sender, MouseEventArgs e)
+        {
+            mouseDown = false;
+        }
+
+        #endregion
+
+    }
 
 
 }

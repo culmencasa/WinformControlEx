@@ -95,6 +95,22 @@ namespace System.Windows.Forms
             return Single<TForm>(true, null);
         }
 
+
+        public static TForm Single<TForm>(object constructorArguments) where TForm : Form, new()
+        {
+            if (constructorArguments == null)
+            {
+                return Single<TForm>(true, null);
+            }
+
+            if (constructorArguments is object[])
+            {
+                return Single<TForm>(true, null, (object[])constructorArguments);
+            }
+
+            return Single<TForm>(true, null, new object[] { constructorArguments });
+        }
+
         /// <summary>
         /// 将所有窗体设置为显示或隐藏
         /// </summary>

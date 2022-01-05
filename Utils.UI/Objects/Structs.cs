@@ -185,4 +185,22 @@ namespace System.Drawing
     }
 
 
+    /// <summary>
+    /// 见http://pinvoke.net/default.aspx/gdi32/GetDeviceCaps.html
+    /// </summary>
+    public enum DeviceCap
+    {
+        /// <summary>
+        /// Logical pixels inch in X
+        /// </summary>
+        LOGPIXELSX = 88,
+        /// <summary>
+        /// Logical pixels inch in Y
+        /// </summary>
+        LOGPIXELSY = 90,
+        VERTRES = 10,
+        DESKTOPVERTRES = 117,
+
+    }
+
 }

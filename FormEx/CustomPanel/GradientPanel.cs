@@ -74,7 +74,8 @@ namespace System.Windows.Forms
                         this.SecondColor
                         ))
                     {
-                        g.FillRoundedRectangle(brush, 0, 0, this.Width, this.Height, RoundBorderRadius);
+                        // 不减1会出现1像素的空白, 原因不明
+                        g.FillRoundedRectangle(brush, BorderWidth - 1, BorderWidth - 1, this.Width - BorderWidth, this.Height - BorderWidth, RoundBorderRadius);
                     }
                 }
                 else

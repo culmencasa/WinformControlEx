@@ -6,7 +6,9 @@ using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
 {
-
+    /// <summary>
+    /// 阴影窗体
+    /// </summary>
     public class DropShadow : Form
     {
         #region 字段
@@ -106,7 +108,6 @@ namespace System.Windows.Forms
 
         #endregion
 
-
         #region 重写的成员
 
         protected override CreateParams CreateParams
@@ -120,7 +121,6 @@ namespace System.Windows.Forms
         }
 
         #endregion
-
 
         #region 公开的方法
         
@@ -193,11 +193,13 @@ namespace System.Windows.Forms
         }
 
         /// <summary>
-        /// 需优化
+        /// 生成阴影图片
         /// </summary>
         /// <returns></returns>
         private Bitmap DrawShadow()
         {
+            //todo: 有时间重写
+
             // 阴影窗体的大小
             int width = Owner.Width + ShadowRadius * 2;
             int height = Owner.Height + ShadowRadius * 2;

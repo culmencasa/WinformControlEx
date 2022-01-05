@@ -36,7 +36,9 @@ namespace System.Drawing
                 SizeF sizeF = new SizeF(diameter, diameter);
                 RectangleF arc = new RectangleF(rectangle.Location, sizeF);
                 if ((RectangleEdgeFilter.TopLeft & filter) == RectangleEdgeFilter.TopLeft)
+                {
                     path.AddArc(arc, 180, 90);
+                }
                 else
                 {
                     path.AddLine(arc.X, arc.Y + arc.Height, arc.X, arc.Y);
@@ -44,7 +46,9 @@ namespace System.Drawing
                 }
                 arc.X = rectangle.Right - diameter;
                 if ((RectangleEdgeFilter.TopRight & filter) == RectangleEdgeFilter.TopRight)
+                {
                     path.AddArc(arc, 270, 90);
+                }
                 else
                 {
                     path.AddLine(arc.X, arc.Y, arc.X + arc.Width, arc.Y);
@@ -52,7 +56,9 @@ namespace System.Drawing
                 }
                 arc.Y = rectangle.Bottom - diameter;
                 if ((RectangleEdgeFilter.BottomRight & filter) == RectangleEdgeFilter.BottomRight)
+                {
                     path.AddArc(arc, 0, 90);
+                }
                 else
                 {
                     path.AddLine(arc.X + arc.Width, arc.Y, arc.X + arc.Width, arc.Y + arc.Height);
@@ -60,7 +66,9 @@ namespace System.Drawing
                 }
                 arc.X = rectangle.Left;
                 if ((RectangleEdgeFilter.BottomLeft & filter) == RectangleEdgeFilter.BottomLeft)
+                {
                     path.AddArc(arc, 90, 90);
+                }
                 else
                 {
                     path.AddLine(arc.X + arc.Width, arc.Y + arc.Height, arc.X, arc.Y + arc.Height);

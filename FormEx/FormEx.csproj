@@ -118,6 +118,11 @@
     <Compile Update="CustomForm\Win7ControlBox - 复制.Designer.cs">
       <DependentUpon>Win7ControlBox.Designer.cs</DependentUpon>
     </Compile>
+    <Compile Update="CustomMessageBox\ExceptionMessageBox.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExceptionMessageBox.resx</DependentUpon>
+    </Compile>
     <Compile Update="CustomPanel\ClickThroughFlowPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -269,6 +274,10 @@
     </EmbeddedResource>
     <EmbeddedResource Update="CustomForm\Win7ControlBox - 复制.resx">
       <DependentUpon>Win7ControlBox.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="CustomMessageBox\ExceptionMessageBox.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessageBox.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="CustomTextBox\PaddingTextBox.resx">
       <DependentUpon>PaddingTextBox.cs</DependentUpon>

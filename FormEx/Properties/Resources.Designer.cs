@@ -203,6 +203,16 @@ namespace System.Windows.Forms.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap exception {
+            get {
+                object obj = ResourceManager.GetObject("exception", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap fringe_bkg {
             get {
                 object obj = ResourceManager.GetObject("fringe_bkg", resourceCulture);

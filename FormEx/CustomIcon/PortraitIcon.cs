@@ -12,7 +12,7 @@ namespace System.Windows.Forms
     /// <summary>
     /// 图标控件
     /// </summary>
-    public class PortraitIcon : TransparentControl //NonFlickerUserControl
+    public class PortraitIcon : NonFlickerUserControl
     {
         #region 字段
 
@@ -255,6 +255,13 @@ namespace System.Windows.Forms
             }
         }
 
+        [DefaultValue(typeof(Color), "Transparent")]
+        public override Color BackColor 
+        { 
+            get => base.BackColor; 
+            set => base.BackColor = value; 
+        }
+
 
         #endregion
 
@@ -296,7 +303,7 @@ namespace System.Windows.Forms
             _imageArea = this.GetImageArea();
 
 
-            //this.BackColor = Color.Transparent;
+            this.BackColor = Color.Transparent;
             this.ForeColor = Color.Black;
             this.FirstColor = Color.White;
             this.SecondColor = Color.White;
@@ -361,15 +368,16 @@ namespace System.Windows.Forms
 
         #region 重写的成员
 
+
         protected override void OnGotFocus(EventArgs e)
         {
-            //this.BackColor = this.FocusBackgroundColor;
+            this.BackColor = this.FocusBackgroundColor;
             base.OnGotFocus(e);
         }
 
         protected override void OnLostFocus(EventArgs e)
         {
-            //this.BackColor = Color.Transparent;
+            this.BackColor = Color.Transparent;
             base.OnLostFocus(e);
         }
 
@@ -384,7 +392,7 @@ namespace System.Windows.Forms
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            //this.BackColor = this.HoverBackgroundColor;
+            this.BackColor = this.HoverBackgroundColor;
             this._isHovering = true;
             this.Invalidate();
 
@@ -393,7 +401,7 @@ namespace System.Windows.Forms
         
         protected override void OnMouseLeave(EventArgs e)
         {
-            //this.BackColor = Color.Transparent;
+            this.BackColor = Color.Transparent;
             this._isHovering = false;
             this.Invalidate();
 
@@ -534,7 +542,8 @@ namespace System.Windows.Forms
             g.SmoothingMode = SmoothingMode.None;
             g.InterpolationMode = InterpolationMode.NearestNeighbor;
 
-            using (Brush coverBrush = new LinearGradientBrush(this.ClientRectangle, this.FirstColor, this.SecondColor, LinearGradientMode.Vertical), fontBrush = new SolidBrush(this.ForeColor))
+            using (Brush coverBrush = new LinearGradientBrush(this.ClientRectangle, this.FirstColor, this.SecondColor, LinearGradientMode.Vertical), 
+                fontBrush = new SolidBrush(this.ForeColor))
             {
 
                 if (_isDragging)

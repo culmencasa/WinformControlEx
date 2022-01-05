@@ -11,7 +11,7 @@ using System.Drawing.Drawing2D;
 // Mick Dohertys' .net Tips and Tricks 源代码见 http://dotnetrix.co.uk/button.htm
 namespace System.Windows.Forms
 {
-   
+
     /// <summary>
     /// 自定义按钮
     /// </summary>
@@ -83,7 +83,7 @@ namespace System.Windows.Forms
 
         #region Properties
 
-        
+
         /// <summary>
         /// 按钮状态
         /// </summary>
@@ -273,10 +273,12 @@ namespace System.Windows.Forms
         {
             base.OnMouseLeave(e);
             if (!keyPressed)
+            {
                 if (this.IsDefault)
                     m_ButtonState = CustomButtonState.Focused;
                 else
                     m_ButtonState = CustomButtonState.Normal;
+            }
             OnStateChange(EventArgs.Empty);
         }
 
@@ -690,9 +692,9 @@ namespace System.Windows.Forms
                 path.AddRectangle(r);
             else
                 if ((corners & Corners.TopLeft) == Corners.TopLeft)
-                    path.AddArc(r.Left, r.Top, radius, radius, 180, 90);
-                else
-                    path.AddLine(r.Left, r.Top, r.Left, r.Top);
+                path.AddArc(r.Left, r.Top, radius, radius, 180, 90);
+            else
+                path.AddLine(r.Left, r.Top, r.Left, r.Top);
 
             if ((corners & Corners.TopRight) == Corners.TopRight)
                 path.AddArc(r.Right - radius, r.Top, radius, radius, 270, 90);
@@ -778,7 +780,7 @@ namespace System.Windows.Forms
         BottomRight = 8,
         All = TopLeft | TopRight | BottomLeft | BottomRight
     }
-    
+
     public enum CustomButtonState
     {
         Normal = 1,
@@ -831,10 +833,10 @@ namespace System.Windows.Forms
             return value;
         }
 
-        
+
+    }
+
 
     #endregion
 
-    }
-      
 }

@@ -94,8 +94,6 @@ namespace System
         [DllImport("gdi32.dll", SetLastError = true)]
         public static extern int GetTextMetrics(IntPtr hdc, ref TEXTMETRIC lptm);
 
-        [DllImport("gdi32.dll", SetLastError = true)]
-        public static extern int GetWindowRect(IntPtr hWnd, ref RECT lpRect);
 
         [DllImport("gdi32.dll", SetLastError = true)]
         public static extern int GetWindowRect(IntPtr hWnd, IntPtr lpRect);

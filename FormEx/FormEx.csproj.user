@@ -23,7 +23,13 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="CustomIcon\PortraitIcon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="CustomListBox\ListBoxEx.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="CustomMessageBox\ExceptionMessageBox.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Update="CustomTextBox\RoundTextBox.cs">
       <SubType>UserControl</SubType>
