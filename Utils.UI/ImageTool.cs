@@ -79,7 +79,17 @@ namespace System.Drawing
 			}
 			catch { return null; }
 		}
-        
+
+
+		public static Bitmap LoadBitmap(string file)
+		{
+			var bytes = File.ReadAllBytes(file);
+			var ms = new MemoryStream(bytes);
+			var result = new Bitmap(Image.FromStream(ms));
+
+			return result;
+		}
+
 		enum EmfToWmfBitsFlags {
 			EmfToWmfBitsFlagsDefault = 0x00000000,
 			EmfToWmfBitsFlagsEmbedEmf = 0x00000001,

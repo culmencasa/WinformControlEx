@@ -31,6 +31,7 @@ namespace DemoNet46
         {
             this.btnShowException = new System.Windows.Forms.CustomButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnWorkShade = new System.Windows.Forms.CustomButton();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,22 +50,37 @@ namespace DemoNet46
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnWorkShade);
             this.groupBox1.Controls.Add(this.btnShowException);
-            this.groupBox1.Location = new System.Drawing.Point(12, 28);
+            this.groupBox1.Location = new System.Drawing.Point(12, 64);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(203, 115);
             this.groupBox1.TabIndex = 1000;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
             // 
+            // btnWorkShade
+            // 
+            this.btnWorkShade.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.btnWorkShade.CornerRadius = 8;
+            this.btnWorkShade.GradientMode = false;
+            this.btnWorkShade.Location = new System.Drawing.Point(16, 52);
+            this.btnWorkShade.Name = "btnWorkShade";
+            this.btnWorkShade.ShadeMode = false;
+            this.btnWorkShade.Size = new System.Drawing.Size(65, 26);
+            this.btnWorkShade.TabIndex = 0;
+            this.btnWorkShade.Text = "遮盖层";
+            this.btnWorkShade.Click += new System.EventHandler(this.btnWorkShade_Click);
+            // 
             // TestButtonForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderColor = System.Drawing.Color.DimGray;
-            this.ClientSize = new System.Drawing.Size(415, 269);
+            this.ClientSize = new System.Drawing.Size(640, 293);
             this.Controls.Add(this.groupBox1);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(3840, 2160);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(200, 100);
             this.Name = "TestButtonForm";
@@ -81,5 +97,6 @@ namespace DemoNet46
 
         private System.Windows.Forms.CustomButton btnShowException;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CustomButton btnWorkShade;
     }
 }

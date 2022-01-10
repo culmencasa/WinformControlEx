@@ -9,7 +9,10 @@ namespace System.Windows.Forms
 {
     public static class FormExtension
     {
-
+        /// <summary>
+        /// 启用窗体自绘和双缓冲
+        /// </summary>
+        /// <param name="target"></param>
         public static void Enable2DBuffer(this Form target)
         {            
             int currentStyle = (int)Win32.GetWindowLong(target.Handle, (-16));

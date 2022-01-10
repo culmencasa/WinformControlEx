@@ -23,5 +23,12 @@ namespace DemoNet46
             ExceptionMessageBox box = new ExceptionMessageBox(ex);
             box.Show();
         }
+
+        private void btnWorkShade_Click(object sender, EventArgs e)
+        {
+            WorkShade ws = new WorkShade(3000);
+            ws.Attach(this.Parent as Form);
+            ws.Show();
+        }
     }
 }

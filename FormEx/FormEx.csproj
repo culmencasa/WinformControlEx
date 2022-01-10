@@ -242,12 +242,6 @@
     <Compile Update="TabControl\TabStyleProviders\TabStyleVS2010Provider.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="TabStrip\TabStrip.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="TabStrip\TabStripButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Update="CustomIcon\TileIcon.cs">
       <SubType>UserControl</SubType>
     </Compile>
