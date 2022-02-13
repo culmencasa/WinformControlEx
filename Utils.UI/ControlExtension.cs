@@ -109,5 +109,26 @@ namespace System.Windows.Forms
             return false;
         }
 
+        /// <summary>
+        /// 将Form嵌入到Control中. 
+        /// </summary>
+        /// <param name="parentControl"></param>
+        /// <param name="form"></param>
+        /// <param name="allowClose">Form从父控件Control中移除之前, 是否可关闭. 默认为false.</param>
+        public static void Embedded(this Control parentControl, Form form, bool allowClose =  false)
+        {
+            form.FormBorderStyle = FormBorderStyle.None;
+            form.TopLevel = false;
+            form.AutoScroll = true;
+            form.Dock = DockStyle.Fill;
+            form.FormClosing += (a, b) => {
+                if (!allowClose && form.Parent != null)
+                {
+                    b.Cancel = true;
+                }            
+            };
+            parentControl.Controls.Add(form);
+            form.Show();
+        }
     }
 }

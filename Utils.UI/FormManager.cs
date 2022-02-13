@@ -193,6 +193,54 @@ namespace System.Windows.Forms
             FixedSingleFormCache.Clear();
         }
 
+
+        /// <summary>
+        /// 获取最近打开的顶层窗体(不支持MDI)
+        /// </summary>
+        /// <returns></returns>
+        public static Form TryGetLastActiveForm()
+        {
+            // 方法1 (不一定有效)
+            Form lastActiveForm = Form.ActiveForm;
+            if (lastActiveForm == null)
+            {
+                // 方法2
+                try
+                {
+                    IntPtr intPtr = Win32.GetActiveWindow();
+                    lastActiveForm = Control.FromHandle(intPtr) as Form;
+                }
+                catch
+                {
+                    lastActiveForm = null;
+                }
+
+
+                // 方法3 (如果动态修改过窗体属性, 有可能找不到)
+                //if (lastActiveForm == null)
+                //{
+                //    for (int index = Application.OpenForms.Count - 1; index >= 0; index--)
+                //    {
+                //        // 一般按索引的先后顺序, 最先遍历到的是最早打开的窗体, 例如index=0可能是主窗体.
+                //        Form item = Application.OpenForms[index];
+
+                //        if (item == null || !item.IsHandleCreated || item.IsDisposed)
+                //            continue;
+
+                //        if (item.TopLevel && item.Visible && item.Focused)
+                //        {
+                //            lastActiveForm = item;
+                //            break;
+                //        }
+                //    }
+                //}
+            }
+
+
+            return lastActiveForm;
+        }
+
+
         #endregion
 
 

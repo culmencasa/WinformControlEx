@@ -11,6 +11,18 @@ namespace System
     {
         #region user32.dll
 
+
+        /// <summary>  
+        /// 获取当前进程的激活窗口
+        /// </summary>  
+        /// <returns></returns>  
+        [DllImport("user32.dll", EntryPoint = "GetActiveWindow")]
+        public static extern IntPtr GetActiveWindow();
+
+        /// <summary>
+        /// 获取Windows系统当前激活窗口
+        /// </summary>
+        /// <returns></returns>
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
 

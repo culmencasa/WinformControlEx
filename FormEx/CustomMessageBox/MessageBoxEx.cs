@@ -19,20 +19,7 @@ namespace System.Windows.Forms
         public static DialogResult ShowMessage(string content, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
             // 找到当前活动窗体, 指定为Owner(在Owner之上激活)
-            Form currentForm = Form.ActiveForm;
-            if (currentForm == null)
-            {
-                foreach (Form item in Application.OpenForms)
-                {
-                    if (item.TopLevel && item.Visible)
-                    {
-                        currentForm = item;
-                        break;
-                    }
-                }
-            }
-
-            Form owner = currentForm;
+            Form owner = FormManager.TryGetLastActiveForm();
             if (owner != null)
             {
                 // 判断是否需要线程回调
@@ -80,24 +67,19 @@ namespace System.Windows.Forms
         /// <returns></returns>
         public static DialogResult ShowConfirm(string caption, string content)
         {
-            Form currentForm = Form.ActiveForm;
-            //if (currentForm == null)
-            //{
-            //    currentForm = TopLayerForm.FocusedForm;
-            //}
-
-            if (currentForm != null)
+            Form owner = FormManager.TryGetLastActiveForm();
+            if (owner != null)
             {
-                if (currentForm.InvokeRequired)
+                if (owner.InvokeRequired)
                 {
-                    return (DialogResult)currentForm.Invoke((Func<DialogResult>)delegate
+                    return (DialogResult)owner.Invoke((Func<DialogResult>)delegate
                     {
-                        return MessageBox.Show(currentForm, content, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        return MessageBox.Show(owner, content, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     });
                 }
                 else
                 {
-                    return MessageBox.Show(currentForm, content, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    return MessageBox.Show(owner, content, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 }
             }
             else

@@ -29,29 +29,29 @@ namespace System.Windows.Forms
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.contentPanel = new System.Windows.Forms.GradientPanel();
+            this.pnlCenterBox = new System.Windows.Forms.GradientPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.contentPanel.SuspendLayout();
+            this.pnlCenterBox.SuspendLayout();
             this.SuspendLayout();
             // 
-            // contentPanel
+            // pnlCenterBox
             // 
-            this.contentPanel.BackColor = System.Drawing.Color.Transparent;
-            this.contentPanel.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.contentPanel.BorderWidth = 1;
-            this.contentPanel.Controls.Add(this.label1);
-            this.contentPanel.Controls.Add(this.btnClose);
-            this.contentPanel.Controls.Add(this.progressBar1);
-            this.contentPanel.FirstColor = System.Drawing.Color.White;
-            this.contentPanel.InnerBackColor = System.Drawing.Color.Transparent;
-            this.contentPanel.Location = new System.Drawing.Point(212, 102);
-            this.contentPanel.Name = "contentPanel";
-            this.contentPanel.RoundBorderRadius = 20;
-            this.contentPanel.SecondColor = System.Drawing.Color.White;
-            this.contentPanel.Size = new System.Drawing.Size(324, 168);
-            this.contentPanel.TabIndex = 2;
+            this.pnlCenterBox.BackColor = System.Drawing.Color.Transparent;
+            this.pnlCenterBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.pnlCenterBox.BorderWidth = 1;
+            this.pnlCenterBox.Controls.Add(this.label1);
+            this.pnlCenterBox.Controls.Add(this.btnClose);
+            this.pnlCenterBox.Controls.Add(this.progressBar1);
+            this.pnlCenterBox.FirstColor = System.Drawing.Color.White;
+            this.pnlCenterBox.InnerBackColor = System.Drawing.Color.Transparent;
+            this.pnlCenterBox.Location = new System.Drawing.Point(212, 102);
+            this.pnlCenterBox.Name = "pnlCenterBox";
+            this.pnlCenterBox.RoundBorderRadius = 20;
+            this.pnlCenterBox.SecondColor = System.Drawing.Color.White;
+            this.pnlCenterBox.Size = new System.Drawing.Size(324, 168);
+            this.pnlCenterBox.TabIndex = 2;
             // 
             // label1
             // 
@@ -78,8 +78,10 @@ namespace System.Windows.Forms
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(40, 51);
+            this.progressBar1.MarqueeAnimationSpeed = 1;
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(245, 14);
+            this.progressBar1.Step = 5;
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 0;
             // 
@@ -88,11 +90,11 @@ namespace System.Windows.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(764, 374);
-            this.Controls.Add(this.contentPanel);
+            this.Controls.Add(this.pnlCenterBox);
             this.Name = "WorkShade";
             this.Resize += new System.EventHandler(this.WorkShade_Resize);
-            this.contentPanel.ResumeLayout(false);
-            this.contentPanel.PerformLayout();
+            this.pnlCenterBox.ResumeLayout(false);
+            this.pnlCenterBox.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -101,7 +103,7 @@ namespace System.Windows.Forms
 
 		private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button btnClose;
-        private GradientPanel contentPanel;
+        private GradientPanel pnlCenterBox;
         private Label label1;
     }
 }
