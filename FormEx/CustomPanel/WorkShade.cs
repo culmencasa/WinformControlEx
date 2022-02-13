@@ -46,7 +46,7 @@ namespace System.Windows.Forms
             // 默认值
             Diameter = 8;
             Opacity = 1d;
-            ShowInTaskbar = false;
+            ShowInTaskbar = true;
             FormBorderStyle = FormBorderStyle.None;
             OwnerLastWindowState = FormWindowState.Minimized;
 
@@ -82,7 +82,7 @@ namespace System.Windows.Forms
                 CreateParams cp = base.CreateParams;
 
                 // 设置窗体为ToolWindow, 不响应Alt-Tab, 以免发生Alt-Tab切换到此窗体, Owner窗体却不可见.
-                cp.ExStyle |= 0x80;
+                //cp.ExStyle |= 0x80;
 
                 return cp;
             }
@@ -118,7 +118,7 @@ namespace System.Windows.Forms
         protected Size OldMinSize { get; set; }
 
 
-        public bool PreventResizeWhenShown { get; set; }
+        public bool DisableOwnerResize { get; set; }
 
         /// <summary>
         /// 边角圆角的直径
@@ -191,7 +191,7 @@ namespace System.Windows.Forms
             Owner.Deactivate += SyncDeactivationEventHandler;
             Owner.ResizeEnd += SyncResizeEndEventHandler;
             // 防止在显示此窗体时, 主窗体拉伸大小
-            if (PreventResizeWhenShown)
+            if (DisableOwnerResize)
             {
                 OldMaxSize = Owner.MaximumSize;
                 OldMinSize = Owner.MinimumSize;
@@ -275,11 +275,13 @@ namespace System.Windows.Forms
         /// <param name="e"></param>
         private void SyncActivationEventHandler(object sender, EventArgs e)
         {
-            if (Owner == null)
+            if (!IsOwnerAlive())
+            {
                 return;
+            }
 
             // 防止两个窗体抢焦点
-            if (Owner.WindowState != OwnerLastWindowState && Owner.WindowState != FormWindowState.Minimized)
+            if (Owner.WindowState != OwnerLastWindowState)
             {
                 OwnerLastWindowState = Owner.WindowState;
                 if (!this.Visible)
@@ -317,7 +319,7 @@ namespace System.Windows.Forms
 
         private void SyncVisiblityEventHandler(object sender, EventArgs e)
         {
-            if (Owner != null)
+            if (IsOwnerAlive())
             {
                 Visible = Owner.Visible;
             }
@@ -329,15 +331,16 @@ namespace System.Windows.Forms
 
         private void SyncBoundsEventHandler(Object sender = null, EventArgs eventArgs = null)
         {
-            if (Owner == null)
+            if (!IsOwnerAlive())
+            {
                 return;
+            }
 
 
             if (CoverCaptionArea)
             {
                 this.StartPosition = FormStartPosition.CenterParent;
                 this.Bounds = this.Owner.Bounds;
-
             }
             else
             {
@@ -357,7 +360,7 @@ namespace System.Windows.Forms
                     
                     // workaround:
                     Point innerLocation = Owner.PointToScreen(Owner.Controls[0].Location);
-                    bounds.X = innerLocation.X - Owner.Padding.Left + 1; // border: 1px
+                    bounds.X = innerLocation.X - Owner.Padding.Left;
 
                 }
 
@@ -369,78 +372,35 @@ namespace System.Windows.Forms
 
         }
 
+        /// <summary>
+        /// 当主窗体大小状态发生变化
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SyncResizeEventHandler(object sender, EventArgs e)
         {
-            if (Owner == null)
+            if (!IsOwnerAlive())
+            {
                 return;
-
-            if (Owner.IsDisposed)
-                return;
-
+            }
 
             FormWindowState lastState = OwnerLastWindowState;
-            // 检测窗体状态变化, 更新控制栏的图标
             if (Owner.WindowState != lastState)
             {
                 OwnerLastWindowState = Owner.WindowState;
-
                 OnFormWindowStateChanged(new FormWindowStateArgs()
                 {
                     LastWindowState = lastState,
                     NewWindowState = WindowState
                 });
 
-                this.Show();
-                this.Activate();
-                this.BringToFront();
-                this.SuspendLayout();
-                SyncBoundsEventHandler();
-                SyncUnderlyaerImage();
-                this.ResumeLayout(false);
-                this.Refresh();
-                return;
-
-                if (Owner.WindowState == FormWindowState.Minimized) //|| Owner.WindowState == FormWindowState.Maximized
-                {
-                    this.Visible = false;
-                }
-                else if (Owner.WindowState == FormWindowState.Maximized)
-                {
-                    this.Visible = true;
-                    BrintSelfToFront();
-                    //this.Paint -= WorkShade_Paint;
-                    //UnderlayerImage = null;
-                    //this.SuspendLayout();
-
-
-                    // 最大化时重新画背景的性能不好
-
-                    //UnderlayerImage = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);  
-                    //var g = Graphics.FromImage(UnderlayerImage);
-                    //g.Clear(System.Drawing.SystemColors.Control);
-                    //UseBlur = false;
-                    //UnderlayerImage = null;
-
-                    //this.ResumeLayout(false);
-                    SyncBoundsEventHandler();
-                    SyncUnderlyaerImage();
-                    //this.Paint += WorkShade_Paint;
-                    Refresh();
-
-                    this.Activate();
-                }
-                else
-                {
-                    UseBlur = true;
-                    this.Visible = true;
-                    Invalidate();
-                } 
+                OnOwnerSizeChanged();
             }
 
         }
         private void SyncResizeEndEventHandler(object sender, EventArgs e)
         {
-            if (!PreventResizeWhenShown)
+            if (!DisableOwnerResize)
             {
                 this.SuspendLayout();
                 SyncBoundsEventHandler();
@@ -450,7 +410,66 @@ namespace System.Windows.Forms
             }
         }
 
+        private void OnOwnerSizeChanged()
+        {
+            if (Owner.WindowState == FormWindowState.Minimized)
+            {
+                this.Visible = false;
+            }
+            else if (Owner.WindowState == FormWindowState.Normal)
+            { 
+                this.pnlCenterBox.Visible = false;
+                SyncBoundsEventHandler();
+                SyncUnderlyaerImage(); 
+                this.Refresh();
+                this.pnlCenterBox.Visible = true;
+            }
+            else if (Owner.WindowState == FormWindowState.Maximized)
+            {
+                // 最大化时重新画背景的性能不好，先展示纯色背景, 以免出现残影
+                UnderlayerImage = null;
+                Refresh();
 
+                // 重设窗体大小
+                SyncBoundsEventHandler();
+                BrintSelfToFront();
+
+                // 延迟？
+                //var thread = new System.Threading.Thread(p =>
+                //{
+                //    //System.Threading.Thread.Sleep(50);
+
+                //    this.BeginInvoke((Action)delegate
+                //    {
+                //        this.Paint -= WorkShade_Paint;
+                //        this.SuspendLayout();
+                //        this.SyncUnderlyaerImage();
+                //        this.Paint += WorkShade_Paint;
+                //        this.ResumeLayout(false);
+                //        this.Refresh();
+                //    });
+                //});
+                //thread.Start();
+
+
+                this.BeginInvoke((Action)delegate
+                {
+                    this.Paint -= WorkShade_Paint;
+                    this.SuspendLayout();
+                    this.SyncUnderlyaerImage();
+                    this.Paint += WorkShade_Paint;
+                    this.ResumeLayout(false);
+                    this.Refresh();
+                });
+
+            }
+            else
+            {
+                UseBlur = true;
+                this.Visible = true;
+                Invalidate();
+            }
+        }
 
         #endregion
 
@@ -460,7 +479,7 @@ namespace System.Windows.Forms
 
         private void WorkShade_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (PreventResizeWhenShown)
+            if (DisableOwnerResize)
             {
                 Owner.MaximumSize = OldMaxSize;
                 Owner.MinimumSize = OldMinSize;
@@ -474,18 +493,23 @@ namespace System.Windows.Forms
 
         private void WorkShade_Load(object sender, EventArgs e)
         {
-            // issue: 有可能主窗体的子控件还未完全加载, 故会出现白块...暂无解决方案
-            this.SuspendLayout();
-            SyncBoundsEventHandler();
-            SyncUnderlyaerImage();
-            this.ResumeLayout(false);
-
         }
 
 
         private void WorkShade_VisibleChanged(object sender, EventArgs e)
         {
+            // issue: 有可能主窗体的子控件还未完全加载, 故会出现白块...
+            if (this.Visible)
+            {
+                this.SuspendLayout();
+                SyncBoundsEventHandler();
+                SyncUnderlyaerImage();
+                this.ResumeLayout(false);
+            }
         }
+
+
+        
 
 
         #endregion
@@ -501,10 +525,13 @@ namespace System.Windows.Forms
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (Owner == null)
+            if (!IsOwnerAlive())
+            {
                 return;
+            }
 
             Graphics g = e.Graphics;
+            g.SetFastRendering();
             g.Clear(Owner.BackColor);
 
             if (UnderlayerImage != null)
@@ -520,14 +547,15 @@ namespace System.Windows.Forms
             base.OnResize(e);
             if (IsHandleCreated && !DesignMode)
             {
-                if (Owner != null && Owner.WindowState == FormWindowState.Normal)
+                if (IsOwnerAlive() && (Owner.WindowState != FormWindowState.Minimized))
                 {
                     // 默认为圆角, 以免盖住Owner窗体边框
-                    this.UpdateFormRoundCorner(Diameter);
+                    UpdateFormRoundCorner();
                 }
                 else
                 {
-                    this.UpdateFormRoundCorner(0);
+                    Diameter = 0;
+                    UpdateFormRoundCorner();
                 }
             }
         }
@@ -535,67 +563,6 @@ namespace System.Windows.Forms
 
         #endregion
 
-        #region 画模糊背景图
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr GetWindowDC(IntPtr hWnd);
-
-
-        /// <summary>
-        /// 同步主窗体的画面
-        /// </summary>
-        private void SyncUnderlyaerImage()
-        {
-            if (Owner.ClientRectangle.Width == 0 || Owner.ClientRectangle.Height == 0)
-                return;
-
-            int factor = (int)EnvironmentEx.GetCurrentScaleFactor();
-            int titleHeight = Owner.GetTitleBarHeight();
-
-
-
-            if (UseBlur)
-            {
-                UnderlayerImage = new Bitmap(Owner.ClientRectangle.Width, Owner.ClientRectangle.Height);
-
-                // 复制窗体图像
-                // 已知问题: 修改FormBorderStyle后失效
-                var g = Graphics.FromImage(UnderlayerImage);
-                g.Clear(System.Drawing.SystemColors.Control);
-                IntPtr hDC = g.GetHdc();
-                IntPtr windowDC = GetWindowDC(Owner.Handle);
-                if (!Win32.BitBlt(
-                    hDC, -4 * factor, -titleHeight, Owner.Width, Owner.Height, windowDC, 0, 0, CopyPixelOperation.SourceCopy))
-                {
-                    // 如果失败,则使用白色
-                    g.Clear(System.Drawing.SystemColors.Control);
-                }
-                g.ReleaseHdc();
-
-                /****** 模糊图像 ********/
-                // 换成另一个开源类GaussianBlur
-                // byte[] bgMeta = ImageTool.ToArray(UnderlayerImage);
-                //using (var magicker = new ImageMagick.MagickImage(bgMeta))
-                //{
-                //    magicker.Blur(100,2.5);
-                //    UnderlayerImage = new Bitmap(ImageTool.FromArray(magicker.ToByteArray()));
-                //}
-                var blur = new SuperfastBlur.GaussianBlur(UnderlayerImage);
-                var result = blur.Process(10);
-
-                //test
-                //result.Save("workshade.jpg", Drawing.Imaging.ImageFormat.Jpeg);
-
-
-                this.UnderlayerImage = result;// ImageTool.LoadBitmap("workshade.jpg");
-            }
-            else
-            {
-                UnderlayerImage = null;
-            }
-        }
-
-        #endregion
 
         #region 遮罩层对话框阴影重绘事件
 
@@ -607,7 +574,7 @@ namespace System.Windows.Forms
         // 画遮罩层阴影
         private void WorkShade_Paint(object sender, PaintEventArgs e)
         {
-            if (Owner == null || UnderlayerImage == null)
+            if (!IsOwnerAlive() || UnderlayerImage == null)
                 return;
 
             if (_boxShadowBitmap == null || _boxShadowBitmap.Size != this.Size)
@@ -618,6 +585,7 @@ namespace System.Windows.Forms
             
             var control = this.pnlCenterBox;
             Graphics g = e.Graphics;
+            g.SetFastRendering();
             var rect = new Rectangle(control.Location.X, control.Location.Y, control.Size.Width, control.Size.Height);
 
 
@@ -629,7 +597,106 @@ namespace System.Windows.Forms
             //DrawFadeRectangle(g, rect, Color.FromArgb(200, 0, 0, 0), 60);
         }
 
-        static void DrawShadowSmooth(GraphicsPath gp, int intensity, int radius, Bitmap dest)
+
+        #endregion
+
+        #region DPI相关
+
+        #endregion
+
+        #region 按钮事件
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
+
+        #region 私有方法
+
+        private bool IsOwnerAlive()
+        {
+            if (Owner == null || Owner.IsDisposed)
+                return false;
+
+            if (!Owner.IsHandleCreated)
+                return false;
+
+            return true;
+        }
+        public void UpdateFormRoundCorner()
+        {
+            if (Diameter == 0)
+            {
+                this.Region = new Region(new Rectangle(0, 0, this.Width, this.Height));
+            }
+            else
+            {
+                // 防止控件撑出窗体            
+                IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, this.Width, this.Height, Diameter / 2 + 4, Diameter / 2 + 4);
+                this.Region = System.Drawing.Region.FromHrgn(hrgn);
+                this.Update();
+                Win32.DeleteObject(hrgn);
+            }
+        }
+         
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr GetWindowDC(IntPtr hWnd);
+
+
+        /// <summary>
+        /// 同步主窗体的画面
+        /// </summary>
+        private void SyncUnderlyaerImage(bool lowquality = true)
+        {
+            if (!IsOwnerAlive() || (Owner.ClientRectangle.Width == 0 || Owner.ClientRectangle.Height == 0))
+            {
+                return;
+            }
+
+            int factor = (int)EnvironmentEx.GetCurrentScaleFactor();
+            int titleHeight = Owner.GetTitleBarHeight();
+
+            UnderlayerImage = new Bitmap(Owner.ClientRectangle.Width, Owner.ClientRectangle.Height);
+
+            // 复制窗体图像
+            // 已知问题: 修改FormBorderStyle后失效
+            var g = Graphics.FromImage(UnderlayerImage);
+            if (lowquality)
+            {
+                g.SetFastRendering();
+            }
+            g.Clear(System.Drawing.SystemColors.Control);
+            IntPtr hDC = g.GetHdc();
+            IntPtr windowDC = GetWindowDC(Owner.Handle);
+            if (!Win32.BitBlt(
+                hDC,
+                1, // -4 * factor,
+                -titleHeight, Owner.Width, Owner.Height, windowDC, 0, 0, CopyPixelOperation.SourcePaint))
+            {
+                // 如果失败,则使用白色
+                g.Clear(System.Drawing.SystemColors.Control);
+            }
+            g.ReleaseHdc();
+
+            /****** 模糊图像 ********/
+            if (UseBlur)
+            {
+                // 换成另一个开源类GaussianBlur
+                // byte[] bgMeta = ImageTool.ToArray(UnderlayerImage);
+                //using (var magicker = new ImageMagick.MagickImage(bgMeta))
+                //{
+                //    magicker.Blur(100,2.5);
+                //    UnderlayerImage = new Bitmap(ImageTool.FromArray(magicker.ToByteArray()));
+                //}
+                var blur = new SuperfastBlur.GaussianBlur(UnderlayerImage);
+                this.UnderlayerImage = blur.Process(10);
+            }
+        }
+
+        private void DrawShadowSmooth(GraphicsPath gp, int intensity, int radius, Bitmap dest)
         {
             using (Graphics g = Graphics.FromImage(dest))
             {
@@ -653,19 +720,6 @@ namespace System.Windows.Forms
 
 
 
-        #endregion
-
-        #region DPI相关
-
-        #endregion
-
-
-        #region 按钮事件
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
 
         #endregion
     }

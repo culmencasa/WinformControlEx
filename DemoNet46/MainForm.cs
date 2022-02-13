@@ -19,6 +19,7 @@ namespace DemoNet46
             this.CaptionShadowWidth = 5;
             this.Resizable = true;
             this.ShowCaptionShadow = true;
+            this.BackgroundImageLayout = ImageLayout.Stretch;
 
             pnlStart.Location = new Point(pnlStart.Left, pnlTaskbar.Top);
             pnlStart.LostFocus += PnlStart_LostFocus;

@@ -272,7 +272,7 @@ namespace System.Windows.Forms
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            base.OnPaintBackground(e);
+            //base.OnPaintBackground(e);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -280,6 +280,7 @@ namespace System.Windows.Forms
             try
             {
                 Graphics g = e.Graphics;
+                g.Clear(BackColor);
                 g.SmoothingMode = SmoothingMode.None;
                 g.InterpolationMode = InterpolationMode.NearestNeighbor;
 
@@ -291,9 +292,7 @@ namespace System.Windows.Forms
                     {
                         case ImageLayout.Stretch:
                         case ImageLayout.Zoom:
-                            g.DrawImage(
-                                this.BackgroundImage,
-                                ClientRectangle, ClientRectangle, GraphicsUnit.Pixel);
+                            g.DrawImage(this.BackgroundImage, 0, 0, ClientRectangle.Width, ClientRectangle.Height);
                             break;
                         case ImageLayout.Center:
                         case ImageLayout.None:
