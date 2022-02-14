@@ -345,7 +345,7 @@ namespace DemoNet46
             this.sysTimer.Enabled = true;
             this.sysTimer.Tick += new System.EventHandler(this.sysTimer_Tick);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -357,7 +357,7 @@ namespace DemoNet46
             this.Controls.Add(this.btnRecycle);
             this.Controls.Add(this.pnlTaskbar);
             this.MaximumSize = new System.Drawing.Size(2240, 1400);
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "窗口标题";
             this.Controls.SetChildIndex(this.pnlTaskbar, 0);
