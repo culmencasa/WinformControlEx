@@ -172,7 +172,7 @@ namespace Utils.UI
             {
                 var asyncResult = client.BeginConnect(hostName, port, null, null);
 
-                result = asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+                result = asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(2));
             }
 
             return result;

@@ -50,6 +50,7 @@
             this.btnDropDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(248)))), ((int)(((byte)(254)))));
             this.btnDropDown.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
             this.btnDropDown.BorderWidth = 1F;
+            this.btnDropDown.CornerRadius = 8;
             this.btnDropDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(122)))), ((int)(((byte)(162)))), ((int)(((byte)(187)))));
             this.btnDropDown.GradientMode = false;
             this.btnDropDown.Location = new System.Drawing.Point(129, 1);

@@ -20,6 +20,7 @@ namespace System.Windows.Forms
         protected Color _lastBackColor;
         protected Color _activedBackColor;
         protected string _iconText;
+        ToolTip _tooltip = new ToolTip();
 
         #endregion
 
@@ -36,7 +37,10 @@ namespace System.Windows.Forms
             this.BackColor = Color.FromArgb(248, 248, 248);
             this.MouseEnter += new EventHandler(TileIcon_MouseEnter);
             this.MouseLeave += new EventHandler(TileIcon_MouseLeave);
+            this.MouseHover += TileIcon_MouseHover;
+
         }
+
 
         protected virtual void TileIcon_MouseLeave(object sender, EventArgs e)
         {
@@ -50,7 +54,22 @@ namespace System.Windows.Forms
             _lastBackColor = this.BackColor;
             this.BackColor = _activedBackColor;
             Invalidate();
+
         }
+
+        private void TileIcon_MouseHover(object sender, EventArgs e)
+        {
+            Rectangle iconArea = this.GetImageArea();
+            if (this.RectangleToScreen(iconArea).Contains(MousePosition))
+            {
+                _tooltip.SetToolTip(this, this.IconText);
+            }
+            else
+            {
+                _tooltip.SetToolTip(this, null);
+            }
+        }
+
 
         protected override CreateParams CreateParams
         {
@@ -66,7 +85,7 @@ namespace System.Windows.Forms
 
         #region 属性
 
-        [Category("样式")]
+        [Category("Custom")]
         public Image Image
         {
             get
@@ -80,7 +99,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("样式")]
+        [Category("Custom")]
         public Drawing.Image DefaultImage
         {
             get
@@ -96,10 +115,10 @@ namespace System.Windows.Forms
         }
 
         /// <summary>
-        /// bug: 这个Text属性无法在设计器中保存下来
+        /// 这个Text属性无法在设计器中保存下来. 请使用IconText替代.
         /// </summary>
-        [Category("样式")]
-        [Browsable(true)] 
+        [Category("Custom")]
+        [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         public override string Text
         {
@@ -114,7 +133,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("样式")]
+        [Category("Custom")]
         public string IconText
         {
             get
@@ -129,6 +148,7 @@ namespace System.Windows.Forms
         }
 
 
+        [Category("Custom")]
         [DefaultValue(typeof(Boolean), "True")]
         public bool ShowImage
         {
@@ -136,8 +156,13 @@ namespace System.Windows.Forms
             set;
         }
 
+        [Category("Custom")]
         [DefaultValue(typeof(Boolean), "True")]
         public bool ShowSplitter { get; set; }
+
+        [Category("Custom")]
+        [DefaultValue(typeof(Boolean), "True")]
+        public bool ShowIconBorder { get; set; }
 
         #endregion
 
@@ -177,6 +202,9 @@ namespace System.Windows.Forms
 
         protected virtual void DrawImageBorder(Graphics g)
         {
+            if (!ShowIconBorder)
+                return;
+
             Rectangle rect = this.GetImageArea();
             //rect.Offset(-1, -1);
             g.DrawRectangle(Pens.LightGray, rect);
@@ -217,6 +245,7 @@ namespace System.Windows.Forms
             int x, y, width, height;
             x = this.Padding.Left;
             y = this.Padding.Top;
+            // 图片大小为控件高度的正方形
             width = this.Height - this.Padding.Bottom - this.Padding.Top;
             height = width;
 
@@ -234,27 +263,6 @@ namespace System.Windows.Forms
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            //using (Bitmap bmp = new Bitmap(this.Width, this.Height, Drawing.Imaging.PixelFormat.Format32bppArgb))
-            //using(Graphics g = Graphics.FromImage(bmp))
-            //{
-            //    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            //    g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-            //    g.TextRenderingHint = Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-
-            //    if (ShowImage)
-            //    {
-            //        DrawImage(g);
-            //        DrawImageBorder(g);
-            //    }
-
-            //    DrawText(g);
-
-            //    if (ShowSplitter)
-            //        DrawSplitter(g);
-
-            //    e.Graphics.DrawImage(bmp, 0, 0);
-            //}
-
             Graphics g = e.Graphics;
             g.SetSlowRendering();
 

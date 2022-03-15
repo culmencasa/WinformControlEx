@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -11,7 +8,7 @@ namespace WinformEx
     {
         #region 静态成员
 
-        static string applicationPath;
+        private static string applicationPath;
 
         internal static string ApplicationPath
         {
@@ -20,24 +17,28 @@ namespace WinformEx
                 if (applicationPath == null)
                 {
                     applicationPath = System.IO.Path.GetDirectoryName
-                            ( System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase );
+                            (System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
                 }
 
                 return applicationPath;
             }
         }
 
-        #endregion
+        #endregion 静态成员
 
         #region 事件
 
         public event MouseEventHandler MouseMove;
+
         public event MouseEventHandler MouseDown;
+
         public event MouseEventHandler MouseUp;
+
         public event EventHandler Click;
+
         public event EventHandler Invalidate;
 
-        #endregion
+        #endregion 事件
 
         #region 构造方法
 
@@ -48,7 +49,7 @@ namespace WinformEx
             _enabled = true;
         }
 
-        #endregion
+        #endregion 构造方法
 
         #region 字段
 
@@ -65,7 +66,7 @@ namespace WinformEx
 
         private UIElement _parent;
 
-        #endregion
+        #endregion 字段
 
         #region 属性
 
@@ -239,7 +240,7 @@ namespace WinformEx
             }
         }
 
-        #endregion
+        #endregion 属性
 
         #region 公有方法
 
@@ -252,11 +253,11 @@ namespace WinformEx
         {
             this.OnRender(graphics);
         }
-        
+
         public void Render(PaintEventArgs e)
         {
             this.OnRender(e);
-        }        
+        }
 
         public void InvokeHostRedraw()
         {
@@ -272,7 +273,7 @@ namespace WinformEx
             }
         }
 
-        #endregion
+        #endregion 公有方法
 
         #region 可继承方法
 
@@ -335,7 +336,6 @@ namespace WinformEx
             }
         }
 
-        #endregion
-
+        #endregion 可继承方法
     }
 }

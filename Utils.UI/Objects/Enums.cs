@@ -15,6 +15,7 @@ namespace System.Drawing
         ULW_EX_NORESIZE = 0x00000008,
     }
 
+    // 同BlendOperation
     public enum BlendOp : byte
     {
         AC_SRC_OVER = 0x00,
@@ -136,7 +137,8 @@ namespace System.Drawing
     // 以下枚举来自 Windows Mobile 5.0 Pocket PC SDK 的 wingdi.h 文件
     public enum BlendOperation : byte
     {
-        AC_SRC_OVER = 0x00
+        AC_SRC_OVER = 0x00,
+        AC_SRC_ALPHA = 0x01,
     }
 
     public enum BlendFlags : byte

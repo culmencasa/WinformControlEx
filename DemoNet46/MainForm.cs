@@ -23,7 +23,6 @@ namespace DemoNet46
 
             pnlStart.Location = new Point(pnlStart.Left, pnlTaskbar.Top);
             pnlStart.LostFocus += PnlStart_LostFocus;
-            
 
             popupTimer = new Timer();
             popupTimer.Interval = 1;
@@ -136,11 +135,17 @@ namespace DemoNet46
 
 		private void PnlStart_LostFocus(object sender, EventArgs e)
         {
-            /* 麻烦... 未实现
-			if (startMenuState != StartMenuStates.Opened)
-			{
+            /* 麻烦... 未实现. 开始菜单应该是一个窗体, 而不是一个控件.
+            if (startMenuState != StartMenuStates.Opened)
+            {
                 return;
-			}
+            }
+            if (pnlStart.ClientRectangle.Contains(PointToClient(Control.MousePosition)))
+            {
+                pnlStart.Focus();
+                return;
+            }
+
             startMenuState = StartMenuStates.Closing;
             popoffTimer.Start();
             */
@@ -250,7 +255,6 @@ namespace DemoNet46
         }
 
         #endregion
-
     }
 
 

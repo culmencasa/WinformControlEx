@@ -106,6 +106,8 @@ namespace System.Windows.Forms
         /// 文本框的内容
         /// </summary>
         [Category("自定义内容")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]        
         public override string Text
         {
             get
@@ -359,6 +361,10 @@ namespace System.Windows.Forms
 
         private void innerTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (WhenTextChanged != null)
+            {
+                WhenTextChanged();
+            }
         }
 
         private void innerTextBox_KeyUp(object sender, KeyEventArgs e)
@@ -750,6 +756,7 @@ namespace System.Windows.Forms
                 ActionBegin();
             }
         }
-        
+
+        public event Action WhenTextChanged;
     }
 }

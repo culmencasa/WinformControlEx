@@ -650,6 +650,7 @@ namespace System.Drawing
             get
             {
                 if (!canCreateFromZeroHwnd.HasValue)
+                {
                     try
                     {
                         using (Graphics g = CreateGraphicsFromZeroHwnd())
@@ -659,6 +660,8 @@ namespace System.Drawing
                     {
                         canCreateFromZeroHwnd = false;
                     }
+                }
+
                 return canCreateFromZeroHwnd.Value;
             }
         }

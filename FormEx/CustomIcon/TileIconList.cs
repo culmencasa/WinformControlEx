@@ -14,8 +14,6 @@ namespace System.Windows.Forms
 
         public TileIconList()
         {
-            //SetStyles();  //bug: win7下会闪烁，xp下却需要。
-
             if (EnvironmentEx.GetCurrentOSName() <= WindowsNames.WindowsXP)
             {
                 SetStyles();

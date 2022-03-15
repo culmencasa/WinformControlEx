@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -21,21 +22,14 @@ namespace System.Windows.Forms
     ///       ws.Show();
     /// </summary>
 	public partial class WorkShade : Form
-	{
+    {
         #region 构造
 
         public WorkShade()
-		{
+        {
+            _tickCountBegin = Environment.TickCount;
 
             this.Enable2DBuffer();
-
-            //SetStyle(
-            //    ControlStyles.UserPaint |
-            //    ControlStyles.AllPaintingInWmPaint |
-            //    ControlStyles.OptimizedDoubleBuffer |
-            //    ControlStyles.ResizeRedraw |
-            //    ControlStyles.SupportsTransparentBackColor, true);
-            //UpdateStyles();
 
             // 防止闪烁
             //SetStyle(ControlStyles.Opaque | ControlStyles.ResizeRedraw, true);
@@ -46,7 +40,7 @@ namespace System.Windows.Forms
             // 默认值
             Diameter = 8;
             Opacity = 1d;
-            ShowInTaskbar = true;
+            ShowInTaskbar = false;
             FormBorderStyle = FormBorderStyle.None;
             OwnerLastWindowState = FormWindowState.Minimized;
 
@@ -56,7 +50,7 @@ namespace System.Windows.Forms
             this.VisibleChanged += WorkShade_VisibleChanged;
             this.Load += WorkShade_Load;
             this.Paint += WorkShade_Paint;
-		}
+        }
 
 
 
@@ -64,7 +58,7 @@ namespace System.Windows.Forms
         /// 指定多少秒后显示关闭按钮
         /// </summary>
         /// <param name="millseconds"></param>
-        public WorkShade(int millseconds) :this()
+        public WorkShade(int millseconds) : this()
         {
             this.WaitTime = millseconds;
         }
@@ -72,17 +66,16 @@ namespace System.Windows.Forms
 
         #endregion
 
-
         #region 窗体设置
 
         protected override CreateParams CreateParams
         {
             get
-            {                
+            {
                 CreateParams cp = base.CreateParams;
 
                 // 设置窗体为ToolWindow, 不响应Alt-Tab, 以免发生Alt-Tab切换到此窗体, Owner窗体却不可见.
-                //cp.ExStyle |= 0x80;
+                cp.ExStyle |= 0x80;
 
                 return cp;
             }
@@ -90,11 +83,18 @@ namespace System.Windows.Forms
 
         #endregion
 
+        #region 外部事件
+
+        public event Action Button1Action;
+
+        #endregion
 
         #region 字段
 
 
         private Bitmap _boxShadowBitmap;
+        private int _tickCountBegin;
+        private int _tickCountEnd;
 
 
         #endregion
@@ -147,9 +147,33 @@ namespace System.Windows.Forms
             set;
         }
 
+        public string ProgressText
+        {
+            get
+            {
+                return lblProgressText.Text;
+            }
+            set
+            {
+                lblProgressText.Text = value;
+            }
+        }
+
+        public string CloseButtonText
+        {
+            get
+            {
+                return btnClose.Text;
+            }
+            set
+            {
+                btnClose.Text = value;
+            }
+        }
+
+        public bool ShowButton1 { get; set; }
 
         #endregion
-
 
         #region 窗体状态变化事件
 
@@ -177,12 +201,24 @@ namespace System.Windows.Forms
         /// </summary>
         /// <param name="owner">主窗体</param>
         public void Attach(Form owner)
-		{
+        {
+            if (Owner == owner)
+            {
+                return;
+            }
+
+            if (Owner != null)
+            {
+                Detach();
+            }
+
             if (owner.TopLevel == false)
+            {
                 throw new Exception("只能使用顶层窗体.");
+            }
 
             Owner = owner;
-             
+
             Owner.LocationChanged += SyncBoundsEventHandler;
             Owner.Resize += SyncResizeEventHandler;
             Owner.FormClosed += SyncFormCloseEventHandler;
@@ -190,6 +226,7 @@ namespace System.Windows.Forms
             Owner.Activated += SyncActivationEventHandler;
             Owner.Deactivate += SyncDeactivationEventHandler;
             Owner.ResizeEnd += SyncResizeEndEventHandler;
+
             // 防止在显示此窗体时, 主窗体拉伸大小
             if (DisableOwnerResize)
             {
@@ -212,20 +249,30 @@ namespace System.Windows.Forms
             base.Show();
             BrintSelfToFront();
 
-            Threading.Timer t = null;
-            t = new System.Threading.Timer(new TimerCallback((o)=> {
-                this.Invoke((Action)delegate
+            // 等待几秒后显示按钮
+            if (WaitTime > 0)
+            {
+                Threading.Timer t = null;
+                t = new System.Threading.Timer(new TimerCallback((o) =>
                 {
-                    btnClose.Visible = true; 
-                });
+                    if (this.IsHandleCreated && !this.IsDisposed)
+                    {
+                        this.Invoke((Action)delegate
+                        {
+                            btnClose.Visible = true;
+                        });
+                    }
 
-                if (t != null)
-                {
-                    t.Dispose();
-                }
-            }), null, WaitTime, Timeout.Infinite);
-            
-
+                    if (t != null)
+                    {
+                        t.Dispose();
+                    }
+                }), null, WaitTime, Timeout.Infinite);
+            }
+            else
+            {
+                btnClose.Visible = ShowButton1;
+            }
         }
 
         /// <summary>
@@ -254,17 +301,39 @@ namespace System.Windows.Forms
                 WindowState = FormWindowState.Normal;
             }
 
-
             TopMost = true;
             Focus();
             BringToFront();
             TopMost = false;
 
-            Win32.SetForegroundWindow(Handle);
+            //Win32.SetForegroundWindow(Handle);
+        }
+
+        public void FadeOut()
+        {
+            int duration = 1000;
+            int steps = 10;
+            Timer timer = new Timer();
+            timer.Interval = duration / steps;
+
+            int currentStep = 1;
+            timer.Tick += (arg1, arg2) =>
+            {
+                Opacity = 1 - ((double)currentStep / steps);
+                currentStep++;
+
+                if (Opacity <= 0.1)
+                {
+                    timer.Stop();
+                    timer.Dispose();
+                    this.Close();
+                }
+            };
+
+            timer.Start();
         }
 
         #endregion
-
 
         #region 与主窗体保持同步
 
@@ -352,17 +421,34 @@ namespace System.Windows.Forms
 
                 int factor = (int)EnvironmentEx.GetCurrentScaleFactor();
 
+                Point leftTopPosition = new Point(0, 0);
+                //if (Owner.Controls.Count > 0)
+                //{
+                //    leftTopPosition = Owner.Controls[0].Location;
+                //}
                 var os = EnvironmentEx.GetCurrentOSName();
-                if (os >= WindowsNames.Windows10)
+                if (os == WindowsNames.Windows11)
+                {
+                    Point innerLocation = Owner.PointToScreen(leftTopPosition);
+                    bounds.X = innerLocation.X - Owner.Padding.Left + 1;
+                    bounds.Width -= 1;
+                }
+                else if (os >= WindowsNames.Windows10)
                 {
                     // bug: 在win10系统上横坐标有偏差4-8个像素(目测跟系统窗体的边框和阴影有关, 但xp下没有这个问题), high-dpi下*factor倍
                     //bounds.X += 10 * factor;
-                    
-                    // workaround:
-                    Point innerLocation = Owner.PointToScreen(Owner.Controls[0].Location);
-                    bounds.X = innerLocation.X - Owner.Padding.Left;
 
+                    // workaround:
+                    Point innerLocation = Owner.PointToScreen(leftTopPosition);
+                    bounds.X = innerLocation.X - Owner.Padding.Left;
                 }
+                else
+                {
+                    Point innerLocation = Owner.PointToScreen(leftTopPosition);
+                    bounds.X = innerLocation.X - Owner.Padding.Left + 1;
+                    bounds.Width -= 1;
+                }
+
 
                 // 貌似只有设置了StartPosition为Manual后, 设置Location属性才能正常显示位置
                 this.StartPosition = FormStartPosition.Manual;
@@ -417,16 +503,17 @@ namespace System.Windows.Forms
                 this.Visible = false;
             }
             else if (Owner.WindowState == FormWindowState.Normal)
-            { 
+            {
                 this.pnlCenterBox.Visible = false;
                 SyncBoundsEventHandler();
-                SyncUnderlyaerImage(); 
+                SyncUnderlyaerImage();
                 this.Refresh();
                 this.pnlCenterBox.Visible = true;
             }
             else if (Owner.WindowState == FormWindowState.Maximized)
             {
                 // 最大化时重新画背景的性能不好，先展示纯色背景, 以免出现残影
+                //todo: 将对话框阴影画到底图上
                 UnderlayerImage = null;
                 Refresh();
 
@@ -434,22 +521,6 @@ namespace System.Windows.Forms
                 SyncBoundsEventHandler();
                 BrintSelfToFront();
 
-                // 延迟？
-                //var thread = new System.Threading.Thread(p =>
-                //{
-                //    //System.Threading.Thread.Sleep(50);
-
-                //    this.BeginInvoke((Action)delegate
-                //    {
-                //        this.Paint -= WorkShade_Paint;
-                //        this.SuspendLayout();
-                //        this.SyncUnderlyaerImage();
-                //        this.Paint += WorkShade_Paint;
-                //        this.ResumeLayout(false);
-                //        this.Refresh();
-                //    });
-                //});
-                //thread.Start();
 
 
                 this.BeginInvoke((Action)delegate
@@ -475,6 +546,22 @@ namespace System.Windows.Forms
 
         #region 窗体其他事件
 
+        private void WorkShade_Load(object sender, EventArgs e)
+        {
+        }
+        private void WorkShade_VisibleChanged(object sender, EventArgs e)
+        {
+            // issue: 有可能主窗体的子控件还未完全加载, 故会出现白块...
+            if (this.Visible)
+            {
+                this.SuspendLayout();
+                SyncBoundsEventHandler();
+                SyncUnderlyaerImage();
+                this.ResumeLayout(false);
+            }
+        }
+
+
 
 
         private void WorkShade_FormClosing(object sender, FormClosingEventArgs e)
@@ -491,25 +578,8 @@ namespace System.Windows.Forms
         {
         }
 
-        private void WorkShade_Load(object sender, EventArgs e)
-        {
-        }
 
 
-        private void WorkShade_VisibleChanged(object sender, EventArgs e)
-        {
-            // issue: 有可能主窗体的子控件还未完全加载, 故会出现白块...
-            if (this.Visible)
-            {
-                this.SuspendLayout();
-                SyncBoundsEventHandler();
-                SyncUnderlyaerImage();
-                this.ResumeLayout(false);
-            }
-        }
-
-
-        
 
 
         #endregion
@@ -520,7 +590,13 @@ namespace System.Windows.Forms
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            g.Clear(Owner.BackColor);
+            if (Owner != null)
+            {
+                g.Clear(Owner.BackColor);
+            }
+
+            //base.OnPaintBackground(e);
+            
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -537,7 +613,7 @@ namespace System.Windows.Forms
             if (UnderlayerImage != null)
             {
                 g.DrawImageOpacity(UnderlayerImage, (float)Opacity, new Point(0, 0));
-            } 
+            }
 
             base.OnPaint(e);
         }
@@ -554,15 +630,25 @@ namespace System.Windows.Forms
                 }
                 else
                 {
-                    Diameter = 0;
-                    UpdateFormRoundCorner();
+
+                    var os = EnvironmentEx.GetCurrentOSName();
+                    if (os == WindowsNames.Windows11)
+                    {
+                        Diameter = 7;
+                        UpdateFormRoundCorner();
+                    }
+                    else if (os >= WindowsNames.Windows10)
+                    {
+                        Diameter = 0;
+                        UpdateFormRoundCorner();
+                    }
+
                 }
             }
         }
 
 
         #endregion
-
 
         #region 遮罩层对话框阴影重绘事件
 
@@ -577,12 +663,13 @@ namespace System.Windows.Forms
             if (!IsOwnerAlive() || UnderlayerImage == null)
                 return;
 
+            //todo: 阴影加深, 偏移
             if (_boxShadowBitmap == null || _boxShadowBitmap.Size != this.Size)
             {
                 _boxShadowBitmap?.Dispose();
                 _boxShadowBitmap = new Bitmap(this.Width, this.Height, PixelFormat.Format32bppArgb);
             }
-            
+
             var control = this.pnlCenterBox;
             Graphics g = e.Graphics;
             g.SetFastRendering();
@@ -594,7 +681,6 @@ namespace System.Windows.Forms
                 DrawShadowSmooth(graphicPath, 100, 60, _boxShadowBitmap);
             }
             e.Graphics.DrawImage(_boxShadowBitmap, new Point(0, 0));
-            //DrawFadeRectangle(g, rect, Color.FromArgb(200, 0, 0, 0), 60);
         }
 
 
@@ -609,6 +695,8 @@ namespace System.Windows.Forms
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
+
+            Button1Action?.Invoke();
         }
 
         #endregion
@@ -640,7 +728,7 @@ namespace System.Windows.Forms
                 Win32.DeleteObject(hrgn);
             }
         }
-         
+
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr GetWindowDC(IntPtr hWnd);

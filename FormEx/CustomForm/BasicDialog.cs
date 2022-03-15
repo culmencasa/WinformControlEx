@@ -17,7 +17,7 @@ namespace System.Windows.Forms
 
         public new DialogResult ShowDialog()
         {
-            Form ownerForm = FormManager.TryGetLastActiveForm();
+            Form ownerForm = FormManager.TryGetLatestActiveForm();
             if (ownerForm != null)
             {
                 return this.ShowDialog(ownerForm); 
@@ -36,6 +36,19 @@ namespace System.Windows.Forms
                 this.Icon = ownerForm.Icon;
             }
             return base.ShowDialog(ownerForm);
+        }
+
+        public void Close(DialogResult dialogResult)
+        {
+            if (!Modal)
+            {
+                DialogResult = dialogResult;
+                base.Close(); 
+            }
+            else
+            {
+                base.Close();
+            }
         }
     }
 }

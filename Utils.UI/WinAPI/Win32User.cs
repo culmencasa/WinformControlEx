@@ -68,6 +68,7 @@ namespace System
         [DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
         public static extern int GetWindowLong(IntPtr hwnd, int nIndex);
 
+
         /// <summary>
         ///     Changes an attribute of the specified window. The function also sets the 32-bit (long) value at the specified offset into the extra window memory.
         /// </summary>

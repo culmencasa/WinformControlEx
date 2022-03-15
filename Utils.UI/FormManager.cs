@@ -198,7 +198,7 @@ namespace System.Windows.Forms
         /// 获取最近打开的顶层窗体(不支持MDI)
         /// </summary>
         /// <returns></returns>
-        public static Form TryGetLastActiveForm()
+        public static Form TryGetLatestActiveForm()
         {
             // 方法1 (不一定有效)
             Form lastActiveForm = Form.ActiveForm;

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net46;net48;net5.0-windows</TargetFrameworks>
+    <TargetFrameworks>net40;net46;net48;net6.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>System.Windows.Forms</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects> 
@@ -40,13 +40,13 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net5.0-windows|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>False</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net5.0-windows|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -111,6 +111,9 @@
     </Compile>
     <Compile Update="CustomForm\SlidePopup.designer.cs">
       <DependentUpon>SlidePopup.cs</DependentUpon>
+    </Compile>
+    <Compile Update="CustomForm\SplashForm.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Update="CustomForm\Win11ControlBox.cs">
       <SubType>UserControl</SubType>
@@ -313,7 +316,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
     <DefineConstants>DEBUG;COMPILE_NET48</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net5.0-windows|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
     <DefineConstants>DEBUG;COMPILE_NET50</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
@@ -325,7 +328,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
     <DefineConstants>TRACE;COMPILE_NET48</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net5.0-windows|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
     <DefineConstants>TRACE;COMPILE_NET50</DefineConstants>
   </PropertyGroup>
   

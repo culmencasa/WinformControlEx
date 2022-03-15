@@ -6,7 +6,7 @@ using System.Text;
 
 namespace System.Windows.Forms
 {
-    class MessageBoxEx
+    public class MessageBoxEx
     {
         /// <summary>
         /// 在当前窗体前显示消息框
@@ -19,7 +19,7 @@ namespace System.Windows.Forms
         public static DialogResult ShowMessage(string content, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
             // 找到当前活动窗体, 指定为Owner(在Owner之上激活)
-            Form owner = FormManager.TryGetLastActiveForm();
+            Form owner = FormManager.TryGetLatestActiveForm();
             if (owner != null)
             {
                 // 判断是否需要线程回调
@@ -67,7 +67,7 @@ namespace System.Windows.Forms
         /// <returns></returns>
         public static DialogResult ShowConfirm(string caption, string content)
         {
-            Form owner = FormManager.TryGetLastActiveForm();
+            Form owner = FormManager.TryGetLatestActiveForm();
             if (owner != null)
             {
                 if (owner.InvokeRequired)
