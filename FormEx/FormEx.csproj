@@ -121,6 +121,9 @@
     <Compile Update="CustomForm\Win7ControlBox - 复制.Designer.cs">
       <DependentUpon>Win7ControlBox.Designer.cs</DependentUpon>
     </Compile>
+    <Compile Update="CustomIcon\CustomGroupIcon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="CustomMessageBox\ExceptionMessageBox.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

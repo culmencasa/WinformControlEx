@@ -113,8 +113,13 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Resources\AnimationBox\onepunch.gif" />
+    <None Include="Resources\Computer1_256.png" />
+    <None Include="Resources\help.png" />
+    <None Include="Resources\home.png" />
     <Content Include="Resources\Icons\bigo.jpg" />
     <Content Include="Resources\Icons\Recycle.png" />
+    <None Include="Resources\Se7enBoot.jpg" />
+    <None Include="Resources\love.png" />
     <Content Include="Resources\Wallpaper\bg.png" />
     <Content Include="Resources\Icons\FIREFOXactive.png" />
     <Content Include="Resources\ImageButton\Win7Hover.png" />

@@ -124,20 +124,35 @@
   <data name="bigo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\icons\bigo.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Computer1_256" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Computer1_256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="earth_mountain" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\wallpaper\earth_mountain.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="FIREFOXactive" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\icons\firefoxactive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="help" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\help.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="home" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\home.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="kisspng_start_menu_windows_7_button_microsoft_5afc309b0e4577_2804259415264769550585" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\kisspng-start-menu-windows-7-button-microsoft-5afc309b0e4577.2804259415264769550585.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="love" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\love.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="onepunch" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\animationbox\onepunch.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Recycle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\icons\recycle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Se7enBoot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Se7enBoot.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Win7Hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\imagebutton\win7hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

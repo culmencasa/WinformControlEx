@@ -72,7 +72,7 @@ namespace System.Windows.Forms
         {
             if (bitmap.PixelFormat != PixelFormat.Format32bppArgb)
             {
-                throw new ApplicationException("The bitmap must be 32bpp with alpha-channel.");
+                //throw new ApplicationException("需要32位透明通道.");
             }
 
             IntPtr screenDc = Win32.GetDC(IntPtr.Zero);
@@ -85,14 +85,14 @@ namespace System.Windows.Forms
                 hBitmap = bitmap.GetHbitmap(Color.FromArgb(0));
                 hOldBitmap = Win32.SelectObject(memDc, hBitmap);
 
-                Size newSize = new Size(bitmap.Width, bitmap.Height);	// Size window to match bitmap
+                Size newSize = new Size(bitmap.Width, bitmap.Height);	
                 Point sourceLocation = new Point(0, 0);
-                Point newLocation = new Point(this.Left, this.Top);		// Same as this window
+                Point newLocation = new Point(this.Left, this.Top);	
                 BlendFunction blend = new BlendFunction();
-                blend.BlendOp = (byte)BlendOperation.AC_SRC_OVER;						// Only works with a 32bpp bitmap
-                blend.BlendFlags = 0;											// Always 0
-                blend.SourceConstantAlpha = 255;										// Set to 255 for per-pixel alpha values
-                blend.AlphaFormat = (byte)BlendOperation.AC_SRC_ALPHA;						// Only works when the bitmap contains an alpha channel
+                blend.BlendOp = (byte)BlendOperation.AC_SRC_OVER;	
+                blend.BlendFlags = 0;											
+                blend.SourceConstantAlpha = 255;										
+                blend.AlphaFormat = (byte)BlendOperation.AC_SRC_ALPHA;
 
                 Win32.UpdateLayeredWindow(Handle, screenDc, ref newLocation, ref newSize,memDc, ref sourceLocation, 0, ref blend, (int)ULWPara.ULW_ALPHA);
             }
@@ -102,7 +102,7 @@ namespace System.Windows.Forms
                 if (hBitmap != IntPtr.Zero)
                 {
                     Win32.SelectObject(memDc, hOldBitmap);
-                    Win32.DeleteObject(hBitmap);										// Remove bitmap resources
+                    Win32.DeleteObject(hBitmap);										
                 }
                 Win32.DeleteDC(memDc);
             }

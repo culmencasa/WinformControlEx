@@ -15,7 +15,7 @@ namespace System.Windows.Forms
         {
 
             this.BackColor = Color.White;
-            this._activedBackColor = Color.FromArgb(233, 243, 252);
+            this._selectedBackColor = Color.FromArgb(233, 243, 252);
 
             this.ShowImage = false;
             this.ShowSplitter = false;

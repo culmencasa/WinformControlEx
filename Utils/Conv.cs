@@ -339,7 +339,7 @@ namespace System.Windows
             if (d < 0)
                 return Math.Truncate(d) + Math.Ceiling((d - Math.Truncate(d)) * sp) / sp;
             else
-                return Math.Truncate(d) + Math.Floor((d - Math.Truncate(d)) * sp) / sp;
+                return Math.Truncate(d) + Math.Floor(Math.Round(d - Math.Truncate(d), s) * sp) / sp;
         }
 
         /// <summary>
@@ -355,7 +355,7 @@ namespace System.Windows
             if (d < 0)
                 return Math.Truncate(d) + Math.Ceiling((d - Math.Truncate(d)) * sp) / sp;
             else
-                return Math.Truncate(d) + Math.Floor((d - Math.Truncate(d)) * sp) / sp;
+                return Math.Truncate(d) + Math.Floor(Math.Round(d - Math.Truncate(d), s) * sp) / sp;
         }
         
         #endregion

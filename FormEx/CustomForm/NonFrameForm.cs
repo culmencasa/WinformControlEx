@@ -48,6 +48,7 @@ namespace System.Windows.Forms
         #region 属性
 
 
+        [Category("Custom")]
         public bool FullScreen
         {
             get
@@ -72,9 +73,10 @@ namespace System.Windows.Forms
         /// <summary>
         /// 边框颜色
         /// </summary>
+        [Category("Custom")]
         public Color BorderColor { get; set; }
 
-        [Category("标题")]
+        [Category("Custom")]
         [Description("用于绘制窗体标题的字体")]
         public Font CaptionFont
         {
@@ -83,7 +85,7 @@ namespace System.Windows.Forms
 
         }
 
-        [Category("标题")]
+        [Category("Custom")]
         [Description("用于绘制窗体标题的颜色")]
         public Color CaptionForeColor
         {
@@ -91,7 +93,7 @@ namespace System.Windows.Forms
             set;
         }
 
-        [Category("标题")]
+        [Category("Custom")]
         [Description("如果TextWithShadow属性为True,则使用该属性绘制阴影")]
         public Color CaptionShadowColor
         {
@@ -99,7 +101,7 @@ namespace System.Windows.Forms
             set;
         }
 
-        [Category("标题")]
+        [Category("Custom")]
         [Description("如果TextWithShadow属性为True,则使用该属性获取或色泽阴影的宽度")]
         public int CaptionShadowWidth
         {
@@ -107,8 +109,8 @@ namespace System.Windows.Forms
             set;
         }
 
-        [Category("标题"), 
-        DefaultValue(true)]
+        [Category("Custom"),
+         DefaultValue(true)]
         public bool ShowCaption
         {
             get
@@ -129,8 +131,8 @@ namespace System.Windows.Forms
         /// <summary>
         /// 与ShowIcon区分开来，因为如果ShowIcon为False时，任务栏上也将无法显示图标
         /// </summary>
-        [Category("标题"),
-        DefaultValue(true), Description("是否显示窗体顶部左上角的图标")]
+        [Category("Custom"),
+         DefaultValue(true), Description("是否显示窗体顶部左上角的图标")]
         public bool ShowIconOnTop
         {
             get;
@@ -140,7 +142,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否显示标题阴影
         /// </summary>
-        [Category("标题")]
+        [Category("Custom")]
         public bool ShowCaptionShadow
         {
             get;
@@ -150,12 +152,15 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否可以拉伸
         /// </summary>
+        [Category("Custom")]
         public bool Resizable { get; set; }
 
+        [Category("Custom")]
         public bool UseDropShadow { get; set; }
 
         private bool IsAeroEnabled { get; set; }
 
+             
         #endregion
 
         #region 重写的成员

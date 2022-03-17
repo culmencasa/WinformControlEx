@@ -229,7 +229,7 @@
   <data name="tileIcon3.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        xAAADsQBlSsOGwAALvJJREFUeF7tnQ94FNXZt+1VWv62pX7Yl7ZAaUWTEFQUVETArSCoqKgICQQMEBQE
+        wgAADsIBFShKgAAALvJJREFUeF7tnQ94FNXZt+1VWv62pX7Yl7ZAaUWTEFQUVETArSCoqKgICQQMEBQE
         FJUqhQ1mKSpV1Fh5+/K1fL6xpYqAllqqqGhXREGLFhUVadSoUaMiIgYIyRLO9zwzZ3ZnZ5/dzOzOzM7s
         Pr/rui+rhclMZu7fOTs7e/YYr0UUlc4/Wliy82jh+I2tRaUr8N+BEnHiuCGiT1kP+cc4HE4uBsSvhwIQ
         KYgAtUC4tbCkRhSOrwLKRWFpQPQd10cEAu3kpjgcjp+CEutEzwAokaLSLVAQq4GlorBkBpTEKFFU0k8U
@@ -435,7 +435,7 @@
   <data name="tileIcon4.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        xAAADsQBlSsOGwAAHqNJREFUeF7t3QmYXFWd/vFb1WsSUBF5fB6fARFkCRDEQITAAAKyOqCIgGyyiQgO
+        wgAADsIBFShKgAAAHqNJREFUeF7t3QmYXFWd/vFb1WsSUBF5fB6fARFkCRDEQITAAAKyOqCIgGyyiQgO
         KAii7AoE1ACioCgii0EgLEkEJKwGyNYdcBhnRMUZcUMdHEeBoKw5c35VdZrTp99777l1l6p76z3P83me
         /0in6tz63++vq6u7bgVcXFxcXFxcXFxcXFxcXFxcstZatkqNWf66tyxXia3p6c2e1nCNYG/S+/XxRn0b
         cd7gYXV9n3FW86H35GOKvk9I34Yx2cOkGMMehozRcIP6v8cZiNE/sircaFOfvq8o9QzVjBXhghWrouk9
@@ -572,7 +572,7 @@
   <data name="tileIcon1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        xAAADsQBlSsOGwAAOldJREFUeF7tnQeYFFXWhv9111VBCaJrwpwzOacBVBAERRDM6IoiiIIoKiCSTAuu
+        wgAADsIBFShKgAAAOldJREFUeF7tnQeYFFXWhv9111VBCaJrwpwzOacBVBAERRDM6IoiiIIoKiCSTAuu
         igEXFF1RcVfMAiICKhIVSZIkDMzAMMMwzDCJPPc/p/qe2duXU9XVM109XdX3e573qVuhq25Vn+9UvvV/
         RkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRvGVEOJ44ArgBqAP
         8AwwDvgQmAn8CmwA0oBMIBcoAg4Bh4FiIA/IAtKBjcAy4HvgP8AbwEjgYaALUAeoLhdvZGTktcBwfwLO

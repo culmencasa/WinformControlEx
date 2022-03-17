@@ -18,8 +18,9 @@ namespace System.Windows.Forms
         protected Image _defaultImage;
         protected bool _defaultImageDefined;
         protected Color _lastBackColor;
-        protected Color _activedBackColor;
+        protected Color _selectedBackColor;
         protected string _iconText;
+        private bool _isSelected;
         ToolTip _tooltip = new ToolTip();
 
         #endregion
@@ -28,7 +29,9 @@ namespace System.Windows.Forms
 
         public TileIcon()
         {
-            _activedBackColor = Color.DodgerBlue;
+            HoverBackColor = Color.DodgerBlue;
+            _selectedBackColor = Color.DodgerBlue;
+            HotTrack = true;
 
             this.ShowImage = true;
             this.ShowSplitter = true;
@@ -38,38 +41,7 @@ namespace System.Windows.Forms
             this.MouseEnter += new EventHandler(TileIcon_MouseEnter);
             this.MouseLeave += new EventHandler(TileIcon_MouseLeave);
             this.MouseHover += TileIcon_MouseHover;
-
         }
-
-
-        protected virtual void TileIcon_MouseLeave(object sender, EventArgs e)
-        {
-            this.BackColor = _lastBackColor;
-            Invalidate();
-        }
-
-        protected virtual void TileIcon_MouseEnter(object sender, EventArgs e)
-        {
-            this.Focus();
-            _lastBackColor = this.BackColor;
-            this.BackColor = _activedBackColor;
-            Invalidate();
-
-        }
-
-        private void TileIcon_MouseHover(object sender, EventArgs e)
-        {
-            Rectangle iconArea = this.GetImageArea();
-            if (this.RectangleToScreen(iconArea).Contains(MousePosition))
-            {
-                _tooltip.SetToolTip(this, this.IconText);
-            }
-            else
-            {
-                _tooltip.SetToolTip(this, null);
-            }
-        }
-
 
         protected override CreateParams CreateParams
         {
@@ -84,6 +56,18 @@ namespace System.Windows.Forms
         #endregion
 
         #region 属性
+
+
+        [Category("Custom")]
+        public Color HoverBackColor { get; set; }
+
+
+        [Category("Custom")]
+        public Color SelectedBackColor
+        {
+            get { return _selectedBackColor; }
+            set { _selectedBackColor = value; }
+        }
 
         [Category("Custom")]
         public Image Image
@@ -164,6 +148,32 @@ namespace System.Windows.Forms
         [DefaultValue(typeof(Boolean), "True")]
         public bool ShowIconBorder { get; set; }
 
+
+        [Category("Custom")]
+        [DefaultValue(typeof(Boolean), "True")]
+        public bool WrapText { get; set; }
+
+        [Category("Custom")]
+        [DefaultValue(typeof(Boolean), "True")]
+        public bool HotTrack { get; set; }
+
+        [Category("Custom")]
+        public bool KeepSelected { get; set; }
+
+        [Category("Custom")]
+        public virtual bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+            set
+            {
+                _isSelected = value;
+                Invalidate();
+            }
+        }
+
         #endregion
 
         #region 私有方法
@@ -218,6 +228,7 @@ namespace System.Windows.Forms
             using (StringFormat textFormat = new StringFormat())
             {
                 textFormat.LineAlignment = StringAlignment.Center;
+                textFormat.Alignment = StringAlignment.Near;
 
                 int x, y, width, height;
                 x = this.Padding.Left + (this.Height - this.Padding.Top - this.Padding.Bottom) + this.Padding.Left;
@@ -226,9 +237,21 @@ namespace System.Windows.Forms
                     x = this.Padding.Left;
                 }
                 y = 0;
-                width = this.Width - this.Padding.Right - x;
+
+                // 随控件大小换行
+                if (WrapText)
+                {
+                    width = this.Width - this.Padding.Right - x;
+                }
+                else
+                {
+                    // 不换行
+                    SizeF stringSize = TextRenderer.MeasureText(IconText, Font);
+                    width = (int)stringSize.Width * 2;
+                }
                 height = this.Height;
                 Rectangle textArea = new Rectangle(x, y, width, height);
+
                 g.DrawString(this.IconText, this.Font, textBrush, textArea, textFormat);
             }
         }
@@ -252,6 +275,17 @@ namespace System.Windows.Forms
             return new Rectangle(x, y, width, height);
         }
 
+        protected virtual void DrawSelectedBackground(Graphics g)
+        {
+            if (KeepSelected && IsSelected)
+            {
+                using (SolidBrush brush = new SolidBrush(SelectedBackColor))
+                {
+                    g.FillRectangle(brush, this.ClientRectangle);
+                }
+            }
+        }
+
         #endregion
 
         #region 重写的方法
@@ -265,6 +299,8 @@ namespace System.Windows.Forms
         {
             Graphics g = e.Graphics;
             g.SetSlowRendering();
+
+            DrawSelectedBackground(g);
 
             if (ShowImage)
             {
@@ -298,6 +334,52 @@ namespace System.Windows.Forms
 
         #endregion
 
+        #region 事件处理
 
+
+        protected virtual void TileIcon_MouseLeave(object sender, EventArgs e)
+        {
+            this.BackColor = _lastBackColor;
+            Invalidate();
+        }
+
+        protected virtual void TileIcon_MouseEnter(object sender, EventArgs e)
+        {
+            this.Focus();
+            _lastBackColor = this.BackColor;
+            if (HotTrack)
+            {
+                this.BackColor = HoverBackColor;
+            }
+            Invalidate();
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            if (KeepSelected)
+            {
+                IsSelected = !IsSelected;
+            }
+        }
+
+
+        private void TileIcon_MouseHover(object sender, EventArgs e)
+        {
+            Rectangle iconArea = this.GetImageArea();
+            if (this.RectangleToScreen(iconArea).Contains(MousePosition))
+            {
+                _tooltip.SetToolTip(this, this.IconText);
+            }
+            else
+            {
+                _tooltip.SetToolTip(this, null);
+            }
+        }
+
+
+
+
+        #endregion
     }
 }

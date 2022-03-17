@@ -190,40 +190,58 @@ namespace DemoNet46
             // 
             this.tileIcon3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
             this.tileIcon3.DefaultImage = null;
+            this.tileIcon3.HoverBackColor = System.Drawing.Color.DodgerBlue;
             this.tileIcon3.IconText = "IntelliJ IDEA";
             this.tileIcon3.Image = ((System.Drawing.Image)(resources.GetObject("tileIcon3.Image")));
+            this.tileIcon3.IsSelected = false;
+            this.tileIcon3.KeepSelected = false;
             this.tileIcon3.Location = new System.Drawing.Point(1, 1);
             this.tileIcon3.Margin = new System.Windows.Forms.Padding(0);
             this.tileIcon3.Name = "tileIcon3";
             this.tileIcon3.Padding = new System.Windows.Forms.Padding(5);
+            this.tileIcon3.SelectedBackColor = System.Drawing.Color.DodgerBlue;
+            this.tileIcon3.ShowIconBorder = false;
             this.tileIcon3.Size = new System.Drawing.Size(261, 51);
             this.tileIcon3.TabIndex = 5;
+            this.tileIcon3.WrapText = false;
             // 
             // tileIcon4
             // 
             this.tileIcon4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
             this.tileIcon4.DefaultImage = null;
+            this.tileIcon4.HoverBackColor = System.Drawing.Color.DodgerBlue;
             this.tileIcon4.IconText = "Photoshop";
             this.tileIcon4.Image = ((System.Drawing.Image)(resources.GetObject("tileIcon4.Image")));
+            this.tileIcon4.IsSelected = false;
+            this.tileIcon4.KeepSelected = false;
             this.tileIcon4.Location = new System.Drawing.Point(1, 52);
             this.tileIcon4.Margin = new System.Windows.Forms.Padding(0);
             this.tileIcon4.Name = "tileIcon4";
             this.tileIcon4.Padding = new System.Windows.Forms.Padding(5);
+            this.tileIcon4.SelectedBackColor = System.Drawing.Color.DodgerBlue;
+            this.tileIcon4.ShowIconBorder = false;
             this.tileIcon4.Size = new System.Drawing.Size(261, 51);
             this.tileIcon4.TabIndex = 6;
+            this.tileIcon4.WrapText = false;
             // 
             // tileIcon1
             // 
             this.tileIcon1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
             this.tileIcon1.DefaultImage = null;
+            this.tileIcon1.HoverBackColor = System.Drawing.Color.DodgerBlue;
             this.tileIcon1.IconText = "Android Studio";
             this.tileIcon1.Image = ((System.Drawing.Image)(resources.GetObject("tileIcon1.Image")));
+            this.tileIcon1.IsSelected = false;
+            this.tileIcon1.KeepSelected = false;
             this.tileIcon1.Location = new System.Drawing.Point(1, 103);
             this.tileIcon1.Margin = new System.Windows.Forms.Padding(0);
             this.tileIcon1.Name = "tileIcon1";
             this.tileIcon1.Padding = new System.Windows.Forms.Padding(5);
+            this.tileIcon1.SelectedBackColor = System.Drawing.Color.DodgerBlue;
+            this.tileIcon1.ShowIconBorder = false;
             this.tileIcon1.Size = new System.Drawing.Size(261, 51);
             this.tileIcon1.TabIndex = 7;
+            this.tileIcon1.WrapText = false;
             // 
             // btnLogoff
             // 
@@ -246,7 +264,7 @@ namespace DemoNet46
             // btnShutdown
             // 
             this.btnShutdown.BackColor = System.Drawing.Color.White;
-            this.btnShutdown.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.btnShutdown.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnShutdown.CornerRadius = 12;
             this.btnShutdown.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnShutdown.GradientMode = true;
@@ -358,8 +376,9 @@ namespace DemoNet46
             this.Controls.Add(this.pnlTaskbar);
             this.MaximumSize = new System.Drawing.Size(2240, 1400);
             this.Name = "MainForm";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "窗口标题";
+            this.Text = "这是一个窗口标题";
             this.Controls.SetChildIndex(this.pnlTaskbar, 0);
             this.Controls.SetChildIndex(this.btnRecycle, 0);
             this.Controls.SetChildIndex(this.btnShowTestForm, 0);
