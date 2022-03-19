@@ -24,9 +24,13 @@ namespace System.Windows.Forms
             set
             {
                 string newValue = value;
-                string oldValue = _groupName; 
+                string oldValue = _groupName;
 
-                if (string.IsNullOrEmpty(newValue))
+                if (newValue == oldValue && string.IsNullOrEmpty(oldValue))
+                {
+                    _groupName = value;
+                }
+                else if (string.IsNullOrEmpty(newValue))
                 {
                     // 如果新值为空, 则从缓存中删除旧值
                     if (groupCaches.ContainsKey(oldValue))
@@ -77,25 +81,32 @@ namespace System.Windows.Forms
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            foreach (var item in groupCaches[this.GroupName])
+            if (!string.IsNullOrEmpty(this.GroupName))
             {
-                if (item.IsSelected && item == this)
+
+                foreach (var item in groupCaches[this.GroupName])
                 {
-                    return;
+                    if (item.IsSelected && item == this)
+                    {
+                        return;
+                    }
+                }
+
+                base.OnMouseDown(e);
+
+
+                foreach (var item in groupCaches[this.GroupName])
+                {
+                    if (!item.Equals(this))
+                    {
+                        item.IsSelected = false;
+                    }
                 }
             }
-
-            base.OnMouseDown(e);
-            
-
-            foreach (var item in groupCaches[this.GroupName])
+            else
             {
-                if (!item.Equals(this))
-                {
-                    item.IsSelected = false;
-                }
+                base.OnMouseDown(e);
             }
-
         }
 
         protected override void DrawSelectedBackground(Graphics g)

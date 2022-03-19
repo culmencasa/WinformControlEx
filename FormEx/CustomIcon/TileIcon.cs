@@ -10,8 +10,15 @@ namespace System.Windows.Forms
     /// <summary>
     /// 平铺样式的图标
     /// </summary>
+    [DefaultEvent("SingleClick")]
     public class TileIcon : NonFlickerUserControl
     {
+        #region 事件
+
+        public event MouseEventHandler SingleClick;
+
+        #endregion
+
         #region 字段
 
         protected Image _image;
@@ -70,6 +77,7 @@ namespace System.Windows.Forms
         }
 
         [Category("Custom")]
+        [DefaultValue(null)]
         public Image Image
         {
             get
@@ -84,6 +92,7 @@ namespace System.Windows.Forms
         }
 
         [Category("Custom")]
+        [DefaultValue(null)]
         public Drawing.Image DefaultImage
         {
             get
@@ -174,7 +183,7 @@ namespace System.Windows.Forms
             }
         }
 
-        #endregion
+        #endregion+z
 
         #region 私有方法
 
@@ -323,6 +332,27 @@ namespace System.Windows.Forms
             base.OnResize(e);
         }
 
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            if (KeepSelected)
+            {
+                IsSelected = !IsSelected;
+            }
+        }
+
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            base.OnMouseClick(e);
+            if (e.Button == MouseButtons.Left)
+            {
+                if (SingleClick != null)
+                {
+                    SingleClick(this, e);
+                }
+            }
+        }
+
         #endregion
 
         #region 公开方法
@@ -352,15 +382,6 @@ namespace System.Windows.Forms
                 this.BackColor = HoverBackColor;
             }
             Invalidate();
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            if (KeepSelected)
-            {
-                IsSelected = !IsSelected;
-            }
         }
 
 
