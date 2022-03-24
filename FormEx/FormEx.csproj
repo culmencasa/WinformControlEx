@@ -138,8 +138,11 @@
     <Compile Update="CustomPanel\GradientPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="CustomPanel\WizardControl.cs">
+    <Compile Update="Components\WizardControl.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Components\BackgroundWorkShade.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Update="CustomScrollbar\CustomScrollbar.cs">
       <SubType>UserControl</SubType>

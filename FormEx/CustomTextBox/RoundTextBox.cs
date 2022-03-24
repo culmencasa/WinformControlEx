@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using Utils;
 
 namespace System.Windows.Forms
 {
@@ -56,6 +57,7 @@ namespace System.Windows.Forms
 
         public event Action ActionBegin;
 
+
         #endregion
 
         #region 字段
@@ -65,6 +67,8 @@ namespace System.Windows.Forms
         private string _emptyTooltipText; 
         private bool _autoSizeFont;
         private bool _useSystemPasswordChar;
+        private Color _textContentBackColor;
+        private Color _textContentForeColor;
 
         public bool ButtonClickWorking { get; set; }
 
@@ -78,6 +82,7 @@ namespace System.Windows.Forms
             InitializeComponent();
 
             DoPrepareWork();
+
         }
 
         #endregion
@@ -87,7 +92,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 内容为空时的提示文字
         /// </summary>
-        [Category("自定义内容")]
+        [Category("Custom")]
         public string EmptyTooltipText
         {
             get
@@ -105,13 +110,13 @@ namespace System.Windows.Forms
         /// <summary>
         /// 内容为空时提示文字的颜色
         /// </summary>
-        [Category("自定义内容")]
+        [Category("Custom")]
         public Color EmptyTooltipForeColor { get; set; }
          
         /// <summary>
         /// 文本框的内容
         /// </summary>
-        [Category("自定义内容")]
+        [Category("Custom")]
         public override string Text
         {
             get
@@ -131,47 +136,105 @@ namespace System.Windows.Forms
                     innerTextBox.Text = this.EmptyTooltipText;
                     innerTextBox.ForeColor = this.EmptyTooltipForeColor;
 
-                    this.BeginInvoke((MethodInvoker)delegate
+                    if (this.IsHandleCreated)
                     {
-                        innerTextBox.UseSystemPasswordChar = false;
-                    });
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            innerTextBox.UseSystemPasswordChar = false;
+                        });
+                    }
                 }
                 UpdateForeColor();
+            }
+        }
+
+        [Category("Custom")]
+        public string TextContent
+        {
+            get
+            {
+                return this.Text;
+            }
+            set
+            {
+                this.Text = value;
             }
         }
 
         /// <summary>
         /// 文本框状态
         /// </summary>
+        [Category("Custom")]
         public TextBoxStates TextBoxState
         {
             get { return _innerTextBoxState; }
             set { _innerTextBoxState = value; this.Invalidate(); }
         }
 
+        [Category("Custom")]
+        public Color TextContentBackColor
+        {
+            get
+            {
+                return _textContentBackColor;
+            }
+            set
+            {
+                _textContentBackColor = value;
+                innerTextBox.BackColor = value;
+                Invalidate();
+            }
+        }
+
+        [Category("Custom")]
+        public Color TextContentForeColor
+        {
+            get
+            {
+                return _textContentForeColor;
+            }
+            set
+            {
+                _textContentForeColor = value;
+
+                if (!IsTextEqualEmptyTooltip())
+                {
+                    base.ForeColor = value;
+                    innerTextBox.ForeColor = value;
+                }
+                else
+                {
+                    base.ForeColor = value;
+                    innerTextBox.ForeColor = EmptyTooltipForeColor;
+                }
+
+                Invalidate();
+            }
+        }
+
 
         /// <summary>
         /// 边框色
         /// </summary>
-        [Category("自定义外观")]
+        [Category("Custom")]
         public Color BorderColor { get; set; }
          
         /// <summary>
         /// 边框悬浮色
         /// </summary>
-        [Category("自定义外观")]
+        [Category("Custom")]
         public Color BorderHoverColor { get; set; }
 
-        [Category("自定义外观")]
+        [Category("Custom")]
         public Color BorderHoverColor2 { get; set; }
 
         /// <summary>
         /// 获得焦点后的边框色
         /// </summary>
-        [Category("自定义外观")]
+        [Category("Custom")]
         public Color BorderFocusColor { get; set; }
 
-        [Category("自定义外观")]
+        [Category("Custom")]
         public Color BorderFocusColor2 { get; set; }
 
 
@@ -179,7 +242,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否自动缩放字体
         /// </summary>
-        [Category("自定义行为")]
+        [Category("Custom")]
         public bool AutoSizeFont
         {
             get
@@ -201,7 +264,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 内容显示为密码字符
         /// </summary>
-        [Category("自定义行为")]
+        [Category("Custom")]
         public bool UseSystemPasswordChar
         {
             get
@@ -225,7 +288,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否显示下拉按钮
         /// </summary>
-        [Category("自定义行为")]
+        [Category("Custom")]
         [DefaultValue(false)]
         public bool ShowDropDownButton
         {
@@ -243,11 +306,11 @@ namespace System.Windows.Forms
         /// <summary>
         /// 圆角半径
         /// </summary>
-        [Category("自定义外观")]
+        [Category("Custom")]
         [DefaultValue(6)]
         public int BorderRadius { get; set; }
 
-        [Category("自定义外观")]
+        [Category("Custom")]
         [DefaultValue(typeof(Color), "Transparent")]
         public override Color BackColor { 
             get => base.BackColor; 
@@ -255,7 +318,8 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("自定义行为")]
+
+        [Category("Custom")]
         public bool ReadOnly
         {
             get
@@ -268,6 +332,15 @@ namespace System.Windows.Forms
                 //innerTextBox.BackColor = this.BackColor;
             }
         }
+
+
+        [Category("Custom")]
+        public bool EnterSendTab
+        {
+            get;
+            set;
+        }
+
 
         #endregion
 
@@ -384,6 +457,8 @@ namespace System.Windows.Forms
 
             _innerTextBoxState = TextBoxStates.Normal;
             this.Invalidate();
+
+            this.OnLeave(e);
         }
 
         private void innerTextBox_LostFocus(object sender, EventArgs e)
@@ -426,24 +501,40 @@ namespace System.Windows.Forms
 
         #region 重写的成员
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (EnterSendTab)
+            {
+                if (keyData == (Keys.Enter))
+                {
+                    SendKeys.Send("{TAB}");
+                }
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         /// <summary>
         /// 前景色
         /// </summary>
+        [Category("Custom")]
+        [Browsable(false)]
         public override Color ForeColor
         {
             get
             {
-                return Color.Black;
+                return base.ForeColor;
             }
             set
             {
-                base.ForeColor = value;
                 if (!IsTextEqualEmptyTooltip())
                 {
+                    base.ForeColor = value;
                     innerTextBox.ForeColor = value;
                 }
                 else
                 {
+                    base.ForeColor = value;
                     innerTextBox.ForeColor = EmptyTooltipForeColor;
                 }
             }
@@ -452,6 +543,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 停靠方式
         /// </summary>
+        [Category("Custom")]
         public override DockStyle Dock
         {
             get
@@ -513,7 +605,6 @@ namespace System.Windows.Forms
         protected override void OnParentChanged(EventArgs e)
         {
             base.OnParentChanged(e);
-
         }
 
 
@@ -536,11 +627,14 @@ namespace System.Windows.Forms
             }
 
             // 填充边框内背景色
-            g.FillRoundedRectangle(Brushes.White,
-                    ClientRectangle.X,
-                    ClientRectangle.Y,
-                    ClientRectangle.Width - 1,
-                    ClientRectangle.Height - 1, BorderRadius);
+            using (Brush brush = new SolidBrush(TextContentBackColor))
+            {
+                g.FillRoundedRectangle(brush,
+                        ClientRectangle.X,
+                        ClientRectangle.Y,
+                        ClientRectangle.Width - 1,
+                        ClientRectangle.Height - 1, BorderRadius);
+            }
 
             switch (_innerTextBoxState)
             {
@@ -614,6 +708,7 @@ namespace System.Windows.Forms
 
             this.BackColor = Color.Transparent;
             this.ForeColor = Color.Black;
+            this.TextContentBackColor = Color.White;
             this.Padding = new Padding((this.Height - innerTextBox.Height) / 2);
             
             innerTextBox.ForeColor = this.EmptyTooltipForeColor;
@@ -771,24 +866,47 @@ namespace System.Windows.Forms
             else
             {
                 int value = 3;
-                using (Graphics g = this.CreateGraphics())
-                {
-                    SizeF size = TextRenderer.MeasureText(innerTextBox.Text, innerTextBox.Font);
-                     
-                    int textWidth = (int)size.Width;
 
-                    //按宽度来，还是高度来算
-                    if (this.Height > this.Width)
-                    { 
-                        
-                    }
+                string text = innerTextBox.Text;
+                if (string.IsNullOrEmpty(text))
+                {
+                    text = EmptyTooltipText;
+                }
+
+                if (string.IsNullOrEmpty(text))
+                {
+                    return;
+                }
+                SizeF size = TextRenderer.MeasureText(text, innerTextBox.Font);
+
+                int textWidth = (int)size.Width;
+                int textHeight = (int)size.Height;
+
+                //按宽度来，还是高度来算
+                if (this.Height > this.Width)
+                {
+                    // Left Top
                     if (textWidth > this.Width)
                     {
-                        value = (this.Width - textWidth) / 2;
+                        value = textWidth / 4;
                     }
                     else
                     {
-                        value = (this.Height - innerTextBox.Height) / 2;
+                        value = (this.Width - textWidth) / 4;
+                    }
+                }
+                else
+                {
+                    // Left Center
+
+                    // 如果获取Height失败
+                    if (textHeight > this.Height)
+                    {
+                        value = textHeight / 4;
+                    }
+                    else
+                    {
+                        value = (this.Height - textHeight) / 4;
                     }
                 }
 
@@ -801,6 +919,7 @@ namespace System.Windows.Forms
             }
             this.btnDropDown.Size = new Size(this.btnDropDown.Width, this.Height - 4);
             this.btnDropDown.Location = new Point(this.Width - this.btnDropDown.Width - (int)this.btnDropDown.BorderWidth * 2, (this.Height - this.btnDropDown.Height) / 2);
+
         }
 
         #endregion

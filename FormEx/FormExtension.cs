@@ -7,7 +7,7 @@ using System.Text;
 
 namespace System.Windows.Forms
 {
-    public static class FormExtension
+    internal static class FormExtension
     {
         /// <summary>
         /// 启用窗体自绘和双缓冲
@@ -29,7 +29,7 @@ namespace System.Windows.Forms
             Win32.SetWindowLong(target.Handle, (-16), currentStyle);
         }
 
-        private static void InvokeSetStyle(Control target, ControlStyles styles)
+        public static void InvokeSetStyle(Control target, ControlStyles styles)
         {
             try
             {

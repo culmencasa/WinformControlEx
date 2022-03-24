@@ -131,6 +131,16 @@ namespace System.Drawing
         }
 
         /*******************************重载****************************************/
+        /// <summary>
+        /// 画圆角(int参数)
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="pen"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="radius"></param>
         public static void DrawRoundedRectangle(
                 this Graphics graphics,
                 Pen pen,
@@ -150,7 +160,16 @@ namespace System.Drawing
                     RectangleEdgeFilter.All);
         }
 
-
+        /// <summary>
+        /// 画圆角(float参数)
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="pen"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="radius"></param>
         public static void DrawRoundedRectangle(
                 this Graphics graphics,
                 Pen pen,

@@ -16,24 +16,243 @@ using System.Windows.Forms;
 namespace System.Windows.Forms
 {
     /// <summary>
-    /// 添加一层提示.
-    /// 用法:  WorkShade ws = new WorkShade();
-    ///       ws.Attach(ownerForm);
-    ///       ws.Show();
+    /// 后台任务和进度条状态提示浮窗
     /// </summary>
-	public partial class WorkShade : Form
+	public partial class BackgroundWorkShade : Form
     {
+        #region BackgroundWorker相关
+
+        #region 委托和事件
+
+        /// <summary>
+        /// 进度报告委托
+        /// </summary>
+        /// <param name="worker"></param>
+        /// <param name="e"></param>
+        public delegate void ProcessReportEventHandler(AbortableBackgroundWorker worker, ProgressChangedEventArgs e);
+        /// <summary>
+        /// 进度报告事件
+        /// </summary>
+        public event ProcessReportEventHandler ProcessReported;
+
+        /// <summary>
+        /// 后台任务委托
+        /// </summary>
+        /// <param name="worker"></param>
+        /// <param name="e"></param>
+        public delegate void ProcedureEventHandler(AbortableBackgroundWorker worker, DoWorkEventArgs e);
+        /// <summary>
+        /// 后台任务预告委托
+        /// </summary>
+        /// <returns></returns>
+        public delegate PredictionInfo GivenPrediction();
+
+        #endregion
+
+        #region PredictionInfo类
+
+        /// <summary>
+        /// 预告信息(显示在进度条上的提示文字)
+        /// </summary>
+        public class PredictionInfo
+        { 
+            /// <summary>
+            /// 下一步要做什么
+            /// </summary>
+            public string WhatsNext { get; set; }
+            /// <summary>
+            /// 大概要多长时间
+            /// </summary>
+            public int HowLongWillItTake { get; set; }
+            /// <summary>
+            /// 完成到一个什么样的进度(百分比)
+            /// </summary>
+            public int CompletedPercent { get; set; }
+        }
+
+        #endregion
+
+
+        #region 相关字段和属性
+
+
+        protected object procedureLockObject = new object();
+
+        protected Dictionary<GivenPrediction, ProcedureEventHandler> ProcedureList
+        {
+            get;
+            private set;
+        }
+
+        public ShadeStates ShadeState { get; private set; }
+
+        protected bool IsQuickerInstance { get; set; }
+
+        #endregion
+
+        #region 暴露的方法
+
+        public void Setup(GivenPrediction prediction, ProcedureEventHandler procedure)
+        {
+            lock (procedureLockObject)
+            {
+                if (ProcedureList == null)
+                {
+                    ProcedureList = new Dictionary<GivenPrediction, ProcedureEventHandler>();
+                }
+
+                if (!ProcedureList.ContainsKey(prediction))
+                {
+                    ProcedureList.Add(prediction, procedure);
+                }
+            }
+        }
+
+        #endregion
+
+        #region 重写的方法
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            ShadeState = ShadeStates.ShownFirstTime;
+            bgwJob.RunWorkerAsync();
+        }
+
+        #endregion
+
+        #region 后台事件
+
+        private void bgwJob_DoWork(object sender, DoWorkEventArgs e)
+        {
+            AbortableBackgroundWorker bgw = sender as AbortableBackgroundWorker;
+
+            while (true)
+            {
+                if (bgw.CancellationPending)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
+                lock (procedureLockObject)
+                {
+                    if (this.ProcedureList != null && ProcedureList.Count > 0)
+                    {
+                        var kvPair = ProcedureList.Take(1).First();
+                        var prediction = kvPair.Key;
+
+                        var userState = prediction.Invoke();
+                        bgw.ReportProgress(0, userState);
+
+                        var process = kvPair.Value;
+                        if (process != null)
+                        {
+                            process.Invoke(bgw, e);
+                        }
+
+                        ProcedureList.Remove(prediction);
+
+                        if (!IsQuickerInstance)
+                        {
+                            if (userState.CompletedPercent >= pbWorkProgress.MaxValue)
+                            {
+                                e.Result = true;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void bgwJob_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            AbortableBackgroundWorker bgw = sender as AbortableBackgroundWorker;
+            var predictionInfo = e.UserState as PredictionInfo;
+            if (predictionInfo != null)
+            {
+                lblProgressText.Text = predictionInfo.WhatsNext;
+                pbWorkProgress.MakeProgress(predictionInfo.CompletedPercent, predictionInfo.HowLongWillItTake);
+            }
+
+            OnProcessReported(bgw, e);
+        }
+
+        private void bgwJob_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                if (!IsQuickerInstance)
+                {
+                    this.Close();
+                }
+                ExceptionMessageBox box = new ExceptionMessageBox(e.Error);
+                box.Show();
+            }
+            else if (e.Cancelled)
+            {
+                //
+                if (!IsQuickerInstance)
+                {
+                    this.FadeOut();
+                }
+            }
+            else if (e.Result != null && (bool)e.Result)
+            {
+                //
+                this.FadeOut();
+            }
+        }
+
+        protected virtual void OnProcessReported(AbortableBackgroundWorker worker, ProgressChangedEventArgs e)
+        {
+            if (ProcessReported != null)
+            {
+                ProcessReported(worker, e);
+            }
+        }
+
+        #endregion
+
+        #region 静态单例
+
+        static BackgroundWorkShade quicker;
+
+        /// <summary>
+        /// 不使用透明背景, 保留在静态字段中, 为了加速启动用
+        /// </summary>
+        public static BackgroundWorkShade Quicker
+        {
+            get
+            {
+                if (quicker == null)
+                {
+                    quicker = new BackgroundWorkShade();
+                    //quicker.UseBlur = false;
+                    //quicker.UseLayerImage = false;
+                    quicker.IsQuickerInstance = true;
+                    quicker.pbWorkProgress.OnProgressCompleted += delegate
+                    {
+                        quicker.Clean();
+                        quicker.Hide();
+                    };
+                }
+
+                return quicker;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region 构造
 
-        public WorkShade()
+        public BackgroundWorkShade()
         {
-            _tickCountBegin = Environment.TickCount;
-
             this.Enable2DBuffer();
-
-            // 防止闪烁
-            //SetStyle(ControlStyles.Opaque | ControlStyles.ResizeRedraw, true);
-            //SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
 
             InitializeComponent();
 
@@ -43,26 +262,18 @@ namespace System.Windows.Forms
             ShowInTaskbar = false;
             FormBorderStyle = FormBorderStyle.None;
             OwnerLastWindowState = FormWindowState.Minimized;
-
+            
+            UseLayerImage = true;
             UseBlur = true;
 
             // 使用Visible事件作为Load事件
+            this.FormClosing += BackgroundWorkShade_FormClosing;
             this.VisibleChanged += WorkShade_VisibleChanged;
             this.Load += WorkShade_Load;
-            this.Paint += WorkShade_Paint;
+            this.Paint += WorkShade_PaintDialogBoxShadow;
+
+            ShadeState = ShadeStates.Created;
         }
-
-
-
-        /// <summary>
-        /// 指定多少秒后显示关闭按钮
-        /// </summary>
-        /// <param name="millseconds"></param>
-        public WorkShade(int millseconds) : this()
-        {
-            this.WaitTime = millseconds;
-        }
-
 
         #endregion
 
@@ -85,7 +296,19 @@ namespace System.Windows.Forms
 
         #region 外部事件
 
-        public event Action Button1Action;
+
+        #endregion
+
+        #region 枚举
+
+        public enum ShadeStates
+        {
+            None,
+            Created,
+            ShownFirstTime,
+            Hidden,
+            Closed
+        }
 
         #endregion
 
@@ -93,13 +316,18 @@ namespace System.Windows.Forms
 
 
         private Bitmap _boxShadowBitmap;
-        private int _tickCountBegin;
-        private int _tickCountEnd;
+
 
 
         #endregion
 
         #region 属性
+
+        public bool UseLayerImage
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// 虚假的透明背景图像
@@ -129,12 +357,6 @@ namespace System.Windows.Forms
             set;
         }
 
-        public int WaitTime
-        {
-            get;
-            set;
-        }
-
         public bool CoverCaptionArea
         {
             get;
@@ -147,31 +369,6 @@ namespace System.Windows.Forms
             set;
         }
 
-        public string ProgressText
-        {
-            get
-            {
-                return lblProgressText.Text;
-            }
-            set
-            {
-                lblProgressText.Text = value;
-            }
-        }
-
-        public string CloseButtonText
-        {
-            get
-            {
-                return btnClose.Text;
-            }
-            set
-            {
-                btnClose.Text = value;
-            }
-        }
-
-        public bool ShowButton1 { get; set; }
 
         #endregion
 
@@ -194,6 +391,7 @@ namespace System.Windows.Forms
 
         #endregion
 
+
         #region 公开的方法
 
         /// <summary>
@@ -202,6 +400,10 @@ namespace System.Windows.Forms
         /// <param name="owner">主窗体</param>
         public void Attach(Form owner)
         {
+            if (owner == null)
+            {
+                throw new ArgumentNullException();
+            }
             if (Owner == owner)
             {
                 return;
@@ -222,8 +424,10 @@ namespace System.Windows.Forms
             Owner.LocationChanged += SyncBoundsEventHandler;
             Owner.Resize += SyncResizeEventHandler;
             Owner.FormClosed += SyncFormCloseEventHandler;
-            Owner.VisibleChanged += SyncVisiblityEventHandler;
-            Owner.Activated += SyncActivationEventHandler;
+
+            // 这两个事件会影响窗体显示, 屏蔽掉
+            //Owner.VisibleChanged += SyncVisiblityEventHandler;
+            //Owner.Activated += SyncActivationEventHandler;
             Owner.Deactivate += SyncDeactivationEventHandler;
             Owner.ResizeEnd += SyncResizeEndEventHandler;
 
@@ -237,41 +441,31 @@ namespace System.Windows.Forms
             }
 
             this.FormClosing += WorkShade_FormClosing;
-            this.FormClosed += WorkShade_FormClosed;
+            this.FormClosed += WorkShade_FormClosed; 
+        }
+
+
+        /// <summary>
+        /// 显示窗体
+        /// </summary>
+        public new void Show()
+        {
+            Opacity = 1;
+            base.Show();
+            BrintSelfToFront();
 
         }
 
         /// <summary>
-        /// 重写的Show方法
+        /// 隐藏窗体
         /// </summary>
-        public new void Show()
+        public new void Hide()
         {
-            base.Show();
-            BrintSelfToFront();
-
-            // 等待几秒后显示按钮
-            if (WaitTime > 0)
+            base.Hide();
+            ShadeState = ShadeStates.Hidden;
+            if (Owner != null)
             {
-                Threading.Timer t = null;
-                t = new System.Threading.Timer(new TimerCallback((o) =>
-                {
-                    if (this.IsHandleCreated && !this.IsDisposed)
-                    {
-                        this.Invoke((Action)delegate
-                        {
-                            btnClose.Visible = true;
-                        });
-                    }
-
-                    if (t != null)
-                    {
-                        t.Dispose();
-                    }
-                }), null, WaitTime, Timeout.Infinite);
-            }
-            else
-            {
-                btnClose.Visible = ShowButton1;
+                Owner.Focus();
             }
         }
 
@@ -289,6 +483,9 @@ namespace System.Windows.Forms
                 Owner.Deactivate -= SyncDeactivationEventHandler;
                 Owner.ResizeEnd -= SyncResizeEndEventHandler;
             }
+
+            this.FormClosing -= WorkShade_FormClosing;
+            this.FormClosed -= WorkShade_FormClosed;
         }
 
         /// <summary>
@@ -309,9 +506,12 @@ namespace System.Windows.Forms
             //Win32.SetForegroundWindow(Handle);
         }
 
+        /// <summary>
+        /// 淡出并关闭窗体
+        /// </summary>
         public void FadeOut()
         {
-            int duration = 1000;
+            int duration = 500;
             int steps = 10;
             Timer timer = new Timer();
             timer.Interval = duration / steps;
@@ -344,7 +544,7 @@ namespace System.Windows.Forms
         /// <param name="e"></param>
         private void SyncActivationEventHandler(object sender, EventArgs e)
         {
-            if (!IsOwnerAlive())
+            if (!IsOwnerAlive() || ShadeState < ShadeStates.ShownFirstTime)
             {
                 return;
             }
@@ -355,7 +555,7 @@ namespace System.Windows.Forms
                 OwnerLastWindowState = Owner.WindowState;
                 if (!this.Visible)
                 {
-                    base.Show();
+                    Show();
                     //Win32.SetForegroundWindow(Handle);
                 }
                 BrintSelfToFront();
@@ -388,13 +588,16 @@ namespace System.Windows.Forms
 
         private void SyncVisiblityEventHandler(object sender, EventArgs e)
         {
-            if (IsOwnerAlive())
+            if (ShadeState >= ShadeStates.ShownFirstTime)
             {
-                Visible = Owner.Visible;
-            }
-            else
-            {
-                Visible = false;
+                if (IsOwnerAlive())
+                {
+                    Visible = Owner.Visible;
+                }
+                else
+                {
+                    Visible = false;
+                }
             }
         }
 
@@ -502,7 +705,7 @@ namespace System.Windows.Forms
             {
                 this.Visible = false;
             }
-            else if (Owner.WindowState == FormWindowState.Normal)
+            else if (Owner.WindowState == FormWindowState.Normal && this.Visible)
             {
                 this.pnlCenterBox.Visible = false;
                 SyncBoundsEventHandler();
@@ -510,7 +713,7 @@ namespace System.Windows.Forms
                 this.Refresh();
                 this.pnlCenterBox.Visible = true;
             }
-            else if (Owner.WindowState == FormWindowState.Maximized)
+            else if (Owner.WindowState == FormWindowState.Maximized && this.Visible)
             {
                 // 最大化时重新画背景的性能不好，先展示纯色背景, 以免出现残影
                 //todo: 将对话框阴影画到底图上
@@ -525,10 +728,10 @@ namespace System.Windows.Forms
 
                 this.BeginInvoke((Action)delegate
                 {
-                    this.Paint -= WorkShade_Paint;
+                    this.Paint -= WorkShade_PaintDialogBoxShadow;
                     this.SuspendLayout();
                     this.SyncUnderlyaerImage();
-                    this.Paint += WorkShade_Paint;
+                    this.Paint += WorkShade_PaintDialogBoxShadow;
                     this.ResumeLayout(false);
                     this.Refresh();
                 });
@@ -536,9 +739,8 @@ namespace System.Windows.Forms
             }
             else
             {
-                UseBlur = true;
-                this.Visible = true;
-                Invalidate();
+                //this.Visible = true;
+                //Invalidate();
             }
         }
 
@@ -551,13 +753,29 @@ namespace System.Windows.Forms
         }
         private void WorkShade_VisibleChanged(object sender, EventArgs e)
         {
-            // issue: 有可能主窗体的子控件还未完全加载, 故会出现白块...
             if (this.Visible)
             {
                 this.SuspendLayout();
                 SyncBoundsEventHandler();
                 SyncUnderlyaerImage();
                 this.ResumeLayout(false);
+            }
+        }
+
+        private void BackgroundWorkShade_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // 如果是Owner关闭, 则无条件关闭
+            if (e.CloseReason == CloseReason.FormOwnerClosing)
+            {
+                e.Cancel = false;
+                return;
+            }
+
+            // 如果使用的是Quicker实例, 则隐藏代替关闭
+            if (IsQuickerInstance && e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                this.Hide();
             }
         }
 
@@ -571,16 +789,12 @@ namespace System.Windows.Forms
                 Owner.MaximumSize = OldMaxSize;
                 Owner.MinimumSize = OldMinSize;
             }
-
         }
 
         private void WorkShade_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Clean();
         }
-
-
-
-
 
         #endregion
 
@@ -590,9 +804,16 @@ namespace System.Windows.Forms
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            if (Owner != null)
+            if (UseLayerImage)
             {
-                g.Clear(Owner.BackColor);
+                if (Owner != null)
+                {
+                    g.Clear(Owner.BackColor);
+                }
+            }
+            else
+            {
+                g.Clear(Color.Black);
             }
 
             //base.OnPaintBackground(e);
@@ -608,43 +829,20 @@ namespace System.Windows.Forms
 
             Graphics g = e.Graphics;
             g.SetFastRendering();
-            g.Clear(Owner.BackColor);
 
-            if (UnderlayerImage != null)
+            if (UseLayerImage)
             {
-                g.DrawImageOpacity(UnderlayerImage, (float)Opacity, new Point(0, 0));
+                if (Owner != null)
+                {
+                    g.Clear(Owner.BackColor);
+                }
+                if (UnderlayerImage != null)
+                {
+                    g.DrawImageOpacity(UnderlayerImage, (float)Opacity, new Point(0, 0));
+                }
             }
 
             base.OnPaint(e);
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            if (IsHandleCreated && !DesignMode)
-            {
-                if (IsOwnerAlive() && (Owner.WindowState != FormWindowState.Minimized))
-                {
-                    // 默认为圆角, 以免盖住Owner窗体边框
-                    UpdateFormRoundCorner();
-                }
-                else
-                {
-
-                    var os = EnvironmentEx.GetCurrentOSName();
-                    if (os == WindowsNames.Windows11)
-                    {
-                        Diameter = 7;
-                        UpdateFormRoundCorner();
-                    }
-                    else if (os >= WindowsNames.Windows10)
-                    {
-                        Diameter = 0;
-                        UpdateFormRoundCorner();
-                    }
-
-                }
-            }
         }
 
 
@@ -652,18 +850,33 @@ namespace System.Windows.Forms
 
         #region 遮罩层对话框阴影重绘事件
 
+        /// <summary>
+        /// 居中
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WorkShade_Resize(object sender, EventArgs e)
         {
             this.pnlCenterBox.Location = new Point((this.Width - pnlCenterBox.Width) / 2, (this.Height - pnlCenterBox.Height) / 2);
         }
 
-        // 画遮罩层阴影
-        private void WorkShade_Paint(object sender, PaintEventArgs e)
+        /// <summary>
+        /// 画遮罩层阴影
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WorkShade_PaintDialogBoxShadow(object sender, PaintEventArgs e)
         {
-            if (!IsOwnerAlive() || UnderlayerImage == null)
+            if (UseLayerImage)
+            {
                 return;
+            }
 
-            //todo: 阴影加深, 偏移
+            if (!IsOwnerAlive() || UnderlayerImage == null)
+            {
+                return;
+            }
+
             if (_boxShadowBitmap == null || _boxShadowBitmap.Size != this.Size)
             {
                 _boxShadowBitmap?.Dispose();
@@ -674,13 +887,13 @@ namespace System.Windows.Forms
             Graphics g = e.Graphics;
             g.SetFastRendering();
             var rect = new Rectangle(control.Location.X, control.Location.Y, control.Size.Width, control.Size.Height);
-
-
+            
             using (GraphicsPath graphicPath = g.GenerateRoundedRectangle(rect, pnlCenterBox.RoundBorderRadius, RectangleEdgeFilter.All))
             {
                 DrawShadowSmooth(graphicPath, 100, 60, _boxShadowBitmap);
             }
             e.Graphics.DrawImage(_boxShadowBitmap, new Point(0, 0));
+
         }
 
 
@@ -694,14 +907,40 @@ namespace System.Windows.Forms
 
         private void btnClose_Click(object sender, EventArgs e)
         {
+            Clean();
             this.Close();
-
-            Button1Action?.Invoke();
         }
 
         #endregion
 
         #region 私有方法
+
+        private void Clean()
+        {
+            // 如果是Quicker实例, 则不关闭后台线程. 
+            if (!IsQuickerInstance)
+            {
+                if (bgwJob != null)
+                {
+                    bgwJob.CancelAsync();
+                    Thread.Sleep(1);
+                    if (bgwJob.IsBusy)
+                    {
+                        bgwJob.Abort();
+                    }
+                }
+            }
+
+            lock (procedureLockObject)
+            {
+                if (ProcedureList != null)
+                {
+                    ProcedureList.Clear();
+                }
+            }
+
+            pbWorkProgress.Reset();
+        }
 
         private bool IsOwnerAlive()
         {
@@ -756,13 +995,23 @@ namespace System.Windows.Forms
             {
                 g.SetFastRendering();
             }
+            else
+            {
+                g.SetSlowRendering();
+            }
             g.Clear(System.Drawing.SystemColors.Control);
             IntPtr hDC = g.GetHdc();
             IntPtr windowDC = GetWindowDC(Owner.Handle);
             if (!Win32.BitBlt(
                 hDC,
-                1, // -4 * factor,
-                -titleHeight, Owner.Width, Owner.Height, windowDC, 0, 0, CopyPixelOperation.SourcePaint))
+                -8 * factor,
+                -titleHeight, 
+                Owner.ClientRectangle.Width + (8 * factor), 
+                Owner.ClientRectangle.Height + titleHeight,
+                windowDC, 
+                0, 
+                0, 
+                CopyPixelOperation.SourcePaint))
             {
                 // 如果失败,则使用白色
                 g.Clear(System.Drawing.SystemColors.Control);
@@ -772,15 +1021,8 @@ namespace System.Windows.Forms
             /****** 模糊图像 ********/
             if (UseBlur)
             {
-                // 换成另一个开源类GaussianBlur
-                // byte[] bgMeta = ImageTool.ToArray(UnderlayerImage);
-                //using (var magicker = new ImageMagick.MagickImage(bgMeta))
-                //{
-                //    magicker.Blur(100,2.5);
-                //    UnderlayerImage = new Bitmap(ImageTool.FromArray(magicker.ToByteArray()));
-                //}
                 var blur = new SuperfastBlur.GaussianBlur(UnderlayerImage);
-                this.UnderlayerImage = blur.Process(10);
+                this.UnderlayerImage = blur.Process(20);
             }
         }
 
@@ -810,5 +1052,5 @@ namespace System.Windows.Forms
 
 
         #endregion
-    }
+  }
 }

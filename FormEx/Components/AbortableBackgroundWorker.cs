@@ -20,13 +20,13 @@ namespace System.ComponentModel
             {
                 base.OnDoWork(e);
             }
-            catch (TaskCanceledException) {
+            catch (TaskCanceledException)
+            {
                 e.Cancel = true;
-                
             }
             catch (ThreadAbortException)
             {
-                e.Cancel = true; 
+                e.Cancel = true;
                 Thread.ResetAbort();
             }
         }
@@ -36,10 +36,13 @@ namespace System.ComponentModel
         {
             if (workerThread != null)
             {
+                // 异常不会被workerThread捕捉
+                //throw new TaskCanceledException();
+
+                workerThread.Abort();
                 workerThread = null;
-                throw new TaskCanceledException();
-                //workerThread.Abort();
             }
         }
+
     }
 }

@@ -61,6 +61,8 @@ namespace System.Windows.Forms
         private string _emptyTooltipText; 
         private bool _autoSizeFont;
         private bool _useSystemPasswordChar;
+        Color _textContentBackColor = Color.White;
+        Color _textContentForeColor = Color.Black;
 
 
         #endregion
@@ -78,6 +80,51 @@ namespace System.Windows.Forms
 
         #region 属性
 
+        [Category("Custom")]
+        public string TextContent
+        {
+            get
+            {
+                return this.Text;
+            }
+            set
+            {
+                this.Text = value;
+            }
+        }
+        [Category("Custom")]
+        public Color TextContentBackColor
+        {
+            get
+            {
+                return _textContentBackColor;
+            }
+            set
+            {
+                _textContentBackColor = value;
+                innerTextBox.BackColor = value;
+                Invalidate();
+            }
+        }
+
+
+        [Category("Custom")]
+        public Color TextContentForeColor
+        {
+            get
+            {
+                return _textContentForeColor;
+            }
+            set
+            {
+                this.ForeColor = value;
+                _textContentForeColor = value;
+                innerTextBox.ForeColor = value;
+                Invalidate();
+            }
+        }
+
+        
         /// <summary>
         /// 内容为空时的提示文字
         /// </summary>
@@ -229,6 +276,13 @@ namespace System.Windows.Forms
         /// ???
         /// </summary>
         public bool ButtonClickWorking { get; set; }
+
+        [Category("Custom")]
+        public bool EnterSendTab
+        {
+            get;
+            set;
+        }
 
         #endregion
 
@@ -391,9 +445,23 @@ namespace System.Windows.Forms
 
         #region 重写的成员
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (EnterSendTab)
+            {
+                if (keyData == (Keys.Enter))
+                {
+                    SendKeys.Send("{TAB}");
+                }
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         /// <summary>
         /// 前景色
         /// </summary>
+        [Category("Custom")]
         public override Color ForeColor
         {
             get
@@ -402,13 +470,14 @@ namespace System.Windows.Forms
             }
             set
             {
-                base.ForeColor = value;
                 if (!IsTextEqualEmptyTooltip())
                 {
+                    base.ForeColor = value;
                     innerTextBox.ForeColor = value;
                 }
                 else
                 {
+                    base.ForeColor = value;
                     innerTextBox.ForeColor = EmptyTooltipForeColor;
                 }
             }
@@ -417,6 +486,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 停靠方式
         /// </summary>
+        [Category("Custom")]
         public override DockStyle Dock
         {
             get
@@ -524,7 +594,7 @@ namespace System.Windows.Forms
             bool result = false;
             if (innerTextBox.Text != string.Empty)
             {
-                if (innerTextBox.Text == this.EmptyTooltipText)
+                if (innerTextBox.Text == _emptyTooltipText)
                 {
                     return true;
                 } 
@@ -701,26 +771,50 @@ namespace System.Windows.Forms
             else
             {
                 int value = 3;
-                using (Graphics g = this.CreateGraphics())
-                {
-                    SizeF size = TextRenderer.MeasureText(innerTextBox.Text, innerTextBox.Font);
-                     
-                    int textWidth = (int)size.Width;
 
-                    //按宽度来，还是高度来算
-                    if (this.Height > this.Width)
-                    { 
-                        
-                    }
+                string text = innerTextBox.Text;
+                if (string.IsNullOrEmpty(text))
+                {
+                    text = EmptyTooltipText;
+                }
+
+                if (string.IsNullOrEmpty(text))
+                {
+                    return;
+                }
+                SizeF size = TextRenderer.MeasureText(text, innerTextBox.Font);
+
+                int textWidth = (int)size.Width;
+                int textHeight = (int)size.Height;
+
+                //按宽度来，还是高度来算
+                if (this.Height > this.Width)
+                {
+                    // Left Top
                     if (textWidth > this.Width)
                     {
-                        value = (this.Width - textWidth) / 2;
+                        value = textWidth / 4;
                     }
                     else
                     {
-                        value = (this.Height - innerTextBox.Height) / 2;
+                        value = (this.Width - textWidth) / 4;
                     }
                 }
+                else
+                {
+                    // Left Center
+
+                    // 如果获取Height失败
+                    if (textHeight > this.Height)
+                    {
+                        value = textHeight / 4;
+                    }
+                    else
+                    {
+                        value = (this.Height - textHeight) / 4;
+                    }
+                }
+
 
                 this.Padding = new Padding(value + 2, value, value, value);
             }

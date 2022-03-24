@@ -8,9 +8,9 @@ using System.Security.Permissions;
 using System.Drawing.Drawing2D;
 
 
-// Mick Dohertys' .net Tips and Tricks 源代码见 http://dotnetrix.co.uk/button.htm
 namespace System.Windows.Forms
 {
+    // Mick Dohertys' .net Tips and Tricks 源代码见 http://dotnetrix.co.uk/button.htm
 
     /// <summary>
     /// 自定义按钮
@@ -30,7 +30,7 @@ namespace System.Windows.Forms
 
         #endregion
 
-        #region Private Instance Variables
+        #region 私有字段
 
         private DialogResult m_DialogResult;
         private bool m_IsDefault;
@@ -49,7 +49,7 @@ namespace System.Windows.Forms
 
         #endregion
 
-        #region IButtonControl Implementation
+        #region IButtonControl 接口实现
 
         [Category("Behavior"), DefaultValue(typeof(DialogResult), "None")]
         [Description("The dialog result produced in a modal form by clicking the button.")]
@@ -81,7 +81,7 @@ namespace System.Windows.Forms
 
         #endregion
 
-        #region Properties
+        #region 属性
 
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace System.Windows.Forms
         /// <summary>
         /// 圆角
         /// </summary>
-        [Category("Appearance")]
+        [Category("Custom")]
         [DefaultValue(14)]
-        [Description("Defines the radius of the controls RoundedCorners.")]
+        [Description("圆角大小")]
         public int CornerRadius
         {
             get { return m_CornerRadius; }
@@ -114,6 +114,7 @@ namespace System.Windows.Forms
 
 
         //DefaultSize
+        [Category("Custom")]
         protected override System.Drawing.Size DefaultSize
         {
             get { return new Size(75, 23); }
@@ -127,7 +128,7 @@ namespace System.Windows.Forms
             get { return m_IsDefault; }
         }
 
-        [Category("Appearance")]
+        [Category("Custom")]
         [Description("背景色是否显渐变.")]
         public bool GradientMode
         {
@@ -135,7 +136,7 @@ namespace System.Windows.Forms
             set;
         }
 
-        [Category("Appearance")]
+        [Category("Custom")]
         [Description("背景色是否显示阴影模式.")]
         public bool ShadeMode
         {
@@ -145,8 +146,8 @@ namespace System.Windows.Forms
 
 
         //ImageList
-        [Category("Appearance"), DefaultValue(typeof(ImageList), null)]
-        [Description("The image list to get the image to display in the face of the control.")]
+        [Category("Custom"), DefaultValue(typeof(ImageList), null)]
+        [Description("指定使用的图片集合")]
         public ImageList ImageList
         {
             get { return m_ImageList; }
@@ -159,8 +160,8 @@ namespace System.Windows.Forms
 
 
         //ImageIndex
-        [Category("Appearance"), DefaultValue(-1)]
-        [Description("The index of the image in the image list to display in the face of the control.")]
+        [Category("Custom"), DefaultValue(-1)]
+        [Description("指定使用的图片索引")]
         [TypeConverter(typeof(ImageIndexConverter))]
         [Editor("System.Windows.Forms.Design.ImageIndexEditor, System.Design", typeof(System.Drawing.Design.UITypeEditor))]
         public int ImageIndex
@@ -175,8 +176,8 @@ namespace System.Windows.Forms
 
 
         //ImageAlign
-        [Category("Appearance"), DefaultValue(typeof(ContentAlignment), "MiddleCenter")]
-        [Description("The alignment of the image that will be displayed in the face of the control.")]
+        [Category("Custom"), DefaultValue(typeof(ContentAlignment), "MiddleCenter")]
+        [Description("图片对齐方式")]
         public ContentAlignment ImageAlign
         {
             get { return m_ImageAlign; }
@@ -193,9 +194,9 @@ namespace System.Windows.Forms
 
 
         //RoundCorners
-        [Category("Appearance")]
+        [Category("Custom")]
         [DefaultValue(typeof(Corners), "None")]
-        [Description("Gets/sets the corners of the control to round.")]
+        [Description("设置几边圆角")]
         [Editor(typeof(RoundCornersEditor), typeof(UITypeEditor))]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Corners RoundCorners
@@ -212,8 +213,8 @@ namespace System.Windows.Forms
 
 
         //TextAlign
-        [Category("Appearance"), DefaultValue(typeof(ContentAlignment), "MiddleCenter")]
-        [Description("The alignment of the text that will be displayed in the face of the control.")]
+        [Category("Custom"), DefaultValue(typeof(ContentAlignment), "MiddleCenter")]
+        [Description("文字对齐方式")]
         public ContentAlignment TextAlign
         {
             get { return m_TextAlign; }
@@ -228,11 +229,13 @@ namespace System.Windows.Forms
             }
         }
 
+        [Category("Custom"), DefaultValue(typeof(Color), "Gray")]
+        [Description("边框颜色")]
         public Color BorderColor { get; set; }
 
         #endregion
 
-        #region Overriden Methods
+        #region 重写方法
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -513,7 +516,7 @@ namespace System.Windows.Forms
 
         #endregion
 
-        #region Internal Draw Methods
+        #region 绘制相关
 
         private void DrawImage(Graphics g)
         {
@@ -672,7 +675,7 @@ namespace System.Windows.Forms
 
         #endregion
 
-        #region Helper Methods
+        #region 辅助方法
 
         private GraphicsPath RoundRectangle(Rectangle r, int radius, Corners corners)
         {
@@ -790,7 +793,7 @@ namespace System.Windows.Forms
         Focused
     }
 
-    #region Custom TypeEditor for RoundCorners property
+    #region RoundCorners 属性的设计时编辑器
 
 #pragma warning disable SYSLIB0003 // 类型或成员已过时
     [PermissionSet(SecurityAction.LinkDemand, Unrestricted = true)]

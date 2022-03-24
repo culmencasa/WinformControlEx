@@ -9,6 +9,7 @@ namespace SuperfastBlur
 {
 
     /// <summary>
+    /// 高斯模糊
     /// ref: https://github.com/mdymel/superfastblur 
     /// </summary>
     public class GaussianBlur

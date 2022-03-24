@@ -8,7 +8,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace System.Windows
+namespace Utils
 {
     public static class ImageUtils
     {

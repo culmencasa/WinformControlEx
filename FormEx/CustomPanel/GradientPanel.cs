@@ -45,7 +45,7 @@ namespace System.Windows.Forms
 				ControlStyles.OptimizedDoubleBuffer |
 				ControlStyles.ResizeRedraw |
 				ControlStyles.SupportsTransparentBackColor, true);
-			//this.DoubleBuffered = true;
+			this.DoubleBuffered = true;
 			UpdateStyles();
 
 			this.BackColor = Color.Transparent;
@@ -53,12 +53,19 @@ namespace System.Windows.Forms
             BorderWidth = 1;
         }
 
-		#endregion
+        #endregion
 
-		protected override void OnPaint(PaintEventArgs e)
+        protected override void OnPaintBackground(PaintEventArgs e)
         {
-            base.OnPaint(e);
-            Graphics g = e.Graphics;
+            base.OnPaintBackground(e);
+        }
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            //base.OnPaint(e);
+            Graphics lazyG = e.Graphics;
+
+            Bitmap bitmap = new Bitmap(this.Width, this.Height);
+            Graphics g = Graphics.FromImage(bitmap);
 
             #region 如果设置了渐变色
 
@@ -126,6 +133,9 @@ namespace System.Windows.Forms
                     }
                 }
             }
+
+            lazyG.DrawImage(bitmap, 0, 0);
+            g.Dispose();
         }
 
         protected override void OnControlAdded(ControlEventArgs e)

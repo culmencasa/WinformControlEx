@@ -8,6 +8,7 @@ using System.Management;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using Utils;
 
 namespace System.Windows.Forms
 {

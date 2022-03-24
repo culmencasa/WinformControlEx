@@ -34,8 +34,14 @@
     <Compile Update="CustomMessageBox\ExceptionMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="CustomPanel\WorkShade.cs">
+    <Compile Update="CustomPanel\ColorGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Components\WorkShade.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="CustomProgressBar\CustomProgressBar.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="CustomTextBox\RoundTextBox.cs">
       <SubType>UserControl</SubType>

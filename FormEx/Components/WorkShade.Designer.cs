@@ -27,7 +27,7 @@ namespace System.Windows.Forms
 		/// 设计器支持所需的方法 - 不要修改
 		/// 使用代码编辑器修改此方法的内容。
 		/// </summary>
-		private void InitializeComponent()
+		protected virtual void InitializeComponent()
 		{
             this.pnlCenterBox = new System.Windows.Forms.GradientPanel();
             this.lblProgressText = new System.Windows.Forms.Label();

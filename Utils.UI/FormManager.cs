@@ -241,6 +241,41 @@ namespace System.Windows.Forms
         }
 
 
+        public static Form GetTopLevelForm(this Control itself)
+        {
+            Form outmostForm = null;
+
+            if (itself == null)
+            {
+                return outmostForm;
+            }
+
+            if (itself is Form && (itself as Form).TopLevel && itself.Parent == null)
+            {
+                return itself as Form;
+            }
+
+            if (itself.Parent == null)
+            {
+                return outmostForm;
+            }
+
+            Control parent = itself.Parent;
+            while (parent != null)
+            {
+                var testForm = parent as Form;
+                if (testForm != null && testForm.TopLevel)
+                {
+                    outmostForm = parent as Form;
+                    return outmostForm;
+                }
+
+                parent = parent.Parent;
+            }
+
+            return outmostForm;
+        }
+
         #endregion
 
 

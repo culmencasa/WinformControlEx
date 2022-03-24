@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utils.UI
+namespace Utils
 {
 
     /// <summary>
@@ -123,7 +123,7 @@ namespace Utils.UI
             try
             {
                 int desc = 0;
-                isConnected = Win32.InternetGetConnectedState(out desc, 0);
+                isConnected = InternetGetConnectedState(out desc, 0);
             }
             catch
             { }
@@ -134,7 +134,7 @@ namespace Utils.UI
         static InternetConnectionState GetInternetState()
         {
             int desc = 0;
-            bool result = Win32.InternetGetConnectedState(out desc, 0);
+            bool result = InternetGetConnectedState(out desc, 0);
 
             return (InternetConnectionState)desc;
         }
@@ -199,26 +199,11 @@ namespace Utils.UI
 
 
 
-        /// <summary>
-        /// Indicates whether any network connection is available
-        /// Filter connections below a specified speed, as well as virtual network cards.
-        /// </summary>
-        /// <returns>
-        ///     <c>true</c> if a network connection is available; otherwise, <c>false</c>.
-        /// </returns>
         public static bool IsNetworkAvailable()
         {
             return IsNetworkAvailable(0);
         }
 
-        /// <summary>
-        /// Indicates whether any network connection is available.
-        /// Filter connections below a specified speed, as well as virtual network cards.
-        /// </summary>
-        /// <param name="minimumSpeed">The minimum speed required. Passing 0 will not filter connection using speed.</param>
-        /// <returns>
-        ///     <c>true</c> if a network connection is available; otherwise, <c>false</c>.
-        /// </returns>
         public static bool IsNetworkAvailable(long minimumSpeed)
         {
             if (!NetworkInterface.GetIsNetworkAvailable())
@@ -249,6 +234,17 @@ namespace Utils.UI
             return false;
         }
 
+
+
+
+        /// <summary>
+        /// 判断网络连接
+        /// </summary>
+        /// <param name="connectionDescription"></param>
+        /// <param name="reservedValue"></param>
+        /// <returns></returns>
+        [DllImport("wininet")]
+        public extern static bool InternetGetConnectedState(out int connectionDescription, int reservedValue);
 
     }
 

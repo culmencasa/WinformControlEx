@@ -27,8 +27,9 @@ namespace System.Windows.Forms
         protected Color _lastBackColor;
         protected Color _selectedBackColor;
         protected string _iconText;
-        private bool _isSelected;
-        ToolTip _tooltip = new ToolTip();
+        protected bool _isSelected;
+        protected bool _isHovering;
+        protected ToolTip _tooltip = new ToolTip();
 
         #endregion
 
@@ -167,6 +168,7 @@ namespace System.Windows.Forms
         public bool HotTrack { get; set; }
 
         [Category("Custom")]
+        [EditorBrowsable(EditorBrowsableState.Always)]
         public bool KeepSelected { get; set; }
 
         [Category("Custom")]
@@ -183,7 +185,7 @@ namespace System.Windows.Forms
             }
         }
 
-        #endregion+z
+        #endregion
 
         #region 私有方法
 
@@ -288,7 +290,12 @@ namespace System.Windows.Forms
         {
             if (KeepSelected && IsSelected)
             {
-                using (SolidBrush brush = new SolidBrush(SelectedBackColor))
+                var activeColor = SelectedBackColor;
+                if (_isHovering)
+                {
+                    activeColor = HoverBackColor;
+                }
+                using (SolidBrush brush = new SolidBrush(activeColor))
                 {
                     g.FillRectangle(brush, this.ClientRectangle);
                 }
@@ -310,6 +317,7 @@ namespace System.Windows.Forms
             g.SetSlowRendering();
 
             DrawSelectedBackground(g);
+            
 
             if (ShowImage)
             {
@@ -370,6 +378,7 @@ namespace System.Windows.Forms
         protected virtual void TileIcon_MouseLeave(object sender, EventArgs e)
         {
             this.BackColor = _lastBackColor;
+            _isHovering = false;
             Invalidate();
         }
 
@@ -380,6 +389,7 @@ namespace System.Windows.Forms
             if (HotTrack)
             {
                 this.BackColor = HoverBackColor;
+                _isHovering = true;
             }
             Invalidate();
         }

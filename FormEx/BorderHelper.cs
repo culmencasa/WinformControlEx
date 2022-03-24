@@ -6,7 +6,7 @@ namespace System.Windows.Forms
     /// <summary>
     /// 为控件添加外边框
     /// </summary>
-    public class BorderHelper
+    internal class BorderHelper
     {
         #region 字段
 
@@ -212,22 +212,20 @@ namespace System.Windows.Forms
         /// <summary>
         /// 绘制渐变填充的半透明圆角矩形
         /// </summary>
-        /// <param name="gx">Destination graphics</param>
-        /// <param name="rc">Destination rectangle</param>
-        /// <param name="startColorValue">Starting color for gradient</param>
-        /// <param name="endColorValue">End color for gradient</param>
-        /// <param name="borderColor">The color of the border</param>
-        /// <param name="size">The size of the rounded corners</param>
-        /// <param name="transparency">Transparency constant</param>
+        /// <param name="gx"></param>
+        /// <param name="rc"></param>
+        /// <param name="startColorValue"></param>
+        /// <param name="endColorValue"></param>
+        /// <param name="borderColor"></param>
+        /// <param name="size"></param>
+        /// <param name="transparency"></param>
         public void DrawGradientRoundedRectangleAlpha(Graphics gx, Rectangle rc, Color startColorValue, Color endColorValue, Color borderColor, Size size, byte transparency, FillDirection direction)
         {
-            // Prepare image for gradient
+            // 画一个圆角矩形到gradientImage
             Bitmap gradientImage = new Bitmap(rc.Width, rc.Height);
-            // Create temporary graphics
+
             Graphics gxGradient = Graphics.FromImage(gradientImage);
-            // This is our rectangle
             Rectangle roundedRect = new Rectangle(0, 0, rc.Width, rc.Height);
-            // Fill in gradient
             GradientFill.Fill(
                 gxGradient,
                 roundedRect,
@@ -235,28 +233,27 @@ namespace System.Windows.Forms
                 endColorValue,
                 direction);
 
-            // Prepare the copy of the screen graphics
+            // 创建一个临时画布, 复制原画布上图像作为背景
             Bitmap tempBitmap = new Bitmap(rc.Width, rc.Height);
             Graphics tempGx = Graphics.FromImage(tempBitmap);
-            // Copy from the screen's graphics to the temp graphics
             CopyGraphics(gx, tempGx, rc.Width, rc.Height, rc.X, rc.Y);
-            // Draw the gradient image with transparency on the temp graphics
+            // 将gradientImage和tempBitmap结合
             tempGx.DrawAlpha(gradientImage, transparency, rc.X, rc.Y);
-            // Cut out the transparent image 
+
             gxGradient.DrawImage(tempBitmap, new Rectangle(0, 0, rc.Width, rc.Height), rc, GraphicsUnit.Pixel);
-            // Prepare for imposing
+            
             roundedRect.Width--;
             roundedRect.Height--;
-            // Impose the rounded rectangle with transparent color
+            // 画边框
             Bitmap borderImage = ImposeRoundedRectangle(roundedRect, borderColor, size);
-            // Draw the transparent rounded rectangle
+            
             ImageAttributes attrib = new ImageAttributes();
             attrib.SetColorKey(Color.Green, Color.Green);
             gxGradient.DrawImage(borderImage, new Rectangle(0, 0, rc.Width, rc.Height), 0, 0, borderImage.Width, borderImage.Height, GraphicsUnit.Pixel, attrib);
-            // OK... now are ready to draw the final image on the original graphics
+           
+            // 最终
             gx.DrawImageTransparent(gradientImage, rc);
 
-            // Clean up
             attrib.Dispose();
             tempGx.Dispose();
             tempBitmap.Dispose();
@@ -265,14 +262,14 @@ namespace System.Windows.Forms
         }
 
         /// <summary>
-        /// Draws gradient filled rounded rectangle
+        /// 
         /// </summary>
-        /// <param name="gx">目标 graphics</param>
-        /// <param name="rc">目标 rectangle</param>
-        /// <param name="startColorValue">Starting color for gradient</param>
-        /// <param name="endColorValue">End color for gradient</param>
-        /// <param name="borderColor">The color of the border</param>
-        /// <param name="size">The size of the rounded corners</param>
+        /// <param name="gx"></param>
+        /// <param name="rc"></param>
+        /// <param name="startColorValue"></param>
+        /// <param name="endColorValue"></param>
+        /// <param name="borderColor"></param>
+        /// <param name="size"></param>
         public void DrawGradientRoundedRectangle(Graphics gx, Rectangle rc, Color startColorValue, Color endColorValue, Color borderColor, Size size, FillDirection direction)
         {
             Bitmap bitmap = GetGradiendRoundedRectangle(new Rectangle(0, 0, rc.Width, rc.Height), startColorValue, endColorValue, borderColor, size, direction);
@@ -318,45 +315,38 @@ namespace System.Windows.Forms
         /// <param name="transparency"></param>
         public void DrawRoundedRectangleAlpha(Graphics gx, Color borderColor, Color backColor, Rectangle rc, Size size, byte transparency)
         {
-            // Prepare image for gradient
-            Bitmap roundedImage = new Bitmap(rc.Width, rc.Height);
-            // Create temporary graphics
-            Graphics gxRounded = Graphics.FromImage(roundedImage);
-            // This is our rectangle
-            Rectangle roundedRect = new Rectangle(0, 0, rc.Width, rc.Height);
-            // Draw rounded rect
+            Bitmap roundedImage = new Bitmap(rc.Width, rc.Height);            
+            Graphics gxRounded = Graphics.FromImage(roundedImage);            
+            Rectangle roundedRect = new Rectangle(0, 0, rc.Width, rc.Height);            
             DrawRoundedRectangle(gxRounded, borderColor, backColor, roundedRect, size);
             //DrawRoundedRect(gxRounded, borderPen, backColor, new Rectangle(0, 0, rc.Width, rc.Width), size);
 
-            // Prepare the copy of the screen graphics
             using (Bitmap tempBitmap = new Bitmap(rc.Width, rc.Height))
             {
                 using (Graphics tempGx = Graphics.FromImage(tempBitmap))
                 {
-                    // Copy from the screen's graphics to the temp graphics
+
                     CopyGraphics(gx, tempGx, rc.Width, rc.Height, rc.X, rc.Y);
-                    // Draw the gradient image with transparency on the temp graphics
+                    
                     tempGx.DrawAlpha(roundedImage, transparency, rc.X, rc.Y);
                 }
-                // Cut out the transparent image 
+
                 gxRounded.DrawImage(tempBitmap, new Rectangle(0, 0, rc.Width, rc.Height), rc, GraphicsUnit.Pixel);
             }
 
-            // Prepare for imposing
+
             roundedRect.Width--;
             roundedRect.Height--;
-            // Impose the rounded rectangle with transparent color
+
             Bitmap borderImage = ImposeRoundedRectangle(roundedRect, borderColor, size);
-            // Draw the transparent rounded rectangle
+
             using (ImageAttributes attrib = new ImageAttributes())
             {
                 attrib.SetColorKey(Color.Green, Color.Green);
                 gxRounded.DrawImage(borderImage, new Rectangle(0, 0, rc.Width, rc.Height), 0, 0, borderImage.Width, borderImage.Height, GraphicsUnit.Pixel, attrib);
-                // OK... now are ready to draw the final image on the original graphics
+                
                 gx.DrawImageTransparent(roundedImage, rc);
             }
-
-            // Clean up
 
             roundedImage.Dispose();
             gxRounded.Dispose();
@@ -376,7 +366,6 @@ namespace System.Windows.Forms
         private Bitmap GetGradiendRoundedRectangle(Rectangle rc, Color startColorValue, Color endColorValue, Color borderColor, Size size, FillDirection direction)
         {
             Bitmap outputImage = new Bitmap(rc.Width, rc.Height);
-            // Create temporary graphics
             Graphics gx = Graphics.FromImage(outputImage);
 
             GradientFill.Fill(
