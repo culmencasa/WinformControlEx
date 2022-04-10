@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace System.Windows.Forms
 {
@@ -38,13 +39,36 @@ namespace System.Windows.Forms
             : base()
         {
             // 1.让PictureBox支持焦点
-            SetStyle(ControlStyles.Selectable, true);
-            SetStyle(ControlStyles.EnableNotifyMessage, true);
+            EnableTabStop();
 
             this.TabStop = true;
 
             this.BackColor = Color.Transparent;
             this.Size = new Size(75, 23);
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+
+            if (IsHandleCreated)
+            {
+                if (NormalImage != null && AutoResize)
+                {
+                    float coeff;
+                    coeff = this.Height * 1f / NormalImage.Height;
+                    int oldWidth = NormalImage.Width;
+                    int oldHeight = NormalImage.Height;
+                    int newWidth = Convert.ToInt16(oldHeight * coeff);
+                    int newHeight = Convert.ToInt16(oldHeight * coeff);
+
+                    //Debug.WriteLine($"{newWidth} , {newHeight}");
+
+                    this.Width = newWidth;
+                    this.Height = newHeight;
+                    //this.Size = new Size(newWidth, newHeight);
+                }
+            }
         }
 
         #endregion
@@ -83,21 +107,51 @@ namespace System.Windows.Forms
 
         #region  Properties
 
+        private bool _autoResize;
+        /// <summary>
+        /// 以控件高度为基准自动大小
+        /// </summary>
+        [Category("Custom")]
+        [Browsable(true)]
+        [DefaultValue(false)]
+        public bool AutoResize
+        {
+            get
+            {
+                return _autoResize;
+            }
+            set
+            {
+                _autoResize = value;
+                Invalidate();
+            }
+        }
+
         public bool ShowFocusLine
         {
             get;
             set;
         }
 
-        [Category("Appearance")]
+        [Category("Custom")]
         [Description("Image to show when the button is not in any other state.")]
         [DefaultValue(null)]
         public Image NormalImage
         {
-            get { return _NormalImage; }
-            set { _NormalImage = value; if (!(_hover || _down)) Image = value; }
+            get
+            {
+                return _NormalImage;
+            }
+            set
+            {
+                _NormalImage = value;
+                if (!(_hover || _down))
+                {
+                    Image = value;
+                }
+            }
         }
-        [Category("Appearance")]
+        [Category("Custom")]
         [Description("Image to show when the button is hovered over.")]
         [DefaultValue(null)]
         public Image HoverImage
@@ -106,7 +160,7 @@ namespace System.Windows.Forms
             set { _HoverImage = value; if (_hover) Image = value; }
         }
 
-        [Category("Appearance")]
+        [Category("Custom")]
         [Description("Image to show when the button is depressed.")]
         [DefaultValue(null)]
         public Image DownImage
@@ -117,7 +171,7 @@ namespace System.Windows.Forms
 
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [Category("Appearance")]
+        [Category("Custom")]
         [Description("The text associated with the control.")]
         public override string Text
         {
@@ -133,7 +187,7 @@ namespace System.Windows.Forms
 
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [Category("Appearance")]
+        [Category("Custom")]
         [Description("The font used to display text in the control.")]
         public override Font Font
         {
@@ -149,62 +203,13 @@ namespace System.Windows.Forms
 
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [Category("Appearance")]
+        [Category("Custom")]
         public override System.Drawing.Color ForeColor
         {
             get;
             set;
         }
 
-        [Description("当鼠标放在控件可见处的提示文本")]
-        public string ToolTipText { get; set; }
-
-        #region 2.让PictureBox支持焦点
-
-        [Browsable(true), EditorBrowsable()]
-        public new bool TabStop
-        {
-            get
-            {
-                return base.TabStop;
-            }
-            set
-            {
-                base.TabStop = value;
-            }
-        }
-
-        [Browsable(true), EditorBrowsable()]
-        public new int TabIndex
-        {
-            get
-            {
-                return base.TabIndex;
-            }
-            set
-            {
-                base.TabIndex = value;
-            }
-        }
-
-        #endregion
-
-
-        private bool _buttonKeepPressed;
-        public bool ButtonKeepPressed { get
-            {
-                return _buttonKeepPressed;
-            }
-            set
-            {
-                _buttonKeepPressed = value;
-                if (value == false)
-                {
-                    Image = NormalImage;
-                    Invalidate();
-                }
-            }
-        }
 
         #endregion
 
@@ -271,6 +276,9 @@ namespace System.Windows.Forms
                 HideToolTip();
                 ShowTooTip(ToolTipText);
             }
+
+
+
             base.OnMouseEnter(e);
         }
 
@@ -321,7 +329,7 @@ namespace System.Windows.Forms
                 Image = _NormalImage;
             }
             base.OnMouseLeave(e);
-        
+
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -437,7 +445,20 @@ namespace System.Windows.Forms
 
         protected override void OnPaint(PaintEventArgs pe)
         {
+            Graphics g = pe.Graphics;
+            // 画鼠标悬浮背景色
+            if (_hover)
+            {
+                using (SolidBrush brush = new SolidBrush(HotTrackColor))
+                {
+                    g.FillRectangle(brush, this.ClientRectangle);
+                }
+            }
+
             base.OnPaint(pe);
+
+            
+
             if ((!string.IsNullOrEmpty(Text)) && (pe != null) && (base.Font != null))
             {
                 SizeF drawStringSize = TextRenderer.MeasureText(base.Text, base.Font);
@@ -489,7 +510,12 @@ namespace System.Windows.Forms
 
         #endregion
 
-        #region Private
+        #region 提示文本
+
+        [Category("Custom")]
+        [Description("当鼠标放在控件可见处的提示文本")]
+        public string ToolTipText { get; set; }
+
 
         private void ShowTooTip(string toolTipText)
         {
@@ -504,10 +530,90 @@ namespace System.Windows.Forms
 
         #endregion
 
+
+        #region 2.让PictureBox支持焦点
+
+        [Category("Custom")]
+        [Browsable(true), EditorBrowsable()]
+        public new bool TabStop
+        {
+            get
+            {
+                return base.TabStop;
+            }
+            set
+            {
+                base.TabStop = value;
+            }
+        }
+
+        [Category("Custom")]
+        [Browsable(true), EditorBrowsable()]
+        public new int TabIndex
+        {
+            get
+            {
+                return base.TabIndex;
+            }
+            set
+            {
+                base.TabIndex = value;
+            }
+        }
+
+
+        protected void EnableTabStop()
+        {
+            SetStyle(ControlStyles.Selectable, true);
+            SetStyle(ControlStyles.EnableNotifyMessage, true);
+        }
+
+        #endregion
+
+
+        #region 让按钮保持按下状态
+
+        private bool _buttonKeepPressed;
+        public bool ButtonKeepPressed
+        {
+            get
+            {
+                return _buttonKeepPressed;
+            }
+            set
+            {
+                _buttonKeepPressed = value;
+                if (value == false)
+                {
+                    Image = NormalImage;
+                    Invalidate();
+                }
+            }
+        }
+
+        #endregion
+
+
+        private Color _hotTrackColor = Color.FromArgb(244, 244, 243);
+        public Color HotTrackColor
+        {
+            get
+            {
+                return _hotTrackColor;
+            }
+            set
+            {
+                _hotTrackColor = value;
+                Invalidate();
+            }
+        }
+
         protected override void OnEnter(EventArgs e)
         {
             this.Invalidate();
             base.OnEnter(e);
+
+
         }
         protected override void OnLeave(EventArgs e)
         {

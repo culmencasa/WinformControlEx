@@ -16,6 +16,8 @@ namespace System.Windows.Forms
         public SplashForm(Bitmap bitmap)
         {
             InitializeComponent();
+
+            this.FormBorderStyle = FormBorderStyle.None;
             this.TopMost = true;
             this.ShowInTaskbar = false;
             this.Size = bitmap.Size;

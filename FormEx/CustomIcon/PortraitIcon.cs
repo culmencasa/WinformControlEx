@@ -12,6 +12,7 @@ namespace System.Windows.Forms
     /// <summary>
     /// 图标控件
     /// </summary>
+    [DefaultEvent("MouseDoubleClick")]
     public class PortraitIcon : NonFlickerUserControl
     {
         #region 字段
@@ -61,6 +62,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 文本
         /// </summary>
+        [Category("Custom")]
         public new string Text
         {
             get
@@ -76,6 +78,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 控件显示的标题文本
         /// </summary>
+        [Category("Custom")]
         [DefaultValue("")]
         public string Caption 
         {
@@ -97,42 +100,51 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否显示标题
         /// </summary>
+        [Category("Custom")]
         public bool ShowCaption { get; set; }
 
+        [Category("Custom")]
         public bool ShowIconBorder { get; set; }
 
         /// <summary>
         /// 是否允许拖动
         /// </summary>
+        [Category("Custom")]
         public bool AllowDrag { get; set; }
 
         /// <summary>
         /// 圆角
         /// </summary>
+        [Category("Custom")]
         public int RoundedCornerAngle { get; set; }
 
         /// <summary>
         /// 选中后的背景色
         /// </summary>
+        [Category("Custom")]
         public Color FocusBackgroundColor { get; set; }
         /// <summary>
         /// 悬浮的背景色
         /// </summary>
+        [Category("Custom")]
         public Color HoverBackgroundColor { get; set; }
 
         /// <summary>
         /// 背景色1
         /// </summary>
+        [Category("Custom")]
         public Color FirstColor { get; set; }
 
         /// <summary>
         /// 背景色2
         /// </summary>
+        [Category("Custom")]
         public Color SecondColor { get; set; }
-               
+
         /// <summary>
         /// 图像
         /// </summary>
+        [Category("Custom")]
         [DefaultValue(typeof(Image), "null")]
         public Image Image
         {
@@ -185,8 +197,10 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否选中 (外部容器使用)
         /// </summary>
+        [Category("Custom")]
         public bool IsSelected { get; set; }
 
+        [Browsable(false)]
         public bool IsDragging
         {
             get
@@ -198,21 +212,24 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否显示为灰色图像
         /// </summary>
+        [Category("Custom")]
         public bool ShowGrayImage { get; set; }
 
 
+        [Category("Custom")]
         protected Padding CaptionMargin
         {
             get { return _captionMargin; }
             set { _captionMargin = value; }
         }
 
-
+        [Browsable(false)]
         public Object DragSender { get; set; }
 
         /// <summary>
         /// 图像的大小模式
         /// </summary>
+        [Category("Custom")]
         public IconSizeMode SizeMode
         {
             get 
@@ -226,6 +243,7 @@ namespace System.Windows.Forms
                 this.Refresh();
             }
         }
+        [Category("Custom")]
         public int FillDegree
         {
             get { return _FillDegree; }
@@ -255,6 +273,7 @@ namespace System.Windows.Forms
             }
         }
 
+        [Category("Custom")]
         [DefaultValue(typeof(Color), "Transparent")]
         public override Color BackColor 
         { 
@@ -388,7 +407,7 @@ namespace System.Windows.Forms
             this.Refresh();
         }
 
-        #region 鼠标
+        #region 鼠标相关
 
         protected override void OnMouseEnter(EventArgs e)
         {
@@ -533,7 +552,7 @@ namespace System.Windows.Forms
 
         #endregion
 
-        #region 重绘
+        #region 重绘相关
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -786,7 +805,8 @@ namespace System.Windows.Forms
                 height = (int)newHeight;
 
                 x = (this.Width - width) / 2;
-                y = (this.Height - height - (int)textarea.Height - _borderWidth * 2 - _captionMargin.Bottom - _captionMargin.Top) / 2;
+                //y = (this.Height - height - (int)textarea.Height - _borderWidth * 2 - _captionMargin.Bottom - _captionMargin.Top) / 2;
+                y = 0;
                 //Image = ImageUtils.ResizeNearest((Bitmap)Image, ratio);
                 //width = Image.Width;
                 //height = Image.Height;

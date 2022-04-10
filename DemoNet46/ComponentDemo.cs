@@ -11,12 +11,13 @@ using System.Windows.Forms;
 
 namespace DemoNet46
 {
-    public partial class TestButtonForm : NonFrameForm
+    public partial class ComponentDemo : NonFrameForm
     {
-        public TestButtonForm()
+        public ComponentDemo()
         {
             InitializeComponent();
         }
+
 
         private void btnShowException_Click(object sender, EventArgs e)
         {
@@ -27,11 +28,13 @@ namespace DemoNet46
 
         private void btnWorkShade_Click(object sender, EventArgs ee)
         {
-            /* 过时
             WorkShade ws = new WorkShade(3000);
             ws.Attach(this.Parent as Form);
             ws.Show();
-            */
+        }
+
+        private void btnBackgroundWorkShade_Click(object sender, EventArgs arg)
+        {
 
             BackgroundWorkShade bws = BackgroundWorkShade.Quicker;
             bws.Attach(this.GetTopLevelForm());

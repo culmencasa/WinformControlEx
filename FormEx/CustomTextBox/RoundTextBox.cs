@@ -57,6 +57,10 @@ namespace System.Windows.Forms
 
         public event Action ActionBegin;
 
+        [Category("Custom")]
+        [Browsable(true)]
+        public new event EventHandler TextChanged;
+
 
         #endregion
 
@@ -131,6 +135,9 @@ namespace System.Windows.Forms
             set
             {
                 innerTextBox.Text = value;
+
+
+
                 if (string.IsNullOrEmpty(value))
                 {
                     innerTextBox.Text = this.EmptyTooltipText;
@@ -144,6 +151,7 @@ namespace System.Windows.Forms
                         });
                     }
                 }
+
                 UpdateForeColor();
             }
         }
@@ -475,6 +483,11 @@ namespace System.Windows.Forms
 
         private void innerTextBox_TextChanged(object sender, EventArgs e)
         {
+            string value = innerTextBox.Text;
+            if (value != null && value.Length > 0 && value != EmptyTooltipText && value != innerTextBox.Text)
+            {
+                TextChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void innerTextBox_KeyUp(object sender, KeyEventArgs e)

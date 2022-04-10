@@ -30,7 +30,7 @@ namespace DemoNet46
 
             popoffTimer = new Timer();
             popoffTimer.Interval = 1;
-			popoffTimer.Tick += PopoffTimer_Tick;
+            popoffTimer.Tick += PopoffTimer_Tick;
 
         }
 
@@ -55,10 +55,10 @@ namespace DemoNet46
             if (startMenuState == StartMenuStates.Closed || startMenuState == StartMenuStates.Opening)
             {
                 popoffTimer.Stop();
-				pnlStart.GotFocus += PnlStart_GotFocus;
+                pnlStart.GotFocus += PnlStart_GotFocus;
                 pnlStart.LostFocus += PnlStart_LostFocus;
                 return;
-            }            
+            }
 
 
             startMenuState = StartMenuStates.Closing;
@@ -84,7 +84,7 @@ namespace DemoNet46
 
         }
 
-		private void PopupTimer_Tick(object sender, EventArgs e)
+        private void PopupTimer_Tick(object sender, EventArgs e)
         {
             if (startMenuState == StartMenuStates.Opened)
             {
@@ -104,7 +104,7 @@ namespace DemoNet46
             {
                 pnlStart.Visible = true;
             }
-           
+
             if (pnlStart.Location.Y <= pnlTaskbar.Top - pnlStart.Height)
             {
                 pnlStart.BringToFront();
@@ -128,14 +128,14 @@ namespace DemoNet46
 
         }
 
-		private void PnlStart_GotFocus(object sender, EventArgs e)
-		{
-            ActiveControl = pnlStart;
-		}
-
-		private void PnlStart_LostFocus(object sender, EventArgs e)
+        private void PnlStart_GotFocus(object sender, EventArgs e)
         {
-            /* 麻烦... 未实现. 开始菜单应该是一个窗体, 而不是一个控件.
+            ActiveControl = pnlStart;
+        }
+
+        private void PnlStart_LostFocus(object sender, EventArgs e)
+        {
+            /* 麻烦... 未实现. 实际上开始菜单应该是一个窗体, 而不是一个Panel控件.
             if (startMenuState != StartMenuStates.Opened)
             {
                 return;
@@ -156,7 +156,7 @@ namespace DemoNet46
             if (startMenuState == StartMenuStates.Closing || startMenuState == StartMenuStates.Closed)
             {
                 pnlStart.LostFocus -= PnlStart_LostFocus;
-                popupTimer.Start();                
+                popupTimer.Start();
             }
             else
             {
@@ -168,46 +168,83 @@ namespace DemoNet46
 
         #endregion
 
+        #region 桌面记时器
 
         private void sysTimer_Tick(object sender, EventArgs e)
         {
             lblTime.Text = DateTime.Now.ToString("HH:mm:ss");
 
+            // 模拟任务栏总在最前
+            pnlTaskbar.BringToFront();
+
+            // 模拟开始菜单失焦
+            if (!pnlStart.Focused && !IsMouseHoverStartMenu() && IsLastClickOutsideOfStartMenu())
+            {
+                startMenuState = StartMenuStates.Closing;
+                popoffTimer.Start();
+            }
+
         }
+
+        /// <summary>
+        /// 判断鼠标是否在开始菜单内部
+        /// </summary>
+        /// <returns></returns>
+        bool IsMouseHoverStartMenu()
+        {
+            Point arrowPosition = pnlStart.PointToClient(Cursor.Position);
+            bool isMouseHoverStartMenu = pnlStart.DisplayRectangle.Contains(arrowPosition);
+
+            return isMouseHoverStartMenu;
+        }
+
+        /// <summary>
+        /// 判断鼠标是否点击了开始菜单外部
+        /// </summary>
+        /// <returns></returns>
+        bool IsLastClickOutsideOfStartMenu()
+        {
+            if (LastClickPoint == Point.Empty)
+                return false;
+
+            Point arrowPosition = pnlStart.PointToClient(LastClickPoint);
+
+            return !pnlStart.DisplayRectangle.Contains(arrowPosition);
+        }
+
+
+
+        protected override void OnControlAdded(ControlEventArgs e)
+        {
+            base.OnControlAdded(e);
+
+            e.Control.MouseClick += Control_MouseClick;
+        }
+
+        protected override void OnControlRemoved(ControlEventArgs e)
+        {
+            base.OnControlRemoved(e);
+            e.Control.MouseClick -= Control_MouseClick;
+        }
+
+        private void Control_MouseClick(object sender, MouseEventArgs e)
+        {
+            LastClickPoint = Cursor.Position;
+        }
+
+        Point LastClickPoint { get; set; }
+
+
+        #endregion
+
+        #region 开始菜单按钮
 
         private void btnShutdown_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void btnShowTestForm_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                TestButtonForm form = FormManager.Single<TestButtonForm>();
-                form.StartPosition = FormStartPosition.CenterParent;
-                
-
-                AddChildWindow(form);
-
-            }
-        }
-
-        private void btnRecycle_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                Form f = new Form();
-                f.TopLevel = false;
-                f.FormBorderStyle = FormBorderStyle.None;
-
-                f.Location = new Point(300, 300);
-                this.Controls.Add(f);
-
-                f.Show();
-
-            }
-        }
+        #endregion
 
 
         #region 子窗体鼠标操作
@@ -228,6 +265,7 @@ namespace DemoNet46
             form.MouseUp += ChildWindow_MouseUp;
 
             this.Controls.Add(form);
+            form.Location = new Point((this.Width - form.Width) / 2, (this.Height - form.Height) / 2);
             form.BringToFront();
 
 
@@ -236,7 +274,7 @@ namespace DemoNet46
 
         private void ChildWindow_MouseDown(object sender, MouseEventArgs e)
         {
-            mouseDown = true; 
+            mouseDown = true;
             lastLocation = e.Location;
         }
         private void ChildWindow_MouseMove(object sender, MouseEventArgs e)
@@ -253,6 +291,61 @@ namespace DemoNet46
         {
             mouseDown = false;
         }
+
+        #endregion
+
+
+        #region 图标事件
+
+        private void btnShowTestForm_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                LayoutDemo form = FormManager.Single<LayoutDemo>();
+
+                AddChildWindow(form);
+            }
+        }
+
+        private void btnShowThemeDemo_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                var themeDemo = FormManager.Single<ThemeDemo>();
+
+                AddChildWindow(themeDemo);
+
+            }
+
+        }
+
+        private void btnShowComponentDemo_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                var componentDemo = FormManager.Single<ComponentDemo>();
+
+                AddChildWindow(componentDemo);
+            }
+        }
+
+        // 回收站
+        private void btnRecycle_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Form f = new Form();
+                f.TopLevel = false;
+                f.FormBorderStyle = FormBorderStyle.None;
+
+                f.Location = new Point(300, 300);
+                this.Controls.Add(f);
+
+                f.Show();
+
+            }
+        }
+
 
         #endregion
     }

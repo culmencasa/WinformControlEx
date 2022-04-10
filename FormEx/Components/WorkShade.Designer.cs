@@ -29,15 +29,27 @@ namespace System.Windows.Forms
 		/// </summary>
 		protected virtual void InitializeComponent()
 		{
-            this.pnlCenterBox = new System.Windows.Forms.GradientPanel();
-            this.lblProgressText = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
+            this.pnlCenterBox = new System.Windows.Forms.CustomPanel();
+            this.lblProgressText = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.pnlCenterBox.SuspendLayout();
             this.SuspendLayout();
             // 
+            // btnClose
+            // 
+            this.btnClose.Location = new System.Drawing.Point(98, 105);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(128, 35);
+            this.btnClose.TabIndex = 1;
+            this.btnClose.Text = "跳过";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Visible = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
             // pnlCenterBox
             // 
+            this.pnlCenterBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pnlCenterBox.BackColor = System.Drawing.Color.Transparent;
             this.pnlCenterBox.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.pnlCenterBox.BorderWidth = 1;
@@ -46,7 +58,7 @@ namespace System.Windows.Forms
             this.pnlCenterBox.Controls.Add(this.progressBar1);
             this.pnlCenterBox.FirstColor = System.Drawing.Color.White;
             this.pnlCenterBox.InnerBackColor = System.Drawing.Color.Transparent;
-            this.pnlCenterBox.Location = new System.Drawing.Point(212, 102);
+            this.pnlCenterBox.Location = new System.Drawing.Point(220, 103);
             this.pnlCenterBox.Name = "pnlCenterBox";
             this.pnlCenterBox.RoundBorderRadius = 20;
             this.pnlCenterBox.SecondColor = System.Drawing.Color.White;
@@ -62,17 +74,6 @@ namespace System.Windows.Forms
             this.lblProgressText.TabIndex = 2;
             this.lblProgressText.Text = "正在运行, 请稍等...";
             // 
-            // btnClose
-            // 
-            this.btnClose.Location = new System.Drawing.Point(98, 105);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(128, 35);
-            this.btnClose.TabIndex = 1;
-            this.btnClose.Text = "跳过";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Visible = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -80,7 +81,7 @@ namespace System.Windows.Forms
             this.progressBar1.Location = new System.Drawing.Point(40, 51);
             this.progressBar1.MarqueeAnimationSpeed = 1;
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(245, 14);
+            this.progressBar1.Size = new System.Drawing.Size(245, 10);
             this.progressBar1.Step = 5;
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 0;
@@ -104,7 +105,7 @@ namespace System.Windows.Forms
 
 		private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button btnClose;
-        private GradientPanel pnlCenterBox;
+        private CustomPanel pnlCenterBox;
         private Label lblProgressText;
     }
 }

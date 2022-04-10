@@ -7,64 +7,57 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace System.Windows.Forms.CustomForm
+namespace System.Windows.Forms
 {
-    public partial class Win11ControlBox : ClickThroughPanel
+    public partial class Win11ControlBox : UserControl
     {
         public Win11ControlBox()
         {
-            InitializeComponent();       
-
-            this.ParentChanged += Win11ControlBox_ParentChanged;
-
-            this.btnClose.Dock = DockStyle.Right;
-            this.btnMaximum.Dock = DockStyle.Right;
-            this.btnMinimum.Dock = DockStyle.Right;
+            InitializeComponent();
 
 
         }
 
-        private void Win11ControlBox_Load(object sender, EventArgs e)
+
+        protected override void OnResize(EventArgs eventargs)
         {
-            //int width = this.Width;
-            //int height = this.Height;
 
-            //int left = 0;
-            //int top = 0;
+            //btnClose.Dock = DockStyle.None;
+            //btnMaximum.Dock = DockStyle.None;
+            //btnMinimum.Dock = DockStyle.None;
 
 
-            //IntPtr handle = Win32.CreateRoundRectRgn(left, top, width, height, 20, 20);
-            //this.Region = Region.FromHrgn(handle);
-            //this.Update();
-            //Win32.DeleteObject(handle); 
+            base.OnResize(eventargs);
 
-            //this.Size = new Size((int)(this.Width * 0.5), (int)(this.Height * 0.5));
-            
+            this.Size = new Size(btnClose.Width + btnMaximum.Width + btnMinimum.Width, this.Height);
         }
+
+        
+
 
         public Form ParentForm { get; set; }
 
-        private void Win11ControlBox_ParentChanged(object sender, EventArgs e)
-        {
-            ParentForm = this.Parent as Form;
-            if (ParentForm != null)
-            {
-                btnClose.Click -= new EventHandler(this.btnClose_Click);
-                btnMaximum.Click -= new EventHandler(this.btnMaximum_Click);
-                btnMinimum.Click -= new EventHandler(this.btnMinimum_Click);
-                btnClose.Click += new EventHandler(this.btnClose_Click);
-                btnMaximum.Click += new EventHandler(this.btnMaximum_Click);
-                btnMinimum.Click += new EventHandler(this.btnMinimum_Click);
 
-                ParentForm.StyleChanged -= ParentForm_StyleChanged;
-                ParentForm.StyleChanged += ParentForm_StyleChanged;
-            }
-            else
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+            if (!DesignMode)
             {
-                //btnClose.Click -= new EventHandler(this.btnClose_Click);
-                //btnMaximum.Click -= new EventHandler(this.btnMaximum_Click);
-                //btnMinimum.Click -= new EventHandler(this.btnMinimum_Click);
-                //ParentForm.StyleChanged -= ParentForm_StyleChanged;
+                ParentForm = FormManager.GetTopForm(this) as Form;
+                if (ParentForm != null)
+                {
+                    this.BackColor = ParentForm.BackColor;
+                    btnClose.Click -= new EventHandler(this.btnClose_Click);
+                    btnMaximum.Click -= new EventHandler(this.btnMaximum_Click);
+                    btnMinimum.Click -= new EventHandler(this.btnMinimum_Click);
+                    btnClose.Click += new EventHandler(this.btnClose_Click);
+                    btnMaximum.Click += new EventHandler(this.btnMaximum_Click);
+                    btnMinimum.Click += new EventHandler(this.btnMinimum_Click);
+
+                    ParentForm.StyleChanged -= ParentForm_StyleChanged;
+                    ParentForm.StyleChanged += ParentForm_StyleChanged;
+                }
             }
         }
 

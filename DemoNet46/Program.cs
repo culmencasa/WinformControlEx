@@ -18,7 +18,6 @@ namespace DemoNet46
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-
             var splashForm = new SplashForm(Properties.Resources.Se7enBoot);
 
             var mainForm = new MainForm();

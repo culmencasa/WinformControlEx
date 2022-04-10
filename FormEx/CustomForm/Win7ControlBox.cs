@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace System.Windows.Forms.CustomForm
+namespace System.Windows.Forms
 {
     public partial class Win7ControlBox : UserControl
     {
@@ -21,23 +21,32 @@ namespace System.Windows.Forms.CustomForm
 
         private void Win7ControlBox_ParentChanged(object sender, EventArgs e)
         {
-            Form parentForm = this.Parent as Form;
-            if (parentForm != null)
+
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            if (!DesignMode)
             {
-                this.btnClose.Click -= new System.EventHandler(this.btnClose_Click);
-                this.btnMaximum.Click -= new System.EventHandler(this.btnMaximum_Click);
-                this.btnMinimum.Click -= new System.EventHandler(this.btnMinimum_Click);
-                this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-                this.btnMaximum.Click += new System.EventHandler(this.btnMaximum_Click);
-                this.btnMinimum.Click += new System.EventHandler(this.btnMinimum_Click);
+                Form parentForm = FormManager.GetTopForm(this) as Form;
+                if (parentForm != null)
+                {
+                    this.btnClose.Click -= new System.EventHandler(this.btnClose_Click);
+                    this.btnMaximum.Click -= new System.EventHandler(this.btnMaximum_Click);
+                    this.btnMinimum.Click -= new System.EventHandler(this.btnMinimum_Click);
+                    this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+                    this.btnMaximum.Click += new System.EventHandler(this.btnMaximum_Click);
+                    this.btnMinimum.Click += new System.EventHandler(this.btnMinimum_Click);
 
-                parentForm.StyleChanged -= ParentForm_StyleChanged;
-                parentForm.StyleChanged += ParentForm_StyleChanged;
+                    parentForm.StyleChanged -= ParentForm_StyleChanged;
+                    parentForm.StyleChanged += ParentForm_StyleChanged;
 
-                this.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-                
+                    this.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+                }
             }
         }
+
 
         private void ParentForm_StyleChanged(object sender, EventArgs e)
         {

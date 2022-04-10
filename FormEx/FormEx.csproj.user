@@ -7,6 +7,9 @@
     <Compile Update="AnimationBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="CustomButton\RoundButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="CustomControl\Placeholder.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -20,7 +23,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="CustomForm\Win11ControlBox.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="CustomForm\Win7ControlBox.cs">
       <SubType>UserControl</SubType>
@@ -46,5 +49,10 @@
     <Compile Update="CustomTextBox\RoundTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="CustomForm\Win7ControlBox.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

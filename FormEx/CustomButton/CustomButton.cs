@@ -26,6 +26,7 @@ namespace System.Windows.Forms
             this.SetStyle(ControlStyles.Selectable | ControlStyles.StandardClick | ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.SupportsTransparentBackColor, true);
 
             BorderColor = DarkenColor(this.BackColor, 25);
+            Size = new Size(52, 24);
         }
 
         #endregion
@@ -94,6 +95,13 @@ namespace System.Windows.Forms
         }
 
 
+        [Browsable(false)]
+        public bool IsDefault
+        {
+            get { return m_IsDefault; }
+        }
+
+
         /// <summary>
         /// 圆角
         /// </summary>
@@ -113,19 +121,10 @@ namespace System.Windows.Forms
         }
 
 
-        //DefaultSize
         [Category("Custom")]
         protected override System.Drawing.Size DefaultSize
         {
             get { return new Size(75, 23); }
-        }
-
-
-        //IsDefault
-        [Browsable(false)]
-        public bool IsDefault
-        {
-            get { return m_IsDefault; }
         }
 
         [Category("Custom")]
@@ -145,7 +144,6 @@ namespace System.Windows.Forms
         }
 
 
-        //ImageList
         [Category("Custom"), DefaultValue(typeof(ImageList), null)]
         [Description("指定使用的图片集合")]
         public ImageList ImageList
@@ -159,7 +157,6 @@ namespace System.Windows.Forms
         }
 
 
-        //ImageIndex
         [Category("Custom"), DefaultValue(-1)]
         [Description("指定使用的图片索引")]
         [TypeConverter(typeof(ImageIndexConverter))]
@@ -175,7 +172,6 @@ namespace System.Windows.Forms
         }
 
 
-        //ImageAlign
         [Category("Custom"), DefaultValue(typeof(ContentAlignment), "MiddleCenter")]
         [Description("图片对齐方式")]
         public ContentAlignment ImageAlign
@@ -193,7 +189,6 @@ namespace System.Windows.Forms
         }
 
 
-        //RoundCorners
         [Category("Custom")]
         [DefaultValue(typeof(Corners), "None")]
         [Description("设置几边圆角")]
@@ -212,7 +207,6 @@ namespace System.Windows.Forms
         }
 
 
-        //TextAlign
         [Category("Custom"), DefaultValue(typeof(ContentAlignment), "MiddleCenter")]
         [Description("文字对齐方式")]
         public ContentAlignment TextAlign
@@ -720,8 +714,6 @@ namespace System.Windows.Forms
         }
 
 
-        //The ControlPaint Class has methods to Lighten and Darken Colors, but they return a Solid Color.
-        //The Following 2 methods return a modified color with original Alpha.
         private Color DarkenColor(Color colorIn, int percent)
         {
             //This method returns Black if you Darken by 100%
@@ -742,8 +734,6 @@ namespace System.Windows.Forms
 
         private Color LightenColor(Color colorIn, int percent)
         {
-            //This method returns White if you lighten by 100%
-
             if (percent < 0 || percent > 100)
                 throw new ArgumentOutOfRangeException("percent");
 

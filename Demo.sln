@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FormEx", "FormEx\FormEx.csproj", "{1D2D4588-D4A4-45FB-954A-4DB23301A419}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoNet46", "DemoNet46\DemoNet46.csproj", "{EFFD3453-C578-43DF-80E7-49880939098B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo5", "Demo5\Demo5.csproj", "{6CEA22B9-4B97-41D5-8B1B-4DECF34B597B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocean", "Ocean\Ocean.csproj", "{9197BB90-53B8-4D5D-8716-9704FA9C744F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{6CEA22B9-4B97-41D5-8B1B-4DECF34B597B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CEA22B9-4B97-41D5-8B1B-4DECF34B597B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CEA22B9-4B97-41D5-8B1B-4DECF34B597B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9197BB90-53B8-4D5D-8716-9704FA9C744F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9197BB90-53B8-4D5D-8716-9704FA9C744F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9197BB90-53B8-4D5D-8716-9704FA9C744F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9197BB90-53B8-4D5D-8716-9704FA9C744F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -100,6 +100,12 @@
     <Compile Update="CustomForm\NonFrameForm.Designer.cs">
       <DependentUpon>NonFrameForm.cs</DependentUpon>
     </Compile>
+    <Compile Update="CustomForm\CustomForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="CustomForm\RoundedCornerForm - 复制.Designer.cs">
+      <DependentUpon>RoundedCornerForm.cs</DependentUpon>
+    </Compile>
     <Compile Update="CustomForm\RoundedCornerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,7 +141,7 @@
     <Compile Update="CustomPanel\ClickThroughPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="CustomPanel\GradientPanel.cs">
+    <Compile Update="CustomPanel\CustomPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Components\WizardControl.cs">
@@ -174,7 +180,7 @@
     <Compile Update="DropDownListControl\DropDownListItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="CustomLabel\GradientLabel.cs">
+    <Compile Update="CustomLabel\CustomLabel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="CustomIcon\IconStackView.cs">
@@ -208,9 +214,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="CustomLabel\RoundNumberControl.cs">
-      <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="CustomControl\RoundUserControl.cs">
       <SubType>UserControl</SubType>
@@ -268,6 +271,9 @@
   <ItemGroup>
     <EmbeddedResource Update="CustomForm\NonFrameForm.resx">
       <DependentUpon>NonFrameForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="CustomForm\RoundedCornerForm - 复制.resx">
+      <DependentUpon>RoundedCornerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Update="CustomForm\RoundedCornerForm.resx">
       <DependentUpon>RoundedCornerForm.cs</DependentUpon>

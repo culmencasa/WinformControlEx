@@ -28,6 +28,13 @@ namespace System.Windows.Forms
                 ControlStyles.SupportsTransparentBackColor, true);
             UpdateStyles();
 
+            /* 事件顺序
+             * HandleCreated
+             * Load
+             * Layout
+             * VisibleChanged
+             * Paint
+             */
         }
 
         [Browsable(false)]
@@ -44,6 +51,26 @@ namespace System.Windows.Forms
                 return parms;
             }
         }
+
+        protected string _text;
+
+        [Category("Custom")]
+        [Browsable(true)]
+        [EditorBrowsable]
+        public override string Text
+        {
+            get
+            {
+                return _text;
+            }
+            set
+            {
+                _text = value;
+                Invalidate();
+            }
+        }
+
+
 
         /// <summary>
         /// 弃用

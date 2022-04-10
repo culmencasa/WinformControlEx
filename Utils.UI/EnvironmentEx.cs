@@ -230,7 +230,13 @@ namespace System.Windows.Forms
             // 再次检查
             if (factor == 1)
             {
-                factor = GetScalingFactorUseMC();
+                // workaround: 异常来自 HRESULT:0x8001010D (RPC_E_CANTCALLOUT_ININPUTSYNCCALL)
+                Thread thread = new Thread(() =>
+                {
+                    factor = GetScalingFactorUseMC();
+                });
+                thread.Start();
+                thread.Join();
             }
             // 再次检查
             if (factor == 1 && form != null)

@@ -29,7 +29,7 @@ namespace System.Windows.Forms
 		/// </summary>
 		protected void InitializeComponent()
 		{
-            this.pnlCenterBox = new System.Windows.Forms.GradientPanel();
+            this.pnlCenterBox = new System.Windows.Forms.CustomPanel();
             this.pbWorkProgress = new System.Windows.Forms.CustomProgressBar();
             this.btnClose = new System.Windows.Forms.CustomButton();
             this.lblProgressText = new System.Windows.Forms.Label();
@@ -122,7 +122,7 @@ namespace System.Windows.Forms
 		}
 
 		#endregion
-        private GradientPanel pnlCenterBox;
+        private CustomPanel pnlCenterBox;
         private Label lblProgressText;
         private System.ComponentModel.AbortableBackgroundWorker bgwJob;
         private CustomButton btnClose;

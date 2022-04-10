@@ -92,6 +92,11 @@ namespace System.Windows.Forms
 
         #region 暴露的方法
 
+        /// <summary>
+        /// 设置任务
+        /// </summary>
+        /// <param name="prediction">预告, 时间需要自己根据任务实际时长估量</param>
+        /// <param name="procedure">后台调用的过程</param>
         public void Setup(GivenPrediction prediction, ProcedureEventHandler procedure)
         {
             lock (procedureLockObject)
@@ -136,6 +141,7 @@ namespace System.Windows.Forms
                     return;
                 }
 
+                   
                 lock (procedureLockObject)
                 {
                     if (this.ProcedureList != null && ProcedureList.Count > 0)
@@ -143,9 +149,11 @@ namespace System.Windows.Forms
                         var kvPair = ProcedureList.Take(1).First();
                         var prediction = kvPair.Key;
 
+                        // 滚动条
                         var userState = prediction.Invoke();
                         bgw.ReportProgress(0, userState);
 
+                        // 调用操作
                         var process = kvPair.Value;
                         if (process != null)
                         {
@@ -154,12 +162,24 @@ namespace System.Windows.Forms
 
                         ProcedureList.Remove(prediction);
 
+                        // 如果滚动条进度到达100%, 则退出
                         if (!IsQuickerInstance)
                         {
                             if (userState.CompletedPercent >= pbWorkProgress.MaxValue)
                             {
                                 e.Result = true;
                                 return;
+                            }
+                        }
+                        else
+                        {
+                            // 如果是IsQuickerInstance, 则隐藏
+                            if (userState.CompletedPercent >= pbWorkProgress.MaxValue)
+                            {
+                                pbWorkProgress.Invoke(new Action(()=>
+                                {
+                                    pbWorkProgress.Complete();
+                                }));
                             }
                         }
                     }

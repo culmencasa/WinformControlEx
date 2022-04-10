@@ -21,7 +21,6 @@ namespace System.Windows.Forms
     ///       ws.Attach(ownerForm);
     ///       ws.Show();
     /// </summary>
-    [Obsolete]
 	public partial class WorkShade : Form
     {
         #region 构造
@@ -316,7 +315,7 @@ namespace System.Windows.Forms
 
         public void FadeOut()
         {
-            int duration = 1000;
+            int duration = 500;
             int steps = 10;
             Timer timer = new Timer();
             timer.Interval = duration / steps;
@@ -332,6 +331,8 @@ namespace System.Windows.Forms
                     timer.Stop();
                     timer.Dispose();
                     this.Close();
+
+                    
                 }
             };
 
@@ -581,6 +582,7 @@ namespace System.Windows.Forms
 
         private void WorkShade_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Owner?.Activate();
         }
 
 

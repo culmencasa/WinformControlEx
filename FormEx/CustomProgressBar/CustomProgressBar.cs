@@ -34,16 +34,18 @@ namespace System.Windows.Forms
         /// </summary>
         private float _pixelUnit;
         /// <summary>
-        /// 当前增长的值
+        /// 当前正在增长的值
         /// </summary>
-        private float _animateIncreasedValue;
+        private float _currentSessionValue;
 
         /// <summary>
         /// 动画要到达的目标值
         /// </summary>
-        private float _animateTargetValue;
-
-        private float LastIncreament;
+        private float _currentSessionGoal;
+        /// <summary>
+        /// 上一次增长的总值
+        /// </summary>
+        private float LastSessionTotal;
         private float LastIncreamentASync;
         /// <summary>
         /// 增长加速度(目前没用)
@@ -249,7 +251,7 @@ namespace System.Windows.Forms
             ProgressBackColor = Color.MidnightBlue;
             ProgressBarColor = Color.RoyalBlue;
 
-            _animateTargetValue = MaxValue;
+            _currentSessionGoal = MaxValue;
         }
 
         #endregion
@@ -260,7 +262,7 @@ namespace System.Windows.Forms
         {
             base.OnLoad(e);
 
-            _animateIncreasedValue = Value;
+            _currentSessionValue = Value;
             ForceRender();
         }
 
@@ -310,10 +312,16 @@ namespace System.Windows.Forms
         {
             Pause();
             this.Value = 0;
-            this._animateIncreasedValue = 0;
-            LastIncreament = 0;
+            this._currentSessionValue = 0;
+            LastSessionTotal = 0;
 
 
+            ForceRender();
+        }
+
+        public void Complete()
+        {
+            this.Value = 100;
             ForceRender();
         }
 
@@ -329,7 +337,7 @@ namespace System.Windows.Forms
                 addUpValue = MaxValue;
             }
             
-            if (addUpValue <= _animateIncreasedValue)
+            if (addUpValue <= _currentSessionValue)
             {
                 return;
             }
@@ -340,12 +348,19 @@ namespace System.Windows.Forms
                     Pause();
                 }
 
-                _animateTargetValue = addUpValue;
+                _currentSessionGoal = addUpValue;
 
-                float increament = (addUpValue - LastIncreament);
-                LastIncreament = increament;
+                float increament = (addUpValue - LastSessionTotal);
+                LastSessionTotal = increament;
 
-                AnimateTimer.Interval = (int)(estimateTime / increament);
+                if (increament <= 0)
+                {
+                    AnimateTimer.Interval = 10;
+                }
+                else
+                {
+                    AnimateTimer.Interval = (int)(estimateTime / increament);
+                }
                 AnimateTimer.Tick += new EventHandler(this.AnimateTimer_Tick);
                 AnimateTimer.Start();
             }
@@ -367,13 +382,13 @@ namespace System.Windows.Forms
         /// <param name="increment">指定进度条增加的量</param>
         public void MakeProgress(int increment)
         {
-            if (_animateIncreasedValue + increment < MaxValue)
+            if (_currentSessionValue + increment < MaxValue)
             {
-                _animateTargetValue = _animateIncreasedValue + increment;
+                _currentSessionGoal = _currentSessionValue + increment;
             }
-            else if (_animateIncreasedValue + increment >= MaxValue)
+            else if (_currentSessionValue + increment >= MaxValue)
             {
-                _animateTargetValue = MaxValue;
+                _currentSessionGoal = MaxValue;
             }
             else
             {
@@ -419,7 +434,7 @@ namespace System.Windows.Forms
             float x = this.Padding.Left;
             float y = this.Padding.Top;
 
-            float width = _animateIncreasedValue * _pixelUnit;
+            float width = _currentSessionValue * _pixelUnit;
             if (DesignMode)
             {
                 width = Value * _pixelUnit;
@@ -468,7 +483,7 @@ namespace System.Windows.Forms
                 }
                 else
                 {
-                    progressText = _animateIncreasedValue + "%";
+                    progressText = _currentSessionValue + "%";
                 }
                 SizeF textSize = g.MeasureString(progressText, this.Font);
                 g.DrawString(progressText, 
@@ -499,27 +514,32 @@ namespace System.Windows.Forms
 
             ForceRender();
 
-            _animateIncreasedValue++;
-
-
-
-
-            if (_animateIncreasedValue >= MaxValue)
+            // 如果已完成 直接退出
+            if (Value == MaxValue)
             {
-                _animateIncreasedValue = MaxValue;
-                Value = MaxValue;
-
-
+                _currentSessionValue = MaxValue;
                 Pause();
-
                 OnProgressCompleted?.Invoke();
             }
-            else if (_animateIncreasedValue >= _animateTargetValue)
+            else
             {
-                _animateIncreasedValue = _animateTargetValue;
-                Value = _animateTargetValue;
+                _currentSessionValue++;
 
-                Pause();
+                if (_currentSessionValue >= MaxValue)
+                {
+                    _currentSessionValue = MaxValue;
+                    Value = MaxValue;
+
+                    Pause();
+                    OnProgressCompleted?.Invoke();
+                }
+                else if (_currentSessionValue >= _currentSessionGoal)
+                {
+                    _currentSessionValue = _currentSessionGoal;
+                    Value = _currentSessionGoal;
+
+                    Pause();
+                }
             }
         }
 

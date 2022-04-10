@@ -240,8 +240,12 @@ namespace System.Windows.Forms
             return lastActiveForm;
         }
 
-
-        public static Form GetTopLevelForm(this Control itself)
+        /// <summary>
+        /// 获取窗体的顶层窗体
+        /// </summary>
+        /// <param name="itself"></param>
+        /// <returns></returns>
+        public static Form GetTopLevelForm(this Form itself)
         {
             Form outmostForm = null;
 
@@ -250,7 +254,7 @@ namespace System.Windows.Forms
                 return outmostForm;
             }
 
-            if (itself is Form && (itself as Form).TopLevel && itself.Parent == null)
+            if (itself.TopLevel && itself.Parent == null)
             {
                 return itself as Form;
             }
@@ -283,7 +287,7 @@ namespace System.Windows.Forms
         #region 焦点所在窗体
 
         /// <summary>
-        /// 获取父窗体
+        /// 获取某一个控件的父窗体
         /// </summary>
         /// <returns></returns>
         public static Form GetTopForm(Control parentControl)

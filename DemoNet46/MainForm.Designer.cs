@@ -31,12 +31,12 @@ namespace DemoNet46
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.pnlTaskbar = new System.Windows.Forms.GradientPanel();
-            this.gradientPanel1 = new System.Windows.Forms.GradientPanel();
-            this.lblTime = new System.Windows.Forms.GradientLabel();
+            this.pnlTaskbar = new System.Windows.Forms.CustomPanel();
+            this.gradientPanel1 = new System.Windows.Forms.CustomPanel();
+            this.lblTime = new System.Windows.Forms.CustomLabel();
             this.btnStart = new System.Windows.Forms.ImageButton();
             this.portraitIcon1 = new System.Windows.Forms.PortraitIcon();
-            this.pnlStart = new System.Windows.Forms.GradientPanel();
+            this.pnlStart = new System.Windows.Forms.CustomPanel();
             this.tileIconList1 = new System.Windows.Forms.TileIconList();
             this.tileIcon3 = new System.Windows.Forms.TileIcon();
             this.tileIcon4 = new System.Windows.Forms.TileIcon();
@@ -47,6 +47,8 @@ namespace DemoNet46
             this.btnRecycle = new System.Windows.Forms.PortraitIcon();
             this.btnShowTestForm = new System.Windows.Forms.PortraitIcon();
             this.sysTimer = new System.Windows.Forms.Timer(this.components);
+            this.btnShowThemeDemo = new System.Windows.Forms.PortraitIcon();
+            this.btnShowComponentDemo = new System.Windows.Forms.PortraitIcon();
             this.pnlTaskbar.SuspendLayout();
             this.gradientPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnStart)).BeginInit();
@@ -64,11 +66,11 @@ namespace DemoNet46
             this.pnlTaskbar.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlTaskbar.FirstColor = System.Drawing.Color.Gray;
             this.pnlTaskbar.InnerBackColor = System.Drawing.Color.Transparent;
-            this.pnlTaskbar.Location = new System.Drawing.Point(0, 546);
+            this.pnlTaskbar.Location = new System.Drawing.Point(0, 848);
             this.pnlTaskbar.Name = "pnlTaskbar";
             this.pnlTaskbar.RoundBorderRadius = 0;
             this.pnlTaskbar.SecondColor = System.Drawing.Color.Black;
-            this.pnlTaskbar.Size = new System.Drawing.Size(924, 52);
+            this.pnlTaskbar.Size = new System.Drawing.Size(1400, 52);
             this.pnlTaskbar.TabIndex = 1;
             // 
             // gradientPanel1
@@ -80,7 +82,7 @@ namespace DemoNet46
             this.gradientPanel1.Dock = System.Windows.Forms.DockStyle.Right;
             this.gradientPanel1.FirstColor = System.Drawing.Color.Black;
             this.gradientPanel1.InnerBackColor = System.Drawing.Color.Transparent;
-            this.gradientPanel1.Location = new System.Drawing.Point(837, 0);
+            this.gradientPanel1.Location = new System.Drawing.Point(1313, 0);
             this.gradientPanel1.Name = "gradientPanel1";
             this.gradientPanel1.RoundBorderRadius = 0;
             this.gradientPanel1.SecondColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -108,6 +110,7 @@ namespace DemoNet46
             this.btnStart.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btnStart.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnStart.DownImage = global::DemoNet46.Properties.Resources.Win7Pressed;
+            this.btnStart.HotTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(243)))));
             this.btnStart.HoverImage = global::DemoNet46.Properties.Resources.Win7Hover;
             this.btnStart.Location = new System.Drawing.Point(0, 0);
             this.btnStart.Name = "btnStart";
@@ -132,7 +135,7 @@ namespace DemoNet46
             this.portraitIcon1.ForeColor = System.Drawing.Color.Black;
             this.portraitIcon1.GrayImage = ((System.Drawing.Image)(resources.GetObject("portraitIcon1.GrayImage")));
             this.portraitIcon1.HoverBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(224)))), ((int)(((byte)(243)))));
-            this.portraitIcon1.Image = global::DemoNet46.Properties.Resources.bigo;
+            this.portraitIcon1.Image = ((System.Drawing.Image)(resources.GetObject("portraitIcon1.Image")));
             this.portraitIcon1.IsSelected = true;
             this.portraitIcon1.Location = new System.Drawing.Point(124, 16);
             this.portraitIcon1.Margin = new System.Windows.Forms.Padding(0);
@@ -143,7 +146,7 @@ namespace DemoNet46
             this.portraitIcon1.ShowGrayImage = false;
             this.portraitIcon1.ShowIconBorder = false;
             this.portraitIcon1.Size = new System.Drawing.Size(101, 91);
-            this.portraitIcon1.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.Center;
+            this.portraitIcon1.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
             this.portraitIcon1.TabIndex = 1000;
             // 
             // pnlStart
@@ -160,7 +163,7 @@ namespace DemoNet46
             this.pnlStart.Controls.Add(this.portraitIcon1);
             this.pnlStart.FirstColor = System.Drawing.Color.Black;
             this.pnlStart.InnerBackColor = System.Drawing.Color.Transparent;
-            this.pnlStart.Location = new System.Drawing.Point(2, 220);
+            this.pnlStart.Location = new System.Drawing.Point(2, 522);
             this.pnlStart.Name = "pnlStart";
             this.pnlStart.RoundBorderRadius = 12;
             this.pnlStart.SecondColor = System.Drawing.Color.Gray;
@@ -189,7 +192,6 @@ namespace DemoNet46
             // tileIcon3
             // 
             this.tileIcon3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
-            this.tileIcon3.DefaultImage = null;
             this.tileIcon3.HoverBackColor = System.Drawing.Color.DodgerBlue;
             this.tileIcon3.IconText = "IntelliJ IDEA";
             this.tileIcon3.Image = ((System.Drawing.Image)(resources.GetObject("tileIcon3.Image")));
@@ -208,7 +210,6 @@ namespace DemoNet46
             // tileIcon4
             // 
             this.tileIcon4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
-            this.tileIcon4.DefaultImage = null;
             this.tileIcon4.HoverBackColor = System.Drawing.Color.DodgerBlue;
             this.tileIcon4.IconText = "Photoshop";
             this.tileIcon4.Image = ((System.Drawing.Image)(resources.GetObject("tileIcon4.Image")));
@@ -227,7 +228,6 @@ namespace DemoNet46
             // tileIcon1
             // 
             this.tileIcon1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
-            this.tileIcon1.DefaultImage = null;
             this.tileIcon1.HoverBackColor = System.Drawing.Color.DodgerBlue;
             this.tileIcon1.IconText = "Android Studio";
             this.tileIcon1.Image = ((System.Drawing.Image)(resources.GetObject("tileIcon1.Image")));
@@ -290,7 +290,7 @@ namespace DemoNet46
             this.portraitIcon2.ForeColor = System.Drawing.Color.White;
             this.portraitIcon2.GrayImage = ((System.Drawing.Image)(resources.GetObject("portraitIcon2.GrayImage")));
             this.portraitIcon2.HoverBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(224)))), ((int)(((byte)(243)))));
-            this.portraitIcon2.Image = global::DemoNet46.Properties.Resources.bigo;
+            this.portraitIcon2.Image = ((System.Drawing.Image)(resources.GetObject("portraitIcon2.Image")));
             this.portraitIcon2.IsSelected = false;
             this.portraitIcon2.Location = new System.Drawing.Point(12, 16);
             this.portraitIcon2.Margin = new System.Windows.Forms.Padding(0);
@@ -301,7 +301,7 @@ namespace DemoNet46
             this.portraitIcon2.ShowGrayImage = true;
             this.portraitIcon2.ShowIconBorder = false;
             this.portraitIcon2.Size = new System.Drawing.Size(101, 91);
-            this.portraitIcon2.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.Center;
+            this.portraitIcon2.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
             this.portraitIcon2.TabIndex = 1000;
             // 
             // btnRecycle
@@ -316,15 +316,15 @@ namespace DemoNet46
             this.btnRecycle.ForeColor = System.Drawing.Color.White;
             this.btnRecycle.GrayImage = ((System.Drawing.Image)(resources.GetObject("btnRecycle.GrayImage")));
             this.btnRecycle.HoverBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(224)))), ((int)(((byte)(243)))));
-            this.btnRecycle.Image = global::DemoNet46.Properties.Resources.Recycle;
+            this.btnRecycle.Image = ((System.Drawing.Image)(resources.GetObject("btnRecycle.Image")));
             this.btnRecycle.IsSelected = false;
-            this.btnRecycle.Location = new System.Drawing.Point(807, 429);
+            this.btnRecycle.Location = new System.Drawing.Point(1274, 727);
             this.btnRecycle.Margin = new System.Windows.Forms.Padding(0);
             this.btnRecycle.Name = "btnRecycle";
             this.btnRecycle.RoundedCornerAngle = 10;
             this.btnRecycle.SecondColor = System.Drawing.Color.White;
             this.btnRecycle.ShowCaption = true;
-            this.btnRecycle.ShowGrayImage = true;
+            this.btnRecycle.ShowGrayImage = false;
             this.btnRecycle.ShowIconBorder = false;
             this.btnRecycle.Size = new System.Drawing.Size(101, 91);
             this.btnRecycle.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
@@ -334,8 +334,7 @@ namespace DemoNet46
             // btnShowTestForm
             // 
             this.btnShowTestForm.AllowDrag = false;
-            this.btnShowTestForm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnShowTestForm.Caption = "测试";
+            this.btnShowTestForm.Caption = "布局演示";
             this.btnShowTestForm.DragSender = null;
             this.btnShowTestForm.FillDegree = 100;
             this.btnShowTestForm.FirstColor = System.Drawing.Color.White;
@@ -343,9 +342,9 @@ namespace DemoNet46
             this.btnShowTestForm.ForeColor = System.Drawing.Color.White;
             this.btnShowTestForm.GrayImage = ((System.Drawing.Image)(resources.GetObject("btnShowTestForm.GrayImage")));
             this.btnShowTestForm.HoverBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(224)))), ((int)(((byte)(243)))));
-            this.btnShowTestForm.Image = global::DemoNet46.Properties.Resources.bigo;
+            this.btnShowTestForm.Image = ((System.Drawing.Image)(resources.GetObject("btnShowTestForm.Image")));
             this.btnShowTestForm.IsSelected = false;
-            this.btnShowTestForm.Location = new System.Drawing.Point(706, 429);
+            this.btnShowTestForm.Location = new System.Drawing.Point(40, 181);
             this.btnShowTestForm.Margin = new System.Windows.Forms.Padding(0);
             this.btnShowTestForm.Name = "btnShowTestForm";
             this.btnShowTestForm.RoundedCornerAngle = 10;
@@ -354,14 +353,67 @@ namespace DemoNet46
             this.btnShowTestForm.ShowGrayImage = false;
             this.btnShowTestForm.ShowIconBorder = false;
             this.btnShowTestForm.Size = new System.Drawing.Size(101, 91);
-            this.btnShowTestForm.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.Center;
+            this.btnShowTestForm.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
             this.btnShowTestForm.TabIndex = 1005;
             this.btnShowTestForm.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.btnShowTestForm_MouseDoubleClick);
             // 
             // sysTimer
             // 
             this.sysTimer.Enabled = true;
+            this.sysTimer.Interval = 500;
             this.sysTimer.Tick += new System.EventHandler(this.sysTimer_Tick);
+            // 
+            // btnShowThemeDemo
+            // 
+            this.btnShowThemeDemo.AllowDrag = false;
+            this.btnShowThemeDemo.Caption = "主题演示";
+            this.btnShowThemeDemo.DragSender = null;
+            this.btnShowThemeDemo.FillDegree = 100;
+            this.btnShowThemeDemo.FirstColor = System.Drawing.Color.White;
+            this.btnShowThemeDemo.FocusBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(232)))), ((int)(((byte)(255)))));
+            this.btnShowThemeDemo.ForeColor = System.Drawing.Color.White;
+            this.btnShowThemeDemo.GrayImage = ((System.Drawing.Image)(resources.GetObject("btnShowThemeDemo.GrayImage")));
+            this.btnShowThemeDemo.HoverBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(224)))), ((int)(((byte)(243)))));
+            this.btnShowThemeDemo.Image = ((System.Drawing.Image)(resources.GetObject("btnShowThemeDemo.Image")));
+            this.btnShowThemeDemo.IsSelected = false;
+            this.btnShowThemeDemo.Location = new System.Drawing.Point(40, 63);
+            this.btnShowThemeDemo.Margin = new System.Windows.Forms.Padding(0);
+            this.btnShowThemeDemo.Name = "btnShowThemeDemo";
+            this.btnShowThemeDemo.RoundedCornerAngle = 10;
+            this.btnShowThemeDemo.SecondColor = System.Drawing.Color.White;
+            this.btnShowThemeDemo.ShowCaption = true;
+            this.btnShowThemeDemo.ShowGrayImage = false;
+            this.btnShowThemeDemo.ShowIconBorder = false;
+            this.btnShowThemeDemo.Size = new System.Drawing.Size(101, 91);
+            this.btnShowThemeDemo.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
+            this.btnShowThemeDemo.TabIndex = 1005;
+            this.btnShowThemeDemo.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.btnShowThemeDemo_MouseDoubleClick);
+            // 
+            // btnShowComponentDemo
+            // 
+            this.btnShowComponentDemo.AllowDrag = false;
+            this.btnShowComponentDemo.Caption = "组件演示";
+            this.btnShowComponentDemo.DragSender = null;
+            this.btnShowComponentDemo.FillDegree = 100;
+            this.btnShowComponentDemo.FirstColor = System.Drawing.Color.White;
+            this.btnShowComponentDemo.FocusBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(232)))), ((int)(((byte)(255)))));
+            this.btnShowComponentDemo.ForeColor = System.Drawing.Color.White;
+            this.btnShowComponentDemo.GrayImage = ((System.Drawing.Image)(resources.GetObject("btnShowComponentDemo.GrayImage")));
+            this.btnShowComponentDemo.HoverBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(224)))), ((int)(((byte)(243)))));
+            this.btnShowComponentDemo.Image = ((System.Drawing.Image)(resources.GetObject("btnShowComponentDemo.Image")));
+            this.btnShowComponentDemo.IsSelected = false;
+            this.btnShowComponentDemo.Location = new System.Drawing.Point(40, 299);
+            this.btnShowComponentDemo.Margin = new System.Windows.Forms.Padding(0);
+            this.btnShowComponentDemo.Name = "btnShowComponentDemo";
+            this.btnShowComponentDemo.RoundedCornerAngle = 10;
+            this.btnShowComponentDemo.SecondColor = System.Drawing.Color.White;
+            this.btnShowComponentDemo.ShowCaption = true;
+            this.btnShowComponentDemo.ShowGrayImage = false;
+            this.btnShowComponentDemo.ShowIconBorder = false;
+            this.btnShowComponentDemo.Size = new System.Drawing.Size(101, 91);
+            this.btnShowComponentDemo.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
+            this.btnShowComponentDemo.TabIndex = 1006;
+            this.btnShowComponentDemo.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.btnShowComponentDemo_MouseDoubleClick);
             // 
             // MainForm
             // 
@@ -369,12 +421,13 @@ namespace DemoNet46
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::DemoNet46.Properties.Resources.earth_mountain;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(924, 598);
+            this.ClientSize = new System.Drawing.Size(1400, 900);
+            this.Controls.Add(this.btnShowComponentDemo);
             this.Controls.Add(this.pnlStart);
+            this.Controls.Add(this.btnShowThemeDemo);
             this.Controls.Add(this.btnShowTestForm);
             this.Controls.Add(this.btnRecycle);
             this.Controls.Add(this.pnlTaskbar);
-            this.MaximumSize = new System.Drawing.Size(2240, 1400);
             this.Name = "MainForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -382,7 +435,9 @@ namespace DemoNet46
             this.Controls.SetChildIndex(this.pnlTaskbar, 0);
             this.Controls.SetChildIndex(this.btnRecycle, 0);
             this.Controls.SetChildIndex(this.btnShowTestForm, 0);
+            this.Controls.SetChildIndex(this.btnShowThemeDemo, 0);
             this.Controls.SetChildIndex(this.pnlStart, 0);
+            this.Controls.SetChildIndex(this.btnShowComponentDemo, 0);
             this.pnlTaskbar.ResumeLayout(false);
             this.gradientPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.btnStart)).EndInit();
@@ -396,10 +451,10 @@ namespace DemoNet46
 		#endregion
 
 		private System.Windows.Forms.ImageButton btnStart;
-		private System.Windows.Forms.GradientPanel pnlTaskbar;
-		private System.Windows.Forms.GradientPanel gradientPanel1;
+		private System.Windows.Forms.CustomPanel pnlTaskbar;
+		private System.Windows.Forms.CustomPanel gradientPanel1;
 		private System.Windows.Forms.PortraitIcon portraitIcon1;
-		private System.Windows.Forms.GradientPanel pnlStart;
+		private System.Windows.Forms.CustomPanel pnlStart;
 		private System.Windows.Forms.PortraitIcon portraitIcon2;
 		private System.Windows.Forms.TileIconList tileIconList1;
 		private System.Windows.Forms.TileIcon tileIcon3;
@@ -408,9 +463,11 @@ namespace DemoNet46
 		private System.Windows.Forms.CustomButton btnShutdown;
 		private System.Windows.Forms.PortraitIcon btnRecycle;
 		private System.Windows.Forms.PortraitIcon btnShowTestForm;
-        private System.Windows.Forms.GradientLabel lblTime;
+        private System.Windows.Forms.CustomLabel lblTime;
         private System.Windows.Forms.Timer sysTimer;
         private System.Windows.Forms.TileIcon tileIcon1;
+        private System.Windows.Forms.PortraitIcon btnShowThemeDemo;
+        private System.Windows.Forms.PortraitIcon btnShowComponentDemo;
     }
 }
 

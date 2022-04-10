@@ -1,5 +1,5 @@
 ﻿
-namespace System.Windows.Forms.CustomForm
+namespace System.Windows.Forms
 {
     partial class Win7ControlBox
     {
@@ -29,7 +29,6 @@ namespace System.Windows.Forms.CustomForm
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Win7ControlBox));
             this.flpControlBox = new System.Windows.Forms.ClickThroughFlowPanel();
             this.btnClose = new System.Windows.Forms.ImageButton();
             this.btnMaximum = new System.Windows.Forms.ImageButton();
@@ -49,22 +48,24 @@ namespace System.Windows.Forms.CustomForm
             this.flpControlBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpControlBox.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flpControlBox.Location = new System.Drawing.Point(0, 0);
+            this.flpControlBox.Margin = new System.Windows.Forms.Padding(2);
             this.flpControlBox.Name = "flpControlBox";
-            this.flpControlBox.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.flpControlBox.Size = new System.Drawing.Size(120, 28);
+            this.flpControlBox.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.flpControlBox.Size = new System.Drawing.Size(96, 21);
             this.flpControlBox.TabIndex = 1001;
             this.flpControlBox.WrapContents = false;
             // 
             // btnClose
             // 
             this.btnClose.BackColor = System.Drawing.Color.Transparent;
+            this.btnClose.ButtonKeepPressed = false;
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnClose.DownImage = ((System.Drawing.Image)(resources.GetObject("btnClose.DownImage")));
-            this.btnClose.HoverImage = ((System.Drawing.Image)(resources.GetObject("btnClose.HoverImage")));
-            this.btnClose.Location = new System.Drawing.Point(78, 0);
+            this.btnClose.DownImage = global::System.Windows.Forms.Properties.Resources.btnClose_DownImage;
+            this.btnClose.HoverImage = global::System.Windows.Forms.Properties.Resources.btnClose_HoverImage;
+            this.btnClose.Location = new System.Drawing.Point(55, 0);
             this.btnClose.Margin = new System.Windows.Forms.Padding(0);
             this.btnClose.Name = "btnClose";
-            this.btnClose.NormalImage = ((System.Drawing.Image)(resources.GetObject("btnClose.NormalImage")));
+            this.btnClose.NormalImage = global::System.Windows.Forms.Properties.Resources.btnClose_NormalImage;
             this.btnClose.ShowFocusLine = false;
             this.btnClose.Size = new System.Drawing.Size(39, 20);
             this.btnClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -75,13 +76,14 @@ namespace System.Windows.Forms.CustomForm
             // btnMaximum
             // 
             this.btnMaximum.BackColor = System.Drawing.Color.Transparent;
+            this.btnMaximum.ButtonKeepPressed = false;
             this.btnMaximum.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnMaximum.DownImage = ((System.Drawing.Image)(resources.GetObject("btnMaximum.DownImage")));
-            this.btnMaximum.HoverImage = ((System.Drawing.Image)(resources.GetObject("btnMaximum.HoverImage")));
-            this.btnMaximum.Location = new System.Drawing.Point(50, 0);
+            this.btnMaximum.DownImage = global::System.Windows.Forms.Properties.Resources.btnMaximum_DownImage;
+            this.btnMaximum.HoverImage = global::System.Windows.Forms.Properties.Resources.btnMaximum_HoverImage;
+            this.btnMaximum.Location = new System.Drawing.Point(27, 0);
             this.btnMaximum.Margin = new System.Windows.Forms.Padding(0);
             this.btnMaximum.Name = "btnMaximum";
-            this.btnMaximum.NormalImage = ((System.Drawing.Image)(resources.GetObject("btnMaximum.NormalImage")));
+            this.btnMaximum.NormalImage = global::System.Windows.Forms.Properties.Resources.btnMaximum_NormalImage;
             this.btnMaximum.ShowFocusLine = false;
             this.btnMaximum.Size = new System.Drawing.Size(28, 20);
             this.btnMaximum.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -92,13 +94,14 @@ namespace System.Windows.Forms.CustomForm
             // btnMinimum
             // 
             this.btnMinimum.BackColor = System.Drawing.Color.Transparent;
+            this.btnMinimum.ButtonKeepPressed = false;
             this.btnMinimum.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnMinimum.DownImage = ((System.Drawing.Image)(resources.GetObject("btnMinimum.DownImage")));
-            this.btnMinimum.HoverImage = ((System.Drawing.Image)(resources.GetObject("btnMinimum.HoverImage")));
-            this.btnMinimum.Location = new System.Drawing.Point(22, 0);
+            this.btnMinimum.DownImage = global::System.Windows.Forms.Properties.Resources.btnMinimum_DownImage;
+            this.btnMinimum.HoverImage = global::System.Windows.Forms.Properties.Resources.btnMinimum_HoverImage;
+            this.btnMinimum.Location = new System.Drawing.Point(-1, 0);
             this.btnMinimum.Margin = new System.Windows.Forms.Padding(0);
             this.btnMinimum.Name = "btnMinimum";
-            this.btnMinimum.NormalImage = ((System.Drawing.Image)(resources.GetObject("btnMinimum.NormalImage")));
+            this.btnMinimum.NormalImage = global::System.Windows.Forms.Properties.Resources.btnMinimum_NormalImage;
             this.btnMinimum.ShowFocusLine = false;
             this.btnMinimum.Size = new System.Drawing.Size(28, 20);
             this.btnMinimum.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -108,11 +111,13 @@ namespace System.Windows.Forms.CustomForm
             // 
             // Win7ControlBox
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSize = true;
             this.Controls.Add(this.flpControlBox);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Win7ControlBox";
-            this.Size = new System.Drawing.Size(120, 28);
+            this.Size = new System.Drawing.Size(96, 21);
             this.flpControlBox.ResumeLayout(false);
             this.flpControlBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnClose)).EndInit();
