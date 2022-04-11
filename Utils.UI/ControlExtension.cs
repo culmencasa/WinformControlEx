@@ -10,7 +10,10 @@ namespace System.Windows.Forms
 {
     public static class ControlExtension
     {
-        private static System.Reflection.Assembly mscorlibAssembly;       
+        private static System.Reflection.Assembly mscorlibAssembly;
+
+
+        #region Control相关
 
         public static bool IsDesignTime(this Control ctl)
         {
@@ -99,6 +102,11 @@ namespace System.Windows.Forms
 
         }
 
+
+        #endregion
+
+        #region 窗体相关
+
         public static bool IsHighResolution(this Form form)
         {
             SizeF currentScreen = form.CurrentAutoScaleDimensions;
@@ -130,5 +138,8 @@ namespace System.Windows.Forms
             parentControl.Controls.Add(form);
             form.Show();
         }
+
+        #endregion
+
     }
 }

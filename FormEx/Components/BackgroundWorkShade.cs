@@ -55,7 +55,7 @@ namespace System.Windows.Forms
         /// 预告信息(显示在进度条上的提示文字)
         /// </summary>
         public class PredictionInfo
-        { 
+        {
             /// <summary>
             /// 下一步要做什么
             /// </summary>
@@ -77,6 +77,7 @@ namespace System.Windows.Forms
 
 
         protected object procedureLockObject = new object();
+        static AutoResetEvent loopContinueSignal = new AutoResetEvent(false);
 
         protected Dictionary<GivenPrediction, ProcedureEventHandler> ProcedureList
         {
@@ -109,6 +110,7 @@ namespace System.Windows.Forms
                 if (!ProcedureList.ContainsKey(prediction))
                 {
                     ProcedureList.Add(prediction, procedure);
+                    loopContinueSignal.Set();
                 }
             }
         }
@@ -133,7 +135,7 @@ namespace System.Windows.Forms
         {
             AbortableBackgroundWorker bgw = sender as AbortableBackgroundWorker;
 
-            while (true)
+            while (true)// todo: CPU消耗太高, 改成消息控制
             {
                 if (bgw.CancellationPending)
                 {
@@ -141,49 +143,52 @@ namespace System.Windows.Forms
                     return;
                 }
 
-                   
-                lock (procedureLockObject)
+                loopContinueSignal.WaitOne();
+
+
+                if (this.ProcedureList != null && ProcedureList.Count > 0)
                 {
-                    if (this.ProcedureList != null && ProcedureList.Count > 0)
+                    var kvPair = ProcedureList.Take(1).First();
+                    var prediction = kvPair.Key;
+
+                    // 滚动条
+                    var userState = prediction.Invoke();
+                    bgw.ReportProgress(0, userState);
+
+                    // 调用操作
+                    var process = kvPair.Value;
+                    if (process != null)
                     {
-                        var kvPair = ProcedureList.Take(1).First();
-                        var prediction = kvPair.Key;
+                        process.Invoke(bgw, e);
+                    }
 
-                        // 滚动条
-                        var userState = prediction.Invoke();
-                        bgw.ReportProgress(0, userState);
-
-                        // 调用操作
-                        var process = kvPair.Value;
-                        if (process != null)
-                        {
-                            process.Invoke(bgw, e);
-                        }
-
+                    lock (procedureLockObject)
+                    {
                         ProcedureList.Remove(prediction);
+                    }
 
-                        // 如果滚动条进度到达100%, 则退出
-                        if (!IsQuickerInstance)
+                    // 如果滚动条进度到达100%, 则退出
+                    if (!IsQuickerInstance)
+                    {
+                        if (userState.CompletedPercent >= pbWorkProgress.MaxValue)
                         {
-                            if (userState.CompletedPercent >= pbWorkProgress.MaxValue)
-                            {
-                                e.Result = true;
-                                return;
-                            }
+                            e.Result = true;
+                            return;
                         }
-                        else
+                    }
+                    else
+                    {
+                        // 如果是IsQuickerInstance, 则隐藏
+                        if (userState.CompletedPercent >= pbWorkProgress.MaxValue)
                         {
-                            // 如果是IsQuickerInstance, 则隐藏
-                            if (userState.CompletedPercent >= pbWorkProgress.MaxValue)
+                            pbWorkProgress.Invoke(new Action(() =>
                             {
-                                pbWorkProgress.Invoke(new Action(()=>
-                                {
-                                    pbWorkProgress.Complete();
-                                }));
-                            }
+                                pbWorkProgress.Complete();
+                            }));
                         }
                     }
                 }
+
             }
         }
 
@@ -282,7 +287,7 @@ namespace System.Windows.Forms
             ShowInTaskbar = false;
             FormBorderStyle = FormBorderStyle.None;
             OwnerLastWindowState = FormWindowState.Minimized;
-            
+
             UseLayerImage = true;
             UseBlur = true;
 
@@ -461,7 +466,7 @@ namespace System.Windows.Forms
             }
 
             this.FormClosing += WorkShade_FormClosing;
-            this.FormClosed += WorkShade_FormClosed; 
+            this.FormClosed += WorkShade_FormClosed;
         }
 
 
@@ -837,7 +842,7 @@ namespace System.Windows.Forms
             }
 
             //base.OnPaintBackground(e);
-            
+
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -907,7 +912,7 @@ namespace System.Windows.Forms
             Graphics g = e.Graphics;
             g.SetFastRendering();
             var rect = new Rectangle(control.Location.X, control.Location.Y, control.Size.Width, control.Size.Height);
-            
+
             using (GraphicsPath graphicPath = g.GenerateRoundedRectangle(rect, pnlCenterBox.RoundBorderRadius, RectangleEdgeFilter.All))
             {
                 DrawShadowSmooth(graphicPath, 100, 60, _boxShadowBitmap);
@@ -1025,12 +1030,12 @@ namespace System.Windows.Forms
             if (!Win32.BitBlt(
                 hDC,
                 -8 * factor,
-                -titleHeight, 
-                Owner.ClientRectangle.Width + (8 * factor), 
+                -titleHeight,
+                Owner.ClientRectangle.Width + (8 * factor),
                 Owner.ClientRectangle.Height + titleHeight,
-                windowDC, 
-                0, 
-                0, 
+                windowDC,
+                0,
+                0,
                 CopyPixelOperation.SourcePaint))
             {
                 // 如果失败,则使用白色
@@ -1072,5 +1077,5 @@ namespace System.Windows.Forms
 
 
         #endregion
-  }
+    }
 }
