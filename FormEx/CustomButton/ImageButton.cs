@@ -47,29 +47,6 @@ namespace System.Windows.Forms
             this.Size = new Size(75, 23);
         }
 
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-
-            if (IsHandleCreated)
-            {
-                if (NormalImage != null && AutoResize)
-                {
-                    float coeff;
-                    coeff = this.Height * 1f / NormalImage.Height;
-                    int oldWidth = NormalImage.Width;
-                    int oldHeight = NormalImage.Height;
-                    int newWidth = Convert.ToInt16(oldHeight * coeff);
-                    int newHeight = Convert.ToInt16(oldHeight * coeff);
-
-                    //Debug.WriteLine($"{newWidth} , {newHeight}");
-
-                    this.Width = newWidth;
-                    this.Height = newHeight;
-                    //this.Size = new Size(newWidth, newHeight);
-                }
-            }
-        }
 
         #endregion
 
@@ -105,27 +82,15 @@ namespace System.Windows.Forms
 
         #endregion
 
+
+        public event EventHandler NormalImageChanged;
+        protected virtual void OnNormalImageChanged()
+        {
+            NormalImageChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         #region  Properties
 
-        private bool _autoResize;
-        /// <summary>
-        /// 以控件高度为基准自动大小
-        /// </summary>
-        [Category("Custom")]
-        [Browsable(true)]
-        [DefaultValue(false)]
-        public bool AutoResize
-        {
-            get
-            {
-                return _autoResize;
-            }
-            set
-            {
-                _autoResize = value;
-                Invalidate();
-            }
-        }
 
         public bool ShowFocusLine
         {
@@ -149,6 +114,8 @@ namespace System.Windows.Forms
                 {
                     Image = value;
                 }
+
+                OnNormalImageChanged();
             }
         }
         [Category("Custom")]

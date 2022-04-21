@@ -141,19 +141,19 @@ namespace System.Windows.Forms
             this.pnlTextArea = new System.Windows.Forms.Panel();
             this.lblContent = new System.Windows.Forms.Label();
             this.pnlStrechSpace = new System.Windows.Forms.Panel();
+            this.pnlSunkBorderContainer = new System.Windows.Forms.Panel();
+            this.txtDetails = new System.Windows.Forms.TextBox();
+            this.pnlControlArea = new System.Windows.Forms.Panel();
             this.btnShowDetails = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.pnlLockSpace = new System.Windows.Forms.Panel();
-            this.txtDetails = new System.Windows.Forms.TextBox();
-            this.pnlControlArea = new System.Windows.Forms.Panel();
-            this.pnlSunkBorderContainer = new System.Windows.Forms.Panel();
             this.pnlIconArea.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbExceptionIcon)).BeginInit();
             this.pnlTextArea.SuspendLayout();
             this.pnlStrechSpace.SuspendLayout();
-            this.pnlLockSpace.SuspendLayout();
-            this.pnlControlArea.SuspendLayout();
             this.pnlSunkBorderContainer.SuspendLayout();
+            this.pnlControlArea.SuspendLayout();
+            this.pnlLockSpace.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlIconArea
@@ -184,7 +184,7 @@ namespace System.Windows.Forms
             this.pnlTextArea.Location = new System.Drawing.Point(78, 0);
             this.pnlTextArea.Name = "pnlTextArea";
             this.pnlTextArea.Padding = new System.Windows.Forms.Padding(10, 25, 30, 30);
-            this.pnlTextArea.Size = new System.Drawing.Size(241, 111);
+            this.pnlTextArea.Size = new System.Drawing.Size(334, 111);
             this.pnlTextArea.TabIndex = 0;
             // 
             // lblContent
@@ -193,7 +193,7 @@ namespace System.Windows.Forms
             this.lblContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblContent.Location = new System.Drawing.Point(10, 25);
             this.lblContent.Name = "lblContent";
-            this.lblContent.Size = new System.Drawing.Size(201, 56);
+            this.lblContent.Size = new System.Drawing.Size(294, 56);
             this.lblContent.TabIndex = 0;
             this.lblContent.Text = "这是一条异常消息 ";
             this.lblContent.UseCompatibleTextRendering = true;
@@ -207,39 +207,18 @@ namespace System.Windows.Forms
             this.pnlStrechSpace.Location = new System.Drawing.Point(0, 111);
             this.pnlStrechSpace.Name = "pnlStrechSpace";
             this.pnlStrechSpace.Padding = new System.Windows.Forms.Padding(10, 0, 10, 10);
-            this.pnlStrechSpace.Size = new System.Drawing.Size(319, 50);
+            this.pnlStrechSpace.Size = new System.Drawing.Size(412, 50);
             this.pnlStrechSpace.TabIndex = 0;
             // 
-            // btnShowDetails
+            // pnlSunkBorderContainer
             // 
-            this.btnShowDetails.Location = new System.Drawing.Point(0, 8);
-            this.btnShowDetails.Name = "btnShowDetails";
-            this.btnShowDetails.Size = new System.Drawing.Size(95, 32);
-            this.btnShowDetails.TabIndex = 100;
-            this.btnShowDetails.Text = "查看详情";
-            this.btnShowDetails.UseVisualStyleBackColor = true;
-            this.btnShowDetails.Click += new System.EventHandler(this.btnShowDetails_Click);
-            // 
-            // btnOK
-            // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(217, 8);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(82, 32);
-            this.btnOK.TabIndex = 0;
-            this.btnOK.Text = "确定";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // pnlLockSpace
-            // 
-            this.pnlLockSpace.Controls.Add(this.pnlTextArea);
-            this.pnlLockSpace.Controls.Add(this.pnlIconArea);
-            this.pnlLockSpace.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlLockSpace.Location = new System.Drawing.Point(0, 0);
-            this.pnlLockSpace.Name = "pnlLockSpace";
-            this.pnlLockSpace.Size = new System.Drawing.Size(319, 111);
-            this.pnlLockSpace.TabIndex = 1;
+            this.pnlSunkBorderContainer.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pnlSunkBorderContainer.Controls.Add(this.txtDetails);
+            this.pnlSunkBorderContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlSunkBorderContainer.Location = new System.Drawing.Point(10, 48);
+            this.pnlSunkBorderContainer.Name = "pnlSunkBorderContainer";
+            this.pnlSunkBorderContainer.Size = new System.Drawing.Size(392, 0);
+            this.pnlSunkBorderContainer.TabIndex = 103;
             // 
             // txtDetails
             // 
@@ -254,7 +233,7 @@ namespace System.Windows.Forms
             this.txtDetails.Name = "txtDetails";
             this.txtDetails.ReadOnly = true;
             this.txtDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtDetails.Size = new System.Drawing.Size(299, 0);
+            this.txtDetails.Size = new System.Drawing.Size(392, 0);
             this.txtDetails.TabIndex = 101;
             this.txtDetails.Visible = false;
             // 
@@ -265,24 +244,45 @@ namespace System.Windows.Forms
             this.pnlControlArea.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlControlArea.Location = new System.Drawing.Point(10, 0);
             this.pnlControlArea.Name = "pnlControlArea";
-            this.pnlControlArea.Size = new System.Drawing.Size(299, 48);
+            this.pnlControlArea.Size = new System.Drawing.Size(392, 48);
             this.pnlControlArea.TabIndex = 102;
             // 
-            // pnlSunkBorderContainer
+            // btnShowDetails
             // 
-            this.pnlSunkBorderContainer.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pnlSunkBorderContainer.Controls.Add(this.txtDetails);
-            this.pnlSunkBorderContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlSunkBorderContainer.Location = new System.Drawing.Point(10, 48);
-            this.pnlSunkBorderContainer.Name = "pnlSunkBorderContainer";
-            this.pnlSunkBorderContainer.Size = new System.Drawing.Size(299, 0);
-            this.pnlSunkBorderContainer.TabIndex = 103;
+            this.btnShowDetails.Location = new System.Drawing.Point(0, 8);
+            this.btnShowDetails.Name = "btnShowDetails";
+            this.btnShowDetails.Size = new System.Drawing.Size(95, 32);
+            this.btnShowDetails.TabIndex = 100;
+            this.btnShowDetails.Text = "查看详情";
+            this.btnShowDetails.UseVisualStyleBackColor = true;
+            this.btnShowDetails.Click += new System.EventHandler(this.btnShowDetails_Click);
+            // 
+            // btnOK
+            // 
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOK.Location = new System.Drawing.Point(310, 8);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(82, 32);
+            this.btnOK.TabIndex = 0;
+            this.btnOK.Text = "确定";
+            this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            // 
+            // pnlLockSpace
+            // 
+            this.pnlLockSpace.Controls.Add(this.pnlTextArea);
+            this.pnlLockSpace.Controls.Add(this.pnlIconArea);
+            this.pnlLockSpace.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlLockSpace.Location = new System.Drawing.Point(0, 0);
+            this.pnlLockSpace.Name = "pnlLockSpace";
+            this.pnlLockSpace.Size = new System.Drawing.Size(412, 111);
+            this.pnlLockSpace.TabIndex = 1;
             // 
             // ExceptionMessageBox
             // 
             this.AcceptButton = this.btnOK;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(319, 161);
+            this.ClientSize = new System.Drawing.Size(412, 161);
             this.Controls.Add(this.pnlStrechSpace);
             this.Controls.Add(this.pnlLockSpace);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -296,10 +296,10 @@ namespace System.Windows.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pbExceptionIcon)).EndInit();
             this.pnlTextArea.ResumeLayout(false);
             this.pnlStrechSpace.ResumeLayout(false);
-            this.pnlLockSpace.ResumeLayout(false);
-            this.pnlControlArea.ResumeLayout(false);
             this.pnlSunkBorderContainer.ResumeLayout(false);
             this.pnlSunkBorderContainer.PerformLayout();
+            this.pnlControlArea.ResumeLayout(false);
+            this.pnlLockSpace.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

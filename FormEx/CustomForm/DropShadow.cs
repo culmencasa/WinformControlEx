@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using Utils.UI;
 
 namespace System.Windows.Forms
 {
@@ -20,9 +21,9 @@ namespace System.Windows.Forms
 
         #region 构造
 
-        public DropShadow(Form f)
+        public DropShadow(Form owner)
         {
-            Owner = f;
+            Owner = owner;
             ShadowRadius = 10;
             ShadowColor = Color.Black;
             ShowInTaskbar = false;
@@ -37,6 +38,8 @@ namespace System.Windows.Forms
             // 绑定事件
             Owner.LocationChanged += UpdateLocation;
             Owner.Resize += new EventHandler(Owner_Resize);
+            Owner.ResizeBegin += Owner_ResizeBegin;
+            Owner.ResizeEnd += Owner_ResizeEnd;
             Owner.FormClosed += (sender, eventArgs) => 
             { 
                 Close(); 
@@ -198,38 +201,38 @@ namespace System.Windows.Forms
         /// <returns></returns>
         private Bitmap DrawShadow()
         {
-            //todo: 有时间重写
-
             // 阴影窗体的大小
             int width = Owner.Width + ShadowRadius * 2;
             int height = Owner.Height + ShadowRadius * 2;
             var bitmap = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bitmap);
 
+            Color fadeColor = Color.FromArgb(50, 0, 0, 0);
             // 第一个阴影的位置
             RectangleF wrapRect = new RectangleF(
                     (bitmap.Width - Owner.Width) / 2 - 3,
                     (bitmap.Height - Owner.Height) / 2 - 3, Owner.Width + 4, Owner.Height + 4);
-            using (Brush br = new SolidBrush(Color.FromArgb(50, 0, 0, 0)))
+            using (Brush br = new SolidBrush(fadeColor))
             {
                 wrapRect.Inflate(-2, -2);
                 //g.FillRoundedRectangle(br, wrapRect, ShadowRadius / 2, RectangleEdgeFilter.All);
                 g.FillRoundedRectangle(br, wrapRect, ShadowRadius, RectangleEdgeFilter.All);
             }
-            Color fadeColor = Color.FromArgb(200, 0, 0,0);
-            //DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius);
             // 层叠第二个阴影
-            wrapRect.Inflate(4, 4);
+            fadeColor = ColorEx.LightenColor(fadeColor, 10);
+            wrapRect.Inflate(2, 2);
             fadeColor = Color.FromArgb(10, 0, 0, 0);
             DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius + 6);
             // 层叠第三个阴影
+            fadeColor = ColorEx.LightenColor(fadeColor, 10);
             wrapRect.Inflate(2, 2);
-            fadeColor = Color.FromArgb(2, 0, 0, 0);
-            DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius + 10);
+            fadeColor = Color.FromArgb(5, 0, 0, 0);
+            DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius * 2);
             // 层叠第四个阴影
+            fadeColor = ColorEx.LightenColor(fadeColor, 10);
             wrapRect.Inflate(1, 1);
-            fadeColor = Color.FromArgb(1, 0,0, 0);
-            DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius + 16);
+            fadeColor = Color.FromArgb(1, 0, 0, 0);
+            DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius * 3);
 
             Width = width;
             Height = height;
@@ -239,11 +242,17 @@ namespace System.Windows.Forms
             return bitmap;
         }
 
+
         #endregion
 
         #region 事件处理
 
-        void Owner_Resize(object sender, EventArgs e)
+
+        private void Owner_ResizeBegin(object sender, EventArgs e)
+        {
+            this.Visible = false;
+        }
+        private void Owner_ResizeEnd(object sender, EventArgs e)
         {
             if (Owner == null)
                 return;
@@ -259,12 +268,31 @@ namespace System.Windows.Forms
             }
 
 
+            Refresh();
+        }
 
-            IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Owner.Width + 1, Owner.Height + 1, 0, 0);
-            Owner.Region = System.Drawing.Region.FromHrgn(hrgn);
+        void Owner_Resize(object sender, EventArgs e)
+        {
+            //if (Owner == null)
+            //    return;
 
-            // 使用Invalidate而不是Refresh，以免影响主窗体上的控件背景显示白块
-            this.Invalidate();
+            //if (Owner.WindowState == FormWindowState.Minimized || Owner.WindowState == FormWindowState.Maximized)
+            //{
+            //    this.Visible = false;
+            //    return;
+            //}
+            //else
+            //{
+            //    this.Visible = true;
+            //}
+
+
+
+            //IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Owner.Width + 1, Owner.Height + 1, 0, 0);
+            //Owner.Region = System.Drawing.Region.FromHrgn(hrgn);
+
+            //// 使用Invalidate而不是Refresh，以免影响主窗体上的控件背景显示白块
+            //this.Invalidate();
         }
 
         #endregion

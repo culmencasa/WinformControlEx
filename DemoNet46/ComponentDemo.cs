@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ocean;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -75,6 +76,12 @@ namespace DemoNet46
             }, (worker, e) => {
                 Thread.Sleep(2000);
             });
+        }
+
+        private void btnRoundForm_Click(object sender, EventArgs e)
+        {
+            OcnForm form = new OcnForm();
+            form.Show();
         }
     }
 }

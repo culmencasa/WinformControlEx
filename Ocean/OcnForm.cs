@@ -5,18 +5,19 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DemoNet46
+namespace Ocean
 {
-    public partial class LayoutDemo : NonFrameForm
+
+    /// <summary>
+    /// 窗体
+    /// </summary>
+    public partial class OcnForm : RoundedCornerForm
     {
-        public LayoutDemo()
+        public OcnForm()
         {
             InitializeComponent();
         }
-
     }
 }

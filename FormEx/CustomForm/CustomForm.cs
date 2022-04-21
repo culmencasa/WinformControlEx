@@ -10,7 +10,7 @@ namespace System.Windows.Forms
 {
 
     /// <summary>
-    /// 圆角窗体
+    /// 自定义窗体(不支持圆角)
     /// </summary>
     public partial class CustomForm : Form
     {
@@ -21,10 +21,11 @@ namespace System.Windows.Forms
 
         #region 字段
 
-        private int _roundCornerDiameter;
         private bool _showTitle;
         private string _customTitleText;
         private int _borderSize = 0;
+        private Color _backColor = Color.Gray;
+        private Color _borderColor;
 
         #endregion
 
@@ -35,6 +36,7 @@ namespace System.Windows.Forms
         /// 窗体边框大小. 
         /// 如果窗体中的控件有Dock或者位置与边框重合，将遮挡边框。 
         /// </summary>
+        [Category("Custom")]
         public int BorderSize
         {
             get
@@ -44,46 +46,53 @@ namespace System.Windows.Forms
             set
             {
                 _borderSize = value;
-                Update();
+                Invalidate();
             }
         }
 
         /// <summary>
         /// 窗体边框颜色
         /// </summary>
+        [Category("Custom")]
         [DefaultValue(typeof(Color), "157,157,157")]
-        public Color BorderColor { get; set; }
+        public Color BorderColor { get
+            {
+                return _borderColor;
+            } set
+            {
+                _borderColor = value;
+                Invalidate();
+            } }
         /// <summary>
         /// 背景渐变色1
         /// </summary>
+        [Category("Custom")]
         public Color BackGradientLightColor { get; set; }
         /// <summary>
         /// 背景渐变色2
-        /// </summary>        
+        /// </summary>   
+        [Category("Custom")]
         public Color BackGradientDarkColor { get; set; }
-        
+
 
         /// <summary>
         /// 是否可以拉伸
         /// </summary>
+        [Category("Custom")]
         [DefaultValue(true)]
         public bool AllowResize { get; set; }
 
         /// <summary>
         /// 允许窗体移动
         /// </summary>
+        [Category("Custom")]
         public bool AllowMove { get; set; }
 
 
         /// <summary>
-        /// 显示窗体阴影
-        /// </summary>
-        [DefaultValue(true)]
-        public bool ShowFormShadow { get; set; }
-
-        /// <summary>
         /// 标题栏高度
         /// </summary>
+        [Category("Custom")]
         public int TitleBarHeight
         {
             get;
@@ -93,6 +102,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 标题栏文字
         /// </summary>
+        [Category("Custom")]
         public string TitleText
         {
             get
@@ -107,6 +117,7 @@ namespace System.Windows.Forms
         }
 
 
+        [Category("Custom")]
         [Description("用于绘制窗体标题的颜色")]
         public Color TitleForeColor
         {
@@ -114,6 +125,7 @@ namespace System.Windows.Forms
             set;
         }
 
+        [Category("Custom")]
         public bool ShowTitleText
         {
             get
@@ -134,19 +146,24 @@ namespace System.Windows.Forms
         /// <summary>
         /// 显示Logo图标
         /// </summary>
+        [Category("Custom")]
         public bool ShowLogo { get; set; }
 
         /// <summary>
         /// 标题居中显示
         /// </summary>
+        [Category("Custom")]
         public bool ShowTitleCenter { get; set; }
 
+        [Category("Custom")]
         public Font TitleFont
         {
             get;
             set;
         }
+        [Category("Custom")]
         public int LogoSize { get; set; }
+        [Category("Custom")]
         public Image Logo { get; set; }
 
 
@@ -157,22 +174,22 @@ namespace System.Windows.Forms
         /// <summary>
         /// 貌似仅能限制Dock控件的区域
         /// </summary>
-        //public override Rectangle DisplayRectangle
-        //{
-        //    get
-        //    {
-        //        Rectangle clientArea = new Rectangle();
-        //        clientArea.X = this.BorderSize + 1;
-        //        clientArea.Y = this.BorderSize + TitleBarHeight + 1;
-        //        clientArea.Width = this.Width - BorderSize * 2;
-        //        clientArea.Height = this.Height - BorderSize * 2 - TitleBarHeight;
+        public override Rectangle DisplayRectangle
+        {
+            get
+            {
+                Rectangle clientArea = new Rectangle();
+                clientArea.X = this.BorderSize;
+                clientArea.Y = this.BorderSize +  TitleBarHeight;
+                clientArea.Width = this.Width - BorderSize * 2;
+                clientArea.Height = this.Height - BorderSize * 2 - TitleBarHeight;
 
-        //        return clientArea;
-        //    }
-        //}
+                return clientArea;
+            }
+        }
 
 
-        protected Color _backColor = Color.Gray;
+
         [DefaultValue(typeof(Color), "Gray")]
         public override Color BackColor
         {
@@ -186,6 +203,7 @@ namespace System.Windows.Forms
                 Invalidate();
             }
         }
+
         #endregion
 
         #region 构造
@@ -197,7 +215,7 @@ namespace System.Windows.Forms
         {
             InitializeComponent();
 
-            //this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 
             SetStyle(
@@ -274,7 +292,7 @@ namespace System.Windows.Forms
                     if (DontWaitChildrenDrawBackground)
                         cp.ExStyle |= (int)WindowStyle.WS_CLIPCHILDREN;  //防止因窗体控件太多出现闪烁
 
-                    //cp.ClassStyle |= 0x20000;  //窗体边框阴影
+                    cp.ClassStyle |= 0x20000;  //窗体边框阴影
                 }
                 return cp;
             }
@@ -355,20 +373,32 @@ namespace System.Windows.Forms
 			Graphics g = e.Graphics;
 			SmoothingMode smooth = g.SmoothingMode;
 
-			base.OnPaint(e);
+            g.FillRectangle(Brushes.WhiteSmoke, DisplayRectangle);
+			//base.OnPaint(e);
 
-			g.SmoothingMode = SmoothingMode.HighSpeed;
+			//g.SmoothingMode = SmoothingMode.HighSpeed;
 
 
 			DrawTitleBackground(g);
+
+
+            g.DrawString($"({Width},{Height})", this.Font, Brushes.Black, new  Point(100,100));
 
 			if (this.WindowState == FormWindowState.Normal)
 			{
 				// 边框
 				using (Pen borderPen = new Pen(this.BorderColor, BorderSize))
 				{
-					g.DrawRectangle(borderPen, 0, 0, this.Width - BorderSize, this.Height - BorderSize);
-
+                    if (BorderSize % 2 == 0)
+                    {
+                        g.DrawRectangle(borderPen, 0, 0, Width, Height);
+                    }
+                    else
+                    {
+                        g.DrawRectangle(borderPen, 0, 0, 
+                            Width - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero), 
+                            Height - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero));
+                    }
 				}
 			}
 
@@ -399,7 +429,6 @@ namespace System.Windows.Forms
 
         #endregion
 
-
         #region 公开的方法
 
         #endregion
@@ -408,11 +437,7 @@ namespace System.Windows.Forms
 
         protected virtual void InitializeDefaultValues()
         {
-            //this.ShowFormShadow = true;
-
             // 初始值
-            //this.SetColorSchema(ColorSchema.Gray);
-
             this.BackColor = Color.Gray;
 
             this.AllowResize = false;
@@ -587,15 +612,6 @@ namespace System.Windows.Forms
         // 窗体加载
         private void RoundedCornerForm_Load(object sender, EventArgs e)
         {
-
-            if (!DesignMode && ShowFormShadow)
-            {
-                // 如果窗体有DPI感应的话，DropShadow代码还需修改
-                DropShadow _shadow = new DropShadow(this);
-                _shadow.BorderRadius = 0;
-                _shadow.ShadowRadius = _shadow.BorderRadius;
-                _shadow.Refresh();
-            }
         }
 
 

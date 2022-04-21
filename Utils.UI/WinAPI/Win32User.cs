@@ -106,6 +106,21 @@ namespace System
         public static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
 
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern uint GetClassLong(IntPtr hWnd, ClassLong nIndex);
+
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern IntPtr GetClassLongPtr(IntPtr hWnd, ClassLong nIndex);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern uint SetClassLong(IntPtr hWnd, ClassLong nIndex, uint dwNewLong);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern IntPtr SetClassLongPtr(IntPtr hWnd, ClassLong nIndex, IntPtr dwNewLong);
+
+
+
         #endregion
 
 

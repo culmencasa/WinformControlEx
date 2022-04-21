@@ -61,38 +61,15 @@ namespace System.Windows.Forms
 
 		public TransparentControl()
 		{
-			this.delay = new Timer();
-			this.delay.Interval = 50;
-			this.delay.Tick += new EventHandler(this.TimerOnTick);
-			this.delay.Enabled = true;
+			//this.delay = new Timer();
+			//this.delay.Interval = 50;
+			//this.delay.Tick += new EventHandler(this.TimerOnTick);
+			//this.delay.Enabled = true;
 		}
 
 		protected override void OnPaintBackground(PaintEventArgs e)
 		{
 		}
-
-		//protected override void OnPaint(PaintEventArgs e)
-		//{
-		//	Graphics graphics = e.Graphics;
-		//	Rectangle rectangle = new Rectangle(0, 0, base.Width - 1, base.Height - 1);
-		//	Color color = this.brushColor;
-		//	int num;
-		//	if (color == Color.Transparent)
-		//	{
-		//		num = 0;
-		//	}
-		//	else
-		//	{
-		//		num = this.opacity * 255 / 100;
-		//	}
-		//	Pen pen = new Pen(Color.Black);
-		//	SolidBrush solidBrush = new SolidBrush(Color.FromArgb(num, color));
-		//	graphics.FillEllipse(solidBrush, rectangle);
-		//	graphics.DrawEllipse(pen, rectangle);
-		//	pen.Dispose();
-		//	solidBrush.Dispose();
-		//	graphics.Dispose();
-		//}
 
 		protected override void OnMove(EventArgs e)
 		{

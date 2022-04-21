@@ -24,3 +24,6 @@ C:\Works\FormEx\Ocean\obj\Debug\Ocean.csproj.CoreCompileInputs.cache
 C:\Works\FormEx\Ocean\obj\Debug\Ocean.csproj.CopyComplete
 C:\Works\FormEx\Ocean\obj\Debug\Ocean.dll
 C:\Works\FormEx\Ocean\obj\Debug\Ocean.pdb
+C:\Works\FormEx\Ocean\obj\Debug\Ocean.OcnForm.resources
+C:\Works\FormEx\Ocean\obj\Debug\Ocean.csproj.GenerateResource.cache
+C:\Works\FormEx\Ocean\obj\Debug\Ocean.OcnMessageBox.resources

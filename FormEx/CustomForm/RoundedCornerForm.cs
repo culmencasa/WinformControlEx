@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
+using Utils.UI;
 
 namespace System.Windows.Forms
 {
@@ -115,8 +116,20 @@ namespace System.Windows.Forms
         private int _roundCornerDiameter;
         private bool _showTitle;
         private string _customTitleText;
-        private int _borderSize = 2;
+        private int _borderSize = 1;
         private bool _fullScreen = true;
+        private Color _borderColor;
+        private Color _backGradientLightColor, _backGradientDarkColor, _shadeColor;
+
+        private bool _showShade;
+        private int _titleBarHeight;
+
+        private Color _titleForeColor;
+        private bool _showLogo, _showTitleCenter;
+        private Font _titleFont;
+        private int _logoSize;
+        private Image _logo;
+
 
         #endregion
 
@@ -127,6 +140,7 @@ namespace System.Windows.Forms
         /// 窗体边框大小. 
         /// 如果窗体中的控件有Dock或者位置与边框重合，将遮挡边框。 
         /// </summary>
+        //[Category("Custom")]
         public int BorderSize
         {
             get
@@ -135,14 +149,16 @@ namespace System.Windows.Forms
             }
             set
             {
-                _borderSize = value;
-                Update();
+                // 2022-04-21 禁止修改
+                //_borderSize = value;
+                //Invalidate();
             }
         }
 
         /// <summary>
         /// 圆角直径
         /// </summary>
+        [Category("Custom")]
         public int RoundCornerDiameter
         {
             get
@@ -154,6 +170,7 @@ namespace System.Windows.Forms
                 _roundCornerDiameter = value;
                 if (IsHandleCreated && !DesignMode)
                     UpdateFormRoundCorner(value);
+                Invalidate();
             }
         }
 
@@ -161,40 +178,100 @@ namespace System.Windows.Forms
         /// 窗体边框颜色
         /// </summary>
         [DefaultValue(typeof(Color), "157,157,157")]
-        public Color BorderColor { get; set; }
+        [Category("Custom")]
+        public Color BorderColor
+        {
+            get
+            {
+                return _borderColor;
+            }
+            set
+            {
+                _borderColor = value;
+                Invalidate();
+            }
+        }
         /// <summary>
         /// 背景渐变色1
         /// </summary>
-        public Color BackGradientLightColor { get; set; }
+        [Category("Custom")]
+        public Color BackGradientLightColor
+        {
+            get
+            {
+                return _backGradientLightColor;
+            }
+            set
+            {
+                _backGradientLightColor = value;
+                BackColor = value;
+                Invalidate();
+            }
+        }
         /// <summary>
         /// 背景渐变色2
-        /// </summary>        
-        public Color BackGradientDarkColor { get; set; }
+        /// </summary>
+        [Category("Custom")]
+        public Color BackGradientDarkColor
+        {
+            get
+            {
+                return _backGradientDarkColor;
+            }
+            set
+            {
+                _backGradientDarkColor = value;
+                Invalidate();
+            }
+        }
         /// <summary>
         /// 阴影面颜色
         /// </summary>
+        [Category("Custom")]
         public Color ShadeColor
         {
-            get;
-            set;
+            get
+            {
+                return _shadeColor;
+            }
+            set
+            {
+                _shadeColor = value;
+                Invalidate();
+            }
 
         }
-
         /// <summary>
         /// 显示阴影分割
         /// </summary>
         [DefaultValue(true)]
-        public bool ShowShade { get; set; }
+        [Category("Custom")]
+        public bool ShowShade
+        {
+            get
+            {
+
+                return _showShade;
+            }
+            set
+            {
+                _showShade = value;
+                Invalidate();
+            }
+        }
+
 
         /// <summary>
         /// 是否可以拉伸
         /// </summary>
         [DefaultValue(true)]
+        [Category("Custom")]
         public bool AllowResize { get; set; }
 
         /// <summary>
         /// 允许窗体移动
         /// </summary>
+        [Category("Custom")]
         public bool AllowMove { get; set; }
 
 
@@ -202,20 +279,30 @@ namespace System.Windows.Forms
         /// 显示窗体阴影
         /// </summary>
         [DefaultValue(true)]
+        [Category("Custom")]
         public bool ShowFormShadow { get; set; }
 
         /// <summary>
         /// 标题栏高度
         /// </summary>
+        [Category("Custom")]
         public int TitleBarHeight
         {
-            get;
-            set;
+            get
+            {
+                return _titleBarHeight;
+            }
+            set
+            {
+                _titleBarHeight = value;
+                Invalidate();
+            }
         }
 
         /// <summary>
         /// 标题栏文字
         /// </summary>
+        [Category("Custom")]
         public string TitleText
         {
             get
@@ -226,17 +313,26 @@ namespace System.Windows.Forms
             {
                 _customTitleText = value;
                 this.Text = value;
+                Invalidate();
             }
         }
 
 
         [Description("用于绘制窗体标题的颜色")]
+        [Category("Custom")]
         public Color TitleForeColor
         {
-            get;
-            set;
+            get
+            {
+                return _titleForeColor;
+            }
+            set
+            {
+                _titleForeColor = value;
+                Invalidate();
+            }
         }
-
+        [Category("Custom")]
         public bool ShowTitleText
         {
             get
@@ -257,42 +353,103 @@ namespace System.Windows.Forms
         /// <summary>
         /// 显示Logo图标
         /// </summary>
-        public bool ShowLogo { get; set; }
+        [Category("Custom")]
+        public bool ShowLogo
+        {
+            get
+            {
+                return _showLogo;
+            }
+            set
+            {
+                _showLogo = value;
+                Invalidate();
+            }
+        }
 
         /// <summary>
         /// 标题居中显示
         /// </summary>
-        public bool ShowTitleCenter { get; set; }
-
-        public Font TitleFont
-        {
-            get;
-            set;
-        }
-        public int LogoSize { get; set; }
-        public Image Logo { get; set; }
-
-
-
-        public bool DontWaitChildrenDrawBackground { get; set; }
-
-
-        /// <summary>
-        /// 貌似仅能限制Dock控件的区域
-        /// </summary>
-        public override Rectangle DisplayRectangle
+        [Category("Custom")]
+        public bool ShowTitleCenter
         {
             get
             {
-                Rectangle clientArea = new Rectangle();
-                clientArea.X = this.BorderSize + 1;
-                clientArea.Y = this.BorderSize + TitleBarHeight + 1;
-                clientArea.Width = this.Width - BorderSize * 2 - 4;
-                clientArea.Height = this.Height - BorderSize * 2 - TitleBarHeight - 4;
-
-                return clientArea;
+                return _showTitleCenter;
+            }
+            set
+            {
+                _showTitleCenter = value;
             }
         }
+        [Category("Custom")]
+        public Font TitleFont
+        {
+            get
+            {
+                return _titleFont;
+            }
+            set
+            {
+                _titleFont = value;
+                Invalidate();
+            }
+        }
+
+
+        [Category("Custom")]
+        public int LogoSize
+        {
+            get
+            {
+                return _logoSize;
+            }
+            set
+            {
+                _logoSize = value;
+            }
+        }
+
+
+        [Category("Custom")]
+        public Image Logo
+        {
+            get
+            {
+                return _logo;
+            }
+            set
+            {
+                _logo = value;
+                Invalidate();
+            }
+        }
+
+
+        [Browsable(false)]
+        public bool DontWaitChildrenDrawBackground { get; set; }
+
+        [Browsable(false)]
+        public bool FullScreen
+        {
+            get
+            {
+                return _fullScreen;
+            }
+            set
+            {
+                _fullScreen = value;
+                if (value)
+                {
+                    MaximumSize = Screen.PrimaryScreen.Bounds.Size;
+                }
+                else
+                {
+                    MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
+                }
+            }
+        }
+
 
 
         #endregion
@@ -392,20 +549,26 @@ namespace System.Windows.Forms
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == Win32.WM_NCHITTEST)
+            switch (m.Msg)
             {
-                if (AllowMove)
-                {
-                    m.Result = new IntPtr(Win32.HTCAPTION);
-                    return;
-                }
+                case Win32.WM_NCHITTEST:
 
-                if (AllowResize)
-                {
-                    WmNcHitTest(ref m);
-                    return;
-                } // 其他区域, 将操作区域视为标题栏
-
+                    Point pos = new Point(m.LParam.ToInt32());
+                    pos = this.PointToClient(pos);
+                    if (pos.X > BorderSize && pos.Y > BorderSize && pos.Y < TitleBarHeight)
+                    {
+                        if (AllowMove)
+                        {
+                            m.Result = new IntPtr(Win32.HTCAPTION);
+                            return;
+                        }
+                    }
+                    if (AllowResize)
+                    {
+                        WmNcHitTest(ref m);
+                        return;
+                    }
+                    break;
             }
 
             if (m.Msg == 0xa3)
@@ -438,67 +601,112 @@ namespace System.Windows.Forms
             base.WndProc(ref m);
         }
 
-		protected override void OnPaintBackground(PaintEventArgs e)
-		{
-			if (WindowState == FormWindowState.Normal)
-			{
-				Graphics g = e.Graphics;
-				SmoothingMode smooth = g.SmoothingMode;
-				if (this.BackgroundImage == null)
-				{
-					DrawGradientBackground(e.Graphics);
-				}
-				else
-				{
-					base.OnPaintBackground(e);
-				}
-				g.SmoothingMode = smooth;
-			}
-			else if (WindowState == FormWindowState.Maximized)
-			{
-				base.OnPaintBackground(e);
-			}
-		}
+        public override Rectangle DisplayRectangle
+        {
+            get
+            {
+                int gap = RoundCornerDiameter / 4;
+                Rectangle clientArea = new Rectangle();
+                clientArea.X = this.BorderSize + gap;
+                clientArea.Y = this.BorderSize + TitleBarHeight;
+                clientArea.Width = this.Width - BorderSize * 2 - gap * 2;
+                clientArea.Height = this.Height - BorderSize * 2 - TitleBarHeight - gap;
 
-		protected override void OnPaint(PaintEventArgs e)
-		{
-			Graphics g = e.Graphics;
-			SmoothingMode smooth = g.SmoothingMode;
+                return clientArea;
+            }
+        }
 
-			base.OnPaint(e);
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            if (WindowState == FormWindowState.Normal)
+            {
+                Graphics g = e.Graphics;
+                SmoothingMode smooth = g.SmoothingMode;
+                if (this.BackgroundImage == null)
+                {
+                    DrawGradientBackground(g);
+                }
+                else
+                {
+                    base.OnPaintBackground(e);
+                }
+                g.SmoothingMode = smooth;
+            }
+            else if (WindowState == FormWindowState.Maximized)
+            {
+                base.OnPaintBackground(e);
+            }
+        }
 
-			g.SmoothingMode = SmoothingMode.HighSpeed;
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            SmoothingMode smooth = g.SmoothingMode;
 
+            base.OnPaint(e);
 
-			DrawTitleBackground(g);
-
-			if (this.WindowState == FormWindowState.Normal)
-			{
-				// 半径
-				int radius = RoundCornerDiameter / 2;
-				// 边框
-				using (Pen borderPen = new Pen(this.BorderColor, BorderSize))
-				{
-					g.DrawRoundedRectangle(borderPen, 0, 0, this.Width - BorderSize, this.Height - BorderSize, radius);
-
-				}
-			}
-
-			// 内边框
-			//Color innerBorder = Color.FromArgb(100, 157, 157, 157);
-			//using (Pen borderPen = new Pen(innerBorder, 2))
-			//{
-			//    g.DrawRoundedRectangle(borderPen, 1, 1, this.Width - 5, this.Height - 5, radius);
-			//}
+            g.SmoothingMode = SmoothingMode.HighSpeed;
 
 
-			// 画标题
-			DrawLogoAndTitle(g);
+            DrawTitleBackground(g);
 
-			g.SmoothingMode = smooth;
-		}
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                if (BorderSize > 0)
+                {
+                    // 半径
+                    int radius = RoundCornerDiameter / 2;
+                    if (!ShowFormShadow && radius > 0)
+                    {
+                        radius = radius + 1; // + 1 防止Region盖住
+                    }
 
-		protected override void OnResize(EventArgs e)
+                    // 边框 2022-04-20 mzc 在win10下边框值为奇数时显示不正常?
+                    using (Pen borderPen = new Pen(this.BorderColor, BorderSize))
+                    {
+                        if (BorderSize % 2 == 0)
+                        {
+                            g.DrawRoundedRectangle(borderPen, 0, 0, Width, Height, radius);
+                        }
+                        else
+                        {
+                            g.DrawRoundedRectangle(borderPen, 0, 0,
+                                Width - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero) - 1,
+                                Height - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero) - 1, radius);
+                        }
+                    }
+
+                    // 内边框
+                    //if (radius > 0)
+                    //{
+                    //    Color innerBorder = BorderColor; // ColorEx.DarkenColor(BorderColor, 50);
+                    //    using (Pen borderPen = new Pen(innerBorder, BorderSize))
+                    //    {
+                    //        if (BorderSize % 2 == 0)
+                    //        {
+                    //            g.DrawRoundedRectangle(borderPen, -BorderSize, -BorderSize, Width, Height, radius);
+                    //        }
+                    //        else
+                    //        {
+                    //            g.DrawRoundedRectangle(borderPen, -BorderSize, -BorderSize,
+                    //                Width - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero),
+                    //                Height - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero),
+                    //                radius); 
+                    //        }
+                    //    }
+                    //}
+                }
+
+            }
+
+
+            // 画标题
+            DrawLogoAndTitle(g);
+
+            g.SmoothingMode = smooth;
+        }
+
+        protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
             // 注：不能写到Resize事件里
@@ -516,27 +724,6 @@ namespace System.Windows.Forms
             }
         }
 
-        public bool FullScreen
-        {
-            get
-            {
-                return _fullScreen;
-            }
-            set
-            {
-                _fullScreen = value;
-                if (value)
-                {
-                    MaximumSize = Screen.PrimaryScreen.Bounds.Size;
-                }
-                else
-                {
-                    MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
-                }
-            }
-        }
-
-
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
@@ -545,7 +732,6 @@ namespace System.Windows.Forms
         }
 
         #endregion
-
 
         #region 公开的方法
 
@@ -647,9 +833,11 @@ namespace System.Windows.Forms
 
 
         protected virtual void DrawGradientBackground(Graphics g)
-        { 
+        {
             int radius = RoundCornerDiameter / 2;
 
+            // 可能是因为没有调用base.OnPaintBackground导致有背景色, 所以这里覆盖掉
+            g.FillGradientRectangle(this.ClientRectangle, BackGradientLightColor, BackGradientDarkColor, FillDirection.TopToBottom);
             using (LinearGradientBrush brush = new LinearGradientBrush(
                 new Point(this.Width / 2, 0),
                 new Point(this.Width / 2, this.Height),
@@ -698,6 +886,7 @@ namespace System.Windows.Forms
         private void WmNcHitTest(ref Message m)
         {
             #region 判断操作的是窗体边缘, 则调整窗体大小
+
             if (WindowState == FormWindowState.Normal)
             {
                 int wparam = m.LParam.ToInt32();
@@ -768,7 +957,7 @@ namespace System.Windows.Forms
             else
             {
                 // 防止控件撑出窗体            
-                IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Width, Height, diameter / 2 + 4, diameter / 2 + 4);
+                IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Width, Height, diameter, diameter);
                 Region = System.Drawing.Region.FromHrgn(hrgn);
                 this.Update();
                 Win32.DeleteObject(hrgn);
@@ -778,9 +967,8 @@ namespace System.Windows.Forms
         /// <summary>
         /// 设置子控件的区域，避免与边框重叠
         /// </summary>
-        protected void UpdateEdgePatching()
+        protected virtual void UpdateEdgePatching()
         {
-
             //var list = GetEdgePatchingControls();
 
             //if (list != null)
@@ -822,8 +1010,9 @@ namespace System.Windows.Forms
             }
         }
 
-
         #endregion
+
+
 
     }
 

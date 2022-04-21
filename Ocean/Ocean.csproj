@@ -41,9 +41,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OcnForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OcnForm.Designer.cs">
+      <DependentUpon>OcnForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="OceanPresets.cs" />
     <Compile Include="OcnButton.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OcnImage.cs" />
+    <Compile Include="OcnLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OcnMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OcnMessageBox.Designer.cs">
+      <DependentUpon>OcnMessageBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
@@ -57,6 +73,14 @@
       <Project>{797ef63f-6c41-4e65-adf0-de428e759b5a}</Project>
       <Name>Utils.UI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OcnForm.resx">
+      <DependentUpon>OcnForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OcnMessageBox.resx">
+      <DependentUpon>OcnMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

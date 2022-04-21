@@ -39,12 +39,11 @@ namespace System.Windows.Forms
             // 
             // btnMinimum
             // 
-            this.btnMinimum.AutoResize = true;
-            this.btnMinimum.BackColor = System.Drawing.Color.Transparent;
             this.btnMinimum.ButtonKeepPressed = false;
             this.btnMinimum.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btnMinimum.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnMinimum.DownImage = global::System.Windows.Forms.Properties.Resources.min3;
+            this.btnMinimum.HotTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(243)))));
             this.btnMinimum.HoverImage = global::System.Windows.Forms.Properties.Resources.min2;
             this.btnMinimum.Location = new System.Drawing.Point(0, 0);
             this.btnMinimum.Margin = new System.Windows.Forms.Padding(0);
@@ -59,12 +58,11 @@ namespace System.Windows.Forms
             // 
             // btnMaximum
             // 
-            this.btnMaximum.AutoResize = true;
-            this.btnMaximum.BackColor = System.Drawing.Color.Transparent;
             this.btnMaximum.ButtonKeepPressed = false;
             this.btnMaximum.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btnMaximum.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnMaximum.DownImage = global::System.Windows.Forms.Properties.Resources.max3;
+            this.btnMaximum.HotTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(243)))));
             this.btnMaximum.HoverImage = global::System.Windows.Forms.Properties.Resources.max2;
             this.btnMaximum.Location = new System.Drawing.Point(90, 0);
             this.btnMaximum.Margin = new System.Windows.Forms.Padding(0);
@@ -79,12 +77,11 @@ namespace System.Windows.Forms
             // 
             // btnClose
             // 
-            this.btnClose.AutoResize = true;
-            this.btnClose.BackColor = System.Drawing.Color.Transparent;
             this.btnClose.ButtonKeepPressed = false;
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btnClose.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnClose.DownImage = global::System.Windows.Forms.Properties.Resources.close3;
+            this.btnClose.HotTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(243)))));
             this.btnClose.HoverImage = global::System.Windows.Forms.Properties.Resources.close2;
             this.btnClose.Location = new System.Drawing.Point(180, 0);
             this.btnClose.Margin = new System.Windows.Forms.Padding(0);
@@ -99,7 +96,6 @@ namespace System.Windows.Forms
             // 
             // Win11ControlBox
             // 
-            this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this.btnMinimum);
             this.Controls.Add(this.btnMaximum);
             this.Controls.Add(this.btnClose);

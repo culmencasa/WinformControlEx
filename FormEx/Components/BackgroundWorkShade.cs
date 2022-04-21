@@ -143,8 +143,6 @@ namespace System.Windows.Forms
                     return;
                 }
 
-                loopContinueSignal.WaitOne();
-
 
                 if (this.ProcedureList != null && ProcedureList.Count > 0)
                 {
@@ -187,6 +185,12 @@ namespace System.Windows.Forms
                             }));
                         }
                     }
+                }
+                else
+                {
+
+                    loopContinueSignal.WaitOne();
+
                 }
 
             }
