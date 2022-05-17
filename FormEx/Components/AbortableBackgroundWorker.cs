@@ -26,8 +26,13 @@ namespace System.ComponentModel
             }
             catch (ThreadAbortException)
             {
+
+#if COMPILE_NET60
+                e.Cancel = true;
+#else
                 e.Cancel = true;
                 Thread.ResetAbort();
+#endif
             }
         }
 
@@ -39,8 +44,12 @@ namespace System.ComponentModel
                 // 异常不会被workerThread捕捉
                 //throw new TaskCanceledException();
 
+#if COMPILE_NET60
+                throw new TaskCanceledException();
+#else
                 workerThread.Abort();
                 workerThread = null;
+#endif
             }
         }
 

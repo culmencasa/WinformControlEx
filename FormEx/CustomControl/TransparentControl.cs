@@ -12,7 +12,7 @@ namespace System.Windows.Forms
 
 		private int opacity = 100;
 
-		private Timer delay;
+		//private Timer delay;
 
 		public Color BrushColor
 		{
@@ -79,7 +79,7 @@ namespace System.Windows.Forms
 		private void TimerOnTick(object source, EventArgs e)
 		{
 			base.RecreateHandle();
-			this.delay.Stop();
+			//this.delay.Stop();
 		}
 	}
 }

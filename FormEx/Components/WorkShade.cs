@@ -27,8 +27,6 @@ namespace System.Windows.Forms
 
         public WorkShade()
         {
-            _tickCountBegin = Environment.TickCount;
-
             this.Enable2DBuffer();
 
             // 防止闪烁
@@ -93,8 +91,6 @@ namespace System.Windows.Forms
 
 
         private Bitmap _boxShadowBitmap;
-        private int _tickCountBegin;
-        private int _tickCountEnd;
 
 
         #endregion

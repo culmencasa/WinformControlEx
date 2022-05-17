@@ -11,7 +11,8 @@ namespace Ocean
 {
 
     /// <summary>
-    /// 
+    /// 主题色按钮
+    /// 注: 更改颜色等属性将无效, 属性会被Theme覆盖. 需要自定义颜色属性请使用CustomButton.
     /// </summary>
     public class OcnButton : CustomButton
     {
@@ -50,6 +51,13 @@ namespace Ocean
         private Color _savedBackColor;
         private Color _savedForeColor;
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Category("Custom")]
+        
         public Themes Theme
         {
             get
@@ -78,6 +86,27 @@ namespace Ocean
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public override Color BorderColor
+        {
+            get => base.BorderColor;
+            set
+            {
+                base.BorderColor = value;
+            }
+        }
+
+        public override Color BackColor
+        {
+            get => base.BackColor;
+            set
+            {
+                base.BackColor = value;
+            }
+        }
+
         [Category("Custom")]
         public Color MouseOverBackColor
         {
@@ -92,40 +121,54 @@ namespace Ocean
             set;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public OceanPresets Presets
         {
             get;
-            set;
+            private set;
         } = OceanPresets.Instance;
+
+        protected bool ThemeApplied { get; set; }
 
         protected virtual void OnThemeChanged()
         {
-
             switch (Theme)
             {
                 case Themes.Primary:
                     ApplyPrimary();
+                    ThemeApplied = true;
                     break;
                 case Themes.Secondary:
                     ApplySecondary();
+                    ThemeApplied = true;
                     break;
                 case Themes.Success:
                     ApplySuccess();
+                    ThemeApplied = true;
                     break;
                 case Themes.Danger:
                     ApplyDanger();
+                    ThemeApplied = true;
                     break;
                 case Themes.Warning:
                     ApplyWarning();
+                    ThemeApplied = true;
                     break;
                 case Themes.Info:
                     ApplyInfo();
+                    ThemeApplied = true;
                     break;
                 case Themes.Light:
                     ApplyLight();
+                    ThemeApplied = true;
                     break;
                 case Themes.Dark:
                     ApplyDark();
+                    ThemeApplied = true;
+                    break;
+                default:
+
+                    ThemeApplied = false;
                     break;
             }
         }
@@ -257,7 +300,7 @@ namespace Ocean
                 BorderColor = ColorEx.DarkenColor(Presets.LightColor, 20);
                 BackColor = Color.White;
                 ForeColor = Color.Black;
-                MouseOverBackColor = Presets.LightColor; 
+                MouseOverBackColor = Presets.LightColor;
                 MouseOverForeColor = Color.Black;
             }
             else
@@ -376,5 +419,18 @@ namespace Ocean
 
 
         #endregion
+
+
+        private bool _designInit;
+        public void BeginInit()
+        {
+            _designInit = true;
+        }
+
+        public void EndInit()
+        {
+            _designInit = false;
+        }
+
     }
 }

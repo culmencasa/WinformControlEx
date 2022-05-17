@@ -23,6 +23,12 @@ namespace Ocean
             }
         }
 
+        private OceanPresets()
+        { }
+
+
+
+
         [Category("Presets")]
         public Color PrimaryColor
         {

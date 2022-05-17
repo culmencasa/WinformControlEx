@@ -46,11 +46,11 @@ namespace System.Windows.Forms
         /// 上一次增长的总值
         /// </summary>
         private float LastSessionTotal;
-        private float LastIncreamentASync;
+        //private float LastIncreamentASync;
         /// <summary>
         /// 增长加速度(目前没用)
         /// </summary>
-        private float _increasingSpeed;
+        //private float _increasingSpeed = 1;
         /// <summary>
         /// 进度条的值
         /// </summary>
@@ -238,9 +238,7 @@ namespace System.Windows.Forms
         #region 构造
 
         public CustomProgressBar()
-        {
-            _increasingSpeed = 1;
-               
+        {               
             BorderRadius = 20;
             Value = 0;
             MinValue = 0;

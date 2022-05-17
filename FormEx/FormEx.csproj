@@ -3,8 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>net40;net46;net48;net6.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
+    <OutputType>Library</OutputType>
     <RootNamespace>System.Windows.Forms</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects> 
+    
+    <ApplicationDefaultFont>Microsoft Sans Serif, 8.25pt</ApplicationDefaultFont>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
@@ -50,6 +53,15 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CustomTextBox\PaddingTextBox.cs" />
+    <Compile Remove="CustomTextBox\PaddingTextBox.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="CustomTextBox\PaddingTextBox.resx" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="ImageComboBox\ComboBMP.bmp" />
@@ -152,12 +164,6 @@
     </Compile>
     <Compile Update="CustomScrollbar\CustomScrollbar.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomTextBox\PaddingTextBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomTextBox\PaddingTextBox.Designer.cs">
-      <DependentUpon>PaddingTextBox.cs</DependentUpon>
     </Compile>
     <Compile Update="CustomTextBox\RoundTextBox.cs">
       <SubType>UserControl</SubType>
@@ -288,9 +294,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessageBox.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="CustomTextBox\PaddingTextBox.resx">
-      <DependentUpon>PaddingTextBox.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Update="CustomTextBox\RoundTextBox.resx">
       <DependentUpon>RoundTextBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -329,7 +332,7 @@
     <DefineConstants>DEBUG;COMPILE_NET48</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
-    <DefineConstants>DEBUG;COMPILE_NET50</DefineConstants>
+    <DefineConstants>DEBUG;COMPILE_NET60</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
     <DefineConstants>TRACE;COMPILE_NET40</DefineConstants>
@@ -341,7 +344,7 @@
     <DefineConstants>TRACE;COMPILE_NET48</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
-    <DefineConstants>TRACE;COMPILE_NET50</DefineConstants>
+    <DefineConstants>TRACE;COMPILE_NET60</DefineConstants>
   </PropertyGroup>
   
 

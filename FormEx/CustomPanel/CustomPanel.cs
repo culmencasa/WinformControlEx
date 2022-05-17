@@ -70,11 +70,23 @@ namespace System.Windows.Forms
         }
         protected override void OnPaint(PaintEventArgs e)
         {
-            //base.OnPaint(e);
             Graphics lazyG = e.Graphics;
 
-            Bitmap bitmap = new Bitmap(this.Width, this.Height);
-            Graphics g = Graphics.FromImage(bitmap);
+            int w = this.Width;
+            int h = this.Height;
+            Bitmap bitmap;
+            Graphics cacheG;
+            if (w > 0 && h > 0)
+            {
+                bitmap = new Bitmap(w, h);
+                cacheG = Graphics.FromImage(bitmap);
+            }
+            else
+            {
+                // 有时候, 例如最小化, Height会变成0
+                base.OnPaint(e);
+                return;
+            } 
 
             #region 如果设置了渐变色
 
@@ -91,13 +103,13 @@ namespace System.Windows.Forms
                         ))
                     {
                         // 不减1会出现1像素的空白, 原因不明
-                        g.FillRoundedRectangle(brush, BorderWidth - 1, BorderWidth - 1, this.Width - BorderWidth, this.Height - BorderWidth, RoundBorderRadius);
+                        cacheG.FillRoundedRectangle(brush, BorderWidth - 1, BorderWidth - 1, this.Width - BorderWidth, this.Height - BorderWidth, RoundBorderRadius);
                     }
                 }
                 else
                 {
                     // 填充直角矩形
-                    GradientFill.Fill(g, this.ClientRectangle, this.FirstColor, this.SecondColor, this.GradientDirection);
+                    GradientFill.Fill(cacheG, this.ClientRectangle, this.FirstColor, this.SecondColor, this.GradientDirection);
                 }
             }
 
@@ -111,11 +123,11 @@ namespace System.Windows.Forms
 				{
 					if (RoundBorderRadius > 0)
 					{
-						g.FillRoundedRectangle(borderBrush, BorderWidth, BorderWidth, this.Width - BorderWidth * 2, this.Height - BorderWidth * 2, RoundBorderRadius);
+						cacheG.FillRoundedRectangle(borderBrush, BorderWidth, BorderWidth, this.Width - BorderWidth * 2, this.Height - BorderWidth * 2, RoundBorderRadius);
 					}
 					else
 					{
-						g.FillRectangle(borderBrush, new Rectangle(BorderWidth, BorderWidth, this.Width - BorderWidth * 2, this.Height - BorderWidth * 2));
+						cacheG.FillRectangle(borderBrush, new Rectangle(BorderWidth, BorderWidth, this.Width - BorderWidth * 2, this.Height - BorderWidth * 2));
 					}
 				}
 
@@ -130,7 +142,7 @@ namespace System.Windows.Forms
                     // 画圆角边框   
                     using (Pen borderPen = new Pen(this.BorderColor, BorderWidth))
                     {
-                        g.DrawRoundedRectangle(borderPen, 0, 0, this.Width - BorderWidth, this.Height - BorderWidth, this.RoundBorderRadius);
+                        cacheG.DrawRoundedRectangle(borderPen, 0, 0, this.Width - BorderWidth, this.Height - BorderWidth, this.RoundBorderRadius);
                     }
                 }
                 else
@@ -138,13 +150,15 @@ namespace System.Windows.Forms
                     // 画直角边框
                     using (Pen borderPen = new Pen(this.BorderColor, BorderWidth))
                     {
-                        g.DrawRectangle(borderPen, 0, 0, this.Width - BorderWidth, this.Height - BorderWidth);
+                        cacheG.DrawRectangle(borderPen, 0, 0, this.Width - BorderWidth, this.Height - BorderWidth);
                     }
                 }
             }
 
             lazyG.DrawImage(bitmap, 0, 0);
-            g.Dispose();
+            cacheG.Dispose();
+
+            base.OnPaint(e);
         }
 
         protected override void OnControlAdded(ControlEventArgs e)
