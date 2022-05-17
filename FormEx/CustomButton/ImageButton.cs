@@ -10,19 +10,30 @@ using System.Diagnostics;
 namespace System.Windows.Forms
 {
 
-    // http://www.codeproject.com/Articles/29010/WinForm-ImageButton
-
+    /// <summary>
+    /// 图片按钮控件
+    /// ref: http://www.codeproject.com/Articles/29010/WinForm-ImageButton
+    /// </summary>
     public class ImageButton : PictureBox, IButtonControl
     {
-        #region  Fileds
+        #region 事件
+
+        /// <summary>
+        /// 按钮常规图片设置后事件
+        /// </summary>
+        public event EventHandler NormalImageChanged;
+
+        #endregion
+
+        #region  私有字段
 
         private const int WM_KEYDOWN = 0x0100;
         private const int WM_KEYUP = 0x0101;
 
-        private DialogResult _DialogResult;
-        private Image _HoverImage;
-        private Image _DownImage;
-        private Image _NormalImage;
+        private DialogResult _dialogResult;
+        private Image _hoverImage;
+        private Image _downImage;
+        private Image _normalImage;
         private bool _hover = false;
         private bool _down = false;
         private bool _isDefault = false;
@@ -30,15 +41,16 @@ namespace System.Windows.Forms
         private bool _leftClick = false;
 
         private ToolTip _toolTip = new ToolTip();
+        private Color _hotTrackColor = Color.Transparent; //Color.FromArgb(244, 244, 243);
 
         #endregion
-
-        #region Constructor
+         
+        #region 构造
 
         public ImageButton()
             : base()
         {
-            // 1.让PictureBox支持焦点
+            // 启用焦点
             EnableTabStop();
 
             this.TabStop = true;
@@ -50,19 +62,19 @@ namespace System.Windows.Forms
 
         #endregion
 
-        #region IButtonControl Members
+        #region 实现 IButtonControl 接口成员
 
         public DialogResult DialogResult
         {
             get
             {
-                return _DialogResult;
+                return _dialogResult;
             }
             set
             {
                 if (Enum.IsDefined(typeof(DialogResult), value))
                 {
-                    _DialogResult = value;
+                    _dialogResult = value;
                 }
             }
         }
@@ -83,33 +95,30 @@ namespace System.Windows.Forms
         #endregion
 
 
-        public event EventHandler NormalImageChanged;
-        protected virtual void OnNormalImageChanged()
-        {
-            NormalImageChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        #region  Properties
+        #region 公开属性
 
 
+        /// <summary>
+        /// 是否显示焦点虚线
+        /// </summary>
+        [Category("Behavior")]
         public bool ShowFocusLine
         {
             get;
             set;
         }
 
-        [Category("Custom")]
-        [Description("Image to show when the button is not in any other state.")]
+        [Category("Appearance")]
         [DefaultValue(null)]
         public Image NormalImage
         {
             get
             {
-                return _NormalImage;
+                return _normalImage;
             }
             set
             {
-                _NormalImage = value;
+                _normalImage = value;
                 if (!(_hover || _down))
                 {
                     Image = value;
@@ -118,44 +127,41 @@ namespace System.Windows.Forms
                 OnNormalImageChanged();
             }
         }
-        [Category("Custom")]
-        [Description("Image to show when the button is hovered over.")]
+
+
+        [Category("Appearance")]
         [DefaultValue(null)]
         public Image HoverImage
         {
-            get { return _HoverImage; }
-            set { _HoverImage = value; if (_hover) Image = value; }
+            get { return _hoverImage; }
+            set
+            {
+                _hoverImage = value;
+                if (_hover)
+                {
+                    Image = value;
+                }
+            }
         }
 
-        [Category("Custom")]
-        [Description("Image to show when the button is depressed.")]
+        [Category("Appearance")]
         [DefaultValue(null)]
         public Image DownImage
         {
-            get { return _DownImage; }
-            set { _DownImage = value; if (_down) Image = value; }
-        }
-
-        [Browsable(true)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [Category("Custom")]
-        [Description("The text associated with the control.")]
-        public override string Text
-        {
-            get
-            {
-                return base.Text;
-            }
+            get { return _downImage; }
             set
             {
-                base.Text = value;
+                _downImage = value;
+                if (_down)
+                {
+                    Image = value;
+                }
             }
         }
 
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [Category("Custom")]
-        [Description("The font used to display text in the control.")]
+        [Category("Appearance")]
         public override Font Font
         {
             get
@@ -170,25 +176,62 @@ namespace System.Windows.Forms
 
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        [Category("Custom")]
-        public override System.Drawing.Color ForeColor
+        [Category("Appearance")]
+        public override Color ForeColor
         {
             get;
             set;
         }
 
 
-        #endregion
-
-        #region Description Changes
-        [Description("Controls how the ImageButton will handle image placement and control sizing.")]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Category("Appearance")]
+        public override string Text
+        {
+            get
+            {
+                return base.Text;
+            }
+            set
+            {
+                base.Text = value;
+            }
+        }
+         
+        [Category("Appearance")]
         public new PictureBoxSizeMode SizeMode { get { return base.SizeMode; } set { base.SizeMode = value; } }
 
-        [Description("Controls what type of border the ImageButton should have.")]
+        [Category("Appearance")]
         public new BorderStyle BorderStyle { get { return base.BorderStyle; } set { base.BorderStyle = value; } }
+
+        /// <summary>
+        /// 鼠标悬浮背景色
+        /// </summary>
+        [Category("Appearance")]
+        [DefaultValue(typeof(Color), "Transparent")]
+        public Color HotTrackColor
+        {
+            get
+            {
+                return _hotTrackColor;
+            }
+            set
+            {
+                _hotTrackColor = value;
+                Invalidate();
+            }
+        }
+
+
+        [Category("Custom")]
+        [Description("当鼠标放在控件可见处的提示文本")]
+        public string ToolTipText { get; set; }
+
+
         #endregion
 
-        #region Hiding
+        #region 隐藏属性
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -217,41 +260,35 @@ namespace System.Windows.Forms
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new bool WaitOnLoad { get { return base.WaitOnLoad; } set { base.WaitOnLoad = value; } }
+
         #endregion
 
-        public void KeepPress()
-        {
-            ButtonKeepPressed = true;
-            Image = DownImage;
-            Invalidate();
-        }
-
-        public void Release()
-        {
-            ButtonKeepPressed = false;
-            Image = NormalImage;
-            Invalidate();
-        }
-
-        #region override
+        #region 重写的方法
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            //show tool tip 
             if (ToolTipText != string.Empty)
             {
                 HideToolTip();
                 ShowTooTip(ToolTipText);
             }
 
-
-
             base.OnMouseEnter(e);
+
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             _hover = true;
+
+            if (_down)
+            {
+                _bms = ButtonMouseStatus.Pressed | ButtonMouseStatus.Focused;
+            }
+            else
+            {
+                _bms = ButtonMouseStatus.Focused;
+            }
 
             if (ButtonKeepPressed)
             {
@@ -261,21 +298,21 @@ namespace System.Windows.Forms
 
             if (_down)
             {
-                if ((_DownImage != null) && (Image != _DownImage))
+                if ((_downImage != null) && (Image != _downImage))
                 {
-                    Image = _DownImage;
+                    Image = _downImage;
                     Invalidate();
                 }
             }
             else
             {
-                if (_HoverImage != null)
+                if (_hoverImage != null)
                 {
-                    Image = _HoverImage;
+                    Image = _hoverImage;
                 }
                 else
                 {
-                    Image = _NormalImage;
+                    Image = _normalImage;
                 }
                 Invalidate();
             }
@@ -287,13 +324,14 @@ namespace System.Windows.Forms
         protected override void OnMouseLeave(EventArgs e)
         {
             _hover = false;
+            _bms = _bms & (~ButtonMouseStatus.Focused) | ButtonMouseStatus.FocusLost;
 
             if (ButtonKeepPressed)
             {
             }
             else
             {
-                Image = _NormalImage;
+                Image = _normalImage;
             }
             base.OnMouseLeave(e);
 
@@ -308,16 +346,17 @@ namespace System.Windows.Forms
                 _leftClick = true;
                 //OnMouseUp(null);
                 _down = true;
+                _bms = (_bms & (~ButtonMouseStatus.Released)) | ButtonMouseStatus.Pressed;
 
                 if (ButtonKeepPressed)
                 {
-                    Release();
+                    ReleasePressing();
                     return;
                 }
 
-                if (_DownImage != null)
+                if (_downImage != null)
                 {
-                    Image = _DownImage;
+                    Image = _downImage;
                     Invalidate();
                 }
             }
@@ -327,6 +366,21 @@ namespace System.Windows.Forms
         protected override void OnMouseUp(MouseEventArgs e)
         {
             _leftClick = false;
+
+            if (this.IsHandleCreated == false || IsDisposed)
+            {
+                base.OnMouseUp(e);
+                return;
+            }
+
+            if (this.MouseIsOverControl())
+            {
+                _bms = ButtonMouseStatus.Focused | ButtonMouseStatus.Released;
+            }
+            else
+            {
+                _bms = ButtonMouseStatus.FocusLost | ButtonMouseStatus.Released;
+            }
 
             if (e.Button == MouseButtons.Left)
             {
@@ -340,7 +394,7 @@ namespace System.Windows.Forms
                 if (_down)
                 {
                     _down = false;
-                    Image = _NormalImage;
+                    Image = _normalImage;
                     Invalidate();
                 }
                 //else if (_hover)
@@ -421,10 +475,8 @@ namespace System.Windows.Forms
                     g.FillRectangle(brush, this.ClientRectangle);
                 }
             }
-
             base.OnPaint(pe);
 
-            
 
             if ((!string.IsNullOrEmpty(Text)) && (pe != null) && (base.Font != null))
             {
@@ -449,7 +501,7 @@ namespace System.Windows.Forms
                 }
             }
 
-            // 3.让PictureBox支持焦点
+            // 3. TabStop焦点
             if (ShowFocusLine && this.Focused)
             {
                 var rc = this.ClientRectangle;
@@ -463,7 +515,9 @@ namespace System.Windows.Forms
             if (disposing)
             {
                 if (_toolTip != null)
+                {
                     _toolTip.Dispose();
+                }
             }
             _toolTip = null;
             base.Dispose(disposing);
@@ -475,21 +529,40 @@ namespace System.Windows.Forms
             base.OnTextChanged(e);
         }
 
+        protected override void OnEnter(EventArgs e)
+        {
+            this.Invalidate();
+            base.OnEnter(e);
+
+
+        }
+        protected override void OnLeave(EventArgs e)
+        {
+            //todo: 不能通过Tab来丢失焦点
+            this.Invalidate();
+            base.OnLeave(e);
+        }
+
         #endregion
 
-        #region 提示文本
 
-        [Category("Custom")]
-        [Description("当鼠标放在控件可见处的提示文本")]
-        public string ToolTipText { get; set; }
+        #region 私有方法
 
+        #region 增加提示文本功能
 
+        /// <summary>
+        /// 显示提示
+        /// </summary>
+        /// <param name="toolTipText"></param>
         private void ShowTooTip(string toolTipText)
         {
             _toolTip.Active = true;
             _toolTip.SetToolTip(this, toolTipText);
         }
 
+        /// <summary>
+        /// 关闭显示
+        /// </summary>
         private void HideToolTip()
         {
             _toolTip.Active = false;
@@ -498,7 +571,7 @@ namespace System.Windows.Forms
         #endregion
 
 
-        #region 2.让PictureBox支持焦点
+        #region 使控件支持焦点
 
         [Category("Custom")]
         [Browsable(true), EditorBrowsable()]
@@ -528,8 +601,10 @@ namespace System.Windows.Forms
             }
         }
 
-
-        protected void EnableTabStop()
+        /// <summary>
+        /// 使控件支持焦点
+        /// </summary>
+        protected virtual void EnableTabStop()
         {
             SetStyle(ControlStyles.Selectable, true);
             SetStyle(ControlStyles.EnableNotifyMessage, true);
@@ -541,6 +616,11 @@ namespace System.Windows.Forms
         #region 让按钮保持按下状态
 
         private bool _buttonKeepPressed;
+
+        /// <summary>
+        /// 设置或获取按钮按下状态
+        /// </summary>
+        [Category("Behavior")]
         public bool ButtonKeepPressed
         {
             get
@@ -558,36 +638,70 @@ namespace System.Windows.Forms
             }
         }
 
+        /// <summary>
+        /// 使按钮成为按下状态
+        /// </summary>
+        public void KeepPress()
+        {
+            ButtonKeepPressed = true;
+            Image = DownImage;
+            Invalidate();
+
+            _bms = ButtonMouseStatus.Pressed;
+        }
+
+        /// <summary>
+        /// 使按钮成为正常状态
+        /// </summary>
+        public void ReleasePressing()
+        {
+            ButtonKeepPressed = false;
+            Image = NormalImage;
+            Invalidate();
+
+            _bms = ButtonMouseStatus.Released;
+        }
+
+        #endregion
+
         #endregion
 
 
-        private Color _hotTrackColor = Color.FromArgb(244, 244, 243);
-        public Color HotTrackColor
+        #region 保护方法
+
+        protected virtual void OnNormalImageChanged()
+        {
+            NormalImageChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion
+
+
+
+        [Flags]
+        public enum ButtonMouseStatus
+        {
+            None  = 0,
+            Focused = 1,
+            Pressed = 2,
+            Released = 4 ,
+            FocusLost = 8
+        }
+
+
+        ButtonMouseStatus _bms = ButtonMouseStatus.None;
+
+        public ButtonMouseStatus Bms
+
         {
             get
             {
-                return _hotTrackColor;
+                return _bms;
             }
             set
             {
-                _hotTrackColor = value;
-                Invalidate();
+                _bms = value;
             }
         }
-
-        protected override void OnEnter(EventArgs e)
-        {
-            this.Invalidate();
-            base.OnEnter(e);
-
-
-        }
-        protected override void OnLeave(EventArgs e)
-        {
-            //todo: 不能通过Tab来丢失焦点
-            this.Invalidate();
-            base.OnLeave(e);
-        }
-
     }
 }

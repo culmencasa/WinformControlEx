@@ -27,3 +27,4 @@ C:\Works\FormEx\Ocean\obj\Debug\Ocean.pdb
 C:\Works\FormEx\Ocean\obj\Debug\Ocean.OcnForm.resources
 C:\Works\FormEx\Ocean\obj\Debug\Ocean.csproj.GenerateResource.cache
 C:\Works\FormEx\Ocean\obj\Debug\Ocean.OcnMessageBox.resources
+C:\Works\FormEx\Ocean\obj\Debug\Ocean.Properties.Resources.resources

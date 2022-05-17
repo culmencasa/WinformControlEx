@@ -225,7 +225,7 @@ namespace System.Windows.Forms
 
         [Category("Custom"), DefaultValue(typeof(Color), "Gray")]
         [Description("边框颜色")]
-        public Color BorderColor { get; set; }
+        public virtual Color BorderColor { get; set; }
 
         #endregion
 

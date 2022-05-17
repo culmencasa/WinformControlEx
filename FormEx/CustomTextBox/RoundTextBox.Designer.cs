@@ -28,48 +28,53 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.innerTextBox = new System.Windows.Forms.RoundTextBox.TabEchoTextBox();
-            this.btnDropDown = new System.Windows.Forms.CustomDropDownButton();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RoundTextBox));
+            this._innerTextBox = new System.Windows.Forms.RoundTextBox.TabEchoTextBox();
+            this.btnCancel = new System.Windows.Forms.ImageButton();
+            ((System.ComponentModel.ISupportInitialize)(this.btnCancel)).BeginInit();
             this.SuspendLayout();
             // 
-            // innerTextBox
+            // _innerTextBox
             // 
-            this.innerTextBox.AcceptsReturn = true;
-            this.innerTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.innerTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.innerTextBox.Location = new System.Drawing.Point(5, 3);
-            this.innerTextBox.Name = "innerTextBox";
-            this.innerTextBox.Size = new System.Drawing.Size(142, 14);
-            this.innerTextBox.TabIndex = 0;
-            this.innerTextBox.TabAction += new System.Action(this.innerTextBox_TabAction);
+            this._innerTextBox.AcceptsReturn = true;
+            this._innerTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this._innerTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._innerTextBox.Location = new System.Drawing.Point(5, 3);
+            this._innerTextBox.Name = "_innerTextBox";
+            this._innerTextBox.Size = new System.Drawing.Size(142, 14);
+            this._innerTextBox.TabIndex = 0;
+            this._innerTextBox.TabAction += new System.Action(this.innerTextBox_TabAction);
             // 
-            // btnDropDown
+            // btnCancel
             // 
-            this.btnDropDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDropDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(248)))), ((int)(((byte)(254)))));
-            this.btnDropDown.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.btnDropDown.BorderWidth = 1F;
-            this.btnDropDown.CornerRadius = 8;
-            this.btnDropDown.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(122)))), ((int)(((byte)(162)))), ((int)(((byte)(187)))));
-            this.btnDropDown.GradientMode = false;
-            this.btnDropDown.Location = new System.Drawing.Point(129, 1);
-            this.btnDropDown.Name = "btnDropDown";
-            this.btnDropDown.ShadeMode = false;
-            this.btnDropDown.Size = new System.Drawing.Size(20, 25);
-            this.btnDropDown.TabIndex = 1;
-            this.btnDropDown.TabStop = false;
-            this.btnDropDown.Visible = false;
-            this.btnDropDown.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnDropDown_MouseClick);
+            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btnCancel.BackColor = System.Drawing.Color.Transparent;
+            this.btnCancel.Bms = System.Windows.Forms.ImageButton.ButtonMouseStatus.None;
+            this.btnCancel.ButtonKeepPressed = false;
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnCancel.DownImage = ((System.Drawing.Image)(resources.GetObject("btnCancel.DownImage")));
+            this.btnCancel.HoverImage = ((System.Drawing.Image)(resources.GetObject("btnCancel.HoverImage")));
+            this.btnCancel.Location = new System.Drawing.Point(124, 3);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.NormalImage = ((System.Drawing.Image)(resources.GetObject("btnCancel.NormalImage")));
+            this.btnCancel.ShowFocusLine = false;
+            this.btnCancel.Size = new System.Drawing.Size(20, 20);
+            this.btnCancel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnCancel.TabIndex = 2;
+            this.btnCancel.Text = "imageButton1";
+            this.btnCancel.ToolTipText = null;
+            this.btnCancel.Visible = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // RoundTextBox
             // 
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.Controls.Add(this.btnDropDown);
-            this.Controls.Add(this.innerTextBox);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this._innerTextBox);
             this.Name = "RoundTextBox";
             this.Padding = new System.Windows.Forms.Padding(5, 3, 3, 3);
             this.Size = new System.Drawing.Size(150, 27);
+            ((System.ComponentModel.ISupportInitialize)(this.btnCancel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -77,7 +82,7 @@
 
         #endregion
 
-        private TabEchoTextBox innerTextBox;
-        private CustomDropDownButton btnDropDown;
+        private TabEchoTextBox _innerTextBox;
+        private ImageButton btnCancel;
     }
 }

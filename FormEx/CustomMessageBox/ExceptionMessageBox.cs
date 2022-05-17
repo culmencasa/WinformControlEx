@@ -43,7 +43,6 @@ namespace System.Windows.Forms
 
         #region 字段
 
-        private string _dialogCaption;
         private Panel pnlIconArea;
         private PictureBox pbExceptionIcon;
         private Panel pnlTextArea;
@@ -54,7 +53,6 @@ namespace System.Windows.Forms
         private Button btnShowDetails;
         private TextBox txtDetails;
         private Panel pnlLockSpace;
-        private string _dialogContent;
         private Panel pnlControlArea;
         private Panel pnlSunkBorderContainer;
         private int _actualHeight;

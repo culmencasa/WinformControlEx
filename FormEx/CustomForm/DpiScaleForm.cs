@@ -35,7 +35,19 @@ namespace System.Windows.Forms
     /// 对于.NET framework 4.7以上Winform 关于DPI的处理, 参见文章 https://docs.telerik.com/devtools/winforms/telerik-presentation-framework/dpi-support?_ga=2.20289336.1856590203.1623301720-198642324.1623301720
     /// 更多: https://www.telerik.com/blogs/winforms-scaling-at-large-dpi-settings-is-it-even-possible-
     /// 
-    /// 
+    /// 补充:  2022-05-05 
+    ///       1.在Visual Studio自动缩放关闭的条件下设计Winform程序
+    ///       "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe" /noScale
+    ///       
+    ///       2.Windows10缩放200%的环境下, Winform程序运行时窗体变得很小且布局错乱
+    ///         在app.manifest中禁用所有dpiAware相关的
+    ///         <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+    ///         则窗体会以200%放大,布局正常
+    ///         
+    ///       3.在app.manifest中启用
+    ///         <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true</dpiAware>
+    ///         则窗体会缩放至正常比例
+    ///         
     /// </summary>
     public class DpiScaleForm : Form
     {

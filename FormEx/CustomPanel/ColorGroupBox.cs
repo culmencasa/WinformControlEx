@@ -34,7 +34,7 @@ namespace System.Windows.Forms
 
         protected override CreateParams CreateParams
         {
-            [SecurityPermission(SecurityAction.LinkDemand)]
+            //[SecurityPermission(SecurityAction.LinkDemand)]
             get
             {
                 CreateParams cp = base.CreateParams;
@@ -304,7 +304,7 @@ namespace System.Windows.Forms
         }
 
 
-        [UIPermission(SecurityAction.LinkDemand, Window = UIPermissionWindow.AllWindows)]
+        //[UIPermission(SecurityAction.LinkDemand, Window = UIPermissionWindow.AllWindows)]
         protected override bool ProcessMnemonic(char charCode)
         {
             if (IsMnemonic(charCode, Text) && CanSelect)

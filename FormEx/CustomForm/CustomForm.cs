@@ -254,41 +254,6 @@ namespace System.Windows.Forms
                         cp.Style |= (int)WindowStyle.WS_MINIMIZEBOX;
                     }
 
-                    #region 用户控件过多显示白块的问题
-
-                    /* 引用： 
-                        It is not the kind of flicker that double-buffering can solve. Nor BeginUpdate or SuspendLayout. You've got too many controls, the BackgroundImage can make it a lot worse.
-
-                        It starts when the UserControl paints itself. It draws the BackgroundImage, leaving holes where the child control windows go. Each child control then gets a message to paint itself, they'll fill in the hole with their window content. When you have a lot of controls, those holes are visible to the user for a while. They are normally white, contrasting badly with the BackgroundImage when it is dark. Or they can be black if the form has its Opacity or TransparencyKey property set, contrasting badly with just about anything.
-
-                        This is a pretty fundamental limitation of Windows Forms, it is stuck with the way Windows renders windows. Fixed by WPF btw, it doesn't use windows for child controls. What you'd want is double-buffering the entire form, including the child controls. That's possible, check my code in this thread for the solution. It has side-effects though, and doesn't actually increase painting speed. The code is simple, paste this in your form (not the user control):
-
-                        protected override CreateParams CreateParams {
-                          get {
-                            CreateParams cp = base.CreateParams;
-                            cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
-                            return cp;
-                          }
-                        } 
-
-                        There are many things you can do to improve painting speed, to the point that the flicker isn't noticeable anymore. Start by tackling the BackgroundImage. They can be really expensive when the source image is large and needs to be shrunk to fit the control. Change the BackgroundImageLayout property to "Tile". If that gives a noticeable speed-up, go back to your painting program and resize the image to be a better match with the typical control size. Or write code in the UC's OnResize() method to create a properly sized copy of the image so that it doesn't have to be resized every time the control repaints. Use the Format32bppPArgb pixel format for that copy, it renders about 10 times faster than any other pixel format.
-
-                        Next thing you can do is prevent the holes from being so noticeable and contrasting badly with the image. You can turn off the WS_CLIPCHILDREN style flag for the UC, the flag that prevents the UC from painting in the area where the child controls go. Paste this code in the UserControl's code:
-
-                        protected override CreateParams CreateParams {
-                          get {
-                            var parms = base.CreateParams;
-                            parms.Style &= ~0x02000000;  // Turn off WS_CLIPCHILDREN
-                            return parms;
-                          }
-                        }
-
-                        The child controls will now paint themselves on top of the background image. You might still see them painting themselves one by one, but the ugly intermediate white or black hole won't be visible.
-
-                        Last but not least, reducing the number of child controls is always a good approach to solve slow painting problems. Override the UC's OnPaint() event and draw what is now shown in a child. Particular Label and PictureBox are very wasteful. Convenient for point and click but their light-weight alternative (drawing a string or an image) takes only a single line of code in your OnPaint() method.
-                    */
-                    #endregion
-
                     if (DontWaitChildrenDrawBackground)
                         cp.ExStyle |= (int)WindowStyle.WS_CLIPCHILDREN;  //防止因窗体控件太多出现闪烁
 
@@ -374,32 +339,30 @@ namespace System.Windows.Forms
 			SmoothingMode smooth = g.SmoothingMode;
 
             g.FillRectangle(Brushes.WhiteSmoke, DisplayRectangle);
-			//base.OnPaint(e);
-
-			//g.SmoothingMode = SmoothingMode.HighSpeed;
 
 
 			DrawTitleBackground(g);
 
 
-            g.DrawString($"({Width},{Height})", this.Font, Brushes.Black, new  Point(100,100));
-
 			if (this.WindowState == FormWindowState.Normal)
 			{
-				// 边框
-				using (Pen borderPen = new Pen(this.BorderColor, BorderSize))
-				{
-                    if (BorderSize % 2 == 0)
+                if (BorderSize > 0)
+                {
+                    // 边框
+                    using (Pen borderPen = new Pen(this.BorderColor, BorderSize))
                     {
-                        g.DrawRectangle(borderPen, 0, 0, Width, Height);
+                        if (BorderSize % 2 == 0)
+                        {
+                            g.DrawRectangle(borderPen, 0, 0, Width, Height);
+                        }
+                        else
+                        {
+                            g.DrawRectangle(borderPen, 0, 0,
+                                Width - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero),
+                                Height - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero));
+                        }
                     }
-                    else
-                    {
-                        g.DrawRectangle(borderPen, 0, 0, 
-                            Width - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero), 
-                            Height - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero));
-                    }
-				}
+                }
 			}
 
 			// 内边框
@@ -414,6 +377,8 @@ namespace System.Windows.Forms
 			DrawLogoAndTitle(g);
 
 			g.SmoothingMode = smooth;
+
+            base.OnPaint(e);
 		}
 
 		protected override void OnResize(EventArgs e)

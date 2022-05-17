@@ -12,8 +12,11 @@ using Utils;
 namespace System.Windows.Forms
 {
     /// <summary>
-    /// 圆角文本框
-    /// 已知Bug: 有时会与其他控件抢焦点, 造成其他按钮点击失效
+    /// 圆角文本框控件
+    /// 
+    /// 已知问题: 
+    ///         1.有时会与其他控件抢焦点, 造成其他按钮点击失效
+    ///         2.点击其他控件时, 不能正常丢失焦点
     /// </summary>
     public partial class RoundTextBox : NonFlickerUserControl
     {
@@ -43,7 +46,7 @@ namespace System.Windows.Forms
             /// <summary>
             ///  /鼠标进入
             /// </summary>
-            Highlight = 1, 
+            Highlight = 1,
             /// <summary>
             /// 控件禁止
             /// </summary>
@@ -62,13 +65,16 @@ namespace System.Windows.Forms
         public new event EventHandler TextChanged;
 
 
+        [Category("Custom")]
+        public event EventHandler CancelButtonClick;
+
         #endregion
 
         #region 字段
 
         private TextBoxStates _innerTextBoxState = TextBoxStates.Normal;
 
-        private string _emptyTooltipText; 
+        private string _emptyTooltipText;
         private bool _autoSizeFont;
         private bool _useSystemPasswordChar;
         private Color _textContentBackColor;
@@ -76,6 +82,8 @@ namespace System.Windows.Forms
 
         public bool ButtonClickWorking { get; set; }
 
+        private int _borderRadius;
+        private bool _autoScrollbar;
 
         #endregion
 
@@ -106,21 +114,23 @@ namespace System.Windows.Forms
             set
             {
                 _emptyTooltipText = value;
-                innerTextBox.Text = _emptyTooltipText;
-                innerTextBox.ForeColor = this.EmptyTooltipForeColor;
+                _innerTextBox.Text = _emptyTooltipText;
+                _innerTextBox.ForeColor = this.EmptyTooltipForeColor;
             }
         }
-         
+
         /// <summary>
         /// 内容为空时提示文字的颜色
         /// </summary>
         [Category("Custom")]
         public Color EmptyTooltipForeColor { get; set; }
-         
+
         /// <summary>
         /// 文本框的内容
         /// </summary>
         [Category("Custom")]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public override string Text
         {
             get
@@ -130,44 +140,34 @@ namespace System.Windows.Forms
                     return string.Empty;
                 }
 
-                return innerTextBox.Text;
+                return _innerTextBox.Text;
             }
             set
             {
-                innerTextBox.Text = value;
+                _innerTextBox.Text = value;
 
 
 
                 if (string.IsNullOrEmpty(value))
                 {
-                    innerTextBox.Text = this.EmptyTooltipText;
-                    innerTextBox.ForeColor = this.EmptyTooltipForeColor;
+                    _innerTextBox.Text = this.EmptyTooltipText;
+                    _innerTextBox.ForeColor = this.EmptyTooltipForeColor;
 
                     if (this.IsHandleCreated)
                     {
                         this.BeginInvoke((MethodInvoker)delegate
                         {
-                            innerTextBox.UseSystemPasswordChar = false;
+                            _innerTextBox.UseSystemPasswordChar = false;
                         });
                     }
                 }
 
                 UpdateForeColor();
+
+                OnAutoScrollbarChanged();
             }
         }
 
-        [Category("Custom")]
-        public string TextContent
-        {
-            get
-            {
-                return this.Text;
-            }
-            set
-            {
-                this.Text = value;
-            }
-        }
 
         /// <summary>
         /// 文本框状态
@@ -189,7 +189,7 @@ namespace System.Windows.Forms
             set
             {
                 _textContentBackColor = value;
-                innerTextBox.BackColor = value;
+                _innerTextBox.BackColor = value;
                 Invalidate();
             }
         }
@@ -208,12 +208,12 @@ namespace System.Windows.Forms
                 if (!IsTextEqualEmptyTooltip())
                 {
                     base.ForeColor = value;
-                    innerTextBox.ForeColor = value;
+                    _innerTextBox.ForeColor = value;
                 }
                 else
                 {
                     base.ForeColor = value;
-                    innerTextBox.ForeColor = EmptyTooltipForeColor;
+                    _innerTextBox.ForeColor = EmptyTooltipForeColor;
                 }
 
                 Invalidate();
@@ -226,7 +226,7 @@ namespace System.Windows.Forms
         /// </summary>
         [Category("Custom")]
         public Color BorderColor { get; set; }
-         
+
         /// <summary>
         /// 边框悬浮色
         /// </summary>
@@ -284,31 +284,15 @@ namespace System.Windows.Forms
                 _useSystemPasswordChar = value;
                 if (IsTextEqualEmptyTooltip())
                 {
-                    innerTextBox.UseSystemPasswordChar = false;
+                    _innerTextBox.UseSystemPasswordChar = false;
                 }
                 else
                 {
-                    innerTextBox.UseSystemPasswordChar = value;
+                    _innerTextBox.UseSystemPasswordChar = value;
                 }
             }
         }
 
-        /// <summary>
-        /// 是否显示下拉按钮
-        /// </summary>
-        [Category("Custom")]
-        [DefaultValue(false)]
-        public bool ShowDropDownButton
-        {
-            get
-            {
-                return btnDropDown.Visible;
-            }
-            set
-            {
-                btnDropDown.Visible = value;
-            }
-        }
 
 
         /// <summary>
@@ -316,12 +300,24 @@ namespace System.Windows.Forms
         /// </summary>
         [Category("Custom")]
         [DefaultValue(6)]
-        public int BorderRadius { get; set; }
+        public int BorderRadius
+        {
+            get
+            {
+                return _borderRadius;
+            }
+            set
+            {
+                _borderRadius = value;
+                ResizePadding();
+            }
+        }
 
         [Category("Custom")]
         [DefaultValue(typeof(Color), "Transparent")]
-        public override Color BackColor { 
-            get => base.BackColor; 
+        public override Color BackColor
+        {
+            get => base.BackColor;
             set => base.BackColor = value;
         }
 
@@ -332,7 +328,7 @@ namespace System.Windows.Forms
         {
             get
             {
-                return innerTextBox.ReadOnly;
+                return _innerTextBox.ReadOnly;
             }
             set
             {
@@ -349,8 +345,86 @@ namespace System.Windows.Forms
             set;
         }
 
+        [Category("Custom")]
+        public bool AutoScrollbar
+        {
+            get
+            {
+                return _autoScrollbar;
+            }
+            set
+            {
+                _autoScrollbar = value;
+                OnAutoScrollbarChanged();
+            }
+        }
+
+
+        [Category("Custom")]
+        public int MaxLength
+        {
+            get
+            {
+                return _innerTextBox.MaxLength;
+            }
+            set
+            {
+                _innerTextBox.MaxLength = value;
+            }
+        }
+
+
+        [Category("Custom")]
+        public AutoCompleteStringCollection AutoCompleteSource
+        {
+            get
+            {
+                return _innerTextBox.AutoCompleteCustomSource;
+            }
+            set
+            {
+                _innerTextBox.AutoCompleteCustomSource = value;
+            }
+
+        }
+
+        private bool _showClearButton;
+        [Category("Custom")]
+        public bool ShowClearButton
+        {
+            get
+            {
+                    
+                return _showClearButton; 
+            }
+            set
+            {
+                _showClearButton = value;
+                UpdateClearButtonVisibility();
+            }
+        }
 
         #endregion
+
+        private void UpdateClearButtonVisibility()
+        {
+
+            string currentText = _innerTextBox.Text;
+            if (!string.IsNullOrEmpty(currentText) && currentText != EmptyTooltipText)
+            {
+                if (_showClearButton)
+                {
+                    btnCancel.Visible = true;
+                }
+            }
+            else
+            {
+                if (_showClearButton)
+                {
+                    btnCancel.Visible = false;
+                }
+            }
+        }
 
         #region 事件处理
 
@@ -368,11 +442,11 @@ namespace System.Windows.Forms
             if (!ButtonClickWorking)
                 return;
 
-            if (!innerTextBox.Focused)
+            if (!_innerTextBox.Focused)
             {
                 _innerTextBoxState = TextBoxStates.Normal;
             }
-            
+
             this.Invalidate();
         }
 
@@ -381,13 +455,13 @@ namespace System.Windows.Forms
             _innerTextBoxState = TextBoxStates.Highlight;
             if (IsTextEqualEmptyTooltip())
             {
-                innerTextBox.UseSystemPasswordChar = false;
-                innerTextBox.ForeColor = this.EmptyTooltipForeColor;
+                _innerTextBox.UseSystemPasswordChar = false;
+                _innerTextBox.ForeColor = this.EmptyTooltipForeColor;
             }
             else
             {
-                innerTextBox.UseSystemPasswordChar = this.UseSystemPasswordChar;
-                innerTextBox.ForeColor = this.ForeColor;
+                _innerTextBox.UseSystemPasswordChar = this.UseSystemPasswordChar;
+                _innerTextBox.ForeColor = this.ForeColor;
             }
             this.Invalidate();
         }
@@ -406,30 +480,30 @@ namespace System.Windows.Forms
 
         private void innerTextBox_Enter(object sender, EventArgs e)
         {
-            if (innerTextBox.Text != string.Empty)
+            if (_innerTextBox.Text != string.Empty)
             {
                 if (IsTextEqualEmptyTooltip())
                 {
                     // 获得焦点时，清除提示文字
-                    innerTextBox.Text = string.Empty;
-                    innerTextBox.ForeColor = this.ForeColor;
+                    _innerTextBox.Text = string.Empty;
+                    _innerTextBox.ForeColor = this.ForeColor;
                 }
             }
 
             if (IsTextEqualEmptyTooltip())
             {
-                innerTextBox.UseSystemPasswordChar = false;
+                _innerTextBox.UseSystemPasswordChar = false;
                 if (this.UseSystemPasswordChar)
                 {
-                    innerTextBox.ForeColor = this.EmptyTooltipForeColor;
+                    _innerTextBox.ForeColor = this.EmptyTooltipForeColor;
                 }
             }
             else
             {
-                innerTextBox.UseSystemPasswordChar = this.UseSystemPasswordChar;
+                _innerTextBox.UseSystemPasswordChar = this.UseSystemPasswordChar;
                 if (this.UseSystemPasswordChar)
                 {
-                    innerTextBox.ForeColor = this.ForeColor;
+                    _innerTextBox.ForeColor = this.ForeColor;
                 }
             }
 
@@ -438,23 +512,24 @@ namespace System.Windows.Forms
 
         private void innerTextBox_Leave(object sender, EventArgs e)
         {
-            if (innerTextBox.Text != string.Empty)
+            if (_innerTextBox.Text != string.Empty)
             {
                 if (IsTextEqualEmptyTooltip())
                 {
-                    innerTextBox.ForeColor = this.EmptyTooltipForeColor;
+                    _innerTextBox.ForeColor = this.EmptyTooltipForeColor;
                 }
                 else
                 {
-                    innerTextBox.ForeColor = this.ForeColor;
+                    _innerTextBox.ForeColor = this.ForeColor;
                 }
             }
             else
             {
-                innerTextBox.Text = this.EmptyTooltipText;
-                innerTextBox.ForeColor = this.EmptyTooltipForeColor;
-                this.BeginInvoke((MethodInvoker)delegate {
-                    innerTextBox.UseSystemPasswordChar = false;
+                _innerTextBox.Text = this.EmptyTooltipText;
+                _innerTextBox.ForeColor = this.EmptyTooltipForeColor;
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    _innerTextBox.UseSystemPasswordChar = false;
                 });
             }
 
@@ -473,18 +548,20 @@ namespace System.Windows.Forms
         {
             if (IsTextEqualEmptyTooltip())
             {
-                innerTextBox.UseSystemPasswordChar = false;
+                _innerTextBox.UseSystemPasswordChar = false;
             }
             else
             {
-                innerTextBox.UseSystemPasswordChar = this.UseSystemPasswordChar;
+                _innerTextBox.UseSystemPasswordChar = this.UseSystemPasswordChar;
             }
+
         }
 
         private void innerTextBox_TextChanged(object sender, EventArgs e)
         {
-            string value = innerTextBox.Text;
-            if (value != null && value.Length > 0 && value != EmptyTooltipText && value != innerTextBox.Text)
+            UpdateClearButtonVisibility();
+
+            if (_innerTextBox.Text != EmptyTooltipText)
             {
                 TextChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -543,12 +620,12 @@ namespace System.Windows.Forms
                 if (!IsTextEqualEmptyTooltip())
                 {
                     base.ForeColor = value;
-                    innerTextBox.ForeColor = value;
+                    _innerTextBox.ForeColor = value;
                 }
                 else
                 {
                     base.ForeColor = value;
-                    innerTextBox.ForeColor = EmptyTooltipForeColor;
+                    _innerTextBox.ForeColor = EmptyTooltipForeColor;
                 }
             }
         }
@@ -557,36 +634,36 @@ namespace System.Windows.Forms
         /// 停靠方式
         /// </summary>
         [Category("Custom")]
-        public override DockStyle Dock
+        public bool Multiline
         {
             get
             {
-                return base.Dock;
+                return _innerTextBox.Multiline;
             }
             set
             {
-                base.Dock = value;
-                innerTextBox.Dock = DockStyle.Fill;
+                _innerTextBox.Multiline = value;
+                ResizePadding();
             }
         }
-         
+
 
         protected override void OnEnabledChanged(EventArgs e)
         {
             if (Enabled)
             {
                 _innerTextBoxState = TextBoxStates.Normal;
-                innerTextBox.Enabled = true;
+                _innerTextBox.Enabled = true;
             }
             else
             {
                 _innerTextBoxState = TextBoxStates.Disabled;
-                innerTextBox.Enabled = false;
+                _innerTextBox.Enabled = false;
             }
             this.Invalidate();
             base.OnEnabledChanged(e);
         }
-         
+
         protected override void OnDockChanged(EventArgs e)
         {
             base.OnDockChanged(e);
@@ -623,7 +700,7 @@ namespace System.Windows.Forms
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            Graphics g = e.Graphics;             
+            Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
 
@@ -656,18 +733,13 @@ namespace System.Windows.Forms
                     break;
                 case TextBoxStates.Highlight:
                     DrawHighLightTextBox(g);
-                    break; 
+                    break;
                 case TextBoxStates.Disabled:
                     DrawDisabledTextBox(g);
                     break;
                 default:
                     break;
             }
-
-            //if (Text.Length == 0 && !string.IsNullOrEmpty(EmptyTextTip) && !Focused)
-            //{
-            //    TextRenderer.DrawText(g, EmptyTextTip, Font, ClientRectangle, EmptyTextTipColor, GetTextFormatFlags(TextAlign, RightToLeft == RightToLeft.Yes));
-            //}
 
             base.OnPaint(e);
         }
@@ -683,6 +755,14 @@ namespace System.Windows.Forms
             base.OnKeyPress(e);
         }
 
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+            OnAutoScrollbarChanged();
+        }
+
+
         #endregion
 
         #region 私有方法
@@ -690,12 +770,12 @@ namespace System.Windows.Forms
         private bool IsTextEqualEmptyTooltip()
         {
             bool result = false;
-            if (innerTextBox.Text != string.Empty)
+            if (_innerTextBox.Text != string.Empty)
             {
-                if (innerTextBox.Text == this.EmptyTooltipText)
+                if (_innerTextBox.Text == this.EmptyTooltipText)
                 {
                     return true;
-                } 
+                }
             }
 
             return result;
@@ -703,7 +783,7 @@ namespace System.Windows.Forms
 
 
         /// <summary>
-        /// 初始化
+        /// 设置各个控件初始值
         /// </summary>
         private void DoPrepareWork()
         {
@@ -713,7 +793,7 @@ namespace System.Windows.Forms
             this.BorderColor = Color.Gray;
             this.BorderHoverColor = Color.SkyBlue;
             this.BorderFocusColor = Color.DodgerBlue;
-             
+
             this.EmptyTooltipText = string.Empty;
             this.EmptyTooltipForeColor = Color.Gray;
 
@@ -722,24 +802,28 @@ namespace System.Windows.Forms
             this.BackColor = Color.Transparent;
             this.ForeColor = Color.Black;
             this.TextContentBackColor = Color.White;
-            this.Padding = new Padding((this.Height - innerTextBox.Height) / 2);
-            
-            innerTextBox.ForeColor = this.EmptyTooltipForeColor;
-            innerTextBox.MouseEnter += new EventHandler(innerTextBox_MouseEnter);
-            innerTextBox.MouseHover += new EventHandler(innerTextBox_MouseHover);
-            innerTextBox.GotFocus += new EventHandler(innerTextBox_GotFocus);
-            innerTextBox.LostFocus += new EventHandler(innerTextBox_LostFocus);
+            this.Padding = new Padding((this.Height - _innerTextBox.Height) / 2);
 
-            innerTextBox.TextChanged += this.innerTextBox_TextChanged;
-            innerTextBox.Enter += this.innerTextBox_Enter;
-            innerTextBox.Leave += this.innerTextBox_Leave;
+            _innerTextBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            _innerTextBox.AutoCompleteSource = Forms.AutoCompleteSource.CustomSource;
+            _innerTextBox.AcceptsReturn = true; 
+            _innerTextBox.Dock = DockStyle.Fill;
+            _innerTextBox.ForeColor = this.EmptyTooltipForeColor;
+            _innerTextBox.MouseEnter += new EventHandler(innerTextBox_MouseEnter);
+            _innerTextBox.MouseHover += new EventHandler(innerTextBox_MouseHover);
+            _innerTextBox.GotFocus += new EventHandler(innerTextBox_GotFocus);
+            _innerTextBox.LostFocus += new EventHandler(innerTextBox_LostFocus);
 
-            innerTextBox.KeyDown += new KeyEventHandler(innerTextBox_KeyDown);
-            innerTextBox.KeyPress += new KeyPressEventHandler(innerTextBox_KeyPress);
-            innerTextBox.KeyUp += new KeyEventHandler(innerTextBox_KeyUp);
+            _innerTextBox.TextChanged += this.innerTextBox_TextChanged;
+            _innerTextBox.Enter += this.innerTextBox_Enter;
+            _innerTextBox.Leave += this.innerTextBox_Leave;
 
-            btnDropDown.MouseEnter += new EventHandler(innerTextBox_MouseEnter);
-            btnDropDown.MouseHover += innerTextBox_MouseHover;
+            _innerTextBox.KeyDown += new KeyEventHandler(innerTextBox_KeyDown);
+            _innerTextBox.KeyPress += new KeyPressEventHandler(innerTextBox_KeyPress);
+            _innerTextBox.KeyUp += new KeyEventHandler(innerTextBox_KeyUp);
+
+            btnCancel.MouseEnter += new EventHandler(innerTextBox_MouseEnter);
+            btnCancel.MouseHover += innerTextBox_MouseHover;
 
             this.MouseEnter += innerTextBox_MouseEnter;
             this.MouseHover += innerTextBox_MouseHover;
@@ -751,7 +835,7 @@ namespace System.Windows.Forms
         private void DrawNormalTextBox(Graphics g)
         {
             using (Pen borderPen = new Pen(this.BorderColor))
-            { 
+            {
                 g.DrawRoundedRectangle(
                     borderPen,
                     new Rectangle(
@@ -772,23 +856,23 @@ namespace System.Windows.Forms
                         ClientRectangle.Width - 1,
                         ClientRectangle.Height - 1);
 
-                if (innerTextBox.Focused && !BorderHoverColor2.IsEmpty)
+                if (_innerTextBox.Focused && !BorderHoverColor2.IsEmpty)
                 {
                     highLightPen.Color = BorderHoverColor2;
                 }
                 g.DrawRoundedRectangle(highLightPen, drawRect, BorderRadius);
 
-                //InnerRect
+                // 外边框
                 drawRect.Inflate(-1, -1);
                 highLightPen.Color = BorderFocusColor;
-                if (innerTextBox.Focused && !BorderFocusColor2.IsEmpty)
+                if (_innerTextBox.Focused && !BorderFocusColor2.IsEmpty)
                 {
                     highLightPen.Color = BorderFocusColor2;
                 }
-                g.DrawRoundedRectangle(highLightPen, drawRect, BorderRadius);
+                g.DrawRoundedRectangle(highLightPen, drawRect, BorderRadius - 2);
             }
         }
-        
+
         private void DrawDisabledTextBox(Graphics g)
         {
             using (Pen disabledPen = new Pen(SystemColors.ControlDark))
@@ -844,11 +928,11 @@ namespace System.Windows.Forms
             if (AutoSizeFont)
             {
                 int height = this.Height - this.Padding.Top - this.Padding.Bottom;
-                innerTextBox.Font = GetFontForTextBoxHeight(height, this.Font);
+                _innerTextBox.Font = GetFontForTextBoxHeight(height, this.Font);
             }
             else
             {
-                innerTextBox.Font = this.Font;
+                _innerTextBox.Font = this.Font;
                 this.ResizePadding();
                 this.Invalidate();
             }
@@ -857,82 +941,99 @@ namespace System.Windows.Forms
 
         private void ResizePadding()
         {
-            if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
+            int defaultPaddingSize = this.BorderRadius;
+            if (defaultPaddingSize < 4)
             {
-                int value = 3;
-                using (Graphics g = this.CreateGraphics())
-                {
-                    SizeF size = g.MeasureString(innerTextBox.Text, innerTextBox.Font);
-                    value = (int)size.Width;
+                defaultPaddingSize = 4;
+            }
 
-                    if (value > this.Width)
-                    {
-                        value = 3;
-                    }
-                    else
-                    {
-                        value = (this.Width - value) / 2;
-                    }
-                }
-                this.Padding = new Padding(value + 2, value, value, value);
+
+            string text = _innerTextBox.Text;
+            if (string.IsNullOrEmpty(text))
+            {
+                text = EmptyTooltipText;
+            }
+
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            SizeF textSize = TextRenderer.MeasureText(text, _innerTextBox.Font);
+            int textWidth = (int)textSize.Width;
+            int textHeight = (int)textSize.Height;
+
+            int paddingValue;
+
+            if (Multiline)
+            {
+                this.Padding = new Padding(defaultPaddingSize);
             }
             else
             {
-                int value = 3;
+                // Left Center
 
-                string text = innerTextBox.Text;
-                if (string.IsNullOrEmpty(text))
+                // 如果获取Height失败
+                if (textHeight > this.Height)
                 {
-                    text = EmptyTooltipText;
-                }
-
-                if (string.IsNullOrEmpty(text))
-                {
-                    return;
-                }
-                SizeF size = TextRenderer.MeasureText(text, innerTextBox.Font);
-
-                int textWidth = (int)size.Width;
-                int textHeight = (int)size.Height;
-
-                //按宽度来，还是高度来算
-                if (this.Height > this.Width)
-                {
-                    // Left Top
-                    if (textWidth > this.Width)
-                    {
-                        value = textWidth / 4;
-                    }
-                    else
-                    {
-                        value = (this.Width - textWidth) / 4;
-                    }
+                    paddingValue = defaultPaddingSize;
                 }
                 else
                 {
-                    // Left Center
-
-                    // 如果获取Height失败
-                    if (textHeight > this.Height)
-                    {
-                        value = textHeight / 4;
-                    }
-                    else
-                    {
-                        value = (this.Height - textHeight) / 4;
-                    }
+                    paddingValue = (this.Height - textHeight) / 2;
                 }
 
-                this.Padding = new Padding(value + 2, value, value, value);
+                this.Padding = new Padding(defaultPaddingSize, paddingValue, defaultPaddingSize, paddingValue);
+
             }
 
-            if (ShowDropDownButton)
+
+            //if (ShowDropDownButton)
+            //{
+            //    this.Padding = new Padding(this.Padding.Left, this.Padding.Top, this.btnDropDown.Width + 2, this.Padding.Bottom);
+            //}
+            //this.btnDropDown.Size = new Size(this.btnDropDown.Width, this.Height - 4);
+            //this.btnDropDown.Location = new Point(this.Width - this.btnDropDown.Width - (int)this.btnDropDown.BorderWidth * 2, (this.Height - this.btnDropDown.Height) / 2);
+
+        }
+
+        private void OnAutoScrollbarChanged()
+        {
+            if (IsHandleCreated && AutoScrollbar)
             {
-                this.Padding = new Padding(this.Padding.Left, this.Padding.Top, this.btnDropDown.Width + 2, this.Padding.Bottom);
-            }
-            this.btnDropDown.Size = new Size(this.btnDropDown.Width, this.Height - 4);
-            this.btnDropDown.Location = new Point(this.Width - this.btnDropDown.Width - (int)this.btnDropDown.BorderWidth * 2, (this.Height - this.btnDropDown.Height) / 2);
+                int mode = 0;
+                SizeF textSize = TextRenderer.MeasureText(_innerTextBox.Text, _innerTextBox.Font);
+                if (textSize.Width > this.Width - BorderRadius * 2)
+                {
+                    mode += 2;
+                }
 
+                if (textSize.Height > this.Height - BorderRadius * 2)
+                {
+                    mode += 4;
+                }
+
+                switch (mode)
+                {
+                    case 0:
+                        _innerTextBox.ScrollBars = ScrollBars.None;
+                        break;
+                    case 2:
+                        _innerTextBox.ScrollBars = ScrollBars.Horizontal;
+                        break;
+                    case 4:
+                        _innerTextBox.ScrollBars = ScrollBars.Vertical;
+                        break;
+                    case 6:
+                        _innerTextBox.ScrollBars = ScrollBars.Both;
+                        break;
+                }
+
+            }
+            else
+            {
+                _innerTextBox.ScrollBars = ScrollBars.None;
+            }
         }
 
         #endregion
@@ -942,14 +1043,14 @@ namespace System.Windows.Forms
         {
             if (IsTextEqualEmptyTooltip())
             {
-                innerTextBox.ForeColor = this.EmptyTooltipForeColor;
+                _innerTextBox.ForeColor = this.EmptyTooltipForeColor;
             }
             else
             {
-                innerTextBox.ForeColor = this.ForeColor;
+                _innerTextBox.ForeColor = this.ForeColor;
             }
         }
-        
+
 
         private void btnDropDown_MouseClick(object sender, MouseEventArgs e)
         {
@@ -958,6 +1059,12 @@ namespace System.Windows.Forms
                 ActionBegin();
             }
         }
-        
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            _innerTextBox.Text = string.Empty;
+
+            CancelButtonClick?.Invoke(sender, e);
+        }
     }
 }

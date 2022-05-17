@@ -6,8 +6,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>System.Windows.Forms</RootNamespace>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects> 
-    
-    <ApplicationDefaultFont>Microsoft Sans Serif, 8.25pt</ApplicationDefaultFont>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
@@ -332,7 +330,7 @@
     <DefineConstants>DEBUG;COMPILE_NET48</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
-    <DefineConstants>DEBUG;COMPILE_NET60</DefineConstants>
+    <DefineConstants>DEBUG;COMPILE_NET50</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
     <DefineConstants>TRACE;COMPILE_NET40</DefineConstants>
@@ -344,7 +342,7 @@
     <DefineConstants>TRACE;COMPILE_NET48</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
-    <DefineConstants>TRACE;COMPILE_NET60</DefineConstants>
+    <DefineConstants>TRACE;COMPILE_NET50</DefineConstants>
   </PropertyGroup>
   
 

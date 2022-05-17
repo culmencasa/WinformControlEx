@@ -31,7 +31,7 @@
     <Compile Update="CustomIcon\PortraitIcon.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="CustomListBox\ListBoxEx.cs">
+    <Compile Update="CustomListBox\CustomListBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="CustomMessageBox\ExceptionMessageBox.cs">

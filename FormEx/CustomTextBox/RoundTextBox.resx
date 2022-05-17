@@ -117,4 +117,41 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnCancel.DownImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAYxJREFUSEvd
+        VctKxEAQDIj6Kyqujz/Qy0IEwYOBvPaaP9GrKH6AHgQv+zdKdFG8+VjFgwreXKugZ3emnbiJuActKDLp
+        rurZdM8mwf9GGIazWZblYBe8Bp+FXHfTNM2oEXkzwByhyA04GENqtsU2HlEUTcGwbxWoyz16pUw1IDxU
+        xiY8kDJ+5Hm+5TE14UeSJJtSzgUebwYbXClDiVls4Pqk4uSj5EoV7xVFMS1lR4A4VsIBNlxjDtdlsG/F
+        +/ilS+Jbtz0kDwhzDpA41ULwDoXmmO90Oou4fwDvuZbYPDWitXnCvAMEe0pkeGs2wXqBRblmDPe+4mRJ
+        jQMEX5VoSGlPS6TUtuyWefgi0hEQfFMimxzoikiDOI5XEfMN3tC7gbdF9kDZHtMixJ3BK15Q4wBB35B9
+        A/UNXvu+Dvm7Y+oZ6HDwtY8p/xxIXCoh79u+VkisDerWnlW+k2Ca3KvCAKJdZapNPPGOlKnGxF/XBhwU
+        TL//wbHBzyE2isFjFDkH34VcHzH340/mH0EQfAJOemfRmqzRHgAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnCancel.HoverImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAWxJREFUSEu1
+        lU1KA0EQhWuRYK4SCQl6AnHhRhAXEhA8Tnb+bBVB8CpiUBS3ioi4CrjxAq7G97C6qHTXhDDMNHxQ/arq
+        ddI1zEhVVZ0Sim0SigmsATgBt+AZfCmMqTE3iHoToUiwpuAFcLMK1hxFHqQURHrgDHiTdTgFvcKvEEQu
+        tKEJ54Xf0kbk0BU34RccLHk68w3wBHzDHOyDT6clPgBzrPH6I+hHBxxrgWdHcxPwrhphPNHcrmqeqfla
+        IHLjChJvYKj5EaAxtZFqQ937HnJtvhb8/zVflHgF6ZBNF9eZk7n5WiCycAU5/OVjVztWLa9LLKzWNX27
+        ghwOdMvVboNo8InwgLor8gPltaQrygfveTBfC+qHnA+U5IP3PSQc8qrHNB+oH/zaj2kf5NfE/R6IfiU1
+        5vKeO2DvJDtAD+nuVWGCyEyLmzAr/Aqh69d1AqubD44Hi59MPl1X4B78KIwvAXPNPpltEYrtUckflw7s
+        aAX80V4AAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="btnCancel.NormalImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAYxJREFUSEvd
+        VctKxEAQDIj6Kyqujz/Qy0IEwYOBvPaaP9GrKH6AHgQv+zdKdFG8+VjFgwreXKugZ3emnbiJuActKDLp
+        rurZdM8mwf9GGIazWZblYBe8Bp+FXHfTNM2oEXkzwByhyA04GENqtsU2HlEUTcGwbxWoyz16pUw1IDxU
+        xiY8kDJ+5Hm+5TE14UeSJJtSzgUebwYbXClDiVls4Pqk4uSj5EoV7xVFMS1lR4A4VsIBNlxjDtdlsG/F
+        +/ilS+Jbtz0kDwhzDpA41ULwDoXmmO90Oou4fwDvuZbYPDWitXnCvAMEe0pkeGs2wXqBRblmDPe+4mRJ
+        jQMEX5VoSGlPS6TUtuyWefgi0hEQfFMimxzoikiDOI5XEfMN3tC7gbdF9kDZHtMixJ3BK15Q4wBB35B9
+        A/UNXvu+Dvm7Y+oZ6HDwtY8p/xxIXCoh79u+VkisDerWnlW+k2Ca3KvCAKJdZapNPPGOlKnGxF/XBhwU
+        TL//wbHBzyE2isFjFDkH34VcHzH340/mH0EQfAJOemfRmqzRHgAAAABJRU5ErkJggg==
+</value>
+  </data>
 </root>
