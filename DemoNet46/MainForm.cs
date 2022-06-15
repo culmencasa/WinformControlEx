@@ -311,9 +311,9 @@ namespace DemoNet46
         {
             if (e.Button == MouseButtons.Left)
             {
-                var themeDemo = FormManager.Single<ThemeDemo>();
+                //var themeDemo = FormManager.Single<ThemeDemo>();
 
-                AddChildWindow(themeDemo);
+                //AddChildWindow(themeDemo);
 
             }
 
@@ -332,18 +332,18 @@ namespace DemoNet46
         // 回收站
         private void btnRecycle_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                Form f = new Form();
-                f.TopLevel = false;
-                f.FormBorderStyle = FormBorderStyle.None;
+            //if (e.Button == MouseButtons.Left)
+            //{
+            //    Form f = new Form();
+            //    f.TopLevel = false;
+            //    f.FormBorderStyle = FormBorderStyle.None;
 
-                f.Location = new Point(300, 300);
-                this.Controls.Add(f);
+            //    f.Location = new Point(300, 300);
+            //    this.Controls.Add(f);
 
-                f.Show();
+            //    f.Show();
 
-            }
+            //}
         }
 
 

@@ -168,7 +168,8 @@ namespace System.Windows.Forms
             set
             {
                 _roundCornerDiameter = value;
-                if (IsHandleCreated && !DesignMode)
+                // 设计时不改变窗体形状. 在HighDPI下宽高会不正常.
+                if (IsHandleCreated && !DesignMode)                    
                     UpdateFormRoundCorner(value);
                 Invalidate();
             }
@@ -479,7 +480,8 @@ namespace System.Windows.Forms
 
             // 2021-08-02 去掉最大化等按钮，与边框及Z-Index之间的关系无法控制，换成独立的Win11ControlBox控件。
 
-            TitleFont = new Font(this.Font.FontFamily.Name, 16f, FontStyle.Bold);
+            TitleFont = new Font(this.Font.FontFamily.Name, 10f, FontStyle.Bold);
+
         }
 
 
@@ -813,14 +815,14 @@ namespace System.Windows.Forms
             // 画文字
             if (ShowTitleText && !string.IsNullOrEmpty(TitleText))
             {
-                top = Padding.Top + (this.TitleBarHeight - (int)textSize.Height) / 2;
+                top = BorderSize + Padding.Top + (this.TitleBarHeight - (int)textSize.Height) / 2 ;
                 TextRenderer.DrawText(
                     g,
                     TitleText,
                     TitleFont,
                     new Rectangle(
                         left + (ShowLogo ? LogoSize : 0),
-                        top - 1,
+                        top,
                         width + (ShowLogo ? LogoSize : 0),
                         height),
                     TitleForeColor,
@@ -952,11 +954,28 @@ namespace System.Windows.Forms
         {
             if (diameter == 0)
             {
-                Region = new Region(new Rectangle(0, 0, MaximumSize.Width, MaximumSize.Height));
+                if (WindowState == FormWindowState.Normal)
+                {
+                    if (MaximumSize.Width > 0 && MaximumSize.Height > 0)
+                    {
+                        Region = new Region(new Rectangle(0, 0, MaximumSize.Width, MaximumSize.Height));
+                    }
+                }
+                else if (WindowState == FormWindowState.Maximized)
+                {
+                    if (!FullScreen)
+                    {
+                        Region = new Region(Screen.PrimaryScreen.WorkingArea);
+                    }
+                    else
+                    {
+                        Region = new Region(Screen.PrimaryScreen.Bounds);
+                    }
+                }
             }
             else
-            {
-                // 防止控件撑出窗体            
+            {                
+                // 防止控件撑出窗体
                 IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Width, Height, diameter, diameter);
                 Region = System.Drawing.Region.FromHrgn(hrgn);
                 this.Update();

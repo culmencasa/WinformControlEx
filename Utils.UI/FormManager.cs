@@ -303,6 +303,10 @@ namespace System.Windows.Forms
                 {
                     return GetTopForm(parentControl.Parent);
                 }
+                else if (!topForm.TopLevel)
+                {
+                    return GetTopForm(topForm.Parent);
+                }
             }
 
             return topForm;

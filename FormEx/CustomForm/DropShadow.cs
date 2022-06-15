@@ -12,6 +12,7 @@ namespace System.Windows.Forms
     /// </summary>
     public class DropShadow : Form
     {
+
         #region 字段
 
         private Bitmap _shadowBitmap;
@@ -36,28 +37,32 @@ namespace System.Windows.Forms
             FormBorderStyle = FormBorderStyle.None;
 
             // 绑定事件
-            Owner.LocationChanged += UpdateLocation;
-            Owner.Resize += new EventHandler(Owner_Resize);
-            Owner.ResizeBegin += Owner_ResizeBegin;
-            Owner.ResizeEnd += Owner_ResizeEnd;
-            Owner.FormClosed += (sender, eventArgs) => 
-            { 
-                Close(); 
-            };
-            Owner.VisibleChanged += (sender, eventArgs) =>
-            {
-                if (Owner != null)
-                {
-                    Visible = Owner.Visible;
-                }
-                else
-                {
-                    Visible = false;
-                }
-            };
-
+            WireupOwnerEvents();
 
         }
+
+        private void Owner_FormClosed(object? sender, FormClosedEventArgs e)
+        {
+            if (IsSelfAlive() && !IsOwnerAlive())
+            {
+                UnwireOwnerEvents();
+                Close();
+                Dispose();
+            }
+        }
+
+        private void Owner_VisibleChanged(object? sender, EventArgs e)
+        {
+            if (Owner != null)
+            {
+                Visible = Owner.Visible;
+            }
+            else
+            {
+                Visible = false;
+            }
+        }
+
 
         #endregion
 
@@ -66,7 +71,7 @@ namespace System.Windows.Forms
         /// <summary>
         ///  阴影偏移
         /// </summary>
-        public Point ShadowOffset { get; set; }
+        public Point ShadowOffset { get; set; } = new Point(40, 40);
 
         /// <summary>
         ///  设置阴影颜色(需要调用Refresh)
@@ -92,9 +97,15 @@ namespace System.Windows.Forms
         public int ShadowRadius { get; set; }
 
         /// <summary>
-        ///  边框半径(需要刷新)
+        ///  主窗体的边框半径(需要刷新)
         /// </summary>
         public int BorderRadius { get; set; }
+
+        /// <summary>
+        ///  主窗体的边框颜色
+        /// </summary>
+        public Color BorderColor { get; set; } = Color.DarkGray;
+
 
         /// <summary>
         ///  阴影透明度
@@ -105,9 +116,10 @@ namespace System.Windows.Forms
             set
             {
                 _shadowOpacity = value;
-                SetBitmap(ShadowBitmap, _shadowOpacity);
             }
         }
+
+
 
         #endregion
 
@@ -126,18 +138,10 @@ namespace System.Windows.Forms
         #endregion
 
         #region 公开的方法
-        
-        public void UpdateLocation(Object sender = null, EventArgs eventArgs = null)
-        {
-            if (Owner == null)
-                return;
-            Point pos = Owner.Location;
-            pos.Offset(ShadowOffset);
-            pos.Offset(-ShadowRadius, -ShadowRadius);
-            Location = pos;
-        }
 
-        public void Refresh(bool redraw = true)
+
+
+        public void Redraw(bool redraw = true)
         {
             if (Owner == null)
             {
@@ -146,7 +150,7 @@ namespace System.Windows.Forms
 
             if (redraw)
             {
-                ShadowBitmap = DrawShadow();
+                ShadowBitmap = DrawShadowBitmap();
             }
 
             SetBitmap(ShadowBitmap, ShadowOpacity);
@@ -159,9 +163,14 @@ namespace System.Windows.Forms
             }
 
             // 设置显示区域
-            Region shadowRegion = Region.FromHrgn(Win32.CreateRoundRectRgn(0, 0, Width, Height, BorderRadius, BorderRadius));
+            Region shadowRegion = Region.FromHrgn(Win32.CreateRoundRectRgn(0, 0,
+                ShadowBitmap.Width,
+                ShadowBitmap.Height,
+                BorderRadius,
+                BorderRadius));
             Region ownerRegion = Owner.Region.Clone();
-            ownerRegion.Translate(ShadowRadius, ShadowRadius);
+            ownerRegion.Translate(ShadowOffset.X, ShadowOffset.Y);
+
             shadowRegion.Exclude(ownerRegion);
             Region = shadowRegion;
 
@@ -182,6 +191,32 @@ namespace System.Windows.Forms
 
         #region 私有方法
 
+        private void WireupOwnerEvents()
+        {
+            if (IsOwnerAlive())
+            {
+                Owner.LocationChanged += UpdateLocation;
+                Owner.Resize += Owner_Resize;
+                Owner.ResizeBegin += Owner_ResizeBegin;
+                Owner.ResizeEnd += Owner_ResizeEnd;
+                Owner.FormClosed += Owner_FormClosed;
+                Owner.VisibleChanged += Owner_VisibleChanged;
+            }
+        }
+
+        private void UnwireOwnerEvents()
+        {
+            if (IsOwnerAlive())
+            {
+                Owner.LocationChanged -= UpdateLocation;
+                Owner.Resize -= new EventHandler(Owner_Resize);
+                Owner.ResizeBegin -= Owner_ResizeBegin;
+                Owner.ResizeEnd -= Owner_ResizeEnd;
+                Owner.VisibleChanged -= Owner_VisibleChanged;
+                Owner.FormClosed -= Owner_FormClosed;
+            }
+        }
+
         private void DrawFadeRectangle(Graphics g, RectangleF wrapRect, Color fadeColor, int shadowRadius)
         {
             using (GraphicsPath path = g.GenerateRoundedRectangle(wrapRect, shadowRadius, RectangleEdgeFilter.All))
@@ -199,47 +234,69 @@ namespace System.Windows.Forms
         /// 生成阴影图片
         /// </summary>
         /// <returns></returns>
-        private Bitmap DrawShadow()
+        private Bitmap DrawShadowBitmap()
         {
-            // 阴影窗体的大小
-            int width = Owner.Width + ShadowRadius * 2;
-            int height = Owner.Height + ShadowRadius * 2;
+            // 阴影窗体的大小 (画板要比Owner窗体大才能看到效果)
+            int width = Owner.Width + ShadowOffset.X * 2;
+            int height = Owner.Height + ShadowOffset.Y * 2;
             var bitmap = new Bitmap(width, height);
-            Graphics g = Graphics.FromImage(bitmap);
-
-            Color fadeColor = Color.FromArgb(50, 0, 0, 0);
-            // 第一个阴影的位置
-            RectangleF wrapRect = new RectangleF(
-                    (bitmap.Width - Owner.Width) / 2 - 3,
-                    (bitmap.Height - Owner.Height) / 2 - 3, Owner.Width + 4, Owner.Height + 4);
-            using (Brush br = new SolidBrush(fadeColor))
+            using (Graphics g = Graphics.FromImage(bitmap))
             {
-                wrapRect.Inflate(-2, -2);
-                //g.FillRoundedRectangle(br, wrapRect, ShadowRadius / 2, RectangleEdgeFilter.All);
-                g.FillRoundedRectangle(br, wrapRect, ShadowRadius, RectangleEdgeFilter.All);
+                Color fadeColor = ShadowColor;
+
+
+                RectangleF wrapRect = new RectangleF(
+                        (bitmap.Width - Owner.Width) / 2,
+                        (bitmap.Height - Owner.Height) / 2, Owner.Width, Owner.Height);
+
+                // 画10个阴影形成渐变
+                for (int i = 0; i < 10; i++)
+                {
+                    wrapRect.Inflate(1, 1);
+                    fadeColor = Color.FromArgb(10 - i, 0, 0, 0);
+                    DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius + i * 2);
+                }
+
+                Width = width;
+                Height = height;
             }
-            // 层叠第二个阴影
-            fadeColor = ColorEx.LightenColor(fadeColor, 10);
-            wrapRect.Inflate(2, 2);
-            fadeColor = Color.FromArgb(10, 0, 0, 0);
-            DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius + 6);
-            // 层叠第三个阴影
-            fadeColor = ColorEx.LightenColor(fadeColor, 10);
-            wrapRect.Inflate(2, 2);
-            fadeColor = Color.FromArgb(5, 0, 0, 0);
-            DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius * 2);
-            // 层叠第四个阴影
-            fadeColor = ColorEx.LightenColor(fadeColor, 10);
-            wrapRect.Inflate(1, 1);
-            fadeColor = Color.FromArgb(1, 0, 0, 0);
-            DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius * 3);
 
-            Width = width;
-            Height = height;
 
-            g.Dispose();
+            // 模糊
+            var blur = new SuperfastBlur.GaussianBlur(bitmap);
+            var bg2 = blur.Process(4);
+            
 
-            return bitmap;
+            // 画上边框
+            using (var g = Graphics.FromImage(bg2))
+            {
+                int borderSize = 2;
+                using (Pen borderPen = new Pen(BorderColor, borderSize))
+                {
+                    g.DrawRoundedRectangle(borderPen,
+                        (bitmap.Width - Owner.Width - borderSize) / 2,
+                        (bitmap.Height - Owner.Height - borderSize) / 2,
+                        Owner.Width,
+                        Owner.Height,
+                        ShadowRadius);
+                }
+            }
+
+            return bg2;
+        }
+
+
+
+        private void UpdateLocation(Object sender = null, EventArgs eventArgs = null)
+        {
+            if (Owner == null)
+                return;
+
+            Point pos = Owner.Location;
+            pos.Offset(-ShadowOffset.X, -ShadowOffset.Y);
+
+
+            Location = pos;
         }
 
 
@@ -250,29 +307,94 @@ namespace System.Windows.Forms
 
         private void Owner_ResizeBegin(object sender, EventArgs e)
         {
-            this.Visible = false;
+            //this.Visible = false;
         }
         private void Owner_ResizeEnd(object sender, EventArgs e)
         {
-            if (Owner == null)
-                return;
+            //    if (Owner == null)
+            //        return;
 
-            if (Owner.WindowState == FormWindowState.Minimized || Owner.WindowState == FormWindowState.Maximized)
+            //    if (Owner.WindowState == FormWindowState.Minimized || Owner.WindowState == FormWindowState.Maximized)
+            //    {
+            //        this.Visible = false;
+            //        return;
+            //    }
+            //    else
+            //    {
+            //        this.Visible = true;
+            //    }
+
+
+            //    Refresh();
+        }
+
+        protected FormWindowState OwnerLastWindowState { get; set; }
+        private bool IsOwnerAlive()
+        {
+            if (Owner == null || Owner.IsDisposed)
+                return false;
+
+            if (!Owner.IsHandleCreated)
+                return false;
+
+            return true;
+        }
+
+        private bool IsSelfAlive()
+        {
+            if (this.IsDisposed)
+                return false;
+
+            if (!this.IsHandleCreated)
+                return false;
+
+            return true;
+        }
+
+        private void OnOwnerSizeChanged()
+        {
+            if (Owner.WindowState == FormWindowState.Minimized)
             {
                 this.Visible = false;
-                return;
+            }
+            else if (Owner.WindowState == FormWindowState.Normal)
+            {
+                this.Visible = true;
+                Redraw(true);
+            }
+            else if (Owner.WindowState == FormWindowState.Maximized)
+            {
+                this.Visible = false;
             }
             else
             {
-                this.Visible = true;
+                this.Visible = false;
             }
-
-
-            Refresh();
         }
 
         void Owner_Resize(object sender, EventArgs e)
         {
+            if (!IsOwnerAlive())
+            {
+                this.Visible = false;
+                return;
+            }
+
+            FormWindowState lastState = OwnerLastWindowState;
+            if (Owner.WindowState != lastState)
+            {
+                OwnerLastWindowState = Owner.WindowState;
+                //OnFormWindowStateChanged(new FormWindowStateArgs()
+                //{
+                //    LastWindowState = lastState,
+                //    NewWindowState = WindowState
+                //});
+
+                OnOwnerSizeChanged();
+            }
+
+
+
             //if (Owner == null)
             //    return;
 

@@ -8,6 +8,9 @@ using System.Drawing.Drawing2D;
 
 namespace System.Windows.Forms
 {
+    /// <summary>
+    /// 渐变, 圆角, 边框面板
+    /// </summary>
     public class CustomPanel : Panel
     {
         #region 属性
@@ -21,13 +24,13 @@ namespace System.Windows.Forms
         public Color SecondColor { get; set; }
 
         [Category("Custom")]
+        [DefaultValue(typeof(FillDirection), "TopToBottom")]
+        public FillDirection GradientDirection { get; set; }
+
+        [Category("Custom")]
         [DefaultValue(typeof(Color), "Color.Empty")]
         public Color BorderColor { get; set; }
 
-
-        [Category("Custom")]
-        [DefaultValue(typeof(FillDirection), "TopToBottom")]
-        public FillDirection GradientDirection { get; set; }
 
         [Category("Custom")]
         public int BorderWidth { get; set; }
@@ -62,7 +65,8 @@ namespace System.Windows.Forms
 
         #endregion
 
-         
+
+        #region 重写的成员
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
@@ -208,9 +212,17 @@ namespace System.Windows.Forms
         public override Rectangle DisplayRectangle
         {
             get
-            { 
-                return new Rectangle(BorderWidth, BorderWidth, Width - BorderWidth * 2, Height - BorderWidth * 2);
+            {
+                int x = BorderWidth + Padding.Left + RoundBorderRadius;
+                int y = BorderWidth + Padding.Top + RoundBorderRadius;
+                int width = Width - BorderWidth * 2 - RoundBorderRadius * 2  - Padding.Left - Padding.Right;
+                int height = Height - BorderWidth * 2 - RoundBorderRadius  * 2- Padding.Left - Padding.Right;
+                     
+                return new Rectangle(x, y, width, height);
             }
         }
+
+
+        #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿using Ocean;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -19,10 +18,12 @@ namespace DemoNet46
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            //new OcnForm().ShowDialog();
-            //new OcnMessageBox().ShowDialog();
-
-            var splashForm = new SplashForm(Properties.Resources.Se7enBoot);
+            var splashForm = new SplashForm()
+            {
+                ShowInTaskbar = true,
+                Text = "Demo"
+            };
+            splashForm.Show(Properties.Resources.Se7enBoot);
 
             Thread th = new Thread(() =>
             {

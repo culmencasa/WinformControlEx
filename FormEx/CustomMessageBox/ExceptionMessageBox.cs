@@ -14,6 +14,13 @@ namespace System.Windows.Forms
     /// </summary>
     public partial class ExceptionMessageBox : Form
     {
+        public static void Show(Exception ex)
+        {
+            ExceptionMessageBox box = new ExceptionMessageBox(ex);
+            Form owner = FormManager.TryGetLatestActiveForm();
+            box.ShowDialog(owner);
+        }
+
         #region 构造
 
         public ExceptionMessageBox()
@@ -39,7 +46,6 @@ namespace System.Windows.Forms
         }
 
         #endregion
-
 
         #region 字段
 
@@ -128,7 +134,6 @@ namespace System.Windows.Forms
         }
 
         #endregion
-
 
         #region 设计器生成的代码
 

@@ -73,7 +73,7 @@ namespace System.Windows.Forms
         /// </summary>
         protected void ResizeControlBox()
         {
-            this.Size = new Size((btnClose.Visible ? btnClose.Width : 0) + (btnMaximum.Visible ? btnMaximum.Width : 0) + (btnMinimum.Visible ? btnMinimum.Width : 0), this.Height);
+            //this.Size = new Size((btnClose.Visible ? btnClose.Width : 0) + (btnMaximum.Visible ? btnMaximum.Width : 0) + (btnMinimum.Visible ? btnMinimum.Width : 0), this.Height);
         }
 
 
@@ -142,7 +142,7 @@ namespace System.Windows.Forms
             ResizeButton(btnMaximum, maxButtonRate);
             ResizeControlBox();
 
-            if (!DesignMode)
+            //if (!DesignMode)
             {
                 ParentForm = FormManager.GetTopForm(this) as Form;
                 if (ParentForm != null)
@@ -156,7 +156,10 @@ namespace System.Windows.Forms
 
                     ParentForm.StyleChanged -= ParentForm_StyleChanged;
                     ParentForm.StyleChanged += ParentForm_StyleChanged;
-                    
+
+                    ParentForm.Shown += ParentForm_Shown;
+
+
                     if (DrawByParent)
                     {
                         btnClose.Visible = false;
@@ -170,7 +173,25 @@ namespace System.Windows.Forms
             }
         }
 
+        private void ParentForm_Shown(object sender, EventArgs e)
+        {
+            Form form = ParentForm;
+            if (form == null)
+                return;
 
+            if (!form.ControlBox)
+            {
+                btnClose.Visible = false;
+                btnMaximum.Visible = false;
+                btnMinimum.Visible = false;
+            }
+            else
+            {
+                btnMaximum.Visible = form.MaximizeBox;
+                btnMinimum.Visible = form.MinimizeBox;
+                btnClose.Visible = true;
+            }
+        }
 
         private void ParentForm_StyleChanged(object sender, EventArgs e)
         {

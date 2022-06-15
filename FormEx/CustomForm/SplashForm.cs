@@ -11,24 +11,59 @@ using System.Windows.Forms;
 
 namespace System.Windows.Forms
 {
+
+    /// <summary>
+    /// 启动画面
+    /// </summary>
     public partial class SplashForm : Form
     {
-        public SplashForm(Bitmap bitmap)
+        #region 构造
+
+        public SplashForm()
         {
             InitializeComponent();
 
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.TopMost = true;
-            this.ShowInTaskbar = false;
-            this.Size = bitmap.Size;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            
-            this.Show();
-            SelectBitmap(bitmap);
+            this.Load += SplashForm_Load;
         }
 
+        #endregion
 
-        #region 窗体淡出
+        #region 字段
+
+        private Bitmap _splashBitmap;
+
+        #endregion
+
+        #region 属性
+
+        public Bitmap SplashBitmap
+        {
+            get
+            {
+                return _splashBitmap;
+            }
+            set
+            {
+                _splashBitmap = value;
+                if (value == null)
+                {
+                    throw new ArgumentNullException();
+                }
+            }
+        }
+
+        #endregion
+
+        #region 事件处理
+
+        private void SplashForm_Load(object sender, EventArgs e)
+        {
+            SelectBitmap(SplashBitmap);
+        }
+
+        #endregion
+
+        #region WINAPI 窗体淡出
 
         //从左到右显示
         public const Int32 AW_HOR_POSITIVE = 0x00000001;
@@ -48,27 +83,23 @@ namespace System.Windows.Forms
         public const Int32 AW_SLIDE = 0x00040000;
         //透明度从高到低
         public const Int32 AW_BLEND = 0x00080000;
-        
+
         [DllImport("user32.dll")]
         private static extern bool AnimateWindow(IntPtr hwnd, int dwTime, int dwFlags);
 
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            //AnimateWindow(Handle, 3000, AW_ACTIVATE);
-        }
-
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
-            base.OnClosing(e);
-            if (e.Cancel == false)
-            {
-                AnimateWindow(this.Handle, 300, AW_CENTER | AW_BLEND | AW_HIDE);
-            }
-        }
-
         #endregion
 
+        #region 私有方法
+
+        private void Customization()
+        {
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.TopMost = true;
+            this.ShowInTaskbar = false;
+            this.Size = SplashBitmap.Size;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+
+        }
 
         private void SelectBitmap(Bitmap bitmap)
         {
@@ -87,16 +118,16 @@ namespace System.Windows.Forms
                 hBitmap = bitmap.GetHbitmap(Color.FromArgb(0));
                 hOldBitmap = Win32.SelectObject(memDc, hBitmap);
 
-                Size newSize = new Size(bitmap.Width, bitmap.Height);	
+                Size newSize = new Size(bitmap.Width, bitmap.Height);
                 Point sourceLocation = new Point(0, 0);
-                Point newLocation = new Point(this.Left, this.Top);	
+                Point newLocation = new Point(this.Left, this.Top);
                 BlendFunction blend = new BlendFunction();
-                blend.BlendOp = (byte)BlendOperation.AC_SRC_OVER;	
-                blend.BlendFlags = 0;											
-                blend.SourceConstantAlpha = 255;										
+                blend.BlendOp = (byte)BlendOperation.AC_SRC_OVER;
+                blend.BlendFlags = 0;
+                blend.SourceConstantAlpha = 255;
                 blend.AlphaFormat = (byte)BlendOperation.AC_SRC_ALPHA;
 
-                Win32.UpdateLayeredWindow(Handle, screenDc, ref newLocation, ref newSize,memDc, ref sourceLocation, 0, ref blend, (int)ULWPara.ULW_ALPHA);
+                Win32.UpdateLayeredWindow(Handle, screenDc, ref newLocation, ref newSize, memDc, ref sourceLocation, 0, ref blend, (int)ULWPara.ULW_ALPHA);
             }
             finally
             {
@@ -104,11 +135,33 @@ namespace System.Windows.Forms
                 if (hBitmap != IntPtr.Zero)
                 {
                     Win32.SelectObject(memDc, hOldBitmap);
-                    Win32.DeleteObject(hBitmap);										
+                    Win32.DeleteObject(hBitmap);
                 }
                 Win32.DeleteDC(memDc);
             }
         }
+
+        #endregion
+
+        #region 公开方法
+
+        public new void Show()
+        {
+            Show(SplashBitmap);
+        }
+
+        public void Show(Bitmap splashBitmap)
+        {
+            SplashBitmap = splashBitmap;
+            Customization();
+
+            base.Show();
+        }
+
+        #endregion
+
+
+        #region 重写的成员
 
         protected override CreateParams CreateParams
         {
@@ -120,6 +173,22 @@ namespace System.Windows.Forms
             }
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            //AnimateWindow(Handle, 3000, AW_ACTIVATE);
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            if (e.Cancel == false)
+            {
+                AnimateWindow(this.Handle, 300, AW_CENTER | AW_BLEND | AW_HIDE);
+            }
+        }
+
+        #endregion
 
     }
 }

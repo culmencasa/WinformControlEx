@@ -5,9 +5,11 @@
     <UseWindowsForms>true</UseWindowsForms>
     <OutputType>Library</OutputType>
     <RootNamespace>System.Windows.Forms</RootNamespace>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects> 
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>     
     
-    <ApplicationDefaultFont>Microsoft Sans Serif, 8.25pt</ApplicationDefaultFont>
+    <SignAssembly>False</SignAssembly>
+	  <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">

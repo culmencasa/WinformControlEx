@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FormExCore\FormExCore.csproj" />
+    <ProjectReference Include="..\FormEx\FormEx.csproj" />
+    <ProjectReference Include="..\Svg\Svg.csproj" />
+    <ProjectReference Include="..\Utils.UI\Utils.UI.csproj" />
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+  </ItemGroup>
+
+</Project>

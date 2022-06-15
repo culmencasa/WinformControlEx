@@ -73,12 +73,6 @@
     <Compile Include="LayoutDemo.Designer.cs">
       <DependentUpon>LayoutDemo.cs</DependentUpon>
     </Compile>
-    <Compile Include="ThemeDemo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ThemeDemo.Designer.cs">
-      <DependentUpon>ThemeDemo.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="ComponentDemo.resx">
       <DependentUpon>ComponentDemo.cs</DependentUpon>
     </EmbeddedResource>
@@ -98,9 +92,9 @@
     <EmbeddedResource Include="LayoutDemo.resx">
       <DependentUpon>LayoutDemo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ThemeDemo.resx">
-      <DependentUpon>ThemeDemo.cs</DependentUpon>
-    </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -118,10 +112,6 @@
     <ProjectReference Include="..\FormEx\FormEx.csproj">
       <Project>{1d2d4588-d4a4-45fb-954a-4db23301a419}</Project>
       <Name>FormEx</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ocean\Ocean.csproj">
-      <Project>{9197bb90-53b8-4d5d-8716-9704fa9c744f}</Project>
-      <Name>Ocean</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utils.UI\Utils.UI.csproj">
       <Project>{c2d46f9d-3f5c-4968-9a5a-75c90d86c2b2}</Project>
