@@ -19,3 +19,10 @@
 .svn/*
 /Utils.UI/bin/Release/net40
 *.pdb
+/Svg/bin/Release
+/FormExCore/bin/Release/net6.0-windows
+/DemoCore/bin/Release/net6.0-windows
+/DemoCore/obj/Debug/net6.0-windows
+/DemoCore/obj/Release/net6.0-windows
+/FormExCore/obj/Release/net6.0-windows
+/Svg/obj/Release/net6.0-windows
