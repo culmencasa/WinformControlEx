@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace FormExCore
     /// <summary>
     /// 窗体
     /// </summary>
-    public partial class OcnForm : Form
+    public partial class OcnForm : BorderlessForm
     {
         #region 构造
 
@@ -24,10 +25,6 @@ namespace FormExCore
         {
             InitializeComponent();
 
-            Theme = OcnThemes.Primary;
-
-
-            FormBorderStyle = FormBorderStyle.None;
             SetStyle(
                 ControlStyles.UserPaint |
                 ControlStyles.AllPaintingInWmPaint |
@@ -36,7 +33,14 @@ namespace FormExCore
                 ControlStyles.SupportsTransparentBackColor, true);
             UpdateStyles();
 
-            StartPosition = FormStartPosition.CenterScreen;
+            TitleFont = new Font(SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size, FontStyle.Bold);
+            Theme = OcnThemes.Primary;
+
+            AfterPositionChanged += OcnForm_AfterPositionChanged;
+        }
+
+        private void OcnForm_AfterPositionChanged()
+        {
 
         }
 
@@ -47,10 +51,15 @@ namespace FormExCore
         private OcnThemes _theme;
         private int _roundCornerDiameter;
         private string _customTitleText;
-        private int _titleBarHeight;
+        private int _titleBarHeight = 32;
         private Color _titleColor;
-        private int _logoSize;
-        private Image _logo;
+        private Color _titleBarBackColor;
+        private int _iconSize;
+        private Image _icon;
+        private Font _titleFont;
+        private bool _showFormIcon = true;
+        private bool _showFormTitle = true;
+        private DateTime _titleClickTime = DateTime.MinValue;
 
         #endregion
 
@@ -61,8 +70,8 @@ namespace FormExCore
         /// <summary>
         /// 主题
         /// </summary>
-        [Category("Custom")]
-
+        [Category("Look")]
+        [Browsable(true)]
         public OcnThemes Theme
         {
             get
@@ -94,14 +103,66 @@ namespace FormExCore
 
         #region 无边框窗体属性
 
-        public Color TitleBackColor
+
+        /// <summary>
+        /// 与ShowIcon区分开来，因为如果ShowIcon为False时，任务栏上也将无法显示图标
+        /// </summary>
+        [Category("Custom"),
+         DefaultValue(true), Description("是否显示窗体顶部左上角的图标")]
+        [Browsable(true)]
+        public bool ShowFormIcon
         {
-            get;
-            set;
+            get
+            {
+                return _showFormIcon;
+            }
+            set
+            {
+                _showFormIcon = value;
+                Invalidate();
+            }
         }
 
+        [Category("Custom"),
+         DefaultValue(true)]
+        [Browsable(true)]
+        public bool ShowFormTitle
+        {
+            get
+            {
+                return _showFormTitle;
+            }
+            set
+            {
+                bool hasChanged = _showFormTitle != value;
+                _showFormTitle = value;
+                if (hasChanged)
+                {
+                    Invalidate();
+                }
+            }
+        }
 
-        [Category("Custom")]
+        [Category("Look")]
+        [Browsable(true)]
+        public Color TitleBarBackColor
+        {
+            get
+            {
+                return _titleBarBackColor;
+            }
+            set
+            {
+                _titleBarBackColor = value;
+                Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// 圆角直径
+        /// </summary>
+        [Category("Look")]
+        [Browsable(true)]
         public int RoundCornerDiameter
         {
             get
@@ -111,7 +172,7 @@ namespace FormExCore
             set
             {
                 _roundCornerDiameter = value;
-                // 设计时不改变窗体形状. 在HighDPI下宽高会不正常.
+                // 设计时不改变窗体形状. 因为在HighDPI下宽高会不正常.
                 if (IsHandleCreated && !DesignMode)
                     UpdateFormRoundCorner(value);
                 Invalidate();
@@ -121,7 +182,8 @@ namespace FormExCore
         /// <summary>
         /// 标题栏文字
         /// </summary>
-        [Category("Custom")]
+        [Category("Look")]
+        [Browsable(true)]
         public string TitleText
         {
             get
@@ -136,10 +198,28 @@ namespace FormExCore
             }
         }
 
+
+        [Category("Look")]
+        [Browsable(true)]
+        public Font TitleFont
+        {
+            get
+            {
+                return _titleFont;
+            }
+            set
+            {
+                _titleFont = value;
+                Invalidate();
+            }
+        }
+
+
         /// <summary>
         /// 标题栏高度
         /// </summary>
-        [Category("Custom")]
+        [Category("Look")]
+        [Browsable(true)]
         public int TitleBarHeight
         {
             get
@@ -153,7 +233,8 @@ namespace FormExCore
             }
         }
 
-        [Category("Custom")]
+        [Category("Look")]
+        [Browsable(true)]
         public Color TitleColor
         {
             get
@@ -166,34 +247,40 @@ namespace FormExCore
             }
         }
 
-        [Category("Custom")]
-        public int LogoSize
+        [Category("Look")]
+        [Browsable(true)]
+        public int IconSize
         {
             get
             {
-                return _logoSize;
+                return _iconSize;
             }
-            private set
+            set
             {
-                _logoSize = value;
+                _iconSize = value;
                 Invalidate();
             }
         }
 
 
-        [Category("Custom")]
-        public Image Logo
+        [Category("Look")]
+        [Browsable(true)]
+        public new Image Icon
         {
             get
             {
-                return _logo;
+                return _icon;
             }
             set
             {
-                _logo = value;
-                if (value != null)
+                _icon = value;
+                if (value != null && _iconSize == 0)
                 {
-                    _logoSize = value.Width;
+                    _iconSize = value.Width;
+                }
+                else
+                {
+                    _iconSize = 0;
                 }
                 Invalidate();
             }
@@ -275,7 +362,7 @@ namespace FormExCore
             //BorderColor = Presets.PrimaryColor;
             BackColor = Color.White;
             ForeColor = Presets.PrimaryColor;
-            TitleBackColor = Color.FromArgb(108, 17, 150);
+            TitleBarBackColor = Color.FromArgb(108, 17, 150);
             TitleColor = Color.White;
         }
 
@@ -284,7 +371,7 @@ namespace FormExCore
             //BorderColor = Presets.SecondaryColor;
             BackColor = Color.White;
             ForeColor = Presets.SecondaryColor;
-            TitleBackColor = Presets.SecondaryColor;
+            TitleBarBackColor = Presets.SecondaryColor;
             TitleColor = Color.White;
         }
         protected virtual void ApplySuccess()
@@ -292,7 +379,7 @@ namespace FormExCore
             //BorderColor = Presets.SuccessColor;
             BackColor = Color.White;
             ForeColor = Presets.SuccessColor;
-            TitleBackColor = Presets.SuccessColor;
+            TitleBarBackColor = Presets.SuccessColor;
             TitleColor = Color.White;
         }
 
@@ -301,7 +388,7 @@ namespace FormExCore
             //BorderColor = Presets.DangerColor;
             BackColor = Color.White;
             ForeColor = Presets.DangerColor;
-            TitleBackColor = Presets.DangerColor;
+            TitleBarBackColor = Presets.DangerColor;
             TitleColor = Color.White;
         }
         protected virtual void ApplyWarning()
@@ -309,7 +396,7 @@ namespace FormExCore
             //BorderColor = Presets.WarningColor;
             BackColor = Color.White;
             ForeColor = Presets.WarningColor;
-            TitleBackColor = Presets.WarningColor;
+            TitleBarBackColor = Presets.WarningColor;
             TitleColor = Color.White;
         }
 
@@ -318,7 +405,7 @@ namespace FormExCore
             //BorderColor = Presets.InfoColor;
             BackColor = Color.White;
             ForeColor = Presets.InfoColor;
-            TitleBackColor = Presets.InfoColor;
+            TitleBarBackColor = Presets.InfoColor;
             TitleColor = Color.Black;
         }
 
@@ -327,7 +414,7 @@ namespace FormExCore
             //BorderColor = ColorEx.DarkenColor(Presets.LightColor, 20);
             BackColor = Color.White;
             ForeColor = Color.Black;
-            TitleBackColor = Presets.LightColor;
+            TitleBarBackColor = Presets.LightColor;
             TitleColor = Color.Black;
         }
 
@@ -336,7 +423,7 @@ namespace FormExCore
             //BorderColor = Presets.DarkColor;
             BackColor = Color.White;
             ForeColor = Presets.DarkColor;
-            TitleBackColor = Presets.DarkColor;
+            TitleBarBackColor = Presets.DarkColor;
             TitleColor = Color.White;
         }
 
@@ -369,11 +456,21 @@ namespace FormExCore
             }
         }
 
+        private void LayoutControlButtons()
+        {
+            this.btnClose.Location = new Point(this.Width - btnClose.Width, (TitleBarHeight - btnClose.Height) / 2);
+            this.btnMax.Location = new Point(btnClose.Left - btnMax.Width, (TitleBarHeight - btnClose.Height) / 2);
+            this.btnMin.Location = new Point(btnMax.Left - btnMin.Width, (TitleBarHeight - btnClose.Height) / 2);
+        }
+           
         #endregion
 
         #region 界面事件
-
-
+                
+        private void OcnForm_Resize(object sender, EventArgs e)
+        {
+            LayoutControlButtons();
+        }
 
         #endregion
 
@@ -390,59 +487,86 @@ namespace FormExCore
                     {
                         cp.Style |= (int)WindowStyle.WS_MAXIMIZEBOX;
                     }
+
                     if (MinimizeBox)
                     {
                         cp.Style |= (int)WindowStyle.WS_MINIMIZEBOX;
                     }
+
+                    cp.Style |= (int)WindowStyle.WS_SYSMENU;
                 }
                 return cp;
             }
         }
+
+
         protected override void WndProc(ref Message m)
         {
-            switch (m.Msg)
+            #region 标题栏
+
+            if (m.Msg == Win32.WM_NCHITTEST) //  && (int)m.Result == Win32.HTCLIENT
             {
-                case Win32.WM_NCHITTEST:
-
-                    Point pos = new Point(m.LParam.ToInt32());
-                    pos = this.PointToClient(pos);
-                    if (pos.Y > 0 && pos.Y < TitleBarHeight)
-                    {
-                        m.Result = new IntPtr(Win32.HTCAPTION);
-                        return;
-                    }
-
-                    break;
-            }
-
-            if (m.Msg == 0xa3)
-            {
-                return;
-            }
-
-
-            if (m.Msg == Win32.WM_SYSCOMMAND)
-            {
-                int state = m.WParam.ToInt32();
-                /* 双击任务栏放大的情况, 参见 
-                 * https://msdn.microsoft.com/en-us/library/windows/desktop/ms646360%28v=vs.85%29.aspx
-                 */
-                if ((state & 0xFFF0) == Win32.SC_MAXMIZE) // 最大化 
+                // 点击标题栏
+                Point pos = new Point(m.LParam.ToInt32());
+                pos = this.PointToClient(pos);
+                if (pos.Y > 0 && pos.Y < TitleBarHeight)
                 {
-                }
-                else if ((state & 0xFFF0) == Win32.SC_MINIMIZE)
-                {
-                }
-                else if ((state & 0xFFF0) == Win32.SC_RESTORE)
-                {
-
+                    m.Result = new IntPtr(Win32.HTCAPTION);
+                    return;
                 }
                 else
                 {
+                    WmNcHitTest(ref m);
+                    return;
                 }
             }
+
+            #endregion
+
+            if (m.Msg == Win32.WM_NCLBUTTONDOWN)
+            {
+
+                // 显示系统菜单
+                Rectangle iconRectangle = GetIconRectangle();
+                Point mousePosition = new Point(m.LParam.ToInt32());
+                mousePosition = PointToClient(mousePosition);
+                Debug.WriteLine($"{mousePosition.X}, {mousePosition.Y}");
+                if (iconRectangle.Contains(mousePosition))
+                {
+
+                    var clickTime = (DateTime.Now - _titleClickTime).TotalMilliseconds;
+                    if (clickTime <= SystemInformation.DoubleClickTime)
+                    {
+                        Close();
+                        return;
+                    }
+                    else
+                    {
+                        _titleClickTime = DateTime.Now;
+                    }
+
+
+                    IntPtr hWnd = Handle;
+                    Win32.RECT pos = new Win32.RECT();
+                    Win32.GetWindowRect(hWnd, ref pos);
+                    pos.top = this.DesktopBounds.Top + TitleBarHeight;
+                    IntPtr hMenu = Win32.GetSystemMenu(hWnd, false);
+                    // 弹出系统菜单
+                    int cmd = Win32.TrackPopupMenu(hMenu, 0x100, pos.left, pos.top, 0, hWnd, IntPtr.Zero);
+                    // 接收菜单的命令
+                    if (cmd > 0)
+                    {
+                        // 执行菜单命令
+                        Win32.SendMessage(hWnd, 0x112, cmd, 0);
+                    }
+                    return;
+                }
+            }
+
             base.WndProc(ref m);
+
         }
+
 
         public override Rectangle DisplayRectangle
         {
@@ -462,6 +586,8 @@ namespace FormExCore
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
+
+
             // 注：不能写到Resize事件里
             if (IsHandleCreated && !DesignMode)
             {
@@ -469,14 +595,15 @@ namespace FormExCore
                 {
                     UpdateFormRoundCorner(this.RoundCornerDiameter);
                 }
-                else
+                else if (WindowState == FormWindowState.Maximized)
                 {
                     UpdateFormRoundCorner(0);
                 }
             }
+            //ResumeDrawing(this);
         }
 
-        protected virtual void DrawTitleBackground(Graphics g)
+        protected virtual void FillTitleBarBackground(Graphics g)
         {
             int radius = RoundCornerDiameter / 2;
 
@@ -488,7 +615,7 @@ namespace FormExCore
 
 
 
-            using (Brush titleBarBrush = new SolidBrush(TitleBackColor))
+            using (Brush titleBarBrush = new SolidBrush(TitleBarBackColor))
             {
                 if (radius > 0)
                 {
@@ -504,145 +631,237 @@ namespace FormExCore
         }
 
 
-        /// <summary>
-        /// 画标题
-        /// </summary>
-        /// <returns></returns>
-        protected virtual Rectangle DrawLogoAndTitle(Graphics g)
+        protected virtual Rectangle GetIconRectangle()
         {
-
-            int left = 6;
-            int top = 0;
             int width = 0;
             int height = 0;
+            int left = 0;
+            int top = 0;
+            Rectangle iconRectangle = Rectangle.Empty;
 
-            // 字体大小
-            SizeF textSize = new SizeF();
-            if (TitleText?.Length > 0)
+            if (ShowFormIcon && Icon != null && IconSize > 0)
             {
-                textSize = TextRenderer.MeasureText(this.TitleText, this.Font);
+                width = IconSize;
+                height = IconSize;
+                left = 6;
+                top = (TitleBarHeight - height) / 2;
+                iconRectangle = new Rectangle(left, top, width, height);
+            }
+            else
+            {
+                // 不显示图标, 但保留占位符
+                width = 10;
+                height = TitleBarHeight;
+                top = 0;
+                left = 0;
+                iconRectangle = new Rectangle(left, top, width, height);
             }
 
 
-            // 整体标题区域大小
-            width = LogoSize + (int)textSize.Width;
-            height = (int)textSize.Height > LogoSize ? (int)textSize.Height : LogoSize;
-
-            // 画图标
-            if (Logo != null)
-            {
-                top = (this.TitleBarHeight - LogoSize) / 2;
-                g.DrawImage(Logo, left, top, LogoSize, LogoSize);
-            }
-
-            // 标题
-            if (!string.IsNullOrEmpty(TitleText))
-            {
-                top = (this.TitleBarHeight - (int)textSize.Height) / 2;
-                TextRenderer.DrawText(
-                    g,
-                    TitleText,
-                    Font,
-                    new Rectangle(
-                        left,
-                        top,
-                        width,
-                        height),
-                    TitleColor,
-                    TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
-            }
-
-
-            return new Rectangle(left, top, width, height);
+            return iconRectangle;
         }
 
+        protected virtual Rectangle GetTitleRectangle()
+        {
+            int width = 0;
+            int height = 0;
+            int left = 0;
+            int top = 0;
+            int margin = 6;
+            Rectangle titleRectangle = Rectangle.Empty;
+            Rectangle iconRectangle = GetIconRectangle();
+
+            if (ShowFormTitle)
+            {
+                // 字体大小
+                SizeF textSize = new SizeF();
+                if (TitleText?.Length > 0)
+                {
+                    textSize = TextRenderer.MeasureText(TitleText, TitleFont);
+                }
+
+                // 整体标题区域大小
+                width = (int)textSize.Width;
+                height = (int)textSize.Height;
+                left = margin + iconRectangle.Right;
+                top = (TitleBarHeight - height) / 2;
+
+                titleRectangle = new Rectangle(left, top, width, height);
+            }
+
+            return titleRectangle;
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
-            SmoothingMode smooth = g.SmoothingMode;
+            if (Width <= 0 || Height <= 0)
+            {
+                base.OnPaint(e);
+                return;
+            }
+
+            Bitmap cacheBitmap = new Bitmap(this.Width, this.Height);
+
+            Graphics g = Graphics.FromImage(cacheBitmap);
+            g.SmoothingMode = SmoothingMode.None;
+
+
+            FillTitleBarBackground(g);
+
+            // 画窗体图标
+            if (ShowFormIcon && Icon != null)
+            {
+                g.DrawImage(Icon, GetIconRectangle());
+            }
+
+            // 画标题   
+            if (!string.IsNullOrEmpty(TitleText))
+            {
+                TextRenderer.DrawText(
+                    g,
+                    TitleText,
+                    TitleFont,
+                    GetTitleRectangle(),
+                    TitleColor,
+                    TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+            }
+            g.Dispose();
+
+
+            e.Graphics.DrawImage(cacheBitmap, 0, 0);
 
             base.OnPaint(e);
 
-            g.SmoothingMode = SmoothingMode.HighSpeed;
-
-
-            DrawTitleBackground(g);
-
-            //if (this.WindowState == FormWindowState.Normal)
-            //{
-            //    if (BorderSize > 0)
-            //    {
-            //        // 半径
-            //        int radius = RoundCornerDiameter / 2;
-            //        if (!ShowFormShadow && radius > 0)
-            //        {
-            //            radius = radius + 1; // + 1 防止Region盖住
-            //        }
-
-            //        // 边框 2022-04-20 mzc 在win10下边框值为奇数时显示不正常?
-            //        using (Pen borderPen = new Pen(this.BorderColor, BorderSize))
-            //        {
-            //            if (BorderSize % 2 == 0)
-            //            {
-            //                g.DrawRoundedRectangle(borderPen, 0, 0, Width, Height, radius);
-            //            }
-            //            else
-            //            {
-            //                g.DrawRoundedRectangle(borderPen, 0, 0,
-            //                    Width - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero) - 1,
-            //                    Height - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero) - 1, radius);
-            //            }
-            //        }
-
-            //        // 内边框
-            //        //if (radius > 0)
-            //        //{
-            //        //    Color innerBorder = BorderColor; // ColorEx.DarkenColor(BorderColor, 50);
-            //        //    using (Pen borderPen = new Pen(innerBorder, BorderSize))
-            //        //    {
-            //        //        if (BorderSize % 2 == 0)
-            //        //        {
-            //        //            g.DrawRoundedRectangle(borderPen, -BorderSize, -BorderSize, Width, Height, radius);
-            //        //        }
-            //        //        else
-            //        //        {
-            //        //            g.DrawRoundedRectangle(borderPen, -BorderSize, -BorderSize,
-            //        //                Width - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero),
-            //        //                Height - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero),
-            //        //                radius); 
-            //        //        }
-            //        //    }
-            //        //}
-            //    }
-
-            //}
-
-
-            // 画标题
-            DrawLogoAndTitle(g);
-
-            g.SmoothingMode = smooth;
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnShown(EventArgs e)
         {
-            base.OnLoad(e);
+            base.OnShown(e);
 
-            if (!DesignMode)
+            var framer = new DropShadow(this);
+            framer.BorderRadius = RoundCornerDiameter / 2;
+            framer.ShadowRadius = RoundCornerDiameter / 2;
+            framer.BorderColor = ColorEx.DarkenColor(this.BackColor, 40);
+            framer.ShadowOpacity = 0.8f;
+            framer.Redraw(true);
+            framer.Show();
+
+        }
+
+
+
+
+        #endregion
+
+        private void btnClose_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnMax_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (WindowState == FormWindowState.Normal)
             {
-                var framer = new DropShadow(this);
-                framer.BorderRadius = RoundCornerDiameter / 2;
-                framer.ShadowRadius = RoundCornerDiameter / 2;
-                framer.BorderColor = ColorEx.DarkenColor(this.BackColor, 40);
-                framer.ShadowOpacity = 0.8f;
-                framer.Redraw(true);
-                framer.Show();
+                WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                WindowState = FormWindowState.Normal;
             }
         }
+
+        private void btnMin_MouseClick(object sender, MouseEventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
+        #region WINAPI
+
+
+
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
+
+        private const int WM_SETREDRAW = 11;
+
+        public static void SuspendDrawing(Control parent)
+        {
+            SendMessage(parent.Handle, WM_SETREDRAW, false, 0);
+        }
+
+        public static void ResumeDrawing(Control parent)
+        {
+            SendMessage(parent.Handle, WM_SETREDRAW, true, 0);
+            parent.Refresh();
+        }
+
+
         #endregion
 
 
+        private void WmNcHitTest(ref Message m)
+        {
+            #region 判断操作的是窗体边缘, 则调整窗体大小
+            if (WindowState == FormWindowState.Normal)
+            {
+                int wparam = m.LParam.ToInt32();
+                Point mouseLocation = new Point(RenderHelper.LOWORD(wparam), RenderHelper.HIWORD(wparam));
+                mouseLocation = PointToClient(mouseLocation);
+
+                if (mouseLocation.X < 5 && mouseLocation.Y < 5)
+                {
+                    m.Result = new IntPtr(Win32.HTTOPLEFT);
+                    return;
+                }
+
+                if (mouseLocation.X > Width - 5 && mouseLocation.Y < 5)
+                {
+                    m.Result = new IntPtr(Win32.HTTOPRIGHT);
+                    return;
+                }
+
+                if (mouseLocation.X < 5 && mouseLocation.Y > Height - 5)
+                {
+                    m.Result = new IntPtr(Win32.HTBOTTOMLEFT);
+                    return;
+                }
+
+                if (mouseLocation.X > Width - 5 && mouseLocation.Y > Height - 5)
+                {
+                    m.Result = new IntPtr(Win32.HTBOTTOMRIGHT);
+                    return;
+                }
+
+                if (mouseLocation.Y <= 3)
+                {
+                    m.Result = new IntPtr(Win32.HTTOP);
+                    return;
+                }
+
+                if (mouseLocation.Y >= Height - 3)
+                {
+                    m.Result = new IntPtr(Win32.HTBOTTOM);
+                    return;
+                }
+
+                if (mouseLocation.X <= 3)
+                {
+                    m.Result = new IntPtr(Win32.HTLEFT);
+                    return;
+                }
+
+                if (mouseLocation.X >= Width - 3)
+                {
+                    m.Result = new IntPtr(Win32.HTRIGHT);
+                    return;
+                }
+
+            }
+
+            #endregion
+
+            m.Result = new IntPtr(Win32.HTCLIENT);
+        }
 
 
     }

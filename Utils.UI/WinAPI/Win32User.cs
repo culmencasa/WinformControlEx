@@ -36,14 +36,6 @@ namespace System
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
-        [DllImport("User32.dll", EntryPoint = "SendMessage")]
-        public static extern int SendMessage(
-            IntPtr hWnd,         // 信息发往的窗口的句柄
-            int Msg,                // 消息ID
-            int wParam,          // 参数1
-            ref CustomSendMessageParam lParam //参数2
-        );
-
 
         [DllImport("User32.dll", EntryPoint = "PostMessage")]
         public static extern int PostMessage(
@@ -56,10 +48,10 @@ namespace System
         [DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
 
-        [DllImport("User32.dll")]
+        [DllImport("user32.dll")]
         public static extern bool ShowWindowAsync(IntPtr hWnd, int cmdShow);
 
-        [DllImport("User32.dll")]
+        [DllImport("user32.dll")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
@@ -85,10 +77,10 @@ namespace System
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
         public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
 
-        [DllImport("User32.dll", EntryPoint = "FindWindow")]
+        [DllImport("user32.dll", EntryPoint = "FindWindow")]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
-        [DllImport("User32.dll", EntryPoint = "FindWindowEx")]
+        [DllImport("user32.dll", EntryPoint = "FindWindowEx")]
         public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpClassName, string lpWindowName);
 
         [DllImport("user32.Dll")]
@@ -119,12 +111,36 @@ namespace System
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr SetClassLongPtr(IntPtr hWnd, ClassLong nIndex, IntPtr dwNewLong);
 
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
 
+        [DllImport("user32.dll")]
+        public static extern int TrackPopupMenu(IntPtr hMenu, uint uFlags, int x, int y, int nReserved, IntPtr hWnd, IntPtr prcRect);
+
+
+        [DllImport("user32.dll")]
+        public static extern int GetSystemMetrics(int smIndex);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWindowVisible(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        public static extern int GetWindowRgn(IntPtr hWnd, IntPtr hRgn);
+        [DllImport("user32.dll")]
+        public static extern int SetWindowRgn(IntPtr hWnd, IntPtr hRgn, bool bRedraw);
 
         #endregion
 
 
 
+
+        [DllImport("user32.dll", EntryPoint = "SendMessage")]
+        public static extern int SendMessage(
+            IntPtr hWnd,         // 信息发往的窗口的句柄
+            int Msg,                // 消息ID
+            int wParam,          // 参数1
+            ref CustomSendMessageParam lParam //参数2
+        );
 
 
         /// <summary>

@@ -1,3 +1,4 @@
+using FormExCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,8 @@ namespace DemoCore
             //Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled); // SetHighDpiMode重复设置无效.
 
 
+            //Application.Run(new Form1());
+            //Application.Run(new OcnForm());
             Application.Run(new MainForm());
         }
     }

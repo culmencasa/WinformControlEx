@@ -28,4 +28,5 @@ C:\Works\FormEx\DemoCore\bin\Debug\net6.0-windows\Svg.dll
 C:\Works\FormEx\DemoCore\bin\Debug\net6.0-windows\FormExCore.pdb
 C:\Works\FormEx\DemoCore\bin\Debug\net6.0-windows\Svg.pdb
 C:\Works\FormEx\DemoCore\obj\Debug\net6.0-windows\DemoCore.MainForm.resources
-C:\Works\FormEx\DemoCore\obj\Debug\net6.0-windows\DemoCore.ThemeDemo.resources
+C:\Works\FormEx\DemoCore\obj\Debug\net6.0-windows\DemoCore.Properties.Resources.resources
+C:\Works\FormEx\DemoCore\obj\Debug\net6.0-windows\DemoCore.Form1.resources

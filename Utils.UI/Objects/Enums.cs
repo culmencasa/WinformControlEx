@@ -27,6 +27,7 @@ namespace System.Drawing
         WM_MOVE = 0x0003,
         WM_SIZE = 0x0005,
         WM_ACTIVATE = 0x0006,
+        WM_SETTEXT = 0x000C,
 
         WM_ACTIVATEAPP = 0x001C,
 

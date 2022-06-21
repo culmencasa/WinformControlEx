@@ -185,5 +185,10 @@ namespace System
 
         [DllImport("gdi32.dll", SetLastError = true)]
         public static extern IntPtr DeleteObject(IntPtr hObject);
+
+
+        [DllImport("gdi32.dll")]
+        public static extern int GetRgnBox(IntPtr hrgn, out RECT lprc);
+
     }
 }

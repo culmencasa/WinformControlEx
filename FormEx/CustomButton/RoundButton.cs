@@ -176,6 +176,26 @@ namespace System.Windows.Forms
 
         #region 重写的成员
 
+        [Category("Custom")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Localizable(true)]
+        [Bindable(false)]
+        public override string Text
+        {
+            get
+            {
+                return base.Text;
+            }
+            set
+            {
+                base.Text = value;
+
+                Invalidate();
+            }
+        }
+
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);

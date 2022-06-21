@@ -72,6 +72,7 @@ namespace System
         public const int WM_LBUTTONDOWN = 0x0201;
         public const int WM_LBUTTONUP = 0x0202;
         public const int WM_LBUTTONDBLCLK = 0x0203;
+        public const int WM_RBUTTONDBLCLK = 0x0206;
         public const int WM_WINDOWPOSCHANGING = 0x46;
         public const int WM_PAINT = 0xF;
         public const int WM_CREATE = 0x0001;
@@ -136,6 +137,17 @@ namespace System
         public const int WS_BORDER = 0x00800000;
 
 
+
+        public const int SM_CXSIZEFRAME = 32;
+        public const int SM_CYSIZEFRAME = 33;
+        public const int SM_CXPADDEDBORDER = 92;
+
+        public const int GWL_ID = (-12);
+        public const int GWL_STYLE = (-16);
+        public const int GWL_EXSTYLE = (-20);
+
+        public const uint ABM_GETSTATE = 0x4;
+        public const int ABS_AUTOHIDE = 0x1;
     }
     
 

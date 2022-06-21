@@ -119,8 +119,7 @@ namespace System.Windows.Forms
             }
         }
 
-
-
+        public bool Blur { get; set; } = false;
         #endregion
 
         #region 重写的成员
@@ -158,9 +157,9 @@ namespace System.Windows.Forms
 
             if (Owner.Region == null)
             {
-                IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Owner.Width + 1, Owner.Height + 1, 0, 0);
+                IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Owner.Width, Owner.Height, 0, 0);
                 Owner.Region = System.Drawing.Region.FromHrgn(hrgn);
-            }
+            } 
 
             // 设置显示区域
             Region shadowRegion = Region.FromHrgn(Win32.CreateRoundRectRgn(0, 0,
@@ -182,10 +181,6 @@ namespace System.Windows.Forms
         }
 
 
-        public void SetBitmap(Bitmap bitmap, float opacity)
-        {
-            GraphicsExtension.SelectBitmapIntoLayerWindow(this, bitmap, (byte)(opacity * 255));
-        }
 
         #endregion
 
@@ -223,11 +218,16 @@ namespace System.Windows.Forms
             using (var pthGrBrush3 = new PathGradientBrush(path))
             {
                 pthGrBrush3.CenterPoint = new PointF(Owner.Width / 2f, Owner.Height / 2f);
-                pthGrBrush3.CenterColor = ShadowColor;
+                pthGrBrush3.CenterColor = Color.Transparent;
                 pthGrBrush3.SurroundColors = new[] { fadeColor };
                 g.FillPath(pthGrBrush3, path);
             }
 
+        }
+
+        private void SetBitmap(Bitmap bitmap, float opacity)
+        {
+            GraphicsExtension.SelectBitmapIntoLayerWindow(this, bitmap, (byte)(opacity * 255));
         }
 
         /// <summary>
@@ -236,6 +236,9 @@ namespace System.Windows.Forms
         /// <returns></returns>
         private Bitmap DrawShadowBitmap()
         {
+            Win32.RECT rect = new Win32.RECT();
+            bool s = Win32.GetWindowRect(Owner.Handle, ref rect);
+
             // 阴影窗体的大小 (画板要比Owner窗体大才能看到效果)
             int width = Owner.Width + ShadowOffset.X * 2;
             int height = Owner.Height + ShadowOffset.Y * 2;
@@ -244,45 +247,71 @@ namespace System.Windows.Forms
             {
                 Color fadeColor = ShadowColor;
 
-
+                // 从bitmap中心向外扩散
                 RectangleF wrapRect = new RectangleF(
                         (bitmap.Width - Owner.Width) / 2,
                         (bitmap.Height - Owner.Height) / 2, Owner.Width, Owner.Height);
 
                 // 画10个阴影形成渐变
-                for (int i = 0; i < 10; i++)
+                int repeat = 10;
+                int alpha = 10;
+                if (Owner.Width < 400 || Owner.Height < 300)
+                {
+                    repeat = 5;
+                    alpha = 5;
+                }
+                for (int i = 0; i < repeat; i++)
                 {
                     wrapRect.Inflate(1, 1);
-                    fadeColor = Color.FromArgb(10 - i, 0, 0, 0);
+                    fadeColor = Color.FromArgb(alpha - i, 0, 0, 0);
                     DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius + i * 2);
                 }
 
                 Width = width;
                 Height = height;
-            }
 
 
-            // 模糊
-            var blur = new SuperfastBlur.GaussianBlur(bitmap);
-            var bg2 = blur.Process(4);
-            
-
-            // 画上边框
-            using (var g = Graphics.FromImage(bg2))
-            {
-                int borderSize = 2;
+                int borderSize = 1;
                 using (Pen borderPen = new Pen(BorderColor, borderSize))
                 {
+                    // issue: 当borderSize大于1时, 计算有点问题
                     g.DrawRoundedRectangle(borderPen,
-                        (bitmap.Width - Owner.Width - borderSize) / 2,
-                        (bitmap.Height - Owner.Height - borderSize) / 2,
-                        Owner.Width,
-                        Owner.Height,
+                        (bitmap.Width - Owner.Width) / 2f - borderSize,
+                        (bitmap.Height - Owner.Height) / 2f - borderSize,
+                        Owner.Width * 1f + (borderSize),
+                        Owner.Height * 1f + (borderSize),
                         ShadowRadius);
                 }
             }
 
-            return bg2;
+            // 模糊
+            if (!Blur)
+            {
+                return bitmap;
+            }
+            else
+            { 
+                var blur = new SuperfastBlur.GaussianBlur(bitmap);
+                var bg2 = blur.Process(4);
+
+                // 画上边框
+                using (var g = Graphics.FromImage(bg2))
+                {
+                    int borderSize = 1;
+                    using (Pen borderPen = new Pen(BorderColor, borderSize))
+                    {
+                        // issue: 当borderSize大于1时, 计算有点问题
+                        g.DrawRoundedRectangle(borderPen,
+                            (bitmap.Width - Owner.Width) / 2f - borderSize,
+                            (bitmap.Height - Owner.Height) / 2f - borderSize,
+                            Owner.Width * 1f + (borderSize),
+                            Owner.Height * 1f + (borderSize),
+                            ShadowRadius);
+                    }
+                }
+
+                return bg2;
+            }
         }
 
 
@@ -292,11 +321,12 @@ namespace System.Windows.Forms
             if (Owner == null)
                 return;
 
-            Point pos = Owner.Location;
-            pos.Offset(-ShadowOffset.X, -ShadowOffset.Y);
-
-
-            Location = pos;
+            if (Owner.WindowState == FormWindowState.Normal)
+            {
+                Point pos = Owner.Location;
+                pos.Offset(-ShadowOffset.X, -ShadowOffset.Y);
+                Location = pos;
+            }
         }
 
 
@@ -311,21 +341,21 @@ namespace System.Windows.Forms
         }
         private void Owner_ResizeEnd(object sender, EventArgs e)
         {
-            //    if (Owner == null)
-            //        return;
+            //if (Owner == null)
+            //    return;
 
-            //    if (Owner.WindowState == FormWindowState.Minimized || Owner.WindowState == FormWindowState.Maximized)
-            //    {
-            //        this.Visible = false;
-            //        return;
-            //    }
-            //    else
-            //    {
-            //        this.Visible = true;
-            //    }
+            //if (Owner.WindowState == FormWindowState.Minimized || Owner.WindowState == FormWindowState.Maximized)
+            //{
+            //    this.Visible = false;
+            //    return;
+            //}
+            //else
+            //{
+            //    this.Visible = true;
+            //}
 
 
-            //    Refresh();
+            //Redraw(false);
         }
 
         protected FormWindowState OwnerLastWindowState { get; set; }
@@ -351,26 +381,6 @@ namespace System.Windows.Forms
             return true;
         }
 
-        private void OnOwnerSizeChanged()
-        {
-            if (Owner.WindowState == FormWindowState.Minimized)
-            {
-                this.Visible = false;
-            }
-            else if (Owner.WindowState == FormWindowState.Normal)
-            {
-                this.Visible = true;
-                Redraw(true);
-            }
-            else if (Owner.WindowState == FormWindowState.Maximized)
-            {
-                this.Visible = false;
-            }
-            else
-            {
-                this.Visible = false;
-            }
-        }
 
         void Owner_Resize(object sender, EventArgs e)
         {
@@ -379,6 +389,7 @@ namespace System.Windows.Forms
                 this.Visible = false;
                 return;
             }
+
 
             FormWindowState lastState = OwnerLastWindowState;
             if (Owner.WindowState != lastState)
@@ -390,34 +401,35 @@ namespace System.Windows.Forms
                 //    NewWindowState = WindowState
                 //});
 
-                OnOwnerSizeChanged();
+                if (OwnerLastWindowState == FormWindowState.Minimized)
+                {
+                    this.Visible = false;
+                }
+                else if (OwnerLastWindowState == FormWindowState.Normal)
+                {
+                    this.Visible = true;
+                    //Owner.Region = null;
+                    //Redraw(false);
+                    Point pos = Owner.Location;
+                    pos.Offset(-ShadowOffset.X, -ShadowOffset.Y);
+                    Location = pos;
+                }
+                else if (OwnerLastWindowState == FormWindowState.Maximized)
+                {
+                    this.Visible = false;
+                }
             }
-
-
-
-            //if (Owner == null)
-            //    return;
-
-            //if (Owner.WindowState == FormWindowState.Minimized || Owner.WindowState == FormWindowState.Maximized)
-            //{
-            //    this.Visible = false;
-            //    return;
-            //}
-            //else
-            //{
-            //    this.Visible = true;
-            //}
-
-
-
-            //IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Owner.Width + 1, Owner.Height + 1, 0, 0);
-            //Owner.Region = System.Drawing.Region.FromHrgn(hrgn);
-
-            //// 使用Invalidate而不是Refresh，以免影响主窗体上的控件背景显示白块
-            //this.Invalidate();
+            else
+            {
+                // 在AeroSnap后设为null重新计算Region
+                Owner.Region = null;
+                Redraw(true);
+            }
         }
 
         #endregion
+
+
     }
 
 

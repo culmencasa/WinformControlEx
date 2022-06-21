@@ -436,8 +436,18 @@ namespace System.Windows.Forms
                 shadeColor = darkDarkColor;
             }
 
-            Rectangle r = this.ClientRectangle;
-            GraphicsPath path = RoundRectangle(r, this.CornerRadius, this.RoundCorners);
+            GraphicsPath path;
+            Rectangle r = ClientRectangle;
+            if (CornerRadius > 0)
+            {
+                path = RoundRectangle(r, this.CornerRadius, this.RoundCorners);
+            }
+            else 
+            {
+                path = new GraphicsPath(FillMode.Winding);
+                path.AddRectangle(r);
+                path.CloseFigure();
+            }
 
             if (this.Enabled)
             {
@@ -771,6 +781,10 @@ namespace System.Windows.Forms
         TopRight = 2,
         BottomLeft = 4,
         BottomRight = 8,
+        Left = TopLeft | BottomLeft,
+        Right = TopRight | BottomRight,
+        Top = TopLeft| TopRight,
+        Bottom = BottomLeft| BottomRight,
         All = TopLeft | TopRight | BottomLeft | BottomRight
     }
 

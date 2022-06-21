@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace FormExCore
 {
     [DefaultEvent("Click")]
-    public class OcnSvgButton : PictureBox
+    public class OcnSvgButton : Control, ISupportInitialize
     {
         #region 字段
 
@@ -21,14 +21,20 @@ namespace FormExCore
 
         private Color _hoverColor = Color.Empty;
         private Color _normalColor = Color.Empty;
+        private Color _backColor = Color.Empty;
+        private Color _hoverBackColor = Color.Empty;
 
         private Image? _normalCache = null;
         private Image? _hoverCache = null;
+        private Image? _image = null;
+
+        private PictureBoxSizeMode _sizeMode = PictureBoxSizeMode.Zoom;
 
         #endregion
 
         #region 属性
 
+        [Category("Look")]
         public bool UseSourcePath
         {
             get
@@ -43,7 +49,8 @@ namespace FormExCore
             }
         }
 
-        
+
+        [Category("Look")]
         public string SourcePath
         {
             get
@@ -52,13 +59,19 @@ namespace FormExCore
             }
             set
             {
+                bool changing = _sourcePath != value;
                 _sourcePath = value;
                 _fullSourcePath = value;
+                if (changing)
+                {
+                    _normalCache = null;
+                }
                 RenderNormalOnce();
 
             }
         }
 
+        [Category("Look")]
         public string SourceName
         {
             get
@@ -67,11 +80,18 @@ namespace FormExCore
             }
             set
             {
+                bool changing = _sourceName != value;
                 _sourceName = value;
+                _useSourcePath = false;
+                if (changing)
+                {
+                    _normalCache = null;
+                }
                 RenderNormalOnce();
             }
         }
 
+        [Category("Look")]
         public Color NormalColor
         {
             get
@@ -81,11 +101,12 @@ namespace FormExCore
             set
             {
                 _normalColor = value;
-                _normalCache = null;
-                RenderNormalOnce();
+
+                Redraw();
             }
         }
 
+        [Category("Look")]
         public Color HoverColor
         {
             get
@@ -99,19 +120,57 @@ namespace FormExCore
             }
         }
 
-
-
-        [Browsable(false)]
-        public new PictureBoxSizeMode SizeMode
+        [Category("Look")]
+        public Color HoverBackColor
         {
             get
             {
-                return base.SizeMode;
+                return _hoverBackColor;
             }
             set
             {
-                base.SizeMode = value;
+                _hoverBackColor = value;
             }
+        }
+        
+
+        protected Image RenderedImage
+        {
+            get
+            {
+                return _image;
+            }
+            set
+            {
+                _image = value;
+            }
+
+        }
+
+
+        public PictureBoxSizeMode SizeMode
+        {
+            get
+            {
+                return _sizeMode;
+            }
+            set
+            {
+                bool changing = _sizeMode != value;
+                _sizeMode = value;
+                if (changing)
+                {
+                    Redraw();
+                }
+            }
+        }
+
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+
+            Redraw();
         }
 
         #endregion
@@ -120,17 +179,23 @@ namespace FormExCore
 
         public OcnSvgButton()
         {
-            this.SizeMode = PictureBoxSizeMode.AutoSize;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
+
+
+
+            this.Size = new Size(32, 32);
             this.MouseEnter += OcnSvgButton_MouseEnter;
             this.MouseLeave += OcnSvgButton_MouseLeave;
             this.Resize += OcnSvgButton_Resize;
+            this.BackColor = Color.Transparent;
+            
         }
 
         private void OcnSvgButton_Resize(object? sender, EventArgs e)
         {
             _normalCache = null;
             _hoverCache = null;
-            Image?.Dispose();
+            RenderedImage?.Dispose();
         }
 
         public OcnSvgButton(string sourcePath) : this()
@@ -152,8 +217,9 @@ namespace FormExCore
             }
             else
             {
-                byte[]? closeButtonBytes = Properties.Resources.ResourceManager.GetObject(SourceName) as byte[];
-                svgDoc = SvgDocument.Open<SvgDocument>(new MemoryStream(closeButtonBytes));
+                // 增加修改资源需要重新生成
+                byte[]? imageBytes = Properties.Resources.ResourceManager.GetObject(SourceName) as byte[];                
+                svgDoc = SvgDocument.Open<SvgDocument>(new MemoryStream(imageBytes));
             }
 
             return svgDoc;
@@ -162,7 +228,7 @@ namespace FormExCore
 
         private Image? Render(Color newColor)
         {
-            if (CheckSource())
+            if (CheckSourceProperties())
             {
                 var svgDoc = CreateSvgDocument();
                 SetInitialSize(svgDoc);
@@ -181,7 +247,12 @@ namespace FormExCore
             }
         }
 
-        private bool CheckSource()
+
+        /// <summary>
+        /// 检查svg来源属性是否设置好
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckSourceProperties()
         {
             if (UseSourcePath)
             {
@@ -222,39 +293,61 @@ namespace FormExCore
             return targetFile;
         }
 
+        private void Redraw()
+        {
+            if (!_initilized)
+                return;
+
+            RenderedImage = Render(NormalColor);
+            _normalCache = RenderedImage;
+            Invalidate();
+        }
 
         private void RenderNormalOnce()
         {
+            if (!_initilized)
+                return;
+
             if (_normalCache == null)
             {
-                Image = Render(NormalColor);
-                _normalCache = Image;
+                RenderedImage = Render(NormalColor);
+                _normalCache = RenderedImage;
             }
             else
             {
-                Image = _normalCache;
+                RenderedImage = _normalCache;
             }
+
+            Invalidate();
         }
 
         private void RenderHoverOnce()
         {
             if (_hoverCache == null)
             {
-                Image = Render(HoverColor);
-                _hoverCache = Image;
+                RenderedImage = Render(HoverColor);
+                _hoverCache = RenderedImage;
             }
             else
             {
-                Image = _hoverCache;
+                RenderedImage = _hoverCache;
             }
+            Invalidate();
         }
 
         private void SetInitialSize(SvgDocument document)
         {
-            if (document.Height > this.Height)
+            if (SizeMode == PictureBoxSizeMode.Zoom)
             {
-                document.Width = (int)((document.Width / (double)document.Height) * this.Height);
-                document.Height = this.Height;
+                double ratio = document.Width / (double)document.Height;
+
+                int shrinkHeight = this.Height - Padding.Top - Padding.Bottom;
+                if (shrinkHeight <= 0)
+                {
+                    shrinkHeight = this.Height - 4;
+                }
+                document.Height = shrinkHeight;
+                document.Width = (int)(ratio * document.Height);
             }
             //return document;
         }
@@ -277,6 +370,10 @@ namespace FormExCore
                 {
                     ChangeColor(item.Children, newColor);
                 }
+                else if (item is SvgElement)
+                {
+                    ChangeColor(item.Children, newColor);
+                }
             }
         }
 
@@ -289,13 +386,84 @@ namespace FormExCore
         private void OcnSvgButton_MouseLeave(object? sender, EventArgs e)
         {
             RenderNormalOnce();
+
+            if (_backColor != Color.Empty)
+            {
+                BackColor = _backColor;
+            }
+            
         }
 
         private void OcnSvgButton_MouseEnter(object? sender, EventArgs e)
         {
             RenderHoverOnce();
+
+            if (HoverBackColor != Color.Empty)
+            {
+                // 备份
+                if (_backColor == Color.Empty)
+                {
+                    _backColor = BackColor;
+                }
+
+                this.BackColor = HoverBackColor;
+                
+            }
         }
 
+        bool _initilized = false;
+        public void BeginInit()
+        {
+            _initilized = false;
+        }
+
+        public void EndInit()
+        {
+            _initilized = true;
+
+            Redraw();
+        }
+
+        /// <summary>
+        /// 控件的实际区域（滚动容器中）
+        /// </summary>
+        public Rectangle ActualBounds
+        {
+            get
+            {
+                Rectangle actualBounds = this.Bounds;
+
+                // 如果是在可滚动的容器内， 计算控件实际偏移后的位置
+                if (this.Parent as ScrollableControl != null)
+                {
+                    ScrollableControl? parent = this.Parent as ScrollableControl;
+                    if (parent != null)
+                    {
+                        actualBounds = new Rectangle(
+                            this.Bounds.X - parent.HorizontalScroll.Value,
+                            this.Bounds.Y - parent.VerticalScroll.Value,
+                            this.Bounds.Width,
+                            this.Bounds.Height);
+                    }
+                }
+
+                return actualBounds;
+            }
+        }
+
+
+        protected override void OnPaint(PaintEventArgs pe)
+        {
+            Graphics g = pe.Graphics;
+
+
+            if (this.RenderedImage != null)
+            {
+                g.DrawImage(this.RenderedImage, (this.Width - RenderedImage.Width) / 2, (Height - RenderedImage.Height) / 2);
+            }
+
+            base.OnPaint(pe);
+        }
 
     }
 }

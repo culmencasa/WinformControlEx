@@ -11,7 +11,7 @@ using System.Reflection;
 namespace System.Windows.Forms
 {
     /// <summary>
-    /// 图像占位符
+    /// 图像占位符 (用父控件的Graphics去绘图)
     /// </summary>
     public class ImagePlaceholder : Control
     {

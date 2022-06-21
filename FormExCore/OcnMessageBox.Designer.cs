@@ -58,7 +58,7 @@
             this.pnlTextArea.Location = new System.Drawing.Point(78, 0);
             this.pnlTextArea.Name = "pnlTextArea";
             this.pnlTextArea.Padding = new System.Windows.Forms.Padding(10, 25, 30, 30);
-            this.pnlTextArea.Size = new System.Drawing.Size(302, 99);
+            this.pnlTextArea.Size = new System.Drawing.Size(318, 99);
             this.pnlTextArea.TabIndex = 0;
             // 
             // lblContent
@@ -69,7 +69,7 @@
             this.lblContent.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lblContent.Location = new System.Drawing.Point(10, 25);
             this.lblContent.Name = "lblContent";
-            this.lblContent.Size = new System.Drawing.Size(262, 44);
+            this.lblContent.Size = new System.Drawing.Size(278, 44);
             this.lblContent.TabIndex = 0;
             this.lblContent.Text = "这是一条消息 这是一条消息 这是一条消息 这是一条消息 这是一条消息 ";
             this.lblContent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -103,9 +103,9 @@
             this.pnlStrechSpace.Controls.Add(this.pnlControlArea);
             this.pnlStrechSpace.Controls.Add(this.boxActionSeparator);
             this.pnlStrechSpace.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlStrechSpace.Location = new System.Drawing.Point(8, 140);
+            this.pnlStrechSpace.Location = new System.Drawing.Point(0, 139);
             this.pnlStrechSpace.Name = "pnlStrechSpace";
-            this.pnlStrechSpace.Size = new System.Drawing.Size(380, 54);
+            this.pnlStrechSpace.Size = new System.Drawing.Size(396, 63);
             this.pnlStrechSpace.TabIndex = 2;
             // 
             // pnlControlArea
@@ -119,7 +119,7 @@
             this.pnlControlArea.Location = new System.Drawing.Point(0, 10);
             this.pnlControlArea.Name = "pnlControlArea";
             this.pnlControlArea.Padding = new System.Windows.Forms.Padding(6, 3, 7, 0);
-            this.pnlControlArea.Size = new System.Drawing.Size(380, 88);
+            this.pnlControlArea.Size = new System.Drawing.Size(396, 88);
             this.pnlControlArea.TabIndex = 1;
             // 
             // btnCancel
@@ -131,7 +131,7 @@
             this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(121)))), ((int)(((byte)(82)))), ((int)(((byte)(179)))));
             this.btnCancel.GradientMode = false;
             this.btnCancel.IsOutline = true;
-            this.btnCancel.Location = new System.Drawing.Point(267, 6);
+            this.btnCancel.Location = new System.Drawing.Point(283, 6);
             this.btnCancel.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(17)))), ((int)(((byte)(150)))));
             this.btnCancel.MouseOverForeColor = System.Drawing.Color.White;
             this.btnCancel.Name = "btnCancel";
@@ -154,7 +154,7 @@
             this.btnNo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(121)))), ((int)(((byte)(82)))), ((int)(((byte)(179)))));
             this.btnNo.GradientMode = false;
             this.btnNo.IsOutline = true;
-            this.btnNo.Location = new System.Drawing.Point(164, 6);
+            this.btnNo.Location = new System.Drawing.Point(180, 6);
             this.btnNo.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(17)))), ((int)(((byte)(150)))));
             this.btnNo.MouseOverForeColor = System.Drawing.Color.White;
             this.btnNo.Name = "btnNo";
@@ -177,7 +177,7 @@
             this.btnYes.ForeColor = System.Drawing.Color.White;
             this.btnYes.GradientMode = false;
             this.btnYes.IsOutline = false;
-            this.btnYes.Location = new System.Drawing.Point(61, 6);
+            this.btnYes.Location = new System.Drawing.Point(77, 6);
             this.btnYes.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(66)))), ((int)(((byte)(144)))));
             this.btnYes.MouseOverForeColor = System.Drawing.Color.White;
             this.btnYes.Name = "btnYes";
@@ -200,7 +200,7 @@
             this.btnOK.ForeColor = System.Drawing.Color.White;
             this.btnOK.GradientMode = false;
             this.btnOK.IsOutline = false;
-            this.btnOK.Location = new System.Drawing.Point(267, 47);
+            this.btnOK.Location = new System.Drawing.Point(283, 47);
             this.btnOK.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(66)))), ((int)(((byte)(144)))));
             this.btnOK.MouseOverForeColor = System.Drawing.Color.White;
             this.btnOK.Name = "btnOK";
@@ -220,7 +220,7 @@
             this.boxActionSeparator.Dock = System.Windows.Forms.DockStyle.Top;
             this.boxActionSeparator.Location = new System.Drawing.Point(0, 0);
             this.boxActionSeparator.Name = "boxActionSeparator";
-            this.boxActionSeparator.Size = new System.Drawing.Size(380, 10);
+            this.boxActionSeparator.Size = new System.Drawing.Size(396, 10);
             this.boxActionSeparator.TabIndex = 2;
             this.boxActionSeparator.Text = "separator1";
             // 
@@ -229,22 +229,20 @@
             this.pnlLockSpace.Controls.Add(this.pnlTextArea);
             this.pnlLockSpace.Controls.Add(this.pnlIconArea);
             this.pnlLockSpace.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlLockSpace.Location = new System.Drawing.Point(8, 41);
+            this.pnlLockSpace.Location = new System.Drawing.Point(0, 40);
             this.pnlLockSpace.Name = "pnlLockSpace";
-            this.pnlLockSpace.Size = new System.Drawing.Size(380, 99);
+            this.pnlLockSpace.Size = new System.Drawing.Size(396, 99);
             this.pnlLockSpace.TabIndex = 3;
             // 
             // btnClose
             // 
             this.btnClose.BackColor = System.Drawing.Color.Transparent;
             this.btnClose.HoverColor = System.Drawing.Color.Empty;
-            this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
             this.btnClose.Location = new System.Drawing.Point(359, 7);
             this.btnClose.Name = "btnClose";
-            this.btnClose.NormalColor = System.Drawing.Color.Empty;
+            this.btnClose.NormalColor = System.Drawing.Color.White;
             this.btnClose.Size = new System.Drawing.Size(24, 24);
-            this.btnClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.btnClose.SourceName = "close_button";
+            this.btnClose.SourceName = "shut";
             this.btnClose.SourcePath = "";
             this.btnClose.TabIndex = 5;
             this.btnClose.TabStop = false;
@@ -262,18 +260,14 @@
             this.Controls.Add(this.pnlStrechSpace);
             this.Controls.Add(this.pnlLockSpace);
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(121)))), ((int)(((byte)(82)))), ((int)(((byte)(179)))));
-            
             this.MaximumSize = new System.Drawing.Size(2560, 1400);
             this.Name = "OcnMessageBox";
-            this.Padding = new System.Windows.Forms.Padding(0);
             this.Text = "消息";
-            this.TitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(17)))), ((int)(((byte)(150)))));
+            this.TitleBarBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(17)))), ((int)(((byte)(150)))));
             this.TitleBarHeight = 40;
+            this.TitleColor = System.Drawing.Color.White;
             this.TitleText = "消息";
             this.Load += new System.EventHandler(this.OcnMessageBox_Load);
-            this.Controls.SetChildIndex(this.pnlLockSpace, 0);
-            this.Controls.SetChildIndex(this.pnlStrechSpace, 0);
-            this.Controls.SetChildIndex(this.btnClose, 0);
             this.pnlTextArea.ResumeLayout(false);
             this.pnlIconArea.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbExceptionIcon)).EndInit();

@@ -27,6 +27,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ThirdParty\Class1.cs" />
+    <Compile Remove="ThirdParty\Class2.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FormEx\FormEx.csproj" />
     <ProjectReference Include="..\Svg\Svg.csproj" />
     <ProjectReference Include="..\Utils.UI\Utils.UI.csproj" />

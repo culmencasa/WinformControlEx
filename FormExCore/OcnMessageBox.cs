@@ -259,11 +259,11 @@ namespace FormExCore
 
         #region 重写的方法
 
-        protected override void DrawTitleBackground(Graphics g)
+        protected override void FillTitleBarBackground(Graphics g)
         {
             if (!string.IsNullOrEmpty(Caption))
             {
-                base.DrawTitleBackground(g);
+                base.FillTitleBarBackground(g);
             }
         }
 
