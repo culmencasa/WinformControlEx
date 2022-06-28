@@ -76,5 +76,15 @@ namespace System.Windows.Forms
         }
 
 
+        public static void MakeMoves(this Form form)
+        {
+            Win32.ReleaseCapture();
+            var pt = MAKELONG(Control.MousePosition.X, Control.MousePosition.Y);
+            Win32.SendMessage(form.Handle, (int)WindowMessages.WM_NCLBUTTONDOWN, Win32.HTCAPTION, pt);
+        }
+        static int MAKELONG(int low, int high)
+        {
+            return (high << 16) | (low & 0xffff);
+        }
     }
 }

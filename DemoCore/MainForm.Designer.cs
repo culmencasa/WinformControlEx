@@ -458,7 +458,6 @@ namespace DemoCore
             this.ClientSize = new System.Drawing.Size(1201, 610);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.colorGroupBox1);
-            this.Icon = ((System.Drawing.Image)(resources.GetObject("$this.Icon")));
             this.IconSize = 16;
             this.Name = "MainForm";
             this.ShowFormIcon = false;

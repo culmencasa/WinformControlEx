@@ -11,7 +11,7 @@ using Utils.UI;
 
 namespace FormExCore
 {
-    public partial class OcnMessageBox : OcnForm
+    public partial class OcnMessageBox : Form
     {
         #region 静态方法
 
@@ -120,6 +120,7 @@ namespace FormExCore
         {
             InitializeComponent();
 
+            this.MouseDown += OcnMessageBox_MouseDown;
             
 
             ControlBorder cb1 = new ControlBorder(btnOK);
@@ -177,21 +178,43 @@ namespace FormExCore
         #region 字段
 
         private MessageBoxButtons _boxButton;
+        private OcnThemes _theme;
+
+
         #endregion
+
         #region 公开属性
 
+        [Category("Look")]
+        [Browsable(true)]
+        public Color TitleBarBackColor
+        {
+            get
+            {
+                return TitleBar.BackColor;
+            }
+            set
+            {
+                TitleBar.BackColor = value;
+            }
+        }
+
+
+        [Category("Custom")]
         public string Caption
         {
             get
             {
-                return TitleText;
+                return lblCaption.Text;
             }
             set
             {
-                TitleText = value;
+                lblCaption.Text = value;
+                this.Text = value;
             }
         }
 
+        [Category("Custom")]
         public string Content
         {
             get
@@ -204,6 +227,7 @@ namespace FormExCore
             }
         }
 
+        [Category("Custom")]
         public MessageBoxButtons BoxButton
         {
             get
@@ -217,12 +241,14 @@ namespace FormExCore
             }
         }
 
+        [Category("Custom")]
         public MessageBoxIcon BoxIcon
         {
             get;
             set;
         }
 
+        [Category("Custom")]
         public Size DesignSize
         {
             get
@@ -252,108 +278,215 @@ namespace FormExCore
         private void OcnMessageBox_Load(object sender, EventArgs e)
         {
             ApplyIcon();
+
+
+            var framer = new DropShadow(this);
+            framer.BorderRadius = 0;
+            framer.ShadowRadius = 0;
+            framer.BorderColor = ColorEx.DarkenColor(this.BackColor, 40);
+            framer.ShadowOpacity = 1f;
+            framer.Redraw(true);
+            framer.Show();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.OK;
+        }
+
+        private void btnNo_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.No;
+        }
+
+
+        private void OcnMessageBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            this.MakeMoves();
         }
 
         #endregion
 
 
-        #region 重写的方法
+        #region 主题相关
 
-        protected override void FillTitleBarBackground(Graphics g)
+        /// <summary>
+        /// 主题
+        /// </summary>
+        [Category("Look")]
+        [Browsable(true)]
+        public OcnThemes Theme
         {
-            if (!string.IsNullOrEmpty(Caption))
+            get
             {
-                base.FillTitleBarBackground(g);
+                return _theme;
+            }
+            set
+            {
+                bool changing = _theme != value;
+                _theme = value;
+
+                if (changing)
+                {
+                    OnThemeChanged();
+                }
             }
         }
 
-        protected override void ApplyDanger()
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public OceanPresets Presets
         {
-            base.ApplyDanger();
+            get;
+            private set;
+        } = OceanPresets.Instance;
 
-            boxActionSeparator.LineColor = Presets.DangerColor;
+        protected bool ThemeApplied { get; set; }
+
+
+        protected virtual void ApplyPrimary()
+        {
+            BackColor = Color.White;
+            ForeColor = Presets.PrimaryColor;
+            TitleBarBackColor = Color.FromArgb(108, 17, 150);
+
+
             btnYes.Theme = Theme;
             btnNo.Theme = Theme;
             btnCancel.Theme = Theme;
             btnOK.Theme = Theme;
-        }
-
-        protected override void ApplyDark()
-        {
-            base.ApplyDark();
-
-            boxActionSeparator.LineColor = Presets.DarkColor;
-            btnYes.Theme = Theme;
-            btnNo.Theme = Theme;
-            btnCancel.Theme = Theme;
-            btnOK.Theme = Theme;
-        }
-
-        protected override void ApplyInfo()
-        {
-            base.ApplyInfo();
-
-            boxActionSeparator.LineColor = Presets.InfoColor;
-            btnYes.Theme = Theme;
-            btnNo.Theme = Theme;
-            btnCancel.Theme = Theme;
-            btnOK.Theme = Theme;
-        }
-
-        protected override void ApplyLight()
-        {
-            base.ApplyLight();
-
-            boxActionSeparator.LineColor = Presets.LightColor ;
-            btnYes.Theme = Theme;
-            btnNo.Theme = Theme;
-            btnCancel.Theme = Theme;
-            btnOK.Theme = Theme;
-        }
-
-        protected override void ApplyPrimary()
-        {
-            base.ApplyPrimary();
 
             boxActionSeparator.LineColor = Presets.PrimaryColor;
-            btnYes.Theme = Theme;
-            btnNo.Theme = Theme;
-            btnCancel.Theme = Theme;
-            btnOK.Theme = Theme;
+            btnClose.NormalColor = Color.White;
+            btnClose.HoverColor = Color.Black;
+            lblCaption.ForeColor = Color.White;
         }
 
 
-        protected override void ApplySecondary()
+        protected virtual void ApplySecondary()
         {
-            base.ApplySecondary();
+            BackColor = Color.White;
+            ForeColor = Presets.SecondaryColor;
+            TitleBarBackColor = Presets.SecondaryColor;
+
+            btnYes.Theme = Theme;
+            btnNo.Theme = Theme;
+            btnCancel.Theme = Theme;
 
             boxActionSeparator.LineColor = Presets.SecondaryColor;
+            btnClose.NormalColor = Color.White;
+            btnClose.HoverColor = Color.Black;
+            lblCaption.ForeColor = Color.White;
+        }
+
+        protected virtual void ApplySuccess()
+        {
+            BackColor = Color.White;
+            ForeColor = Presets.SuccessColor;
+            TitleBarBackColor = Presets.SuccessColor;
+
             btnYes.Theme = Theme;
             btnNo.Theme = Theme;
             btnCancel.Theme = Theme;
             btnOK.Theme = Theme;
-        }
-
-        protected override void ApplySuccess()
-        {
-            base.ApplySuccess();
 
             boxActionSeparator.LineColor = Presets.SuccessColor;
+            btnClose.NormalColor = Color.Black;
+            btnClose.HoverColor = Color.White;
+            lblCaption.ForeColor = Color.White;
+        }
+
+        protected virtual void ApplyDanger()
+        {
+            BackColor = Color.White;
+            ForeColor = Presets.DangerColor;
+            TitleBarBackColor = Presets.DangerColor;
+
             btnYes.Theme = Theme;
             btnNo.Theme = Theme;
             btnCancel.Theme = Theme;
             btnOK.Theme = Theme;
+
+            boxActionSeparator.LineColor = Presets.DangerColor;
+            btnClose.NormalColor = Color.White;
+            btnClose.HoverColor = Color.Black;
+            lblCaption.ForeColor = Color.White;
         }
 
-        protected override void ApplyWarning()
+        protected virtual void ApplyWarning()
         {
-            base.ApplyWarning();
+            BackColor = Color.White;
+            ForeColor = Presets.WarningColor;
+            TitleBarBackColor = Presets.WarningColor;
+
 
             boxActionSeparator.LineColor = Presets.WarningColor;
             btnYes.Theme = Theme;
             btnNo.Theme = Theme;
             btnCancel.Theme = Theme;
             btnOK.Theme = Theme;
+
+            TitleBar.BackColor = Presets.WarningColor;
+            btnClose.NormalColor = Color.Black;
+            btnClose.HoverColor = Color.White;
+            lblCaption.ForeColor = Color.White;
+        }
+
+        protected virtual void ApplyInfo()
+        {
+            BackColor = Color.White;
+            ForeColor = Presets.InfoColor;
+            TitleBarBackColor = Presets.InfoColor;
+
+            btnYes.Theme = Theme;
+            btnNo.Theme = Theme;
+            btnCancel.Theme = Theme;
+            btnOK.Theme = Theme;
+
+            boxActionSeparator.LineColor = Presets.InfoColor;
+            btnClose.NormalColor = Color.Black;
+            btnClose.HoverColor = Color.White;
+            lblCaption.ForeColor = Color.White;
+        }
+
+        protected virtual void ApplyLight()
+        {
+            BackColor = Color.White;
+            ForeColor = Color.Black;
+            TitleBarBackColor = Presets.LightColor;
+
+            btnYes.Theme = Theme;
+            btnNo.Theme = Theme;
+            btnCancel.Theme = Theme;
+            btnOK.Theme = Theme;
+
+            boxActionSeparator.LineColor = Presets.LightColor;
+            btnClose.NormalColor = Color.Black;
+            btnClose.HoverColor = Color.White;
+            lblCaption.ForeColor = Color.Black;
+        }
+
+
+        protected virtual void ApplyDark()
+        {
+            BackColor = Color.White;
+            ForeColor = Presets.DarkColor;
+            TitleBarBackColor = Presets.DarkColor;
+
+            btnYes.Theme = Theme;
+            btnNo.Theme = Theme;
+            btnCancel.Theme = Theme;
+            btnOK.Theme = Theme;
+
+            boxActionSeparator.LineColor = Presets.DarkColor;
+            TitleBar.BackColor = Presets.DarkColor;
+            btnClose.NormalColor = Color.White;
+            btnClose.HoverColor = Color.Black;
+            lblCaption.ForeColor = Color.White;
         }
 
 
@@ -366,6 +499,65 @@ namespace FormExCore
             pnlControlArea.Controls.OfType<OcnButton>().ToList().ForEach((x) => { x.Visible = false; });
         }
 
+        protected virtual void OnThemeChanged()
+        {
+            // 防止在调用此方法时, 子类控件还未完全实例化而报空引用异常
+            if (!this.IsHandleCreated)
+            {
+                EventHandler? onLoadRegister = null;
+                onLoadRegister = delegate (object sender, EventArgs e)
+                {
+                    OnThemeChanged();
+                    if (onLoadRegister != null)
+                    {
+                        this.HandleCreated -= onLoadRegister;
+                    }
+                };
+                this.HandleCreated += onLoadRegister;
+                return;
+            }
+
+
+            switch (Theme)
+            {
+                case OcnThemes.Primary:
+                    ApplyPrimary();
+                    ThemeApplied = true;
+                    break;
+                case OcnThemes.Secondary:
+                    ApplySecondary();
+                    ThemeApplied = true;
+                    break;
+                case OcnThemes.Success:
+                    ApplySuccess();
+                    ThemeApplied = true;
+                    break;
+                case OcnThemes.Danger:
+                    ApplyDanger();
+                    ThemeApplied = true;
+                    break;
+                case OcnThemes.Warning:
+                    ApplyWarning();
+                    ThemeApplied = true;
+                    break;
+                case OcnThemes.Info:
+                    ApplyInfo();
+                    ThemeApplied = true;
+                    break;
+                case OcnThemes.Light:
+                    ApplyLight();
+                    ThemeApplied = true;
+                    break;
+                case OcnThemes.Dark:
+                    ApplyDark();
+                    ThemeApplied = true;
+                    break;
+                default:
+
+                    ThemeApplied = false;
+                    break;
+            }
+        }
         private void ApplyButtons()
         {
             HideAllButtons();
@@ -432,19 +624,5 @@ namespace FormExCore
 
         #endregion
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-        }
-
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.OK;
-        }
-
-        private void btnNo_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.No;
-        }
     }
 }

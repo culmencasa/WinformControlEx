@@ -265,7 +265,7 @@ namespace FormExCore
 
         [Category("Look")]
         [Browsable(true)]
-        public new Image Icon
+        public Image TitleIcon
         {
             get
             {
@@ -286,6 +286,19 @@ namespace FormExCore
             }
         }
 
+
+        [Category("Custom")]
+        public bool AllowResize
+        {
+            get;
+            set;
+        }
+
+        public bool Shadow
+        {
+            get;
+            set;
+        } = true;
 
         #endregion
 
@@ -516,8 +529,11 @@ namespace FormExCore
                 }
                 else
                 {
-                    WmNcHitTest(ref m);
-                    return;
+                    if (AllowResize)
+                    {
+                        WmNcHitTest(ref m);
+                        return;
+                    }
                 }
             }
 
@@ -639,7 +655,7 @@ namespace FormExCore
             int top = 0;
             Rectangle iconRectangle = Rectangle.Empty;
 
-            if (ShowFormIcon && Icon != null && IconSize > 0)
+            if (ShowFormIcon && TitleIcon != null && IconSize > 0)
             {
                 width = IconSize;
                 height = IconSize;
@@ -709,9 +725,9 @@ namespace FormExCore
             FillTitleBarBackground(g);
 
             // 画窗体图标
-            if (ShowFormIcon && Icon != null)
+            if (ShowFormIcon && TitleIcon != null)
             {
-                g.DrawImage(Icon, GetIconRectangle());
+                g.DrawImage(TitleIcon, GetIconRectangle());
             }
 
             // 画标题   
@@ -738,16 +754,39 @@ namespace FormExCore
         {
             base.OnShown(e);
 
-            var framer = new DropShadow(this);
-            framer.BorderRadius = RoundCornerDiameter / 2;
-            framer.ShadowRadius = RoundCornerDiameter / 2;
-            framer.BorderColor = ColorEx.DarkenColor(this.BackColor, 40);
-            framer.ShadowOpacity = 0.8f;
-            framer.Redraw(true);
-            framer.Show();
-
+            if (!DesignMode)
+            {
+                if (Shadow)
+                {
+                    var framer = new DropShadow(this);
+                    framer.BorderRadius = RoundCornerDiameter / 2;
+                    framer.ShadowRadius = RoundCornerDiameter / 2;
+                    framer.BorderColor = ColorEx.DarkenColor(this.BackColor, 40);
+                    framer.ShadowOpacity = 0.8f;
+                    framer.Redraw(true);
+                    framer.Show();
+                }
+            }
         }
 
+
+        protected override void OnStyleChanged(EventArgs e)
+        {
+            base.OnStyleChanged(e);
+
+            if (!ControlBox)
+            {
+                btnClose.Visible = false;
+                btnMax.Visible = false;
+                btnMin.Visible = false;
+            }
+            else
+            {
+                btnMax.Visible = MaximizeBox;
+                btnMin.Visible = MinimizeBox;
+                btnClose.Visible = true;
+            }
+        }
 
 
 

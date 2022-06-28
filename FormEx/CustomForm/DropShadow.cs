@@ -255,7 +255,7 @@ namespace System.Windows.Forms
                 // 画10个阴影形成渐变
                 int repeat = 10;
                 int alpha = 10;
-                if (Owner.Width < 400 || Owner.Height < 300)
+                if (Owner.Width < 300 || Owner.Height < 200)
                 {
                     repeat = 5;
                     alpha = 5;
@@ -269,49 +269,34 @@ namespace System.Windows.Forms
 
                 Width = width;
                 Height = height;
+            }
 
 
+            Bitmap reproccessBitmap = bitmap;
+            // 模糊
+            if (Blur)
+            {
+                var blur = new SuperfastBlur.GaussianBlur(reproccessBitmap);
+                reproccessBitmap = blur.Process(4);
+            }
+
+            // 画上边框
+            using (var g = Graphics.FromImage(reproccessBitmap))
+            {
+                // issue: 当borderSize大于1时, 计算有点问题
                 int borderSize = 1;
                 using (Pen borderPen = new Pen(BorderColor, borderSize))
                 {
-                    // issue: 当borderSize大于1时, 计算有点问题
                     g.DrawRoundedRectangle(borderPen,
-                        (bitmap.Width - Owner.Width) / 2f - borderSize,
-                        (bitmap.Height - Owner.Height) / 2f - borderSize,
-                        Owner.Width * 1f + (borderSize),
-                        Owner.Height * 1f + (borderSize),
+                        (bitmap.Width - Owner.Width) / 2f - borderSize - 0.25f,
+                        (bitmap.Height - Owner.Height) / 2f - borderSize - 0.25f,
+                        Owner.Width * 1f + 0.25f,
+                        Owner.Height * 1f + 0.25f,
                         ShadowRadius);
                 }
             }
 
-            // 模糊
-            if (!Blur)
-            {
-                return bitmap;
-            }
-            else
-            { 
-                var blur = new SuperfastBlur.GaussianBlur(bitmap);
-                var bg2 = blur.Process(4);
-
-                // 画上边框
-                using (var g = Graphics.FromImage(bg2))
-                {
-                    int borderSize = 1;
-                    using (Pen borderPen = new Pen(BorderColor, borderSize))
-                    {
-                        // issue: 当borderSize大于1时, 计算有点问题
-                        g.DrawRoundedRectangle(borderPen,
-                            (bitmap.Width - Owner.Width) / 2f - borderSize,
-                            (bitmap.Height - Owner.Height) / 2f - borderSize,
-                            Owner.Width * 1f + (borderSize),
-                            Owner.Height * 1f + (borderSize),
-                            ShadowRadius);
-                    }
-                }
-
-                return bg2;
-            }
+            return reproccessBitmap;
         }
 
 
