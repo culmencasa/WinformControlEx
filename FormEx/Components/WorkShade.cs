@@ -19,7 +19,7 @@ namespace System.Windows.Forms
     /// 添加一层提示.
     /// 用法:  WorkShade ws = new WorkShade();
     ///       ws.Attach(ownerForm);
-    ///       ws.Show();
+    ///       ws.FadeIn();
     /// </summary>
 	public partial class WorkShade : Form
     {
@@ -244,9 +244,33 @@ namespace System.Windows.Forms
         /// <summary>
         /// 重写的Show方法
         /// </summary>
-        public new void Show()
+        public void FadeIn()
         {
             base.Show();
+
+
+            Opacity = 0;
+            int duration = 300;
+            int steps = 10;
+            Timer timer = new Timer();
+            timer.Interval = duration / steps;
+
+            int currentStep = 1;
+            timer.Tick += (arg1, arg2) =>
+            {
+                Opacity = Opacity + ((double)currentStep / steps);
+                currentStep++;
+
+                if (Opacity >= 1.00)
+                {
+                    timer.Stop();
+                    timer.Dispose();
+                }
+            };
+
+            timer.Start();
+
+
             BrintSelfToFront();
 
             // 等待几秒后显示按钮
@@ -273,6 +297,7 @@ namespace System.Windows.Forms
             {
                 btnClose.Visible = ShowButton1;
             }
+            
         }
 
         /// <summary>
@@ -311,7 +336,11 @@ namespace System.Windows.Forms
 
         public void FadeOut()
         {
-            int duration = 500;
+
+            pnlCenterBox.Visible = false;
+
+
+            int duration = 300;
             int steps = 10;
             Timer timer = new Timer();
             timer.Interval = duration / steps;
@@ -326,9 +355,7 @@ namespace System.Windows.Forms
                 {
                     timer.Stop();
                     timer.Dispose();
-                    this.Close();
-
-                    
+                    this.Close();                    
                 }
             };
 
@@ -615,7 +642,8 @@ namespace System.Windows.Forms
 
             if (UnderlayerImage != null)
             {
-                g.DrawImageOpacity(UnderlayerImage, (float)Opacity, new Point(0, 0));
+                //g.DrawImageOpacity(UnderlayerImage, (float)Opacity, new Point(0, 0));
+                g.DrawImageOpacity(UnderlayerImage, 1, new Point(0, 0));
             }
 
             base.OnPaint(e);
@@ -666,24 +694,28 @@ namespace System.Windows.Forms
             if (!IsOwnerAlive() || UnderlayerImage == null)
                 return;
 
-            //todo: 阴影加深, 偏移
-            if (_boxShadowBitmap == null || _boxShadowBitmap.Size != this.Size)
-            {
-                _boxShadowBitmap?.Dispose();
-                _boxShadowBitmap = new Bitmap(this.Width, this.Height, PixelFormat.Format32bppArgb);
-            }
-
             var control = this.pnlCenterBox;
-            Graphics g = e.Graphics;
-            g.SetFastRendering();
-            var rect = new Rectangle(control.Location.X, control.Location.Y, control.Size.Width, control.Size.Height);
 
-
-            using (GraphicsPath graphicPath = g.GenerateRoundedRectangle(rect, pnlCenterBox.RoundBorderRadius, RectangleEdgeFilter.All))
+            if (control.Visible)
             {
-                DrawShadowSmooth(graphicPath, 100, 60, _boxShadowBitmap);
+                //todo: 阴影加深, 偏移
+                if (_boxShadowBitmap == null || _boxShadowBitmap.Size != this.Size)
+                {
+                    _boxShadowBitmap?.Dispose();
+                    _boxShadowBitmap = new Bitmap(this.Width, this.Height, PixelFormat.Format32bppArgb);
+                }
+
+                Graphics g = e.Graphics;
+                g.SetFastRendering();
+                var rect = new Rectangle(control.Location.X, control.Location.Y, control.Size.Width, control.Size.Height);
+
+
+                using (GraphicsPath graphicPath = g.GenerateRoundedRectangle(rect, pnlCenterBox.RoundBorderRadius, RectangleEdgeFilter.All))
+                {
+                    DrawShadowSmooth(graphicPath, 100, 60, _boxShadowBitmap);
+                }
+                e.Graphics.DrawImage(_boxShadowBitmap, new Point(0, 0));
             }
-            e.Graphics.DrawImage(_boxShadowBitmap, new Point(0, 0));
         }
 
 

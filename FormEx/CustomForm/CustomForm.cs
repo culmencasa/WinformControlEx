@@ -16,6 +16,8 @@ namespace System.Windows.Forms
     {
         #region 事件
 
+        public delegate void LoadCompletedEventHandler();
+        public event LoadCompletedEventHandler LoadCompleted;
 
         #endregion
 
@@ -230,6 +232,7 @@ namespace System.Windows.Forms
             InitializeDefaultValues();
 
             TitleFont = new Font(this.Font.FontFamily.Name, 16f, FontStyle.Bold);
+            Shown += CustomForm_Shown;
         }
 
 
@@ -577,6 +580,13 @@ namespace System.Windows.Forms
         // 窗体加载
         private void RoundedCornerForm_Load(object sender, EventArgs e)
         {
+        }
+
+        private void CustomForm_Shown(object sender, EventArgs e)
+        {
+            Application.DoEvents();
+            if (LoadCompleted != null)
+                LoadCompleted();
         }
 
 

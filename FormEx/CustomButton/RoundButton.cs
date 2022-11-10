@@ -199,9 +199,6 @@ namespace System.Windows.Forms
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-
-
-
         }
 
         protected override void OnPaintBackground(PaintEventArgs pevent)

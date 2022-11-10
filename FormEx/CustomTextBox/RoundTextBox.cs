@@ -15,8 +15,7 @@ namespace System.Windows.Forms
     /// 圆角文本框控件
     /// 
     /// 已知问题: 
-    ///         1.有时会与其他控件抢焦点, 造成其他按钮点击失效
-    ///         2.点击其他控件时, 不能正常丢失焦点
+    ///         1.有时会与其他控件抢焦点, 造成其他按钮点击失效    
     /// </summary>
     public partial class RoundTextBox : NonFlickerUserControl
     {
@@ -80,7 +79,7 @@ namespace System.Windows.Forms
         private Color _textContentBackColor;
         private Color _textContentForeColor;
 
-        public bool ButtonClickWorking { get; set; }
+        //public bool ButtonClickWorking { get; set; }
 
         private int _borderRadius;
         private bool _autoScrollbar;
@@ -428,10 +427,16 @@ namespace System.Windows.Forms
 
         #region 事件处理
 
+        private void RoundTextBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            //_innerTextBoxState = TextBoxStates.Normal;
+            //this.Invalidate();
+        }
+
         private void PaddingTextBox_LostFocus(object sender, EventArgs e)
         {
-            if (!ButtonClickWorking)
-                return;
+            //if (!ButtonClickWorking)
+            //    return;
 
             _innerTextBoxState = TextBoxStates.Normal;
             this.Invalidate();
@@ -439,8 +444,8 @@ namespace System.Windows.Forms
 
         private void PaddingTextBox_MouseLeave(object sender, EventArgs e)
         {
-            if (!ButtonClickWorking)
-                return;
+            //if (!ButtonClickWorking)
+            //    return;
 
             if (!_innerTextBox.Focused)
             {
@@ -533,10 +538,10 @@ namespace System.Windows.Forms
                 });
             }
 
-            if (ButtonClickWorking)
-            {
-                return;
-            }
+            //if (ButtonClickWorking)
+            //{
+            //    return;
+            //}
 
             _innerTextBoxState = TextBoxStates.Normal;
             this.Invalidate();
@@ -829,6 +834,7 @@ namespace System.Windows.Forms
             this.MouseHover += innerTextBox_MouseHover;
             this.MouseLeave += new EventHandler(PaddingTextBox_MouseLeave);
             this.LostFocus += new EventHandler(PaddingTextBox_LostFocus);
+            this.MouseMove += RoundTextBox_MouseMove;
         }
 
 

@@ -315,7 +315,15 @@ namespace System.Windows.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            if (this.Modal)
+            {
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
         }
 
         private void btnShowDetails_Click(object sender, EventArgs e)

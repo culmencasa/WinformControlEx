@@ -305,6 +305,10 @@ namespace System.Drawing
                 int height,
                 int radius)
         {
+            if (width <= 0 || height <= 0)
+            {
+                return;
+            }
             graphics.FillRoundedRectangle(
                     brush,
                     Convert.ToSingle(x),
@@ -321,6 +325,10 @@ namespace System.Drawing
             int radius,
             RectangleEdgeFilter filter)
         {
+            if (rectangle.Width <= 0 || rectangle.Height <= 0)
+            {
+                return;
+            }
             graphics.FillRoundedRectangle(
                 brush,
                 rectangle.X,
@@ -337,6 +345,10 @@ namespace System.Drawing
             Rectangle rectangle,
             int radius)
         {
+            if (rectangle.Width <= 0 || rectangle.Height <= 0)
+            {
+                return;
+            }
             graphics.FillRoundedRectangle(
                 brush,
                 rectangle.X,
@@ -354,6 +366,10 @@ namespace System.Drawing
             int radius,
             RectangleEdgeFilter filter)
         {
+            if (rectangle.Width <= 0 || rectangle.Height <= 0)
+            {
+                return;
+            }
             graphics.FillRoundedRectangle(
                 brush,
                 rectangle.X,
@@ -370,6 +386,10 @@ namespace System.Drawing
             RectangleF rectangle,
             int radius)
         {
+            if (rectangle.Width <= 0 || rectangle.Height <= 0)
+            {
+                return;
+            }
             graphics.FillRoundedRectangle(
                 brush,
                 rectangle.X,
