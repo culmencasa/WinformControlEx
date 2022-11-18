@@ -32,7 +32,7 @@ namespace FormExCore
                 // 判断是否需要线程回调
                 if (owner.InvokeRequired)
                 {
-                    return owner.Invoke(()=>ShowMessage(content, caption, icon));
+                    return (DialogResult)owner.Invoke(()=>ShowMessage(content, caption, icon));
                 }
                 else
                 {
@@ -84,7 +84,7 @@ namespace FormExCore
             {
                 if (owner.InvokeRequired)
                 {
-                    return owner.Invoke(() => ShowConfirm(caption, content));
+                    return (DialogResult)owner.Invoke(() => ShowConfirm(caption, content));
                 }
                 else
                 {

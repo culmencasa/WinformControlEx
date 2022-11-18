@@ -16,15 +16,21 @@ using System.Windows.Forms;
 namespace System.Windows.Forms
 {
     /// <summary>
-    /// 添加一层提示.
-    /// 用法:  WorkShade ws = new WorkShade();
-    ///       ws.Attach(ownerForm);
-    ///       ws.FadeIn();
+    /// 添加一层提示
+    /// <para>废弃不再更新</para>      
     /// </summary>
+    [Obsolete]
 	public partial class WorkShade : Form
     {
         #region 构造
 
+        ///<summary>
+        /// 创建实例
+        /// <para>用法: </para>
+        /// <para>WorkShade ws = new WorkShade();</para>
+        /// <para>ws.Attach(ownerForm);</para>
+        /// <para>ws.FadeIn(); </para>
+        /// </summary>
         public WorkShade()
         {
             this.Enable2DBuffer();
@@ -78,6 +84,17 @@ namespace System.Windows.Forms
                 return cp;
             }
         }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                this.Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
 
         #endregion
 
@@ -241,6 +258,13 @@ namespace System.Windows.Forms
 
         }
 
+        public new void Show()
+        {
+            base.Show();
+
+            ShowButtonWhenTimeIsUp();
+        }
+
         /// <summary>
         /// 重写的Show方法
         /// </summary>
@@ -274,31 +298,12 @@ namespace System.Windows.Forms
             BrintSelfToFront();
 
             // 等待几秒后显示按钮
-            if (WaitTime > 0)
-            {
-                Threading.Timer t = null;
-                t = new System.Threading.Timer(new TimerCallback((o) =>
-                {
-                    if (this.IsHandleCreated && !this.IsDisposed)
-                    {
-                        this.Invoke((Action)delegate
-                        {
-                            btnClose.Visible = true;
-                        });
-                    }
+            ShowButtonWhenTimeIsUp();
 
-                    if (t != null)
-                    {
-                        t.Dispose();
-                    }
-                }), null, WaitTime, Timeout.Infinite);
-            }
-            else
-            {
-                btnClose.Visible = ShowButton1;
-            }
-            
+
         }
+
+
 
         /// <summary>
         /// 取消关联的事件
@@ -737,6 +742,34 @@ namespace System.Windows.Forms
         #endregion
 
         #region 私有方法
+
+        private void ShowButtonWhenTimeIsUp()
+        {
+            // 等待几秒后显示按钮
+            if (WaitTime > 0)
+            {
+                Threading.Timer t = null;
+                t = new System.Threading.Timer(new TimerCallback((o) =>
+                {
+                    if (this.IsHandleCreated && !this.IsDisposed)
+                    {
+                        this.Invoke((Action)delegate
+                        {
+                            btnClose.Visible = true;
+                        });
+                    }
+
+                    if (t != null)
+                    {
+                        t.Dispose();
+                    }
+                }), null, WaitTime, Timeout.Infinite);
+            }
+            else
+            {
+                btnClose.Visible = ShowButton1;
+            }
+        }
 
         private bool IsOwnerAlive()
         {

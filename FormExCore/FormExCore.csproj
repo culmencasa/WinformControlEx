@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -59,4 +59,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+	<ItemGroup Condition="('$(TargetFramework)'=='net48') ">
+		<Reference Include="System.Net" />
+		<Reference Include="System.Net.Http" />
+	</ItemGroup>
 </Project>

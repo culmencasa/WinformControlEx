@@ -12,7 +12,6 @@ namespace System.Windows.Forms
     /// </summary>
     public class DropShadow : Form
     {
-
         #region 字段
 
         private Bitmap _shadowBitmap;
@@ -70,6 +69,7 @@ namespace System.Windows.Forms
 
         /// <summary>
         ///  阴影偏移
+        ///  <para>默认阴影窗体扩大了20x20</para>
         /// </summary>
         public Point ShadowOffset { get; set; } = new Point(40, 40);
 
@@ -190,7 +190,8 @@ namespace System.Windows.Forms
         {
             if (IsOwnerAlive())
             {
-                Owner.LocationChanged += UpdateLocation;
+                //Owner.Move += OnLocationChanged;
+                Owner.LocationChanged += OnLocationChanged;
                 Owner.Resize += Owner_Resize;
                 Owner.ResizeBegin += Owner_ResizeBegin;
                 Owner.ResizeEnd += Owner_ResizeEnd;
@@ -203,7 +204,8 @@ namespace System.Windows.Forms
         {
             if (IsOwnerAlive())
             {
-                Owner.LocationChanged -= UpdateLocation;
+                //Owner.Move -= OnLocationChanged;
+                Owner.LocationChanged -= OnLocationChanged;
                 Owner.Resize -= new EventHandler(Owner_Resize);
                 Owner.ResizeBegin -= Owner_ResizeBegin;
                 Owner.ResizeEnd -= Owner_ResizeEnd;
@@ -301,20 +303,35 @@ namespace System.Windows.Forms
 
 
 
-        private void UpdateLocation(Object sender = null, EventArgs eventArgs = null)
+        private void OnLocationChanged(Object sender = null, EventArgs eventArgs = null)
         {
             if (Owner == null)
                 return;
 
             if (Owner.WindowState == FormWindowState.Normal)
             {
-                Point pos = Owner.Location;
+                UpdateLocation();
+            }
+        }
+
+        private void UpdateLocation()
+        {
+            Point pos = Owner.Location;
+
+            // 如果窗体(Owner)作为一个控件放在另一个窗体中
+            if (Owner.Parent != null)
+            {
+                pos = Owner.PointToScreen(Point.Empty);
+                //pos = Owner.Parent.PointToClient(pos);
+                pos.Offset(-ShadowOffset.X, -ShadowOffset.Y);
+                Location = pos;
+            }
+            else
+            {
                 pos.Offset(-ShadowOffset.X, -ShadowOffset.Y);
                 Location = pos;
             }
         }
-
-
         #endregion
 
         #region 事件处理
@@ -395,9 +412,10 @@ namespace System.Windows.Forms
                     this.Visible = true;
                     //Owner.Region = null;
                     //Redraw(false);
-                    Point pos = Owner.Location;
-                    pos.Offset(-ShadowOffset.X, -ShadowOffset.Y);
-                    Location = pos;
+
+
+
+                    UpdateLocation();
                 }
                 else if (OwnerLastWindowState == FormWindowState.Maximized)
                 {

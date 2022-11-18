@@ -595,6 +595,17 @@ namespace System.Windows.Forms
             }
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                this.Clean();
+                this.Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         #endregion
 
         #region 窗体状态变化事件

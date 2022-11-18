@@ -1,353 +1,353 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net40;net48;net6.0-windows</TargetFrameworks>
-    <UseWindowsForms>true</UseWindowsForms>
-    <OutputType>Library</OutputType>
-    <RootNamespace>System.Windows.Forms</RootNamespace>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>     
-    
-    <SignAssembly>False</SignAssembly>
-	  <LangVersion>latest</LangVersion>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net40;net48;net6.0-windows</TargetFrameworks>
+		<UseWindowsForms>true</UseWindowsForms>
+		<OutputType>Library</OutputType>
+		<RootNamespace>System.Windows.Forms</RootNamespace>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Optimize>False</Optimize>
-  </PropertyGroup>
+		<SignAssembly>False</SignAssembly>
+		<LangVersion>latest</LangVersion>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Optimize>False</Optimize>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Optimize>False</Optimize>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Optimize>False</Optimize>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Optimize>False</Optimize>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Optimize>False</Optimize>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Optimize>False</Optimize>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Optimize>False</Optimize>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="CustomTextBox\PaddingTextBox.cs" />
-    <Compile Remove="CustomTextBox\PaddingTextBox.Designer.cs" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Remove="CustomTextBox\PaddingTextBox.resx" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="CustomTextBox\PaddingTextBox.cs" />
+		<Compile Remove="CustomTextBox\PaddingTextBox.Designer.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove="ImageComboBox\ComboBMP.bmp" />
-    <None Remove="ImageComboBox\None.bmp" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Remove="CustomTextBox\PaddingTextBox.resx" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="ImageComboBox\ComboBMP.bmp" />
-    <EmbeddedResource Include="ImageComboBox\None.bmp" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="ImageComboBox\ComboBMP.bmp" />
+		<None Remove="ImageComboBox\None.bmp" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Utils.UI\Utils.UI.csproj" />
-    <ProjectReference Include="..\Utils\Utils.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup Condition="('$(TargetFramework)'=='net40') Or ('$(TargetFramework)'=='net46') Or ('$(TargetFramework)'=='net48')">
-      <Reference Include="System.Design" />
-  </ItemGroup>
-  
-  <ItemGroup Condition="('$(TargetFramework)'=='net40') Or ('$(TargetFramework)'=='net46') Or ('$(TargetFramework)'=='net48')">
-    <Reference Include="System.Management" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="ImageComboBox\ComboBMP.bmp" />
+		<EmbeddedResource Include="ImageComboBox\None.bmp" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="AnimationBox.cs" />
-    <Compile Update="BorderHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Components\AbortableBackgroundWorker.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="CustomButton\CustomButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="CustomButton\CustomDropDownButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="CustomButton\RoundButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="CustomForm\DropShadow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="CustomForm\NonFrameForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="CustomForm\NonFrameForm.Designer.cs">
-      <DependentUpon>NonFrameForm.cs</DependentUpon>
-    </Compile>
-    <Compile Update="CustomForm\CustomForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="CustomForm\RoundedCornerForm - 复制.Designer.cs">
-      <DependentUpon>RoundedCornerForm.cs</DependentUpon>
-    </Compile>
-    <Compile Update="CustomForm\RoundedCornerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="CustomForm\RoundedCornerForm.Designer.cs">
-      <DependentUpon>RoundedCornerForm.cs</DependentUpon>
-    </Compile>
-    <Compile Update="CustomForm\SlidePopup.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="CustomForm\SlidePopup.designer.cs">
-      <DependentUpon>SlidePopup.cs</DependentUpon>
-    </Compile>
-    <Compile Update="CustomForm\SplashForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="CustomForm\Win11ControlBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomForm\Win7ControlBox - 复制.Designer.cs">
-      <DependentUpon>Win7ControlBox.Designer.cs</DependentUpon>
-    </Compile>
-    <Compile Update="CustomIcon\CustomGroupIcon.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomMessageBox\ExceptionMessageBox.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ExceptionMessageBox.resx</DependentUpon>
-    </Compile>
-    <Compile Update="CustomPanel\ClickThroughFlowPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="CustomPanel\ClickThroughPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="CustomPanel\CustomPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Components\WizardControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Components\BackgroundWorkShade.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="CustomScrollbar\CustomScrollbar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomTextBox\RoundTextBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomTextBox\RoundTextBox.Designer.cs">
-      <DependentUpon>RoundTextBox.cs</DependentUpon>
-    </Compile>
-    <Compile Update="DropDownListControl\DropDownBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="DropDownListControl\DropDownBox.Designer.cs">
-      <DependentUpon>DropDownBox.cs</DependentUpon>
-    </Compile>
-    <Compile Update="DropDownListControl\DropDownList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="DropDownListControl\DropDownList.Designer.cs">
-      <DependentUpon>DropDownList.cs</DependentUpon>
-    </Compile>
-    <Compile Update="DropDownListControl\DropDownListItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomLabel\CustomLabel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="CustomIcon\IconStackView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomIcon\IconStackView.Designer.cs">
-      <DependentUpon>IconStackView.cs</DependentUpon>
-    </Compile>
-    <Compile Update="CustomButton\ImageButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="ImageComboBox\ImageComboBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="ImageComboBox\ImageListBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="ImageComboBox\ItemImagesContainer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="CustomControl\ImagePlaceholder.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="CustomControl\NonFlickerUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomIcon\PortraitIcon.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="CustomControl\RoundUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomControl\RoundUserControl.Designer.cs">
-      <DependentUpon>RoundUserControl.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Separator\Separator.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="TabControl\CustomTabControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="TabControl\TabStyleProvider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="TabControl\TabStyleProviders\TabStyleAngledProvider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="TabControl\TabStyleProviders\TabStyleChromeProvider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="TabControl\TabStyleProviders\TabStyleDefaultProvider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="TabControl\TabStyleProviders\TabStyleIE8Provider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="TabControl\TabStyleProviders\TabStyleNoneProvider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="TabControl\TabStyleProviders\TabStyleRoundedProvider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="TabControl\TabStyleProviders\TabStyleVisualStudioProvider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="TabControl\TabStyleProviders\TabStyleVS2010Provider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="CustomIcon\TileIcon.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomIcon\TileIconList.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="VisualElements\UIFormCanvas.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="VisualElements\UIUserControlCanvas.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Utils.UI\Utils.UI.csproj" />
+		<ProjectReference Include="..\Utils\Utils.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="CustomForm\NonFrameForm.resx">
-      <DependentUpon>NonFrameForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="CustomForm\RoundedCornerForm - 复制.resx">
-      <DependentUpon>RoundedCornerForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="CustomForm\RoundedCornerForm.resx">
-      <DependentUpon>RoundedCornerForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="CustomForm\SlidePopup.resx">
-      <DependentUpon>SlidePopup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="CustomForm\Win7ControlBox - 复制.resx">
-      <DependentUpon>Win7ControlBox.resx</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="CustomMessageBox\ExceptionMessageBox.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ExceptionMessageBox.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="CustomTextBox\RoundTextBox.resx">
-      <DependentUpon>RoundTextBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DropDownListControl\DropDownBox.resx">
-      <DependentUpon>DropDownBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DropDownListControl\DropDownList.resx">
-      <DependentUpon>DropDownList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="CustomIcon\IconStackView.resx">
-      <DependentUpon>IconStackView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ImageComboBox\ImageComboBox.resx">
-      <DependentUpon>ImageComboBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ImageComboBox\ImageListBox.resx">
-      <DependentUpon>ImageListBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ImageComboBox\ItemImagesContainer.resx">
-      <DependentUpon>ItemImagesContainer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+	<ItemGroup Condition="('$(TargetFramework)'=='net40') Or ('$(TargetFramework)'=='net46') Or ('$(TargetFramework)'=='net48')">
+		<Reference Include="System.Design" />
+	</ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
-    <DefineConstants>DEBUG;COMPILE_NET40</DefineConstants>
-  </PropertyGroup>
+	<ItemGroup Condition="('$(TargetFramework)'=='net40') Or ('$(TargetFramework)'=='net46') Or ('$(TargetFramework)'=='net48')">
+		<Reference Include="System.Management" />
+	</ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|AnyCPU'">
-    <DefineConstants>DEBUG;COMPILE_NET46</DefineConstants>
-  </PropertyGroup>  
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
-    <DefineConstants>DEBUG;COMPILE_NET48</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
-    <DefineConstants>DEBUG;COMPILE_NET60</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
-    <DefineConstants>TRACE;COMPILE_NET40</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
-    <DefineConstants>TRACE;COMPILE_NET46</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
-    <DefineConstants>TRACE;COMPILE_NET48</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
-    <DefineConstants>TRACE;COMPILE_NET60</DefineConstants>
-  </PropertyGroup>
-  
+	<ItemGroup>
+		<Compile Update="AnimationBox.cs" />
+		<Compile Update="BorderHelper.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Components\AbortableBackgroundWorker.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="CustomButton\CustomButton.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="CustomButton\CustomDropDownButton.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="CustomButton\RoundButton.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="CustomForm\DropShadow.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="CustomForm\NonFrameForm.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="CustomForm\NonFrameForm.Designer.cs">
+			<DependentUpon>NonFrameForm.cs</DependentUpon>
+		</Compile>
+		<Compile Update="CustomForm\CustomForm.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="CustomForm\RoundedCornerForm - 复制.Designer.cs">
+			<DependentUpon>RoundedCornerForm.cs</DependentUpon>
+		</Compile>
+		<Compile Update="CustomForm\RoundedCornerForm.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="CustomForm\RoundedCornerForm.Designer.cs">
+			<DependentUpon>RoundedCornerForm.cs</DependentUpon>
+		</Compile>
+		<Compile Update="CustomForm\SlidePopup.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="CustomForm\SlidePopup.designer.cs">
+			<DependentUpon>SlidePopup.cs</DependentUpon>
+		</Compile>
+		<Compile Update="CustomForm\SplashForm.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="CustomForm\Win11ControlBox.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="CustomForm\Win7ControlBox - 复制.Designer.cs">
+			<DependentUpon>Win7ControlBox.Designer.cs</DependentUpon>
+		</Compile>
+		<Compile Update="CustomIcon\CustomGroupIcon.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="CustomMessageBox\ExceptionMessageBox.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>ExceptionMessageBox.resx</DependentUpon>
+		</Compile>
+		<Compile Update="CustomPanel\ClickThroughFlowPanel.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="CustomPanel\ClickThroughPanel.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="CustomPanel\CustomPanel.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="Components\WizardControl.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="Components\BackgroundWorkShade.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="CustomScrollbar\CustomScrollbar.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="CustomTextBox\RoundTextBox.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="CustomTextBox\RoundTextBox.Designer.cs">
+			<DependentUpon>RoundTextBox.cs</DependentUpon>
+		</Compile>
+		<Compile Update="DropDownListControl\DropDownBox.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="DropDownListControl\DropDownBox.Designer.cs">
+			<DependentUpon>DropDownBox.cs</DependentUpon>
+		</Compile>
+		<Compile Update="DropDownListControl\DropDownList.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="DropDownListControl\DropDownList.Designer.cs">
+			<DependentUpon>DropDownList.cs</DependentUpon>
+		</Compile>
+		<Compile Update="DropDownListControl\DropDownListItem.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="CustomLabel\CustomLabel.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="CustomIcon\IconStackView.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="CustomIcon\IconStackView.Designer.cs">
+			<DependentUpon>IconStackView.cs</DependentUpon>
+		</Compile>
+		<Compile Update="CustomButton\ImageButton.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="ImageComboBox\ImageComboBox.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="ImageComboBox\ImageListBox.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="ImageComboBox\ItemImagesContainer.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="CustomControl\ImagePlaceholder.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="CustomControl\NonFlickerUserControl.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="CustomIcon\PortraitIcon.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="CustomControl\RoundUserControl.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="CustomControl\RoundUserControl.Designer.cs">
+			<DependentUpon>RoundUserControl.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Separator\Separator.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="TabControl\CustomTabControl.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="TabControl\TabStyleProvider.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="TabControl\TabStyleProviders\TabStyleAngledProvider.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="TabControl\TabStyleProviders\TabStyleChromeProvider.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="TabControl\TabStyleProviders\TabStyleDefaultProvider.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="TabControl\TabStyleProviders\TabStyleIE8Provider.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="TabControl\TabStyleProviders\TabStyleNoneProvider.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="TabControl\TabStyleProviders\TabStyleRoundedProvider.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="TabControl\TabStyleProviders\TabStyleVisualStudioProvider.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="TabControl\TabStyleProviders\TabStyleVS2010Provider.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="CustomIcon\TileIcon.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="CustomIcon\TileIconList.cs">
+			<SubType>Component</SubType>
+		</Compile>
+		<Compile Update="VisualElements\UIFormCanvas.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="VisualElements\UIUserControlCanvas.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="CustomForm\NonFrameForm.resx">
+			<DependentUpon>NonFrameForm.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="CustomForm\RoundedCornerForm - 复制.resx">
+			<DependentUpon>RoundedCornerForm.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="CustomForm\RoundedCornerForm.resx">
+			<DependentUpon>RoundedCornerForm.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="CustomForm\SlidePopup.resx">
+			<DependentUpon>SlidePopup.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="CustomForm\Win7ControlBox - 复制.resx">
+			<DependentUpon>Win7ControlBox.resx</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="CustomMessageBox\ExceptionMessageBox.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>ExceptionMessageBox.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="CustomTextBox\RoundTextBox.resx">
+			<DependentUpon>RoundTextBox.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="DropDownListControl\DropDownBox.resx">
+			<DependentUpon>DropDownBox.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="DropDownListControl\DropDownList.resx">
+			<DependentUpon>DropDownList.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="CustomIcon\IconStackView.resx">
+			<DependentUpon>IconStackView.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="ImageComboBox\ImageComboBox.resx">
+			<DependentUpon>ImageComboBox.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="ImageComboBox\ImageListBox.resx">
+			<DependentUpon>ImageListBox.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="ImageComboBox\ItemImagesContainer.resx">
+			<DependentUpon>ItemImagesContainer.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
+		<DefineConstants>DEBUG;COMPILE_NET40</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|AnyCPU'">
+		<DefineConstants>DEBUG;COMPILE_NET46</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
+		<DefineConstants>DEBUG;COMPILE_NET48</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
+		<DefineConstants>DEBUG;COMPILE_NET60</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
+		<DefineConstants>TRACE;COMPILE_NET40</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
+		<DefineConstants>TRACE;COMPILE_NET46</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
+		<DefineConstants>TRACE;COMPILE_NET48</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
+		<DefineConstants>TRACE;COMPILE_NET60</DefineConstants>
+	</PropertyGroup>
+
 
 </Project>

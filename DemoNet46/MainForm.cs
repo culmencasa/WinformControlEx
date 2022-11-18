@@ -246,7 +246,6 @@ namespace DemoNet46
 
         #endregion
 
-
         #region 子窗体鼠标操作
 
         private bool mouseDown;
@@ -294,7 +293,6 @@ namespace DemoNet46
 
         #endregion
 
-
         #region 图标事件
 
         private void btnShowTestForm_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -311,9 +309,9 @@ namespace DemoNet46
         {
             if (e.Button == MouseButtons.Left)
             {
-                //var themeDemo = FormManager.Single<ThemeDemo>();
+                var themeDemo = FormManager.Single<ThemeDemo>();
 
-                //AddChildWindow(themeDemo);
+                AddChildWindow(themeDemo);
 
             }
 
@@ -350,5 +348,7 @@ namespace DemoNet46
         #endregion
     }
 
+
+    //todo : 最小化到任务栏
 
 }
