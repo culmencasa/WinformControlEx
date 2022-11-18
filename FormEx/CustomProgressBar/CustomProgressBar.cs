@@ -319,7 +319,8 @@ namespace System.Windows.Forms
 
         public void Complete()
         {
-            this.Value = 100;
+            this.Value = MaxValue;
+            _currentSessionValue = MaxValue;
             ForceRender();
         }
 

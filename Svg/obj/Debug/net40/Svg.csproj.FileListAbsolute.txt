@@ -1,7 +1,0 @@
-C:\Works\FormEx\Svg\bin\Debug\net40\Svg.dll
-C:\Works\FormEx\Svg\bin\Debug\net40\Svg.pdb
-C:\Works\FormEx\Svg\obj\Debug\net40\Svg.csproj.AssemblyReference.cache
-C:\Works\FormEx\Svg\obj\Debug\net40\Svg.GeneratedMSBuildEditorConfig.editorconfig
-C:\Works\FormEx\Svg\obj\Debug\net40\Svg.csproj.CoreCompileInputs.cache
-C:\Works\FormEx\Svg\obj\Debug\net40\Svg.dll
-C:\Works\FormEx\Svg\obj\Debug\net40\Svg.pdb

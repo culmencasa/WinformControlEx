@@ -6,9 +6,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{EFFD3453-C578-43DF-80E7-49880939098B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>DemoNet46</RootNamespace>
-    <AssemblyName>DemoNet46</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <RootNamespace>DemoNet48</RootNamespace>
+    <AssemblyName>DemoNet48</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>

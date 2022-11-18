@@ -26,3 +26,6 @@
 /DemoCore/obj/Release/net6.0-windows
 /FormExCore/obj/Release/net6.0-windows
 /Svg/obj/Release/net6.0-windows
+/DemoCore/*.user
+*/bin/*
+*/obj/*

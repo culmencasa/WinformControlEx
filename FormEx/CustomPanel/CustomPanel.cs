@@ -38,7 +38,13 @@ namespace System.Windows.Forms
         [Category("Custom")]
         public int RoundBorderRadius { get; set; }
 
+        /// <summary>
+        /// 没有用
+        /// </summary>
         [Category("Custom")]
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Color InnerBackColor { get; set; }
 
         #endregion
@@ -92,9 +98,10 @@ namespace System.Windows.Forms
                 return;
             } 
 
-            #region 如果设置了渐变色
+            #region 背景（如果设置了渐变色）
 
-            if (this.FirstColor != Color.Empty && this.SecondColor != Color.Empty)
+            if (this.FirstColor != Color.Empty && this.SecondColor != Color.Empty
+                 && FirstColor != SecondColor)
             {
                 if (RoundBorderRadius > 0)
                 {
@@ -107,46 +114,65 @@ namespace System.Windows.Forms
                         ))
                     {
                         // 不减1会出现1像素的空白, 原因不明
-                        cacheG.FillRoundedRectangle(brush, BorderWidth - 1, BorderWidth - 1, this.Width - BorderWidth, this.Height - BorderWidth, RoundBorderRadius);
+                        cacheG.FillRoundedRectangle(brush,
+                            BorderWidth / 2,
+                            BorderWidth / 2, 
+                            (this.Width - BorderWidth), 
+                            (this.Height - BorderWidth), RoundBorderRadius);
                     }
                 }
                 else
                 {
                     // 填充直角矩形
-                    GradientFill.Fill(cacheG, this.ClientRectangle, this.FirstColor, this.SecondColor, this.GradientDirection);
+                    GradientFill.Fill(cacheG, 
+                        ClientRectangle,
+                        this.FirstColor, this.SecondColor, this.GradientDirection);
                 }
             }
 
 			#endregion
 
-			#region 没有渐变色
+			#region 背景（没有渐变色）
 
 			else
 			{
-				using (SolidBrush borderBrush = new SolidBrush(BackColor))
+                var backColor = BackColor;
+                if (FirstColor != Color.Empty)
+                {
+                    backColor = FirstColor;
+                }
+                if (SecondColor != Color.Empty)
+                {
+                    backColor = SecondColor;
+                }
+				using (SolidBrush backgroundBrush = new SolidBrush(backColor))
 				{
-					if (RoundBorderRadius > 0)
-					{
-						cacheG.FillRoundedRectangle(borderBrush, BorderWidth, BorderWidth, this.Width - BorderWidth * 2, this.Height - BorderWidth * 2, RoundBorderRadius);
-					}
-					else
-					{
-						cacheG.FillRectangle(borderBrush, new Rectangle(BorderWidth, BorderWidth, this.Width - BorderWidth * 2, this.Height - BorderWidth * 2));
-					}
-				}
+                    if (RoundBorderRadius > 0)
+                    {
+                        cacheG.FillRoundedRectangle(backgroundBrush, BorderWidth / 2, BorderWidth / 2, this.Width - BorderWidth, this.Height - BorderWidth, RoundBorderRadius);
+                    }
+                    else
+                    {
+                        cacheG.FillRectangle(backgroundBrush, new Rectangle(BorderWidth / 2, BorderWidth / 2, this.Width - BorderWidth, this.Height - BorderWidth));
+                    }
+                }
 
-			}
+            }
 
-			#endregion
+            #endregion
 
-			if (this.BorderColor != Color.Empty && BorderWidth > 0)
+            #region 边框
+
+            if (this.BorderColor != Color.Empty && BorderWidth > 0)
             {
                 if (RoundBorderRadius > 0)
                 {
                     // 画圆角边框   
                     using (Pen borderPen = new Pen(this.BorderColor, BorderWidth))
                     {
-                        cacheG.DrawRoundedRectangle(borderPen, 0, 0, this.Width - BorderWidth, this.Height - BorderWidth, this.RoundBorderRadius);
+                        cacheG.DrawRoundedRectangle(borderPen, 
+                            BorderWidth / 2, BorderWidth / 2, (float)this.Width - BorderWidth, (float)this.Height - BorderWidth, 
+                            this.RoundBorderRadius);
                     }
                 }
                 else
@@ -154,10 +180,16 @@ namespace System.Windows.Forms
                     // 画直角边框
                     using (Pen borderPen = new Pen(this.BorderColor, BorderWidth))
                     {
-                        cacheG.DrawRectangle(borderPen, 0, 0, this.Width - BorderWidth, this.Height - BorderWidth);
+                        cacheG.DrawRectangle(borderPen, 
+                            BorderWidth / 2, 
+                            BorderWidth / 2, 
+                            (float)this.Width - BorderWidth, (float)this.Height - BorderWidth);
                     }
                 }
             }
+
+            #endregion
+
 
             lazyG.DrawImage(bitmap, 0, 0);
             cacheG.Dispose();

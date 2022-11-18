@@ -204,20 +204,6 @@ namespace System.Windows.Forms
             }
         }
 
-        public static bool CheckIfAppIsRunning(string appName)
-        {
-            bool isFirstSyncElement;
-            Mutex mutexObject = new Mutex(false, appName, out isFirstSyncElement);
-            if (isFirstSyncElement == false)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
 
         /// <summary>
         /// 获取当前缩放大小(1-4)

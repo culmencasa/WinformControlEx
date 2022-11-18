@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using static System.Windows.Forms.BackgroundWorkShade;
 
 namespace System.Windows.Forms
 {
@@ -20,6 +21,33 @@ namespace System.Windows.Forms
     /// </summary>
 	public partial class BackgroundWorkShade : Form
     {
+        #region 静态单例
+
+        static BackgroundWorkShade quicker;
+
+        /// <summary>
+        /// BackgroundWorkShade的静态实例
+        /// <para>不使用透明背景</para>
+        /// <para></para>
+        /// </summary>
+        public static BackgroundWorkShade Quicker
+        {
+            get
+            {
+                if (quicker == null || quicker.IsDisposed)
+                {
+                    quicker = new BackgroundWorkShade();
+                    quicker.UseBlur = false;
+                    quicker.UseLayerImage = false;
+                    quicker.IsQuickerInstance = true;
+                }
+
+                return quicker;
+            }
+        }
+
+        #endregion
+
         #region BackgroundWorker相关
 
         #region 委托和事件
@@ -29,30 +57,30 @@ namespace System.Windows.Forms
         /// </summary>
         /// <param name="worker"></param>
         /// <param name="e"></param>
-        public delegate void ProcessReportEventHandler(AbortableBackgroundWorker worker, ProgressChangedEventArgs e);
+        public delegate void ProcedureReportEventHandler(AbortableBackgroundWorker worker, ProgressChangedEventArgs e);
         /// <summary>
-        /// 进度报告事件(QuickInstance不响应此事件)
+        /// 进度报告事件
         /// </summary>
-        public event ProcessReportEventHandler ProcessReported;
+        public event ProcedureReportEventHandler ProcessReported;
 
         /// <summary>
         /// 用于指定后台任务的委托
         /// </summary>
         /// <param name="worker"></param>
         /// <param name="e"></param>
-        public delegate void ProcedureEventHandler(AbortableBackgroundWorker worker, DoWorkEventArgs e);
+        public delegate void ProcedureEventHandler(AbortableBackgroundWorker worker, ProcedureEventArgs e);
         /// <summary>
         /// 用于定义后台任务预告的委托
         /// </summary>
         /// <returns></returns>
         public delegate PredictionInfo GivenPrediction();
 
-        public delegate void ProcessCompletedEventHandler(AbortableBackgroundWorker worker, RunWorkerCompletedEventArgs e);
+        public delegate void ProcedureCompletedEventHandler(AbortableBackgroundWorker worker, ProcedureCompleteEventArgs e);
 
         /// <summary>
-        /// 任务完成事件(QuickInstance不响应此事件)
+        /// 任务完成事件
         /// </summary>
-        public event ProcessCompletedEventHandler ProcessCompleted;
+        public event ProcedureCompletedEventHandler ProcessCompleted;
 
         #endregion
 
@@ -88,6 +116,73 @@ namespace System.Windows.Forms
 
         #endregion
 
+        public class ProcedureEventArgs : DoWorkEventArgs
+        {
+            public ProcedureEventArgs(object argument) : base(argument)
+            {
+                Continue = true;
+
+            }
+
+            /// <summary>
+            /// 是否继续下一个任务， 默认为true。
+            /// <para>如果Continue为false，将退出后台任务。如果为true, 则会继续等待。</para>
+            /// </summary>
+            public bool Continue
+            {
+                get;
+                set;
+            }
+
+            /// <summary>
+            /// 是否提前结束(进度变为100%)。优先于Continue。
+            /// </summary>
+            public bool CompleteInAdvance
+            {
+                get;
+                set;
+            }
+
+            public object UserResult
+            {
+                get;
+                set;
+            }
+
+
+            /// <summary>
+            /// 使用UserResult
+            /// </summary>
+            [Browsable(false)]
+            [Bindable(false)]
+            [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+            [EditorBrowsable(EditorBrowsableState.Never)]
+            public new object Result
+            {
+                get
+                {
+                    return UserResult;
+                }
+                set
+                {
+                    base.Result = value;
+                    UserResult = value;
+                }
+            }
+
+        }
+
+        public class ProcedureCompleteEventArgs : RunWorkerCompletedEventArgs
+        {
+            public ProcedureCompleteEventArgs(object result, Exception error, bool cancelled) : base(result, error, cancelled)
+            {
+            }
+
+            public ProcedureCompleteEventArgs(RunWorkerCompletedEventArgs p) : base(p.Result, p.Error, p.Cancelled)
+            {
+
+            }
+        }
 
         #region 相关字段和属性
 
@@ -111,6 +206,18 @@ namespace System.Windows.Forms
             get; set;
         }
 
+        protected AutoResetEvent LoopContinueSignal
+        {
+            get
+            {
+                if (loopContinueSignal == null)
+                {
+                    loopContinueSignal = new AutoResetEvent(false);
+                }
+                return loopContinueSignal;
+            }
+        }
+
         #endregion
 
         #region 暴露的方法
@@ -132,7 +239,7 @@ namespace System.Windows.Forms
                 if (!ProcedureList.ContainsKey(prediction))
                 {
                     ProcedureList.Add(prediction, procedure);
-                    loopContinueSignal.Set();
+                    LoopContinueSignal.Set();
                 }
             }
         }
@@ -147,7 +254,11 @@ namespace System.Windows.Forms
 
             // OnLoad只会执行一次
             ShadeState = ShadeStates.ShownFirstTime;
-            bgwJob.RunWorkerAsync();
+
+            if (!bgwJob.IsBusy)
+            {
+                bgwJob.RunWorkerAsync();
+            }
         }
 
         #endregion
@@ -159,6 +270,7 @@ namespace System.Windows.Forms
             AbortableBackgroundWorker bgw = sender as AbortableBackgroundWorker;
             while (true)
             {
+                // 任务前检测取消
                 if (bgw.CancellationPending)
                 {
                     e.Cancel = true;
@@ -170,15 +282,17 @@ namespace System.Windows.Forms
                     var kvPair = ProcedureList.Take(1).First();
                     var prediction = kvPair.Key;
 
-                    // 滚动条
+                    // 滚动条滚起来
                     var userState = prediction.Invoke();
                     bgw.ReportProgress(0, userState);
 
                     // 调用操作
+                    var conversation = new ProcedureEventArgs(bgw);
                     var process = kvPair.Value;
                     if (process != null)
                     {
-                        process.Invoke(bgw, e);
+                        process.Invoke(bgw, conversation);
+
                     }
 
                     lock (procedureLockObject)
@@ -186,14 +300,62 @@ namespace System.Windows.Forms
                         ProcedureList.Remove(prediction);
                     }
 
-                    if (userState.CompletedPercent >= pbWorkProgress.MaxValue)
+                    // 任务后检测取消
+                    if (bgw.CancellationPending)
                     {
-                        e.Result = true;
-                        return; // 退出while
+                        e.Cancel = true;
+                        return;
+                    }
+
+                    if (conversation.CompleteInAdvance)
+                    {
+                        ProcedureList.Clear();
+                        if (conversation.UserResult != null)
+                        {
+                            e.Result = conversation.UserResult;
+                        }
+                        else
+                        {
+                            e.Result = true;
+                        }
+                        break;
+                    }
+                    else if (!conversation.Continue)
+                    {
+                        ProcedureList.Clear();
+                        if (conversation.UserResult != null)
+                        {
+                            e.Result = conversation.UserResult;
+                        }
+                        else
+                        {
+                            e.Result = null;
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        // 继续下一个任务直到达到最终进度
+                        if (userState.CompletedPercent >= (int)pbWorkProgress.MaxValue)
+                        {
+                            if (conversation.UserResult != null)
+                            {
+                                e.Result = conversation.UserResult;
+                            }
+                            else
+                            {
+                                e.Result = true;
+                            }
+                            return; // 退出while
+                        }
                     }
                 }
                 else
                 {
+                    if (loopContinueSignal == null || loopContinueSignal.SafeWaitHandle.IsClosed)
+                    {
+                        return;
+                    }
                     loopContinueSignal.WaitOne();
                 }
             }
@@ -202,15 +364,21 @@ namespace System.Windows.Forms
         private void bgwJob_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             AbortableBackgroundWorker bgw = sender as AbortableBackgroundWorker;
-            var predictionInfo = e.UserState as PredictionInfo;
-            if (predictionInfo != null)
+            if (e.ProgressPercentage == 0)
             {
-                lblProgressText.Text = predictionInfo.WhatsNext;
-                pbWorkProgress.MakeProgress(predictionInfo.CompletedPercent, predictionInfo.HowLongWillItTake);
+                var predictionInfo = e.UserState as PredictionInfo;
+                if (predictionInfo != null)
+                {
+                    lblProgressText.Text = predictionInfo.WhatsNext;
+                    lblProgressText.ForeColor = Color.Black;
+                    pbWorkProgress.MakeProgress(predictionInfo.CompletedPercent, predictionInfo.HowLongWillItTake);
+                }
             }
-
-            // 外部的
-            OnProcessReported(bgw, e);
+            else
+            {
+                // 外部的
+                OnProcessReported(bgw, e);
+            }
         }
 
         private void bgwJob_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -248,7 +416,7 @@ namespace System.Windows.Forms
 
                 #endregion
             }
-            else if (e.Result != null && (bool)e.Result)
+            else if (e.Result != null)
             {
                 #region 任务完成
 
@@ -258,12 +426,15 @@ namespace System.Windows.Forms
                 {
                     this.FadeOut();
 
-                    OnProcessCompleted(bgw, e);
+                    OnProcessCompleted(bgw, new ProcedureCompleteEventArgs(e));
                 }
                 else
                 {
                     // 进度条更新为100%, 因为QuickerInstance模式下任务数不确定
                     pbWorkProgress.Complete();
+                    Application.DoEvents();
+
+                    OnProcessCompleted(bgw, new ProcedureCompleteEventArgs(e));
 
                     // 清理并隐藏
                     quicker.Clean();
@@ -276,48 +447,17 @@ namespace System.Windows.Forms
 
         protected virtual void OnProcessReported(AbortableBackgroundWorker worker, ProgressChangedEventArgs e)
         {
-            if (!IsQuickerInstance)
+            if (ProcessReported != null)
             {
-                if (ProcessReported != null)
-                {
-                    ProcessReported(worker, e);
-                }
+                ProcessReported(worker, e);
             }
         }
 
-        protected virtual void OnProcessCompleted(AbortableBackgroundWorker worker, RunWorkerCompletedEventArgs e)
+        protected virtual void OnProcessCompleted(AbortableBackgroundWorker worker, ProcedureCompleteEventArgs e)
         {
-            if (!IsQuickerInstance)
+            if (ProcessCompleted != null)
             {
-                if (ProcessCompleted != null)
-                {
-                    ProcessCompleted(worker, e);
-                }
-            }
-        }
-
-        #endregion
-
-        #region 静态单例
-
-        static BackgroundWorkShade quicker;
-
-        /// <summary>
-        /// 不使用透明背景, 保留在静态字段中, 为了加速启动用
-        /// </summary>
-        public static BackgroundWorkShade Quicker
-        {
-            get
-            {
-                if (quicker == null)
-                {
-                    quicker = new BackgroundWorkShade();
-                    //quicker.UseBlur = false;
-                    //quicker.UseLayerImage = false;
-                    quicker.IsQuickerInstance = true;
-                }
-
-                return quicker;
+                ProcessCompleted(worker, e);
             }
         }
 
@@ -332,6 +472,7 @@ namespace System.Windows.Forms
             None,
             Created,
             ShownFirstTime,
+            Running,
             Cleaned,
             Hidden,
             Closed
@@ -531,17 +672,14 @@ namespace System.Windows.Forms
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            if (UseLayerImage)
+
+            var backColor = Color.Black;
+            if (Owner != null)
             {
-                if (Owner != null)
-                {
-                    g.Clear(Owner.BackColor);
-                }
+                backColor = Owner.BackColor;
             }
-            else
-            {
-                g.Clear(Color.Black);
-            }
+
+            g.Clear(backColor);
 
             //base.OnPaintBackground(e);
 
@@ -553,6 +691,7 @@ namespace System.Windows.Forms
             {
                 return;
             }
+
 
             Graphics g = e.Graphics;
             g.SetFastRendering();
@@ -585,6 +724,7 @@ namespace System.Windows.Forms
 
         /// <summary>
         /// 连接主窗体
+        /// <para>连接的窗体关闭时会一起注销</para>
         /// </summary>
         /// <param name="owner">主窗体</param>
         public void Attach(Form owner)
@@ -641,33 +781,43 @@ namespace System.Windows.Forms
         public new void Show()
         {
             Opacity = 1;
-            base.Show();
-            BrintSelfToFront();
 
-            if (IsQuickerInstance && ShadeState >= ShadeStates.Cleaned)
+            if (IsQuickerInstance)
             {
-                if (bgwJob.IsBusy)
+                if (ShadeState >= ShadeStates.ShownFirstTime)
                 {
-                    try
-                    {
-                        bgwJob.CancelAsync();
-                        bgwJob.Dispose();
-                        bgwJob = null;
-                    }
-                    catch
-                    {
-                    }
+                    lblProgressText.Text = "准备取消当前操作...";
+                    lblProgressText.ForeColor = Color.Red;
+
+                    Stop();
+                    InitBackgroundWorker();
+
+                    bgwJob.RunWorkerAsync();
                 }
-
-                bgwJob = new AbortableBackgroundWorker();
-                bgwJob.WorkerSupportsCancellation = true;
-                bgwJob.WorkerReportsProgress = true;
-                bgwJob.DoWork += bgwJob_DoWork;
-                bgwJob.ProgressChanged += bgwJob_ProgressChanged;
-                bgwJob.RunWorkerCompleted += bgwJob_RunWorkerCompleted;
-
-                bgwJob.RunWorkerAsync();
             }
+            else
+            {
+                if (bgwJob == null)
+                {
+                    InitBackgroundWorker();
+                }
+            }
+
+
+            base.Show(); // onLoad事件
+            BrintSelfToFront();
+        }
+
+        private void InitBackgroundWorker()
+        {
+            loopContinueSignal = new AutoResetEvent(false);
+            bgwJob = new AbortableBackgroundWorker();
+            bgwJob.WorkerSupportsCancellation = true;
+            bgwJob.WorkerReportsProgress = true;
+            bgwJob.DoWork += bgwJob_DoWork;
+            bgwJob.ProgressChanged += bgwJob_ProgressChanged;
+            bgwJob.RunWorkerCompleted += bgwJob_RunWorkerCompleted;
+
         }
 
         /// <summary>
@@ -683,6 +833,44 @@ namespace System.Windows.Forms
             }
         }
 
+        public void Stop()
+        {
+            if (bgwJob != null && bgwJob.IsBusy)
+            {
+                //ManualResetEvent timeoutObject = new ManualResetEvent(false);
+                //timeoutObject.Reset();
+
+                //try
+                //{
+                //    bgwJob.CancelAsync();
+
+
+                //    if (!timeoutObject.WaitOne(3000, false))
+                //    {
+                //        bgwJob.ProgressChanged -= bgwJob_ProgressChanged;
+                //        bgwJob.RunWorkerCompleted -= bgwJob_RunWorkerCompleted;
+                //        bgwJob.Dispose();
+                //        bgwJob = null;
+
+                //        loopContinueSignal.Close();
+                //        loopContinueSignal?.Dispose();
+                //        loopContinueSignal = null;
+                //    }
+                //    else
+                //    {
+
+                //    }
+
+                //}
+                //catch
+                //{
+                //}
+
+            }
+            Clean();
+        }
+
+        
         /// <summary>
         /// 取消关联的事件
         /// </summary>
@@ -796,8 +984,12 @@ namespace System.Windows.Forms
         /// <param name="e"></param>
         private void SyncFormCloseEventHandler(object sender, FormClosedEventArgs e)
         {
-            this.Detach();
-            this.Close();
+            if (!IsQuickerInstance)
+            {
+
+                this.Detach();
+                this.Close();
+            }
         }
 
         private void SyncVisiblityEventHandler(object sender, EventArgs e)
@@ -1020,7 +1212,7 @@ namespace System.Windows.Forms
         private void btnClose_Click(object sender, EventArgs e)
         {
             Clean();
-            this.Close();
+            Close();
         }
 
         #endregion
@@ -1052,7 +1244,7 @@ namespace System.Windows.Forms
                 }
             }
 
-            ShadeState = ShadeStates.Cleaned;            
+            ShadeState = ShadeStates.Cleaned;
             pbWorkProgress.Reset();
         }
 
@@ -1093,6 +1285,11 @@ namespace System.Windows.Forms
         private void SyncUnderlyaerImage(bool lowquality = true)
         {
             if (!IsOwnerAlive() || (Owner.ClientRectangle.Width == 0 || Owner.ClientRectangle.Height == 0))
+            {
+                return;
+            }
+
+            if (!UseLayerImage)
             {
                 return;
             }

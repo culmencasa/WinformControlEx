@@ -46,7 +46,6 @@ namespace System.Windows.Forms
             this.pnlCenterBox.Controls.Add(this.btnClose);
             this.pnlCenterBox.Controls.Add(this.lblProgressText);
             this.pnlCenterBox.FirstColor = System.Drawing.Color.White;
-            this.pnlCenterBox.InnerBackColor = System.Drawing.Color.Transparent;
             this.pnlCenterBox.Location = new System.Drawing.Point(220, 103);
             this.pnlCenterBox.Name = "pnlCenterBox";
             this.pnlCenterBox.RoundBorderRadius = 20;
