@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="OcnButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="OcnForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="OcnLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="OcnMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="OcnSvgButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="OcnTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="ThirdParty\BorderlessForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

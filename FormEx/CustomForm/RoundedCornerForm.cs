@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.Design;
+﻿using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Design;
 using System.Drawing.Drawing2D;
-using System.Runtime.InteropServices;
 using Utils.UI;
 
 namespace System.Windows.Forms
 {
-
     /// <summary>
     /// 圆角窗体
     /// </summary>
@@ -17,11 +12,30 @@ namespace System.Windows.Forms
     {
         public class ColorSchema
         {
-            public Color BackColor { get; set; }
-            public Color BorderColor { get; set; }
-            public Color BackGradientLightColor { get; set; }
-            public Color BackGradientDarkColor { get; set; }
-            public Color ShadeColor { get; set; }
+            public Color BackColor
+            {
+                get; set;
+            }
+
+            public Color BorderColor
+            {
+                get; set;
+            }
+
+            public Color BackGradientLightColor
+            {
+                get; set;
+            }
+
+            public Color BackGradientDarkColor
+            {
+                get; set;
+            }
+
+            public Color ShadeColor
+            {
+                get; set;
+            }
 
             private static ColorSchema systemSchema = null;
             private static ColorSchema defaultSchema = null;
@@ -84,7 +98,6 @@ namespace System.Windows.Forms
                 }
             }
 
-
             public static ColorSchema White
             {
                 get
@@ -106,17 +119,13 @@ namespace System.Windows.Forms
         }
 
 
-        #region 事件
-
-
-        #endregion
 
         #region 字段
 
         private int _roundCornerDiameter;
         private bool _showTitle;
         private string _customTitleText;
-        private int _borderSize = 1;
+        protected int _borderSize = 1;
         private bool _fullScreen = true;
         private Color _borderColor;
         private Color _backGradientLightColor, _backGradientDarkColor, _shadeColor;
@@ -130,15 +139,13 @@ namespace System.Windows.Forms
         private int _logoSize;
         private Image _logo;
 
-
-        #endregion
+        #endregion 字段
 
         #region 属性
 
-
         /// <summary>
-        /// 窗体边框大小. 
-        /// 如果窗体中的控件有Dock或者位置与边框重合，将遮挡边框。 
+        /// 窗体边框大小.
+        /// 如果窗体中的控件有Dock或者位置与边框重合，将遮挡边框。
         /// </summary>
         //[Category("Custom")]
         public int BorderSize
@@ -169,7 +176,7 @@ namespace System.Windows.Forms
             {
                 _roundCornerDiameter = value;
                 // 设计时不改变窗体形状. 在HighDPI下宽高会不正常.
-                if (IsHandleCreated && !DesignMode)                    
+                if (IsHandleCreated && !DesignMode)
                     UpdateFormRoundCorner(value);
                 Invalidate();
             }
@@ -192,6 +199,7 @@ namespace System.Windows.Forms
                 Invalidate();
             }
         }
+
         /// <summary>
         /// 背景渐变色1
         /// </summary>
@@ -209,6 +217,7 @@ namespace System.Windows.Forms
                 Invalidate();
             }
         }
+
         /// <summary>
         /// 背景渐变色2
         /// </summary>
@@ -225,6 +234,7 @@ namespace System.Windows.Forms
                 Invalidate();
             }
         }
+
         /// <summary>
         /// 阴影面颜色
         /// </summary>
@@ -240,8 +250,8 @@ namespace System.Windows.Forms
                 _shadeColor = value;
                 Invalidate();
             }
-
         }
+
         /// <summary>
         /// 显示阴影分割
         /// </summary>
@@ -251,7 +261,6 @@ namespace System.Windows.Forms
         {
             get
             {
-
                 return _showShade;
             }
             set
@@ -261,27 +270,34 @@ namespace System.Windows.Forms
             }
         }
 
-
         /// <summary>
         /// 是否可以拉伸
         /// </summary>
         [DefaultValue(true)]
         [Category("Custom")]
-        public bool AllowResize { get; set; }
+        public bool AllowResize
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 允许窗体移动
         /// </summary>
         [Category("Custom")]
-        public bool AllowMove { get; set; }
-
+        public bool AllowMove
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 显示窗体阴影
         /// </summary>
         [DefaultValue(true)]
         [Category("Custom")]
-        public bool ShowFormShadow { get; set; }
+        public bool ShowFormShadow
+        {
+            get; set;
+        }
 
         /// <summary>
         /// 标题栏高度
@@ -318,7 +334,6 @@ namespace System.Windows.Forms
             }
         }
 
-
         [Description("用于绘制窗体标题的颜色")]
         [Category("Custom")]
         public Color TitleForeColor
@@ -333,6 +348,7 @@ namespace System.Windows.Forms
                 Invalidate();
             }
         }
+
         [Category("Custom")]
         public bool ShowTitleText
         {
@@ -383,6 +399,7 @@ namespace System.Windows.Forms
                 _showTitleCenter = value;
             }
         }
+
         [Category("Custom")]
         public Font TitleFont
         {
@@ -397,7 +414,6 @@ namespace System.Windows.Forms
             }
         }
 
-
         [Category("Custom")]
         public int LogoSize
         {
@@ -410,7 +426,6 @@ namespace System.Windows.Forms
                 _logoSize = value;
             }
         }
-
 
         [Category("Custom")]
         public Image Logo
@@ -426,9 +441,11 @@ namespace System.Windows.Forms
             }
         }
 
-
         [Browsable(false)]
-        public bool DontWaitChildrenDrawBackground { get; set; }
+        public bool DontWaitChildrenDrawBackground
+        {
+            get; set;
+        }
 
         [Browsable(false)]
         public bool FullScreen
@@ -451,14 +468,12 @@ namespace System.Windows.Forms
             }
         }
 
-
-
-        #endregion
+        #endregion 属性
 
         #region 构造
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public RoundedCornerForm()
         {
@@ -475,17 +490,14 @@ namespace System.Windows.Forms
                 ControlStyles.SupportsTransparentBackColor, true);
             UpdateStyles();
 
-
             InitializeDefaultValues();
 
             // 2021-08-02 去掉最大化等按钮，与边框及Z-Index之间的关系无法控制，换成独立的Win11ControlBox控件。
 
             TitleFont = new Font(this.Font.FontFamily.Name, 10f, FontStyle.Bold);
-
         }
 
-
-        #endregion
+        #endregion 构造
 
         #region 重写基类的成员
 
@@ -507,7 +519,7 @@ namespace System.Windows.Forms
 
                     #region 用户控件过多显示白块的问题
 
-                    /* 引用： 
+                    /* 引用：
                         It is not the kind of flicker that double-buffering can solve. Nor BeginUpdate or SuspendLayout. You've got too many controls, the BackgroundImage can make it a lot worse.
 
                         It starts when the UserControl paints itself. It draws the BackgroundImage, leaving holes where the child control windows go. Each child control then gets a message to paint itself, they'll fill in the hole with their window content. When you have a lot of controls, those holes are visible to the user for a while. They are normally white, contrasting badly with the BackgroundImage when it is dark. Or they can be black if the form has its Opacity or TransparencyKey property set, contrasting badly with just about anything.
@@ -520,7 +532,7 @@ namespace System.Windows.Forms
                             cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
                             return cp;
                           }
-                        } 
+                        }
 
                         There are many things you can do to improve painting speed, to the point that the flicker isn't noticeable anymore. Start by tackling the BackgroundImage. They can be really expensive when the source image is large and needs to be shrunk to fit the control. Change the BackgroundImageLayout property to "Tile". If that gives a noticeable speed-up, go back to your painting program and resize the image to be a better match with the typical control size. Or write code in the UC's OnResize() method to create a properly sized copy of the image so that it doesn't have to be resized every time the control repaints. Use the Format32bppPArgb pixel format for that copy, it renders about 10 times faster than any other pixel format.
 
@@ -538,7 +550,8 @@ namespace System.Windows.Forms
 
                         Last but not least, reducing the number of child controls is always a good approach to solve slow painting problems. Override the UC's OnPaint() event and draw what is now shown in a child. Particular Label and PictureBox are very wasteful. Convenient for point and click but their light-weight alternative (drawing a string or an image) takes only a single line of code in your OnPaint() method.
                     */
-                    #endregion
+
+                    #endregion 用户控件过多显示白块的问题
 
                     if (DontWaitChildrenDrawBackground)
                         cp.ExStyle |= (int)WindowStyle.WS_CLIPCHILDREN;  //防止因窗体控件太多出现闪烁
@@ -578,14 +591,13 @@ namespace System.Windows.Forms
                 return;
             }
 
-
             if (m.Msg == Win32.WM_SYSCOMMAND)
             {
                 int state = m.WParam.ToInt32();
-                /* 双击任务栏放大的情况, 参见 
+                /* 双击任务栏放大的情况, 参见
                  * https://msdn.microsoft.com/en-us/library/windows/desktop/ms646360%28v=vs.85%29.aspx
                  */
-                if ((state & 0xFFF0) == Win32.SC_MAXMIZE) // 最大化 
+                if ((state & 0xFFF0) == Win32.SC_MAXMIZE) // 最大化
                 {
                 }
                 else if ((state & 0xFFF0) == Win32.SC_MINIMIZE)
@@ -593,7 +605,6 @@ namespace System.Windows.Forms
                 }
                 else if ((state & 0xFFF0) == Win32.SC_RESTORE)
                 {
-
                 }
                 else
                 {
@@ -649,7 +660,6 @@ namespace System.Windows.Forms
 
             g.SmoothingMode = SmoothingMode.HighSpeed;
 
-
             DrawTitleBackground(g);
 
             if (this.WindowState == FormWindowState.Normal)
@@ -693,14 +703,12 @@ namespace System.Windows.Forms
                     //            g.DrawRoundedRectangle(borderPen, -BorderSize, -BorderSize,
                     //                Width - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero),
                     //                Height - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero),
-                    //                radius); 
+                    //                radius);
                     //        }
                     //    }
                     //}
                 }
-
             }
-
 
             // 画标题
             DrawLogoAndTitle(g);
@@ -733,7 +741,7 @@ namespace System.Windows.Forms
             UpdateEdgePatching();
         }
 
-        #endregion
+        #endregion 重写基类的成员
 
         #region 公开的方法
 
@@ -747,7 +755,7 @@ namespace System.Windows.Forms
             this.Invalidate();
         }
 
-        #endregion
+        #endregion 公开的方法
 
         #region 可重写的方法
 
@@ -757,7 +765,6 @@ namespace System.Windows.Forms
 
             // 初始值
             this.SetColorSchema(ColorSchema.White);
-
 
             FullScreen = true;
             this.RoundCornerDiameter = 16;
@@ -780,7 +787,6 @@ namespace System.Windows.Forms
         /// <returns></returns>
         protected virtual Rectangle DrawLogoAndTitle(Graphics g)
         {
-
             int left = 6;
             int top = 0;
             int width = 0;
@@ -793,7 +799,6 @@ namespace System.Windows.Forms
             {
                 textSize = TextRenderer.MeasureText(this.TitleText, this.TitleFont);
             }
-
 
             // 整体标题区域大小
             width = (ShowLogo ? LogoSize : 0) + (ShowTitleText ? (int)textSize.Width : 0) + padding;
@@ -815,7 +820,7 @@ namespace System.Windows.Forms
             // 画文字
             if (ShowTitleText && !string.IsNullOrEmpty(TitleText))
             {
-                top = BorderSize + Padding.Top + (this.TitleBarHeight - (int)textSize.Height) / 2 ;
+                top = BorderSize + Padding.Top + (this.TitleBarHeight - (int)textSize.Height) / 2;
                 TextRenderer.DrawText(
                     g,
                     TitleText,
@@ -829,10 +834,8 @@ namespace System.Windows.Forms
                     TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
             }
 
-
             return new Rectangle(left, top, width, height);
         }
-
 
         protected virtual void DrawGradientBackground(Graphics g)
         {
@@ -849,7 +852,6 @@ namespace System.Windows.Forms
             {
                 g.FillRoundedRectangle(brush, 0, 0, this.Width, this.Height, radius);
             }
-
 
             if (ShowShade)
             {
@@ -873,15 +875,22 @@ namespace System.Windows.Forms
             }
         }
 
-
         protected virtual void DrawTitleBackground(Graphics g)
         {
+        }
 
+        protected virtual void DropShadowSetup()
+        {
+            DropShadow _shadow = new DropShadow(this);
+            _shadow.BorderRadius = RoundCornerDiameter / 2;
+            _shadow.ShadowRadius = RoundCornerDiameter / 2;
+            _shadow.BorderColor = ColorEx.DarkenColor(this.BackColor, 40);
+            _shadow.ShadowOpacity = 0.8f;
+            _shadow.Refresh();
         }
 
 
-
-        #endregion
+        #endregion 可重写的方法
 
         #region 私有方法
 
@@ -942,10 +951,9 @@ namespace System.Windows.Forms
                     m.Result = new IntPtr(Win32.HTRIGHT);
                     return;
                 }
-
             }
 
-            #endregion
+            #endregion 判断操作的是窗体边缘, 则调整窗体大小
 
             m.Result = new IntPtr(Win32.HTCLIENT);
         }
@@ -974,7 +982,7 @@ namespace System.Windows.Forms
                 }
             }
             else
-            {                
+            {
                 // 防止控件撑出窗体
                 IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Width, Height, diameter, diameter);
                 Region = System.Drawing.Region.FromHrgn(hrgn);
@@ -1001,39 +1009,27 @@ namespace System.Windows.Forms
             //        int left =  control.Left <= BorderSize ? BorderSize + 1 : control.Left;
             //        int top = control.Top <= BorderSize ? BorderSize + 1 : control.Top;
 
-
             //        IntPtr handle = Win32.CreateRoundRectRgn(left, top, width, height, RoundCornerDiameter, RoundCornerDiameter);
             //        control.Region = Region.FromHrgn(handle);
             //        Win32.DeleteObject(handle);
             //    }
             //}
-
         }
 
-
-        #endregion
+        #endregion 私有方法
 
         #region 事件处理
 
         // 窗体加载
         private void RoundedCornerForm_Load(object sender, EventArgs e)
         {
-
             if (!DesignMode && ShowFormShadow)
             {
                 // 如果窗体有DPI感应的话，DropShadow代码还需修改
-                DropShadow _shadow = new DropShadow(this);
-                _shadow.BorderRadius = this.RoundCornerDiameter / 2;
-                _shadow.ShadowRadius = _shadow.BorderRadius;
-                _shadow.Refresh();
+                DropShadowSetup();
             }
         }
 
-        #endregion
-
-
-
+        #endregion 事件处理
     }
-
-
 }

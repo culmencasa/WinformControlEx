@@ -138,8 +138,6 @@ namespace System.Windows.Forms
 
         #region 公开的方法
 
-
-
         public void Redraw(bool redraw = true)
         {
             if (Owner == null)
@@ -167,10 +165,12 @@ namespace System.Windows.Forms
                 ShadowBitmap.Height,
                 BorderRadius,
                 BorderRadius));
+            
             Region ownerRegion = Owner.Region.Clone();
             ownerRegion.Translate(ShadowOffset.X, ShadowOffset.Y);
 
-            shadowRegion.Exclude(ownerRegion);
+            // issue: 区域大小不正确
+            //shadowRegion.Exclude(ownerRegion);
             Region = shadowRegion;
 
             if (this.Owner.TopMost)
@@ -191,8 +191,9 @@ namespace System.Windows.Forms
             if (IsOwnerAlive())
             {
                 //Owner.Move += OnLocationChanged;
+                Owner.Shown += Owner_Shown;
                 Owner.LocationChanged += OnLocationChanged;
-                Owner.Resize += Owner_Resize;
+                Owner.Resize += Owner_Resize; // issue: win11下Resize事件不触发
                 Owner.ResizeBegin += Owner_ResizeBegin;
                 Owner.ResizeEnd += Owner_ResizeEnd;
                 Owner.FormClosed += Owner_FormClosed;
@@ -200,11 +201,18 @@ namespace System.Windows.Forms
             }
         }
 
+        private void Owner_Shown(object sender, EventArgs e)
+        {
+            Redraw(true);
+        }
+
+
         private void UnwireOwnerEvents()
         {
             if (IsOwnerAlive())
             {
                 //Owner.Move -= OnLocationChanged;
+                Owner.Shown -= Owner_Shown;
                 Owner.LocationChanged -= OnLocationChanged;
                 Owner.Resize -= new EventHandler(Owner_Resize);
                 Owner.ResizeBegin -= Owner_ResizeBegin;
@@ -252,7 +260,9 @@ namespace System.Windows.Forms
                 // 从bitmap中心向外扩散
                 RectangleF wrapRect = new RectangleF(
                         (bitmap.Width - Owner.Width) / 2,
-                        (bitmap.Height - Owner.Height) / 2, Owner.Width, Owner.Height);
+                        (bitmap.Height - Owner.Height) / 2,
+                        Owner.Width, 
+                        Owner.Height);
 
                 // 画10个阴影形成渐变
                 int repeat = 10;

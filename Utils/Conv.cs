@@ -350,12 +350,13 @@ namespace Utils
         /// <returns></returns>
         public static double ToFixed(double d, int s)
         {
-            double sp = Math.Pow(10, s);
+            int digitsValue = Convert.ToInt32(Math.Pow(10, s));
 
-            if (d < 0)
-                return Math.Truncate(d) + Math.Ceiling((d - Math.Truncate(d)) * sp) / sp;
-            else
-                return Math.Truncate(d) + Math.Floor(Math.Round(d - Math.Truncate(d), s) * sp) / sp;
+            double valuTemp = d * digitsValue;
+
+            double floorValue = Math.Floor(valuTemp);
+
+            return floorValue / digitsValue; 
         }
         
         #endregion

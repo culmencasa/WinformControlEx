@@ -49,6 +49,9 @@ namespace System
         public static extern bool ReleaseCapture();
 
         [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr handle, int nCmdShow);
+
+        [DllImport("user32.dll")]
         public static extern bool ShowWindowAsync(IntPtr hWnd, int cmdShow);
 
         [DllImport("user32.dll")]
@@ -131,7 +134,8 @@ namespace System
 
         #endregion
 
-
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern bool IsIconic(IntPtr handle);
 
 
         [DllImport("user32.dll", EntryPoint = "SendMessage")]
