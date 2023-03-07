@@ -27,6 +27,8 @@ namespace System.Windows.Forms
             TitleText = string.Empty;
             ContentText = string.Empty;
             MaxSize = new Size(300, 250);
+
+            this.InfoIcon.Image = Properties.Resources.lightbub;
         }
 
         #endregion

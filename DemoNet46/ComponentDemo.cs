@@ -1,9 +1,11 @@
-﻿using System;
+﻿using FormExCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,9 +23,15 @@ namespace DemoNet46
 
         private void btnShowException_Click(object sender, EventArgs e)
         {
-            Exception ex = new Exception("abc");
-            ExceptionMessageBox box = new ExceptionMessageBox(ex);
-            box.Show();
+            try
+            {
+                throw new IndexOutOfRangeException($"Invalid index: 0");
+            }
+            catch (Exception ex)
+            {
+                ExceptionMessageBox box = new ExceptionMessageBox(ex);
+                box.Show();
+            }
         }
 
         private void btnWorkShade_Click(object sender, EventArgs ee)
@@ -79,7 +87,18 @@ namespace DemoNet46
 
         private void btnRoundForm_Click(object sender, EventArgs e)
         {
-            
+            OcnForm form = new OcnForm();
+            form.Show();
+        }
+
+        private void btnShowInfoTip_Click(object sender, EventArgs e)
+        {
+
+            InfoTip.SetToolTip(btnShowInfoTip, 
+                "空山新雨后， 天气晚来秋。 " + Environment.NewLine +
+                "明月松间照， 清泉石上流。 " + Environment.NewLine +
+                "竹喧归浣女， 莲动下渔舟。 " + Environment.NewLine +  
+                "随意春芳歇， 王孙自可留。", "王维《山居秋暝》", InfoTip.Position.Right, 8000);
         }
     }
 }

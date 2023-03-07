@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Reflection;
-using System.ComponentModel;
 
 namespace System.Windows.Forms
 {
@@ -13,11 +8,14 @@ namespace System.Windows.Forms
     /// </summary>
     public static class FormManager
     {
+
+        //TODO: 改成IoC
+
         // 窗体缓存
         static List<Form> FixedSingleFormCache = new List<Form>();
 
-        #region 公开方法
-        
+        #region 单例窗体
+
         /// <summary>
         /// 获取一个与指定条件匹配的窗体对象，如果未找到默认会创建一个(非Mdi)
         /// </summary>
@@ -56,7 +54,6 @@ namespace System.Windows.Forms
                     }
                 }
 
-
                 if (createIfNotFound)
                 {
                     if (instance == null)
@@ -73,10 +70,7 @@ namespace System.Windows.Forms
                             instance.GotFocus += Form_GotFocus;
                             instance.Activated += Form_Activated;
                         }
-                        instance.FormClosed += delegate(object sender, FormClosedEventArgs e)
-                        {
-                            FormManager.FixedSingleFormCache.Remove(instance);
-                        };
+                        instance.FormClosed += Form_Closed;
                         FormManager.FixedSingleFormCache.Add(instance);
                     }
                 }
@@ -90,12 +84,23 @@ namespace System.Windows.Forms
             return instance;
         }
 
+        /// <summary>
+        /// 创建一个无参构造的窗体
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <returns></returns>
         public static TForm Single<TForm>() where TForm : Form, new()
         {
             return Single<TForm>(true, null);
         }
 
 
+        /// <summary>
+        /// 创建一个有参构造的窗体
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <param name="constructorArguments"></param>
+        /// <returns></returns>
         public static TForm Single<TForm>(object constructorArguments) where TForm : Form, new()
         {
             if (constructorArguments == null)
@@ -110,6 +115,9 @@ namespace System.Windows.Forms
 
             return Single<TForm>(true, null, new object[] { constructorArguments });
         }
+        #endregion
+
+        #region 窗体相关
 
         /// <summary>
         /// 将所有窗体设置为显示或隐藏
@@ -130,6 +138,96 @@ namespace System.Windows.Forms
                 }
             }
         }
+
+        /// <summary>
+        /// 关闭所有窗体 
+        /// </summary>
+        public static void CloseAll()
+        {
+            for (int i = FixedSingleFormCache.Count - 1; i >= 0; i--)
+            {
+                Form instance = FixedSingleFormCache[i];
+
+                //ClearEvents(instance, "FormClsing");
+                //instance.Close();
+                instance.Dispose();
+            }
+            FixedSingleFormCache.Clear();
+        }
+
+        /// <summary>
+        /// 是否包含某一类型
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <returns></returns>
+        public static bool Contains<TForm>()
+        {
+            return FormManager.FixedSingleFormCache.Exists(p => p.GetType().Equals(typeof(TForm)));
+        }
+
+        /// <summary>
+        /// 是否包含同一实例
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public static bool Contains<TForm>(TForm instance) where TForm : Form, new()
+        {
+            var existsInCache = FormManager.FixedSingleFormCache.FirstOrDefault(p => p.GetType().Equals(typeof(TForm)));
+            if (existsInCache != null && !existsInCache.IsDisposed && existsInCache != instance)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 是否包含同名
+        /// </summary>
+        /// <param name="formName"></param>
+        /// <returns></returns>
+        public static bool ContainsName(string formName)
+        {
+            return FormManager.FixedSingleFormCache.Exists(
+                p => p.Name == formName
+                && p.IsDisposed == false);
+        }
+
+        /// <summary>
+        /// 将外部创建的实例附加到缓存中
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <param name="instance"></param>
+        public static void Attach<TForm>(TForm instance) where TForm : Form, new()
+        {
+            var existsInCache = FormManager.FixedSingleFormCache.FirstOrDefault(p => p.GetType().Equals(typeof(TForm)));
+            if (existsInCache != null)
+            {
+                if (existsInCache == instance)
+                {
+                    return;
+                }
+
+                if (existsInCache.IsDisposed)
+                {
+                    FormManager.FixedSingleFormCache.Remove(existsInCache);
+                }
+
+            }
+
+            instance.GotFocus -= Form_GotFocus;
+            instance.Activated -= Form_Activated;
+            instance.FormClosed -= Form_Closed;
+            instance.GotFocus += Form_GotFocus;
+            instance.Activated += Form_Activated;
+            instance.FormClosed += Form_Closed;
+            FormManager.FixedSingleFormCache.Add(instance);
+        }
+
+        #endregion
+
+        #region 扩展方法
 
         /// <summary>
         /// 获取指定控件下的子控件集合中与指定条件匹配的窗体对象
@@ -178,21 +276,50 @@ namespace System.Windows.Forms
         }
 
         /// <summary>
-        /// 关闭所有窗体 
+        /// 获取窗体的顶层窗体
         /// </summary>
-        public static void CloseAll()
+        /// <param name="itself"></param>
+        /// <returns></returns>
+        public static Form GetTopLevelForm(this Form itself)
         {
-            for (int i = FixedSingleFormCache.Count - 1; i >= 0; i--)
+            Form outmostForm = null;
+
+            if (itself == null)
             {
-                Form instance = FixedSingleFormCache[i];
-                
-                //ClearEvents(instance, "FormClsing");
-                //instance.Close();
-                instance.Dispose();
+                return outmostForm;
             }
-            FixedSingleFormCache.Clear();
+
+            if (itself.TopLevel && itself.Parent == null)
+            {
+                return itself as Form;
+            }
+
+            if (itself.Parent == null)
+            {
+                return outmostForm;
+            }
+
+            Control parent = itself.Parent;
+            while (parent != null)
+            {
+                var testForm = parent as Form;
+                if (testForm != null && testForm.TopLevel)
+                {
+                    outmostForm = parent as Form;
+                    return outmostForm;
+                }
+
+                parent = parent.Parent;
+            }
+
+            return outmostForm;
         }
 
+
+        #endregion
+
+
+        #region 焦点所在窗体
 
         /// <summary>
         /// 获取最近打开的顶层窗体(不支持MDI)
@@ -241,52 +368,6 @@ namespace System.Windows.Forms
         }
 
         /// <summary>
-        /// 获取窗体的顶层窗体
-        /// </summary>
-        /// <param name="itself"></param>
-        /// <returns></returns>
-        public static Form GetTopLevelForm(this Form itself)
-        {
-            Form outmostForm = null;
-
-            if (itself == null)
-            {
-                return outmostForm;
-            }
-
-            if (itself.TopLevel && itself.Parent == null)
-            {
-                return itself as Form;
-            }
-
-            if (itself.Parent == null)
-            {
-                return outmostForm;
-            }
-
-            Control parent = itself.Parent;
-            while (parent != null)
-            {
-                var testForm = parent as Form;
-                if (testForm != null && testForm.TopLevel)
-                {
-                    outmostForm = parent as Form;
-                    return outmostForm;
-                }
-
-                parent = parent.Parent;
-            }
-
-            return outmostForm;
-        }
-
-        #endregion
-
-
-
-        #region 焦点所在窗体
-
-        /// <summary>
         /// 获取某一个控件的父窗体
         /// </summary>
         /// <returns></returns>
@@ -313,20 +394,65 @@ namespace System.Windows.Forms
         }
 
 
-        public static Form FocusedForm { get; set; }
+        public static Form FocusedForm
+        {
+            get; set;
+        }
+
+        #endregion
+
+
+        #region 事件
 
         private static void Form_Activated(object sender, EventArgs e)
         {
             FocusedForm = sender as Form;
         }
 
-        static void Form_GotFocus(object sender, EventArgs e)
+        private static void Form_GotFocus(object sender, EventArgs e)
         {
             FocusedForm = sender as Form;
         }
 
+        static void Form_Closed(object sender, FormClosedEventArgs e)
+        {
+            var instance = sender as Form;
+            if (instance != null)
+            {
+                if (FormManager.FixedSingleFormCache.Contains(instance))
+                {
+                    FormManager.FixedSingleFormCache.Remove(instance);
+                }
+            }
+        }
+
         #endregion
 
+
+        /// <summary>
+        /// 实例化一个窗体（等同new), 并指定窗体名称
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <param name="formName"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public static TForm Create<TForm>(string formName, params object[] parameters) where TForm : Form, new()
+        {
+            TForm instance = default(TForm);
+
+            if (parameters?.Length > 0)
+            {
+                instance = Activator.CreateInstance(typeof(TForm), parameters) as TForm;
+            }
+            else
+            {
+                instance = new TForm();
+            }
+
+            instance.Name = formName;
+
+            return instance;
+        }
 
     }
 }

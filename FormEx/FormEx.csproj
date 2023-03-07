@@ -277,6 +277,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<EmbeddedResource Update="CustomForm\InfoTip.resx">
+		  <Generator>ResXFileCodeGenerator</Generator>
+		  <LastGenOutput>InfoTip.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 		<EmbeddedResource Update="CustomForm\NonFrameForm.resx">
 			<DependentUpon>NonFrameForm.cs</DependentUpon>
 		</EmbeddedResource>

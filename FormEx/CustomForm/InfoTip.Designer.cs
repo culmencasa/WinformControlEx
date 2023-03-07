@@ -31,12 +31,12 @@ namespace System.Windows.Forms
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InfoTip));
             this.lblTitle = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.InfoIcon = new System.Windows.Forms.PictureBox();
             this.iconHolder = new System.Windows.Forms.Panel();
             this.wrapper = new System.Windows.Forms.Panel();
             this.pnlTextLayout = new System.Windows.Forms.Panel();
             this.lblText = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.InfoIcon)).BeginInit();
             this.iconHolder.SuspendLayout();
             this.wrapper.SuspendLayout();
             this.pnlTextLayout.SuspendLayout();
@@ -57,17 +57,17 @@ namespace System.Windows.Forms
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(2, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(30, 33);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
+            //this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.InfoIcon.Location = new System.Drawing.Point(2, 0);
+            this.InfoIcon.Name = "pictureBox1";
+            this.InfoIcon.Size = new System.Drawing.Size(30, 33);
+            this.InfoIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.InfoIcon.TabIndex = 1;
+            this.InfoIcon.TabStop = false;
             // 
             // iconHolder
             // 
-            this.iconHolder.Controls.Add(this.pictureBox1);
+            this.iconHolder.Controls.Add(this.InfoIcon);
             this.iconHolder.Dock = System.Windows.Forms.DockStyle.Left;
             this.iconHolder.Location = new System.Drawing.Point(0, 0);
             this.iconHolder.Name = "iconHolder";
@@ -123,7 +123,7 @@ namespace System.Windows.Forms
             this.ShowFormShadow = true;
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.InfoIcon)).EndInit();
             this.iconHolder.ResumeLayout(false);
             this.wrapper.ResumeLayout(false);
             this.pnlTextLayout.ResumeLayout(false);
@@ -134,7 +134,7 @@ namespace System.Windows.Forms
         #endregion
 
         private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox InfoIcon;
         private System.Windows.Forms.Panel iconHolder;
         private System.Windows.Forms.Panel wrapper;
         private System.Windows.Forms.Label lblText;

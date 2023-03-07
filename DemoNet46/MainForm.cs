@@ -310,7 +310,7 @@ namespace DemoNet46
             if (e.Button == MouseButtons.Left)
             {
                 var themeDemo = FormManager.Single<ThemeDemo>();
-
+                themeDemo.Shadow = false;
                 AddChildWindow(themeDemo);
 
             }
