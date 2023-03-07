@@ -116,7 +116,7 @@
             this.colorGroupBox1.Controls.Add(this.btnWorkShade);
             this.colorGroupBox1.Controls.Add(this.btnBackgroundWorkShade);
             this.colorGroupBox1.LineColor = System.Drawing.Color.DimGray;
-            this.colorGroupBox1.Location = new System.Drawing.Point(6, 6);
+            this.colorGroupBox1.Location = new System.Drawing.Point(6, 27);
             this.colorGroupBox1.Name = "colorGroupBox1";
             this.colorGroupBox1.Show3DShadow = false;
             this.colorGroupBox1.Size = new System.Drawing.Size(308, 225);
@@ -144,7 +144,7 @@
             this.circularProgressBar1.TextFont1 = new System.Drawing.Font("Arial", 14F);
             this.circularProgressBar1.TextFont2 = new System.Drawing.Font("Arial", 20F);
             this.circularProgressBar1.TextFont3 = new System.Drawing.Font("Arial", 14F);
-            this.circularProgressBar1.TextLine1 = "情绪";
+            this.circularProgressBar1.TextLine1 = "怒气";
             this.circularProgressBar1.TextLine2 = "100";
             this.circularProgressBar1.TextLine3 = "%";
             this.circularProgressBar1.Value = 100F;
@@ -179,7 +179,7 @@
             this.colorGroupBox2.Controls.Add(this.btnShowInfoTip);
             this.colorGroupBox2.Controls.Add(this.circularProgressBar1);
             this.colorGroupBox2.Controls.Add(this.roundButton1);
-            this.colorGroupBox2.Location = new System.Drawing.Point(314, 6);
+            this.colorGroupBox2.Location = new System.Drawing.Point(314, 27);
             this.colorGroupBox2.Name = "colorGroupBox2";
             this.colorGroupBox2.Show3DShadow = false;
             this.colorGroupBox2.Size = new System.Drawing.Size(343, 225);
