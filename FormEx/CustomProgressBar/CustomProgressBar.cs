@@ -233,6 +233,17 @@ namespace System.Windows.Forms
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [Category("Custom")]
+        [DefaultValue(true)]
+        public bool ShowPercentText
+        {
+            get;
+            set;
+        } = true;
+
         #endregion
 
         #region 构造
@@ -475,20 +486,24 @@ namespace System.Windows.Forms
                     g.DrawRoundedRectangle(pen, GetBounds(), BorderRadius);
                 }
 
-                string progressText = "0%";
-                if (DesignMode)
+                if (ShowPercentText)
                 {
-                    progressText = Value + "%";
+                    string progressText = "0%";
+                    if (DesignMode)
+                    {
+                        progressText = Value + "%";
+                    }
+                    else
+                    {
+                        progressText = _currentSessionValue + "%";
+                    }
+                    SizeF textSize = g.MeasureString(progressText, this.Font);
+                    g.DrawString(progressText,
+                        this.Font,
+                        new SolidBrush(this.ForeColor),
+                        new PointF((this.Width - textSize.Width) / 2, (this.Height - textSize.Height) / 2));
+
                 }
-                else
-                {
-                    progressText = _currentSessionValue + "%";
-                }
-                SizeF textSize = g.MeasureString(progressText, this.Font);
-                g.DrawString(progressText, 
-                    this.Font,
-                    new SolidBrush(this.ForeColor),
-                    new PointF((this.Width - textSize.Width) / 2, (this.Height - textSize.Height) / 2));
             }
 
             return bufferImage;

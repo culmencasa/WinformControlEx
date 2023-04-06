@@ -12,7 +12,7 @@ namespace System.Windows.Forms
     /// <summary>
     /// 自定义窗体(不支持圆角)
     /// </summary>
-    public partial class CustomForm : Form
+    public partial class CustomForm : Form, IDpiDefined
     {
         #region 事件
 
@@ -38,7 +38,7 @@ namespace System.Windows.Forms
         /// 窗体边框大小. 
         /// 如果窗体中的控件有Dock或者位置与边框重合，将遮挡边框。 
         /// </summary>
-        [Category("Custom")]
+        [Category("Custom")]        
         public int BorderSize
         {
             get
@@ -47,7 +47,12 @@ namespace System.Windows.Forms
             }
             set
             {
+                if (value < 0 || value > 4)
+                {
+                    return;
+                }
                 _borderSize = value;
+                
                 Invalidate();
             }
         }
@@ -57,14 +62,18 @@ namespace System.Windows.Forms
         /// </summary>
         [Category("Custom")]
         [DefaultValue(typeof(Color), "157,157,157")]
-        public Color BorderColor { get
+        public Color BorderColor
+        {
+            get
             {
                 return _borderColor;
-            } set
+            }
+            set
             {
                 _borderColor = value;
                 Invalidate();
-            } }
+            }
+        }
         /// <summary>
         /// 背景渐变色1
         /// </summary>
@@ -182,7 +191,7 @@ namespace System.Windows.Forms
             {
                 Rectangle clientArea = new Rectangle();
                 clientArea.X = this.BorderSize;
-                clientArea.Y = this.BorderSize +  TitleBarHeight;
+                clientArea.Y = this.BorderSize + TitleBarHeight;
                 clientArea.Width = this.Width - BorderSize * 2;
                 clientArea.Height = this.Height - BorderSize * 2 - TitleBarHeight;
 
@@ -232,6 +241,7 @@ namespace System.Windows.Forms
             InitializeDefaultValues();
 
             TitleFont = new Font(this.Font.FontFamily.Name, 16f, FontStyle.Bold);
+            Load += CustomForm_Load;
             Shown += CustomForm_Shown;
         }
 
@@ -270,18 +280,25 @@ namespace System.Windows.Forms
         {
             if (m.Msg == Win32.WM_NCHITTEST)
             {
-                if (AllowMove)
+                bool dealt = false;
+                // 点击任意位置等于点击标题栏, 需要代码处理支持AeroSnap
+                if (WindowState == FormWindowState.Normal)
                 {
-                    m.Result = new IntPtr(Win32.HTCAPTION);
-                    return;
+                    if (AllowResize)
+                    {
+                        dealt = HandleResizeMessage(ref m);
+                        if (dealt)
+                        {
+                            return;
+                        }
+                    }
+
+                    if (AllowMove)
+                    {
+                        m.Result = new IntPtr(Win32.HTCAPTION);
+                        return;
+                    }
                 }
-
-                if (AllowResize)
-                {
-                    WmNcHitTest(ref m);
-                    return;
-                } // 其他区域, 将操作区域视为标题栏
-
             }
 
             if (m.Msg == 0xa3)
@@ -314,41 +331,41 @@ namespace System.Windows.Forms
             base.WndProc(ref m);
         }
 
-		//protected override void OnPaintBackground(PaintEventArgs e)
-		//{
-		//	if (WindowState == FormWindowState.Normal)
-		//	{
-		//		Graphics g = e.Graphics;
-		//		SmoothingMode smooth = g.SmoothingMode;
-		//		if (this.BackgroundImage == null)
-		//		{
-		//			DrawGradientBackground(e.Graphics);
-		//		}
-		//		else
-		//		{
-		//			base.OnPaintBackground(e);
-		//		}
-		//		g.SmoothingMode = smooth;
-		//	}
-		//	else if (WindowState == FormWindowState.Maximized)
-		//	{
-		//		base.OnPaintBackground(e);
-		//	}
-		//}
+        //protected override void OnPaintBackground(PaintEventArgs e)
+        //{
+        //	if (WindowState == FormWindowState.Normal)
+        //	{
+        //		Graphics g = e.Graphics;
+        //		SmoothingMode smooth = g.SmoothingMode;
+        //		if (this.BackgroundImage == null)
+        //		{
+        //			DrawGradientBackground(e.Graphics);
+        //		}
+        //		else
+        //		{
+        //			base.OnPaintBackground(e);
+        //		}
+        //		g.SmoothingMode = smooth;
+        //	}
+        //	else if (WindowState == FormWindowState.Maximized)
+        //	{
+        //		base.OnPaintBackground(e);
+        //	}
+        //}
 
-		protected override void OnPaint(PaintEventArgs e)
-		{
-			Graphics g = e.Graphics;
-			SmoothingMode smooth = g.SmoothingMode;
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            SmoothingMode smooth = g.SmoothingMode;
 
             g.FillRectangle(Brushes.WhiteSmoke, DisplayRectangle);
 
 
-			DrawTitleBackground(g);
+            DrawTitleBackground(g);
 
 
-			if (this.WindowState == FormWindowState.Normal)
-			{
+            if (this.WindowState == FormWindowState.Normal)
+            {
                 if (BorderSize > 0)
                 {
                     // 边框
@@ -366,25 +383,25 @@ namespace System.Windows.Forms
                         }
                     }
                 }
-			}
+            }
 
-			// 内边框
-			//Color innerBorder = Color.FromArgb(100, 157, 157, 157);
-			//using (Pen borderPen = new Pen(innerBorder, 2))
-			//{
-			//    g.DrawRoundedRectangle(borderPen, 1, 1, this.Width - 5, this.Height - 5, radius);
-			//}
+            // 内边框
+            //Color innerBorder = Color.FromArgb(100, 157, 157, 157);
+            //using (Pen borderPen = new Pen(innerBorder, 2))
+            //{
+            //    g.DrawRoundedRectangle(borderPen, 1, 1, this.Width - 5, this.Height - 5, radius);
+            //}
 
 
-			// 画标题
-			DrawLogoAndTitle(g);
+            // 画标题
+            DrawLogoAndTitle(g);
 
-			g.SmoothingMode = smooth;
+            g.SmoothingMode = smooth;
 
             base.OnPaint(e);
-		}
+        }
 
-		protected override void OnResize(EventArgs e)
+        protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
         }
@@ -424,64 +441,71 @@ namespace System.Windows.Forms
         /// 画标题
         /// </summary>
         /// <returns></returns>
-        protected virtual Rectangle DrawLogoAndTitle(Graphics g)
+        protected virtual void DrawLogoAndTitle(Graphics g)
         {
-
-            int left = 6;
+            int startX = 0;
             int top = 0;
-            int width = 0;
-            int height = 0;
+            int fullWidth = 0;
+            int fullHeight = 0;
             int padding = 6;
+            int space = 6;
 
             // 字体大小
-            SizeF textSize = new SizeF();
+            SizeF textSize = new SizeF(1, 1);
             if (this.TitleText.Length > 0)
             {
                 textSize = TextRenderer.MeasureText(this.TitleText, this.TitleFont);
             }
 
-
             // 整体标题区域大小
-            width = (ShowLogo ? LogoSize : 0) + (ShowTitleText ? (int)textSize.Width : 0) + padding;
-            height = (int)textSize.Height > LogoSize ? (int)textSize.Height : LogoSize;
+            fullWidth = (ShowLogo ? LogoSize : 0) + (ShowTitleText ? (int)textSize.Width : 0) + space;
+            fullHeight = Math.Max((int)textSize.Height, LogoSize);
 
             // 图片位置
             if (ShowTitleCenter)
             {
-                left = (this.Width - width) / 2;
+                startX = (this.Width - fullWidth) / 2;
+            }
+            else
+            {
+                startX = Math.Max(Padding.Left, padding);
             }
 
             // 画图标
-            if (ShowLogo && Logo != null)
+            if (ShowLogo && Logo != null && Logo.Width > 0 && Logo.Height > 0)
             {
-                top = Padding.Top + (this.TitleBarHeight - LogoSize) / 2;
-                g.DrawImage(Logo, left, top, LogoSize, LogoSize);
+                int imageX = startX;
+                int imageY = (this.TitleBarHeight - LogoSize) / 2;
+                g.DrawImage(Logo, imageX, imageY, LogoSize, LogoSize);
             }
 
             // 画文字
             if (ShowTitleText && !string.IsNullOrEmpty(TitleText))
             {
-                top = Padding.Top + (this.TitleBarHeight - (int)textSize.Height) / 2;
+                int imagePlaceholderWidth = (ShowLogo ? LogoSize : 0);
+                int textX = startX + imagePlaceholderWidth + space;
+                int textY = (this.TitleBarHeight - (int)textSize.Height) / 2;
+                int textWidth = fullWidth - imagePlaceholderWidth;
+                int textHeight = TitleBarHeight;
+                Rectangle textArea = new Rectangle(
+                        textX,
+                        textY,
+                        textWidth,
+                        textHeight);
+
                 TextRenderer.DrawText(
                     g,
                     TitleText,
                     TitleFont,
-                    new Rectangle(
-                        left + (ShowLogo ? LogoSize : 0),
-                        top - 1,
-                        width + (ShowLogo ? LogoSize : 0),
-                        height),
+                    textArea,
                     TitleForeColor,
                     TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
             }
-
-
-            return new Rectangle(left, top, width, height);
         }
 
 
         protected virtual void DrawGradientBackground(Graphics g)
-        { 
+        {
             g.Clear(BackColor);
 
             using (LinearGradientBrush brush = new LinearGradientBrush(
@@ -508,68 +532,70 @@ namespace System.Windows.Forms
 
         #region 私有方法
 
-        private void WmNcHitTest(ref Message m)
+        /// <summary>
+        /// 判断操作的是窗体边缘, 则调整窗体大小
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        private bool HandleResizeMessage(ref Message m)
         {
-            #region 判断操作的是窗体边缘, 则调整窗体大小
-            if (WindowState == FormWindowState.Normal)
+
+            int wparam = m.LParam.ToInt32();
+            Point mouseLocation = new Point(RenderHelper.LOWORD(wparam), RenderHelper.HIWORD(wparam));
+            mouseLocation = PointToClient(mouseLocation);
+
+
+            int range = 15;
+
+            if (mouseLocation.X < range && mouseLocation.Y < range)
             {
-                int wparam = m.LParam.ToInt32();
-                Point mouseLocation = new Point(RenderHelper.LOWORD(wparam), RenderHelper.HIWORD(wparam));
-                mouseLocation = PointToClient(mouseLocation);
-
-                if (mouseLocation.X < 5 && mouseLocation.Y < 5)
-                {
-                    m.Result = new IntPtr(Win32.HTTOPLEFT);
-                    return;
-                }
-
-                if (mouseLocation.X > Width - 5 && mouseLocation.Y < 5)
-                {
-                    m.Result = new IntPtr(Win32.HTTOPRIGHT);
-                    return;
-                }
-
-                if (mouseLocation.X < 5 && mouseLocation.Y > Height - 5)
-                {
-                    m.Result = new IntPtr(Win32.HTBOTTOMLEFT);
-                    return;
-                }
-
-                if (mouseLocation.X > Width - 5 && mouseLocation.Y > Height - 5)
-                {
-                    m.Result = new IntPtr(Win32.HTBOTTOMRIGHT);
-                    return;
-                }
-
-                if (mouseLocation.Y < 3)
-                {
-                    m.Result = new IntPtr(Win32.HTTOP);
-                    return;
-                }
-
-                if (mouseLocation.Y > Height - 3)
-                {
-                    m.Result = new IntPtr(Win32.HTBOTTOM);
-                    return;
-                }
-
-                if (mouseLocation.X < 3)
-                {
-                    m.Result = new IntPtr(Win32.HTLEFT);
-                    return;
-                }
-
-                if (mouseLocation.X > Width - 3)
-                {
-                    m.Result = new IntPtr(Win32.HTRIGHT);
-                    return;
-                }
-
+                m.Result = new IntPtr(Win32.HTTOPLEFT);
+                return true;
             }
 
-            #endregion
+            if (mouseLocation.X > Width - range && mouseLocation.Y < range)
+            {
+                m.Result = new IntPtr(Win32.HTTOPRIGHT);
+                return true;
+            }
 
-            m.Result = new IntPtr(Win32.HTCLIENT);
+            if (mouseLocation.X < range && mouseLocation.Y > Height - range)
+            {
+                m.Result = new IntPtr(Win32.HTBOTTOMLEFT);
+                return true;
+            }
+
+            if (mouseLocation.X > Width - range && mouseLocation.Y > Height - range)
+            {
+                m.Result = new IntPtr(Win32.HTBOTTOMRIGHT);
+                return true;
+            }
+
+            if (mouseLocation.Y < range)
+            {
+                m.Result = new IntPtr(Win32.HTTOP);
+                return true;
+            }
+
+            if (mouseLocation.Y > Height - range)
+            {
+                m.Result = new IntPtr(Win32.HTBOTTOM);
+                return true;
+            }
+
+            if (mouseLocation.X < range * 2)
+            {
+                m.Result = new IntPtr(Win32.HTLEFT);
+                return true;
+            }
+
+            if (mouseLocation.X > Width - range * 2)
+            {
+                m.Result = new IntPtr(Win32.HTRIGHT);
+                return true;
+            }
+
+            return false;
         }
 
 
@@ -578,8 +604,13 @@ namespace System.Windows.Forms
         #region 事件处理
 
         // 窗体加载
-        private void RoundedCornerForm_Load(object sender, EventArgs e)
+        private void CustomForm_Load(object sender, EventArgs e)
         {
+            using (Graphics graphics = this.CreateGraphics())
+            {
+                RuntimeScaleFactorX = graphics.DpiX / 96f;
+                RuntimeScaleFactorY = graphics.DpiY / 96f;
+            }
         }
 
         private void CustomForm_Shown(object sender, EventArgs e)
@@ -591,6 +622,28 @@ namespace System.Windows.Forms
 
 
         #endregion
+
+        public float DesigntimeScaleFactorX { get; set; }
+        public float DesigntimeScaleFactorY { get; set; }
+        public float RuntimeScaleFactorX { get; set; }
+        public float RuntimeScaleFactorY { get; set; }
+
+        public float ScaleFactorRatioX
+        {
+            get
+            {
+                return RuntimeScaleFactorX / DesigntimeScaleFactorX;
+            }
+        }
+        public float ScaleFactorRatioY
+        {
+            get
+            {
+                return RuntimeScaleFactorY / DesigntimeScaleFactorY;
+            }
+        }
+
+
 
     }
 

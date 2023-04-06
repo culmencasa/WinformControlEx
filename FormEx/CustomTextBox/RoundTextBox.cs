@@ -78,11 +78,13 @@ namespace System.Windows.Forms
         private bool _useSystemPasswordChar;
         private Color _textContentBackColor;
         private Color _textContentForeColor;
-
+        private Font _originalFont;
         //public bool ButtonClickWorking { get; set; }
 
         private int _borderRadius;
         private bool _autoScrollbar;
+        private int _defaultPadding = 7;
+        private int _customLeftIndent;
 
         #endregion
 
@@ -260,13 +262,15 @@ namespace System.Windows.Forms
             {
                 bool isChanged = _autoSizeFont != value;
                 _autoSizeFont = value;
+
                 if (isChanged)
                 {
-                    this.Padding = new Forms.Padding(3);
-                    ReizeTextBoxFont();
+                    ResizeTextBoxFont();
+                    RecalculateInnerTextBoxPosition();
                 }
             }
         }
+
 
         /// <summary>
         /// 内容显示为密码字符
@@ -308,7 +312,7 @@ namespace System.Windows.Forms
             set
             {
                 _borderRadius = value;
-                ResizePadding();
+                RecalculateInnerTextBoxPosition();
             }
         }
 
@@ -331,7 +335,7 @@ namespace System.Windows.Forms
             }
             set
             {
-                //innerTextBox.ReadOnly = value;
+                _innerTextBox.ReadOnly = value;
                 //innerTextBox.BackColor = this.BackColor;
             }
         }
@@ -393,8 +397,8 @@ namespace System.Windows.Forms
         {
             get
             {
-                    
-                return _showClearButton; 
+
+                return _showClearButton;
             }
             set
             {
@@ -402,6 +406,66 @@ namespace System.Windows.Forms
                 UpdateClearButtonVisibility();
             }
         }
+
+
+
+
+        /// <summary>
+        /// 前景色
+        /// </summary>
+        [Category("Custom")]
+        [Browsable(false)]
+        public override Color ForeColor
+        {
+            get
+            {
+                return base.ForeColor;
+            }
+            set
+            {
+                if (!IsTextEqualEmptyTooltip())
+                {
+                    base.ForeColor = value;
+                    _innerTextBox.ForeColor = value;
+                }
+                else
+                {
+                    base.ForeColor = value;
+                    _innerTextBox.ForeColor = EmptyTooltipForeColor;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 停靠方式
+        /// </summary>
+        [Category("Custom")]
+        public bool Multiline
+        {
+            get
+            {
+                return _innerTextBox.Multiline;
+            }
+            set
+            {
+                _innerTextBox.Multiline = value;
+                RecalculateInnerTextBoxPosition();
+            }
+        }
+
+        [Category("Custom")]
+        public int CustumLeftIndent
+        {
+            get
+            {
+                return _customLeftIndent;
+            }
+            set
+            {
+                _customLeftIndent = value;
+            }
+        }
+
 
         #endregion
 
@@ -473,14 +537,29 @@ namespace System.Windows.Forms
 
         private void innerTextBox_MouseHover(object sender, EventArgs e)
         {
-            _innerTextBoxState = TextBoxStates.Highlight;
-            this.Invalidate();
+            //_innerTextBoxState = TextBoxStates.Highlight;
+            //this.Invalidate();
+
         }
 
         private void innerTextBox_MouseEnter(object sender, EventArgs e)
         {
             _innerTextBoxState = TextBoxStates.Highlight;
             this.Invalidate();
+            Timer t = new Timer();
+            t.Interval = 500;
+            t.Tick += (a, b) =>
+            {
+                bool hittest = _innerTextBox.Bounds.Contains(PointToClient(new Point(Control.MousePosition.X, Control.MousePosition.Y)));
+                if (!hittest)
+                {
+                    _innerTextBoxState = TextBoxStates.Normal;
+                    this.Invalidate();
+                    t.Stop();
+                    t.Dispose();
+                }
+            };
+            t.Start();
         }
 
         private void innerTextBox_Enter(object sender, EventArgs e)
@@ -609,47 +688,31 @@ namespace System.Windows.Forms
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        /// <summary>
-        /// 前景色
-        /// </summary>
-        [Category("Custom")]
-        [Browsable(false)]
-        public override Color ForeColor
-        {
-            get
-            {
-                return base.ForeColor;
-            }
-            set
-            {
-                if (!IsTextEqualEmptyTooltip())
-                {
-                    base.ForeColor = value;
-                    _innerTextBox.ForeColor = value;
-                }
-                else
-                {
-                    base.ForeColor = value;
-                    _innerTextBox.ForeColor = EmptyTooltipForeColor;
-                }
-            }
-        }
 
-        /// <summary>
-        /// 停靠方式
-        /// </summary>
-        [Category("Custom")]
-        public bool Multiline
+        /*
+         * 1. 字体改变时，且Dock为None, 文本框高度跟着改变
+         * 2. 控件拉伸时，如果AutoSizeFont, 字体跟着改变大小
+         * 3. 
+为         */
+        protected override void OnFontChanged(EventArgs e)
         {
-            get
+            base.OnFontChanged(e);
+
+
+            _innerTextBox.Font = this.Font;
+
+            SizeF textSize = TextRenderer.MeasureText("ABC100", _innerTextBox.Font);
+            if (textSize.Height >= this.Height)
             {
-                return _innerTextBox.Multiline;
+                // 大于外框大小，则扩大。 
+                ResizeControlHeight();
             }
-            set
+            else
             {
-                _innerTextBox.Multiline = value;
-                ResizePadding();
+                // 小于外框大小， 则居中. 不缩小外框大小，用户自己拉伸。
+                RecalculateInnerTextBoxPosition();
             }
+
         }
 
 
@@ -669,37 +732,27 @@ namespace System.Windows.Forms
             base.OnEnabledChanged(e);
         }
 
-        protected override void OnDockChanged(EventArgs e)
-        {
-            base.OnDockChanged(e);
-
-            if (this.Dock != DockStyle.None)
-            {
-                ReizeTextBoxFont();
-            }
-            else
-            {
-                ResizePadding();
-            }
-        }
 
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
-            if (this.Dock != DockStyle.None)
+            if (AutoSizeFont)
             {
-                ReizeTextBoxFont();
+                ResizeTextBoxFont();
             }
-            else
-            {
-                ResizePadding();
-            }
+
+            RecalculateInnerTextBoxPosition();
         }
 
         protected override void OnParentChanged(EventArgs e)
         {
             base.OnParentChanged(e);
+
+            if (this.Parent != null)
+            {
+                _originalFont = this.Parent.Font;
+            }
         }
 
 
@@ -768,9 +821,13 @@ namespace System.Windows.Forms
         }
 
 
+
+
         #endregion
 
+
         #region 私有方法
+
 
         private bool IsTextEqualEmptyTooltip()
         {
@@ -807,11 +864,13 @@ namespace System.Windows.Forms
             this.BackColor = Color.Transparent;
             this.ForeColor = Color.Black;
             this.TextContentBackColor = Color.White;
-            this.Padding = new Padding((this.Height - _innerTextBox.Height) / 2);
+
+
+            this.Padding = new Padding(_defaultPadding);
 
             _innerTextBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             _innerTextBox.AutoCompleteSource = Forms.AutoCompleteSource.CustomSource;
-            _innerTextBox.AcceptsReturn = true; 
+            _innerTextBox.AcceptsReturn = true;
             _innerTextBox.Dock = DockStyle.Fill;
             _innerTextBox.ForeColor = this.EmptyTooltipForeColor;
             _innerTextBox.MouseEnter += new EventHandler(innerTextBox_MouseEnter);
@@ -832,10 +891,14 @@ namespace System.Windows.Forms
 
             this.MouseEnter += innerTextBox_MouseEnter;
             this.MouseHover += innerTextBox_MouseHover;
-            this.MouseLeave += new EventHandler(PaddingTextBox_MouseLeave);
-            this.LostFocus += new EventHandler(PaddingTextBox_LostFocus);
+            this.MouseLeave += PaddingTextBox_MouseLeave;
+            this.LostFocus += PaddingTextBox_LostFocus;
             this.MouseMove += RoundTextBox_MouseMove;
+
+
         }
+
+
 
 
         private void DrawNormalTextBox(Graphics g)
@@ -892,84 +955,104 @@ namespace System.Windows.Forms
             }
         }
 
+
         // 根据高度重新设定文本框的字体大小
         private Font GetFontForTextBoxHeight(int TextBoxHeight, Font OriginalFont)
         {
-            // What is the target size of the text box?
             float desiredheight = (float)TextBoxHeight;
 
-            // Set the font from the existing TextBox font.
-            // We use the fnt = new Font(...) method so we can ensure that
-            //  we're setting the GraphicsUnit to Pixels.  This avoids all
-            //  the DPI conversions between point & pixel.
             Font fnt = new Font(OriginalFont.FontFamily,
                                 OriginalFont.Size,
                                 OriginalFont.Style,
                                 GraphicsUnit.Pixel);
 
-            // TextBoxes never size below 8 pixels. This consists of the
-            // 4 pixels above & 3 below of whitespace, and 1 pixel line of
-            // greeked text.
             if (desiredheight < 8)
                 desiredheight = 8;
 
-            // Determine the Em sizes of the font and font line spacing
-            // These values are constant for each font at the given font style.
-            // and screen DPI.
             float FontEmSize = fnt.FontFamily.GetEmHeight(fnt.Style);
             float FontLineSpacing = fnt.FontFamily.GetLineSpacing(fnt.Style);
 
-            // emSize is the target font size.  TextBoxes have a total of
-            // 7 pixels above and below the FontHeight of the font.
-            float emSize = (desiredheight - 7) * FontEmSize / FontLineSpacing;
+            int defaultPaddingSize = _borderRadius / 2 + 7;
+            if (defaultPaddingSize < _defaultPadding)
+            {
+                defaultPaddingSize = _defaultPadding;
+            }
 
-            // Create the font, with the proper size to change the TextBox Height to the desired size.
+            float emSize = (desiredheight - defaultPaddingSize) * FontEmSize / FontLineSpacing;
+
             fnt = new Font(fnt.FontFamily, emSize, fnt.Style, GraphicsUnit.Pixel);
 
             return fnt;
         }
 
-        private void ReizeTextBoxFont()
+        /// <summary>
+        /// 自适应文本框字体大小
+        /// <para>不改变控件大小，按当前控件大小重新设定字体大小</para>
+        /// </summary>
+        private void ResizeTextBoxFont()
         {
             if (AutoSizeFont)
             {
-                int height = this.Height - this.Padding.Top - this.Padding.Bottom;
+                // 缩放字体以适应文本框
+                int height = this.Height - _defaultPadding * 2;
                 _innerTextBox.Font = GetFontForTextBoxHeight(height, this.Font);
             }
             else
             {
                 _innerTextBox.Font = this.Font;
-                this.ResizePadding();
                 this.Invalidate();
+            }
+        }
+
+        private void ResizeControlHeight()
+        {
+
+            // 仅在单行和未停靠时修改控件大小
+            if (this.Dock == DockStyle.None && !Multiline)
+            {
+                // 如果字体超出了文本框，将文本框扩大 
+                SizeF minSize = TextRenderer.MeasureText("10000", _originalFont);
+                int minHeight = (int)minSize.Height + _defaultPadding * 2;
+
+                SizeF textSize = TextRenderer.MeasureText("10000", _innerTextBox.Font);
+                int newHeight = (int)textSize.Height + _defaultPadding * 2;
+                if (newHeight < minHeight)
+                {
+                    newHeight = minHeight;
+                }
+                this.Height = newHeight;
             }
 
         }
 
-        private void ResizePadding()
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Padding Padding
         {
-            int defaultPaddingSize = this.BorderRadius;
-            if (defaultPaddingSize < 4)
+            get
             {
-                defaultPaddingSize = 4;
+                return base.Padding;
+            }
+            set
+            {
+                //base.Padding = new Padding(_borderRadius / 2 + 7);
+                base.Padding = value;
+            }
+        }
+
+
+        /// <summary>
+        /// 单行模式下，文本垂直居中。
+        /// 多行模式下，文本居左上。
+        /// </summary>
+        private void RecalculateInnerTextBoxPosition()
+        {
+            int defaultPaddingSize = _borderRadius / 2 + 7;
+            if (defaultPaddingSize < _defaultPadding)
+            {
+                defaultPaddingSize = _defaultPadding;
             }
 
-
-            string text = _innerTextBox.Text;
-            if (string.IsNullOrEmpty(text))
-            {
-                text = EmptyTooltipText;
-            }
-
-            if (string.IsNullOrEmpty(text))
-            {
-                return;
-            }
-
-            SizeF textSize = TextRenderer.MeasureText(text, _innerTextBox.Font);
-            int textWidth = (int)textSize.Width;
-            int textHeight = (int)textSize.Height;
-
-            int paddingValue;
 
             if (Multiline)
             {
@@ -977,30 +1060,29 @@ namespace System.Windows.Forms
             }
             else
             {
-                // Left Center
+                this.Padding = new Padding(defaultPaddingSize);
 
-                // 如果获取Height失败
-                if (textHeight > this.Height)
-                {
-                    paddingValue = defaultPaddingSize;
-                }
-                else
-                {
-                    paddingValue = (this.Height - textHeight) / 2;
-                }
 
-                this.Padding = new Padding(defaultPaddingSize, paddingValue, defaultPaddingSize, paddingValue);
 
+                _innerTextBox.Dock = DockStyle.Fill;
+
+                int innerHeight = _innerTextBox.Height;
+                int top = (this.Height - innerHeight) / 2;
+
+                int innerWidth = _innerTextBox.Width;
+
+                //this.Padding = new Padding(
+                //    defaultPaddingSize,
+                //    top,
+                //    defaultPaddingSize,
+                //    bottom);
+
+                _innerTextBox.Dock = DockStyle.None;
+                _innerTextBox.Location = new Point(defaultPaddingSize, top);
+                //_innerTextBox.Width = this.Width - defaultPaddingSize * 2 - (ShowClearButton ? btnCancel.Width : 0);
+
+                _innerTextBox.Width = innerWidth;
             }
-
-
-            //if (ShowDropDownButton)
-            //{
-            //    this.Padding = new Padding(this.Padding.Left, this.Padding.Top, this.btnDropDown.Width + 2, this.Padding.Bottom);
-            //}
-            //this.btnDropDown.Size = new Size(this.btnDropDown.Width, this.Height - 4);
-            //this.btnDropDown.Location = new Point(this.Width - this.btnDropDown.Width - (int)this.btnDropDown.BorderWidth * 2, (this.Height - this.btnDropDown.Height) / 2);
-
         }
 
         private void OnAutoScrollbarChanged()

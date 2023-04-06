@@ -41,7 +41,7 @@
             this._innerTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this._innerTextBox.Location = new System.Drawing.Point(5, 3);
             this._innerTextBox.Name = "_innerTextBox";
-            this._innerTextBox.Size = new System.Drawing.Size(142, 14);
+            this._innerTextBox.Size = new System.Drawing.Size(142, 21);
             this._innerTextBox.TabIndex = 0;
             this._innerTextBox.TabAction += new System.Action(this.innerTextBox_TabAction);
             // 

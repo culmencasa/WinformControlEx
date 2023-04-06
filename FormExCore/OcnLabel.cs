@@ -59,7 +59,7 @@ namespace FormExCore
         public override ContentAlignment TextAlign { get => base.TextAlign; set => base.TextAlign = value; }
 
 
-        protected virtual Rectangle GetImageRectangle()
+        protected virtual Rectangle GetImageRectangle(Graphics g)
         {
             int width = 0;
             int height = 0;
@@ -74,16 +74,27 @@ namespace FormExCore
             {
                 width = IconSize;
                 height = IconSize;
-                left = marginToLeftSide;
+                left = 0;
                 top = (this.Height - height) / 2;
-                
+
+                var parentForm = FormManager.GetTopForm(this.Parent);
+                if (parentForm is IDpiDefined)
+                {
+                    var dpiForm = parentForm as IDpiDefined;
+                    width = (int)(width * dpiForm.ScaleFactorRatioX);
+                    height =(int)(height * dpiForm.ScaleFactorRatioY);
+                    top = (this.Height - height) / 2;
+                }
+
                 if (AlignCenter)
                 {
-                    SizeF textSize = TextRenderer.MeasureText(Text, Font);
-                    left = (this.Width - IconSize - (int)textSize.Width - marginToLeftSide * 2) / 2;
-
+                    SizeF textSize = g.MeasureString(Text, Font);
+                    left = (this.Width - width - (int)textSize.Width - marginToLeftSide * 2) / 2; 
                 }
-                iconRectangle = new Rectangle(left, top, width, height);
+                else
+                {
+                    left = marginToLeftSide;
+                }
             }
             else
             {
@@ -91,14 +102,23 @@ namespace FormExCore
                 height = this.Height;
                 top = 0;
                 left = 0;
-                iconRectangle = new Rectangle(left, top, width, height);
+
+                var parentForm = FormManager.GetTopForm(this.Parent);
+                if (parentForm is IDpiDefined)
+                {
+                    var dpiForm = parentForm as IDpiDefined;
+                    width = (int)(width * dpiForm.ScaleFactorRatioX);
+                    height = (int)(height * dpiForm.ScaleFactorRatioY);
+                    top = (this.Height - height) / 2;
+                }
             }
 
+            iconRectangle = new Rectangle(left, top, width, height);
 
             return iconRectangle;
         }
 
-        protected virtual Rectangle GetTextRectangle()
+        protected virtual Rectangle GetTextRectangle(Graphics g)
         {
             int width = 0;
             int height = 0;
@@ -108,22 +128,24 @@ namespace FormExCore
             int textMarginToImage = 6;
 
             Rectangle titleRectangle = Rectangle.Empty;
-            Rectangle iconRectangle = GetImageRectangle();
+            Rectangle iconRectangle = GetImageRectangle(g);
 
             // 字体大小
             SizeF textSize = new SizeF();
             if (Text?.Length > 0)
             {
-                textSize = TextRenderer.MeasureText(Text, Font);
+                textSize = g.MeasureString(Text, Font);
             }
 
             // 整体标题区域大小
-            width = (int)textSize.Width;
+            width = (int)Math.Floor(textSize.Width) + 2;
             height = (int)textSize.Height;
             left = iconRectangle.Right + textMarginToImage;
             top = (this.Height - height) / 2;
+            
 
             titleRectangle = new Rectangle(left, top, width, height);
+
             return titleRectangle;
         }
 
@@ -131,7 +153,7 @@ namespace FormExCore
         {
             if (Image != null)
             {
-                g.DrawImage(Image, GetImageRectangle());
+                g.DrawImage(Image, GetImageRectangle(g));
             }
 
         }
@@ -142,11 +164,12 @@ namespace FormExCore
             {
                 using (SolidBrush sb = new SolidBrush(ForeColor))
                 {
-                    
+
                     //StringFormat sf = new StringFormat(StringFormatFlags.NoWrap | StringFormatFlags.NoClip);
                     //sf.Alignment = StringAlignment.Center;
                     //sf.LineAlignment = StringAlignment.Center;
-                    g.DrawString(Text, Font, sb, GetTextRectangle());
+                    g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+                    g.DrawString(Text, Font, sb, GetTextRectangle(g));
                 }
             }
         }

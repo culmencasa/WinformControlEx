@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Management;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Utils;
@@ -303,6 +304,21 @@ namespace System.Windows.Forms
             return factor;
         }
 
+        /// <summary>
+        /// 是否启用ClearType
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsClearTypeEnabled()
+        {
+            uint SPI_GETFONTSMOOTHING = 0x004A;
+            uint SPI_GETFONTSMOOTHINGCONTRAST = 0x200C;
+
+            uint fontSmoothing = 0;
+            uint fontSmoothingContrast = 0;
+            Win32.SystemParametersInfo(SPI_GETFONTSMOOTHING, 0, ref fontSmoothing, 0);
+            Win32.SystemParametersInfo(SPI_GETFONTSMOOTHINGCONTRAST, 0, ref fontSmoothingContrast, 0);
+            return (fontSmoothing == 1 && fontSmoothingContrast >= 200);
+        }
 
 
     }

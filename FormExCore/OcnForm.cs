@@ -175,6 +175,7 @@ namespace FormExCore
                 // 设计时不改变窗体形状. 因为在HighDPI下宽高会不正常.
                 if (IsHandleCreated && !DesignMode)
                     UpdateFormRoundCorner(value);
+
                 Invalidate();
             }
         }
@@ -471,18 +472,56 @@ namespace FormExCore
 
         private void LayoutControlButtons()
         {
-            this.btnClose.Location = new Point(this.Width - btnClose.Width, (TitleBarHeight - btnClose.Height) / 2);
-            this.btnMax.Location = new Point(btnClose.Left - btnMax.Width, (TitleBarHeight - btnClose.Height) / 2);
-            this.btnMin.Location = new Point(btnMax.Left - btnMin.Width, (TitleBarHeight - btnClose.Height) / 2);
+            int left = this.Width;
+            int top = 0;
+            if (TitleBarHeight > btnClose.Height)
+            {
+                int maxItemHeight = new[] { btnClose.Height, btnMax.Height, btnMin.Height }.Max();
+                top = (TitleBarHeight - maxItemHeight) / 2;
+            }
+            else
+            {
+                top = 0;
+            }
+
+
+            if (btnClose.Visible)
+            {
+                left -= btnClose.Width;
+                this.btnClose.Location = new Point(left, top);
+            }
+
+            if (btnMax.Visible)
+            {
+                left -= btnMax.Width;
+                this.btnMax.Location = new Point(left, top);
+            }
+
+            if (btnMin.Visible)
+            {
+                left -= btnMin.Width;
+                this.btnMin.Location = new Point(left, top);
+            }
         }
-           
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            SetControlBoxVisibility();
+            LayoutControlButtons();
+        }
+
         #endregion
 
         #region 界面事件
-                
+
         private void OcnForm_Resize(object sender, EventArgs e)
         {
-            LayoutControlButtons();
+            if (IsHandleCreated && this.Visible)
+            {
+                LayoutControlButtons();
+            }
         }
 
         #endregion
@@ -507,6 +546,7 @@ namespace FormExCore
                     }
 
                     cp.Style |= (int)WindowStyle.WS_SYSMENU;
+                    //cp.ExStyle |= 0x02000000;  // 禁用掉窗体的自动重绘功能
                 }
                 return cp;
             }
@@ -708,6 +748,7 @@ namespace FormExCore
             return titleRectangle;
         }
 
+
         protected override void OnPaint(PaintEventArgs e)
         {
             if (Width <= 0 || Height <= 0)
@@ -719,7 +760,7 @@ namespace FormExCore
             Bitmap cacheBitmap = new Bitmap(this.Width, this.Height);
 
             Graphics g = Graphics.FromImage(cacheBitmap);
-            g.SmoothingMode = SmoothingMode.None;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
 
 
             FillTitleBarBackground(g);
@@ -774,6 +815,10 @@ namespace FormExCore
         {
             base.OnStyleChanged(e);
 
+            SetControlBoxVisibility();
+        }
+        protected void SetControlBoxVisibility()
+        {
             if (!ControlBox)
             {
                 btnClose.Visible = false;
@@ -787,7 +832,6 @@ namespace FormExCore
                 btnClose.Visible = true;
             }
         }
-
 
 
         #endregion

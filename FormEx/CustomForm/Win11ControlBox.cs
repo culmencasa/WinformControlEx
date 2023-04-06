@@ -154,6 +154,8 @@ namespace System.Windows.Forms
                     btnMaximum.Click += new EventHandler(this.btnMaximum_Click);
                     btnMinimum.Click += new EventHandler(this.btnMinimum_Click);
 
+                    ParentForm.Resize += ParentForm_Resize;
+
                     ParentForm.StyleChanged -= ParentForm_StyleChanged;
                     ParentForm.StyleChanged += ParentForm_StyleChanged;
 
@@ -173,6 +175,28 @@ namespace System.Windows.Forms
             }
         }
 
+        private void ParentForm_Resize(object sender, EventArgs e)
+        {
+        }
+
+        public bool ShowClose
+        {
+            get;
+            set;
+        }
+
+        public bool ShowMax
+        {
+            get;
+            set;
+        }
+
+        public bool ShowMin
+        {
+            get;
+            set;
+        }
+
         private void ParentForm_Shown(object sender, EventArgs e)
         {
             Form form = ParentForm;
@@ -181,16 +205,18 @@ namespace System.Windows.Forms
 
             if (!form.ControlBox)
             {
-                btnClose.Visible = false;
-                btnMaximum.Visible = false;
-                btnMinimum.Visible = false;
+                ShowClose = false;
+                ShowMax = false;
+                ShowMin = false;
             }
             else
             {
-                btnMaximum.Visible = form.MaximizeBox;
-                btnMinimum.Visible = form.MinimizeBox;
-                btnClose.Visible = true;
+                ShowClose = true;
+                ShowMax = form.MaximizeBox;
+                ShowMin = form.MinimizeBox;
             }
+
+            ShrinkOrGrow();
         }
 
         private void ParentForm_StyleChanged(object sender, EventArgs e)
@@ -201,18 +227,51 @@ namespace System.Windows.Forms
 
             if (!form.ControlBox)
             {
-                btnClose.Visible = false;
-                btnMaximum.Visible = false;
-                btnMinimum.Visible = false;
+                ShowClose = false;
+                ShowMax = false;
+                ShowMin = false;
             }
             else
             {
-                btnMaximum.Visible = form.MaximizeBox;
-                btnMinimum.Visible = form.MinimizeBox;
-                btnClose.Visible = true;
+                ShowClose = true;
+                ShowMax = form.MaximizeBox;
+                ShowMin = form.MinimizeBox;
+            }
+
+            ShrinkOrGrow();
+        }
+
+        private void ShrinkOrGrow()
+        {
+
+            btnClose.Visible = ShowClose;
+            btnMaximum.Visible = ShowMax;
+            btnMinimum.Visible = ShowMin;
+
+            int width = 0;
+            if (ShowClose)
+            {
+                width += btnClose.Width;
+            }
+            if (ShowMax)
+            {
+                width += btnMaximum.Width;
+            }
+            if (ShowMin)
+            {
+                width += btnMinimum.Width;
+            }
+
+            this.Width = width;
+
+            if ((Anchor & (AnchorStyles.Top | AnchorStyles.Right)) == (AnchorStyles.Top | AnchorStyles.Right))
+            {
+                this.Location = new Point(this.Parent.Width - width - 1, this.Top);
             }
         }
 
+
+        #region 按钮行为
 
         // 点击最小化按钮 
         private void btnMinimum_Click(object sender, EventArgs e)
@@ -257,6 +316,11 @@ namespace System.Windows.Forms
                 form.Close();
             }
         }
+
+        #endregion
+
+
+        #region 图像
 
         public Image CloseButtonNormalImage
         {
@@ -358,6 +422,8 @@ namespace System.Windows.Forms
                 btnMaximum.HoverImage = value;
             }
         }
+
+        #endregion
 
         #endregion
 

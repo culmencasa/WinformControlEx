@@ -146,6 +146,9 @@ namespace System
             ref CustomSendMessageParam lParam //参数2
         );
 
+        [DllImport("user32.dll")]
+        public static extern bool SystemParametersInfo(uint uiAction, uint uiParam, ref uint pvParam, uint fWinIni);
+
 
         /// <summary>
         /// 自定义的结构

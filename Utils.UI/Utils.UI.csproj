@@ -5,6 +5,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <LangVersion>preview</LangVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup Condition="('$(TargetFramework)'=='net6.0-windows')">

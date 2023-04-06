@@ -40,7 +40,6 @@ namespace System.Windows.Forms
             this.Padding = new System.Windows.Forms.Padding(2, 0, 2, 2);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "RoundForm";
-            this.Load += new System.EventHandler(this.RoundedCornerForm_Load);
             this.ResumeLayout(false);
 
         }

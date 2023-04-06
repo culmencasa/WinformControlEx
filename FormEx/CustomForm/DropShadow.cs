@@ -171,6 +171,10 @@ namespace System.Windows.Forms
 
             // issue: 区域大小不正确
             //shadowRegion.Exclude(ownerRegion);
+
+            shadowRegion.Exclude(ownerRegion);
+
+
             Region = shadowRegion;
 
             if (this.Owner.TopMost)
