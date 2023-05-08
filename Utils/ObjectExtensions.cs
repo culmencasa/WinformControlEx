@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -9,6 +10,8 @@ namespace Utils
 
     public static class ObjectExtensions
     {
+        #region Copy
+
         private static readonly MethodInfo CloneMethod = typeof(Object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static bool IsPrimitive(this Type type)
@@ -21,6 +24,8 @@ namespace Utils
         {
             return InternalCopy(originalObject, new Dictionary<Object, Object>(new ReferenceEqualityComparer()));
         }
+
+
         private static Object InternalCopy(Object originalObject, IDictionary<Object, Object> visited)
         {
             if (originalObject == null) return null;
@@ -69,6 +74,46 @@ namespace Utils
         {
             return (T)Copy((Object)original);
         }
+
+        #endregion
+
+
+        #region Event
+
+        public static void ClearEvent(this object obj, string eventName)
+        {
+            var fi = obj.GetType().GetEventField(eventName);
+            if (fi != null)
+            {
+                fi.SetValue(obj, null);
+            }
+        }
+
+        private static FieldInfo GetEventField(this Type type, string eventName)
+        {
+            FieldInfo field = null;
+            while (type != null)
+            {
+                field = type.GetField(eventName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic);
+                if (field != null && (field.FieldType == typeof(MulticastDelegate) || field.FieldType.IsSubclassOf(typeof(MulticastDelegate))))
+                {
+                    break;
+                }
+
+                field = type.GetField("EVENT_" + eventName.ToUpper(), BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic);
+                if (field != null)
+                {
+                    break;
+                }
+
+                type = type.BaseType;
+            }
+            return field;
+        }
+
+
+        #endregion
+
     }
 
 

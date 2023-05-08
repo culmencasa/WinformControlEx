@@ -17,7 +17,7 @@ namespace System.Windows.Forms
 {
     /// <summary>
     /// 添加一层提示
-    /// <para>废弃不再更新</para>      
+    /// <para>废弃不再更新</para>
     /// </summary>
     [Obsolete]
 	public partial class WorkShade : Form

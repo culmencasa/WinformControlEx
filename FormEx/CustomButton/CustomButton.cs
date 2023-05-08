@@ -445,7 +445,7 @@ namespace System.Windows.Forms
             else 
             {
                 path = new GraphicsPath(FillMode.Winding);
-                path.AddRectangle(r);
+                path.AddRectangle(new Rectangle(0, 0, Width - 1, Height - 1));
                 path.CloseFigure();
             }
 

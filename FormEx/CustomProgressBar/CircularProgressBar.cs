@@ -59,6 +59,10 @@ namespace System.Windows.Forms
             set
             {
                 _value = value;
+                if (value >= Maximum)
+                { 
+                    _value = Maximum;
+                }
                 Invalidate();
             }
         }
@@ -342,13 +346,19 @@ namespace System.Windows.Forms
                     EndCap = LineCap.Round
                 })
                 {
-                    bufferedGraphics.DrawArc(penBorder,
-                    0 + penBorder.Width / 2f,
-                    0 + penBorder.Width / 2f,
-                    (float)this.Width - penBorder.Width - 1f,
-                    (float)this.Height - penBorder.Width - 1f,
-                    (float)StartAngle,
-                    (float)SweepAngle);
+                    float width = this.Width - penBorder.Width - 1f;
+                    float height = this.Height - penBorder.Width - 1f;
+
+                    if (width > 0 && height > 0)
+                    {
+                        bufferedGraphics.DrawArc(penBorder,
+                        0 + penBorder.Width / 2f,
+                        0 + penBorder.Width / 2f,
+                        width,
+                        height,
+                        StartAngle,
+                        SweepAngle);
+                    }
                 }
 
                 // 渐变, 留出边框 
@@ -363,14 +373,18 @@ namespace System.Windows.Forms
                     float width = (float)this.Width - progressPen.Width - 2.5f;
                     float height = (float)this.Height - progressPen.Width - 2.5f;
 
-                    // 进度
-                    bufferedGraphics.DrawArc(progressPen,
-                        x,
-                        y,
-                        width,
-                        height,
-                        (float)StartAngle,
-                        (this._value / this._maximum) * (float)SweepAngle);
+
+                    if (width > 0 && height > 0)
+                    {
+                        // 进度
+                        bufferedGraphics.DrawArc(progressPen,
+                            x,
+                            y,
+                            width,
+                            height,
+                            StartAngle,
+                            (_value / this._maximum) * SweepAngle);
+                    }
                 }
 
 

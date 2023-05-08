@@ -20,6 +20,9 @@
     <Compile Update="OcnTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="OcnTile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="ThirdParty\BorderlessForm.cs">
       <SubType>Form</SubType>
     </Compile>

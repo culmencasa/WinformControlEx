@@ -33,10 +33,10 @@ namespace System.Windows.Forms
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NonFrameForm));
             this.flpControlBox = new System.Windows.Forms.FlowLayoutPanel();
+            this.FormBorderImage = new System.Windows.Forms.ImageList(this.components);
             this.btnClose = new System.Windows.Forms.ImageButton();
             this.btnMaximum = new System.Windows.Forms.ImageButton();
             this.btnMinimum = new System.Windows.Forms.ImageButton();
-            this.FormBorderImage = new System.Windows.Forms.ImageList(this.components);
             this.flpControlBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnMaximum)).BeginInit();
@@ -59,9 +59,17 @@ namespace System.Windows.Forms
             this.flpControlBox.TabIndex = 999;
             this.flpControlBox.WrapContents = false;
             // 
+            // FormBorderImage
+            // 
+            this.FormBorderImage.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("FormBorderImage.ImageStream")));
+            this.FormBorderImage.TransparentColor = System.Drawing.Color.Transparent;
+            this.FormBorderImage.Images.SetKeyName(0, "fringe_bkg.png");
+            // 
             // btnClose
             // 
             this.btnClose.BackColor = System.Drawing.Color.Transparent;
+            this.btnClose.Bms = System.Windows.Forms.ImageButton.ButtonMouseStatus.None;
+            this.btnClose.ButtonKeepPressed = false;
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btnClose.DownImage = ((System.Drawing.Image)(resources.GetObject("btnClose.DownImage")));
             this.btnClose.HoverImage = ((System.Drawing.Image)(resources.GetObject("btnClose.HoverImage")));
@@ -80,6 +88,8 @@ namespace System.Windows.Forms
             // btnMaximum
             // 
             this.btnMaximum.BackColor = System.Drawing.Color.Transparent;
+            this.btnMaximum.Bms = System.Windows.Forms.ImageButton.ButtonMouseStatus.None;
+            this.btnMaximum.ButtonKeepPressed = false;
             this.btnMaximum.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btnMaximum.DownImage = ((System.Drawing.Image)(resources.GetObject("btnMaximum.DownImage")));
             this.btnMaximum.HoverImage = ((System.Drawing.Image)(resources.GetObject("btnMaximum.HoverImage")));
@@ -98,6 +108,8 @@ namespace System.Windows.Forms
             // btnMinimum
             // 
             this.btnMinimum.BackColor = System.Drawing.Color.Transparent;
+            this.btnMinimum.Bms = System.Windows.Forms.ImageButton.ButtonMouseStatus.None;
+            this.btnMinimum.ButtonKeepPressed = false;
             this.btnMinimum.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btnMinimum.DownImage = ((System.Drawing.Image)(resources.GetObject("btnMinimum.DownImage")));
             this.btnMinimum.HoverImage = ((System.Drawing.Image)(resources.GetObject("btnMinimum.HoverImage")));
@@ -113,20 +125,15 @@ namespace System.Windows.Forms
             this.btnMinimum.ToolTipText = "最小化";
             this.btnMinimum.Click += new System.EventHandler(this.btnMinimum_Click);
             // 
-            // FormBorderImage
-            // 
-            this.FormBorderImage.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.FormBorderImage.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("FormBorderImage.ImageStream")));
-            this.FormBorderImage.TransparentColor = System.Drawing.Color.Transparent;
-            this.FormBorderImage.Images.SetKeyName(0, "fringe_bkg.png");
-            // 
             // NonFrameForm
             // 
             this.ClientSize = new System.Drawing.Size(733, 261);
             this.Controls.Add(this.flpControlBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "NonFrameForm";
-            this.Resize += new System.EventHandler(this.NoneBorderForm_Resize);
+            this.Shown += new System.EventHandler(this.NonFrameForm_Shown);
+            this.SizeChanged += new System.EventHandler(this.NonFrameForm_SizeChanged);
+            this.Resize += new System.EventHandler(this.NonFrameForm_Resize);
             this.flpControlBox.ResumeLayout(false);
             this.flpControlBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnClose)).EndInit();

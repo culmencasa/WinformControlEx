@@ -372,6 +372,7 @@ namespace System.Windows.Forms
             var innerBorderColor1 = ColorEx.LightenColor(parentBackColor, 80);
             var innerBorderColor2 = ColorEx.DarkenColor(parentBackColor, 80); //ChangeColor(parentBackColor, 0.9f);
 
+
             using (Pen outterBorderPen = new Pen(BoxBorderColor, BorderSize))
             using (Brush brush = new SolidBrush(BoxColor))
             using (Brush fontBrush = new SolidBrush(ForeColor))
@@ -447,7 +448,10 @@ namespace System.Windows.Forms
                 }
 
                 // 画边框
-                g.DrawRoundedRectangle(outterBorderPen, GetBorderRectangle(), BorderRadius);
+                if (BorderSize > 0)
+                {
+                    g.DrawRoundedRectangle(outterBorderPen, GetBorderRectangle(), BorderRadius);
+                }
 
 
                 //var innerArea = DisplayRectangle;

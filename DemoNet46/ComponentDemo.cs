@@ -18,8 +18,39 @@ namespace DemoNet46
         public ComponentDemo()
         {
             InitializeComponent();
+
+            this.Load += ComponentDemo_Load;
         }
 
+        private void ComponentDemo_Load(object sender, EventArgs e)
+        {
+            btnMinimum.BringToFront();
+            btnMaximum.BringToFront();
+            btnClose.BringToFront();
+
+            CustomNavGroup group1 = new CustomNavGroup();
+            group1.GroupText = "导航组1";
+            group1.GroupIndent = 12;
+            group1.AddGroupItem("链接1", "", null, imageList1.Images[0], OpenLink);
+            group1.AddGroupItem("链接2", "", null, imageList1.Images[0], OpenLink);
+            group1.AddGroupItem("链接3", "", null, imageList1.Images[0], OpenLink);
+            CustomNavGroup group2 = new CustomNavGroup();
+            group2.GroupText = "导航组2";
+            group2.GroupIndent = 12;
+            group2.AddGroupItem("双行链接1", "详细说明", null, imageList1.Images[1], OpenLink);
+            group2.AddGroupItem("双行链接2", "2023-05-08", null, imageList1.Images[1], OpenLink);
+            group2.AddGroupItem("双行链接3", "1000s", null, imageList1.Images[1], OpenLink);
+            group2.AddGroupItem("双行链接4", "", null, imageList1.Images[1], OpenLink);
+            this.customNavSideBar1.Groups.Add(group1);
+            customNavSideBar1.Groups.Add(group2);
+
+
+        }
+
+        private void OpenLink(object sender , EventArgs e)
+        { 
+        
+        }
 
         private void btnShowException_Click(object sender, EventArgs e)
         {
@@ -93,12 +124,38 @@ namespace DemoNet46
 
         private void btnShowInfoTip_Click(object sender, EventArgs e)
         {
-
             InfoTip.SetToolTip(btnShowInfoTip, 
                 "空山新雨后， 天气晚来秋。 " + Environment.NewLine +
                 "明月松间照， 清泉石上流。 " + Environment.NewLine +
                 "竹喧归浣女， 莲动下渔舟。 " + Environment.NewLine +  
                 "随意春芳歇， 王孙自可留。", "王维《山居秋暝》", InfoTip.Position.Right, 8000);
+        }
+
+        private void btnProgressGo_Click(object sender, EventArgs e)
+        {
+
+            circularProgressBar1.Value = 0;
+            Thread t = new Thread(() =>
+            {
+                int i = 0;
+                do
+                {
+                    if (!this.IsHandleCreated || this.IsDisposed)
+                    {
+                        break;
+                    }
+
+                    this.Invoke((Action)delegate
+                    {
+                        circularProgressBar1.Value++;
+                    });
+                    i++;
+                    Thread.Sleep(100);
+                } while (i < 100);
+
+            });
+            t.IsBackground = true;
+            t.Start();
         }
     }
 }

@@ -55,8 +55,11 @@ namespace System.Windows.Forms
         protected string _text;
 
         [Category("Custom")]
-        [Browsable(true)]
-        [EditorBrowsable]
+        [Browsable(true)] 
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Localizable(true)]
+        [Bindable(true)]
         public override string Text
         {
             get

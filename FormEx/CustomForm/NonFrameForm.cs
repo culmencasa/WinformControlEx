@@ -30,7 +30,7 @@ namespace System.Windows.Forms
             this.CaptionFont = this.Font;
             this.CaptionShadowColor = Color.FromArgb(2, 0, 0, 0);
             this.CaptionForeColor = Color.FromArgb(255, 255, 255, 255);
-            this.StyleChanged += new EventHandler(NoneBorderForm_StyleChanged);
+            this.StyleChanged += new EventHandler(NonFrameForm_StyleChanged);
             this.PaddingChanged += NonFrameForm_PaddingChanged;
             this.UseDropShadow = true;
         }
@@ -160,7 +160,35 @@ namespace System.Windows.Forms
 
         private bool IsAeroEnabled { get; set; }
 
-             
+        public override Rectangle DisplayRectangle
+        {
+            get
+            { 
+                return new Rectangle(ClientMargin,
+                    TitleBarHeight + ClientMargin,
+                    Width - BorderSize * 2 - ClientMargin, 
+                    Height - TitleBarHeight - BorderSize * 2 - ClientMargin);
+            }
+        }
+
+        private int TitleBarHeight
+        {
+            get;
+            set;
+        } = 40;
+
+        private int BorderSize
+        {
+            get;
+            set;
+        } = 1;
+
+        private int ClientMargin
+        {
+            get;
+            set;
+        } = 2;
+
         #endregion
 
         #region 重写的成员
@@ -343,12 +371,15 @@ namespace System.Windows.Forms
                 base.OnPaint(e);
 
                 // 画边框
-                Rectangle borderRect = new Rectangle(0, 0, this.Width - 1, this.Height - 1);
-                using (Pen borderPen = new Pen(this.BorderColor))
+                if (BorderSize > 0)
                 {
-                    g.DrawRectangle(borderPen, borderRect);
+                    Rectangle borderRect = new Rectangle(0, 0, this.Width - BorderSize, this.Height - BorderSize);
+                    using (Pen borderPen = new Pen(this.BorderColor))
+                    {
+                        g.DrawRectangle(borderPen, borderRect);
+                    }
                 }
-                //RenderHelper.DrawFormFringe(this, e.Graphics, System.Windows.Forms.Properties.Resources.fringe_bkg, 5);
+                
 
             }
             catch
@@ -500,7 +531,7 @@ namespace System.Windows.Forms
         }
 
         // 设置是否显示控制按钮
-        private void NoneBorderForm_StyleChanged(object sender, EventArgs e)
+        private void NonFrameForm_StyleChanged(object sender, EventArgs e)
         {
             if (!ControlBox)
             {
@@ -515,14 +546,28 @@ namespace System.Windows.Forms
                 btnClose.Visible = true;
             }
         }
-        
-        // 窗体调整大小
-        private void NoneBorderForm_Resize(object sender, EventArgs e)
+
+        private void NonFrameForm_Shown(object sender, EventArgs e)
         {
-            this.flpControlBox.Location = new Point(this.Width - this.flpControlBox.Width, 0);
-            this.Refresh();
+            if (IsHandleCreated)
+            {
+                flpControlBox.Anchor = AnchorStyles.None;
+                int controlBoxWidth = btnClose.Width;
+                controlBoxWidth += MaximizeBox ? btnMaximum.Width : 0;
+                controlBoxWidth += MinimizeBox ? btnMinimum.Width : 0;
+                flpControlBox.Location = new Point(this.Width - controlBoxWidth, 0);
+
+                flpControlBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            }
+        }
+        // 窗体调整大小
+        private void NonFrameForm_Resize(object sender, EventArgs e)
+        {
         }
 
+        private void NonFrameForm_SizeChanged(object sender, EventArgs e)
+        {
+        }
         // 点击最小化按钮 
         private void btnMinimum_Click(object sender, EventArgs e)
         {

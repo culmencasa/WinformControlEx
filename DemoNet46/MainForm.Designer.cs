@@ -65,12 +65,11 @@ namespace DemoNet46
             this.pnlTaskbar.Controls.Add(this.btnStart);
             this.pnlTaskbar.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlTaskbar.FirstColor = System.Drawing.Color.Gray;
-            this.pnlTaskbar.InnerBackColor = System.Drawing.Color.Transparent;
             this.pnlTaskbar.Location = new System.Drawing.Point(0, 848);
             this.pnlTaskbar.Name = "pnlTaskbar";
             this.pnlTaskbar.RoundBorderRadius = 0;
             this.pnlTaskbar.SecondColor = System.Drawing.Color.Black;
-            this.pnlTaskbar.Size = new System.Drawing.Size(1400, 52);
+            this.pnlTaskbar.Size = new System.Drawing.Size(1440, 52);
             this.pnlTaskbar.TabIndex = 1;
             // 
             // gradientPanel1
@@ -81,8 +80,7 @@ namespace DemoNet46
             this.gradientPanel1.Controls.Add(this.lblTime);
             this.gradientPanel1.Dock = System.Windows.Forms.DockStyle.Right;
             this.gradientPanel1.FirstColor = System.Drawing.Color.Black;
-            this.gradientPanel1.InnerBackColor = System.Drawing.Color.Transparent;
-            this.gradientPanel1.Location = new System.Drawing.Point(1313, 0);
+            this.gradientPanel1.Location = new System.Drawing.Point(1353, 0);
             this.gradientPanel1.Name = "gradientPanel1";
             this.gradientPanel1.RoundBorderRadius = 0;
             this.gradientPanel1.SecondColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -106,6 +104,7 @@ namespace DemoNet46
             // btnStart
             // 
             this.btnStart.BackColor = System.Drawing.Color.Transparent;
+            this.btnStart.Bms = System.Windows.Forms.ImageButton.ButtonMouseStatus.None;
             this.btnStart.ButtonKeepPressed = false;
             this.btnStart.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btnStart.Dock = System.Windows.Forms.DockStyle.Left;
@@ -148,6 +147,7 @@ namespace DemoNet46
             this.portraitIcon1.Size = new System.Drawing.Size(101, 91);
             this.portraitIcon1.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
             this.portraitIcon1.TabIndex = 1000;
+            this.portraitIcon1.Text = "图标选中";
             // 
             // pnlStart
             // 
@@ -162,7 +162,6 @@ namespace DemoNet46
             this.pnlStart.Controls.Add(this.portraitIcon2);
             this.pnlStart.Controls.Add(this.portraitIcon1);
             this.pnlStart.FirstColor = System.Drawing.Color.Black;
-            this.pnlStart.InnerBackColor = System.Drawing.Color.Transparent;
             this.pnlStart.Location = new System.Drawing.Point(2, 522);
             this.pnlStart.Name = "pnlStart";
             this.pnlStart.RoundBorderRadius = 12;
@@ -205,6 +204,7 @@ namespace DemoNet46
             this.tileIcon3.ShowIconBorder = false;
             this.tileIcon3.Size = new System.Drawing.Size(261, 51);
             this.tileIcon3.TabIndex = 5;
+            this.tileIcon3.Text = "IntelliJ IDEA";
             this.tileIcon3.WrapText = false;
             // 
             // tileIcon4
@@ -223,6 +223,7 @@ namespace DemoNet46
             this.tileIcon4.ShowIconBorder = false;
             this.tileIcon4.Size = new System.Drawing.Size(261, 51);
             this.tileIcon4.TabIndex = 6;
+            this.tileIcon4.Text = "Photoshop";
             this.tileIcon4.WrapText = false;
             // 
             // tileIcon1
@@ -241,6 +242,7 @@ namespace DemoNet46
             this.tileIcon1.ShowIconBorder = false;
             this.tileIcon1.Size = new System.Drawing.Size(261, 51);
             this.tileIcon1.TabIndex = 7;
+            this.tileIcon1.Text = "Android Studio";
             this.tileIcon1.WrapText = false;
             // 
             // btnLogoff
@@ -303,6 +305,7 @@ namespace DemoNet46
             this.portraitIcon2.Size = new System.Drawing.Size(101, 91);
             this.portraitIcon2.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
             this.portraitIcon2.TabIndex = 1000;
+            this.portraitIcon2.Text = "图标灰度";
             // 
             // btnRecycle
             // 
@@ -318,7 +321,7 @@ namespace DemoNet46
             this.btnRecycle.HoverBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(224)))), ((int)(((byte)(243)))));
             this.btnRecycle.Image = ((System.Drawing.Image)(resources.GetObject("btnRecycle.Image")));
             this.btnRecycle.IsSelected = false;
-            this.btnRecycle.Location = new System.Drawing.Point(1274, 727);
+            this.btnRecycle.Location = new System.Drawing.Point(1314, 727);
             this.btnRecycle.Margin = new System.Windows.Forms.Padding(0);
             this.btnRecycle.Name = "btnRecycle";
             this.btnRecycle.RoundedCornerAngle = 10;
@@ -329,6 +332,7 @@ namespace DemoNet46
             this.btnRecycle.Size = new System.Drawing.Size(101, 91);
             this.btnRecycle.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
             this.btnRecycle.TabIndex = 1004;
+            this.btnRecycle.Text = "回收站";
             this.btnRecycle.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.btnRecycle_MouseDoubleClick);
             // 
             // btnShowTestForm
@@ -355,6 +359,7 @@ namespace DemoNet46
             this.btnShowTestForm.Size = new System.Drawing.Size(101, 91);
             this.btnShowTestForm.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
             this.btnShowTestForm.TabIndex = 1005;
+            this.btnShowTestForm.Text = "布局演示";
             this.btnShowTestForm.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.btnShowTestForm_MouseDoubleClick);
             // 
             // sysTimer
@@ -387,6 +392,7 @@ namespace DemoNet46
             this.btnShowThemeDemo.Size = new System.Drawing.Size(101, 91);
             this.btnShowThemeDemo.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
             this.btnShowThemeDemo.TabIndex = 1005;
+            this.btnShowThemeDemo.Text = "主题演示";
             this.btnShowThemeDemo.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.btnShowThemeDemo_MouseDoubleClick);
             // 
             // btnShowComponentDemo
@@ -413,6 +419,7 @@ namespace DemoNet46
             this.btnShowComponentDemo.Size = new System.Drawing.Size(101, 91);
             this.btnShowComponentDemo.SizeMode = System.Windows.Forms.PortraitIcon.IconSizeMode.AutoResize;
             this.btnShowComponentDemo.TabIndex = 1006;
+            this.btnShowComponentDemo.Text = "组件演示";
             this.btnShowComponentDemo.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.btnShowComponentDemo_MouseDoubleClick);
             // 
             // MainForm
@@ -421,7 +428,7 @@ namespace DemoNet46
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::DemoNet46.Properties.Resources.earth_mountain;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(1400, 900);
+            this.ClientSize = new System.Drawing.Size(1440, 900);
             this.Controls.Add(this.btnShowComponentDemo);
             this.Controls.Add(this.pnlStart);
             this.Controls.Add(this.btnShowThemeDemo);

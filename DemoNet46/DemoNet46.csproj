@@ -79,6 +79,12 @@
     <Compile Include="ThemeDemo.Designer.cs">
       <DependentUpon>ThemeDemo.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\GridPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\GridPanel.Designer.cs">
+      <DependentUpon>GridPanel.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ComponentDemo.resx">
       <DependentUpon>ComponentDemo.cs</DependentUpon>
     </EmbeddedResource>
@@ -100,6 +106,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ThemeDemo.resx">
       <DependentUpon>ThemeDemo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\GridPanel.resx">
+      <DependentUpon>GridPanel.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>

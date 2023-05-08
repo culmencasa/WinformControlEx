@@ -502,6 +502,7 @@ namespace System.Windows.Forms
         /// <returns></returns>
         public float GetCurrentScaleFactor()
         {
+            // 在调用user32的SetProcessDPIAware()函数后, 能正常获取DPI
             float factor = GetScalingFactor();
             // 再次检查
             if (factor == 1)

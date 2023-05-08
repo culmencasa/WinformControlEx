@@ -27,5 +27,14 @@ namespace System
         [DllImport("message.dll", SetLastError = true)]
         public static extern IntPtr LoadImageDec(string file);
 
+
+        /// <summary>
+        /// 动态加载DLL
+        /// </summary>
+        /// <param name="dllToLoad"></param>
+        /// <returns></returns>
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr LoadLibrary(string dllToLoad);
+
     }
 }

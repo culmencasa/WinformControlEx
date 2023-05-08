@@ -60,7 +60,7 @@ namespace System
         [DllImport("user32.dll")]
         public static extern bool ShowScrollBar(System.IntPtr hWnd, int wBar, bool bShow);
 
-        [DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern int GetWindowLong(IntPtr hwnd, int nIndex);
 
 
@@ -134,7 +134,7 @@ namespace System
 
         #endregion
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        [DllImport("user32.dll")]
         public static extern bool IsIconic(IntPtr handle);
 
 
@@ -148,6 +148,13 @@ namespace System
 
         [DllImport("user32.dll")]
         public static extern bool SystemParametersInfo(uint uiAction, uint uiParam, ref uint pvParam, uint fWinIni);
+
+        [DllImport("user32.dll")]
+        public static extern uint GetDpiForWindow(IntPtr hWnd);
+
+
+        [DllImport("user32.dll")]
+        public static extern bool SetProcessDPIAware();
 
 
         /// <summary>

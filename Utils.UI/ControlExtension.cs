@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using System.ComponentModel;
 
 namespace System.Windows.Forms
 {
@@ -157,6 +158,27 @@ namespace System.Windows.Forms
         {
             return control.ClientRectangle.Contains(control.PointToClient(Cursor.Position));               
         }
+
+        public static bool IsAlive(this Control control)
+        {
+            if (control == null)
+            {
+                return false;
+            }
+
+            if (!control.IsHandleCreated || control.Handle == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            if (control.IsDisposed)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
 
         #endregion
 

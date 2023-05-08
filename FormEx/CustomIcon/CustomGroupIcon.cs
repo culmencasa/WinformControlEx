@@ -12,6 +12,15 @@ namespace System.Windows.Forms
     {
         #region 分组功能
 
+        /// <summary>
+        /// 激活后的背景色
+        /// </summary>
+        public enum SelectionStyles
+        {
+            AccentBar,
+            PureColor
+        }
+
         static Dictionary<string, List<CustomGroupIcon>> groupCaches = new Dictionary<string, List<CustomGroupIcon>>();
 
 
@@ -73,15 +82,6 @@ namespace System.Windows.Forms
                     _groupName = newValue;
                 }
             }
-        }
-
-        /// <summary>
-        /// 激活后的背景色
-        /// </summary>
-        public enum SelectionStyles
-        {
-            AccentBar,
-            PureColor
         }
 
         [Category("Group")]
@@ -155,9 +155,11 @@ namespace System.Windows.Forms
             }
 
         }
+
+
+        #endregion
     }
 
-    #endregion
 
 
 }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace System.Windows.Forms
@@ -26,11 +28,20 @@ namespace System.Windows.Forms
             this.Load += SplashForm_Load;
         }
 
+        public SplashForm(int width, int height) : this()
+        {
+            _displaySize = new Size(width, height);
+        }
+
         #endregion
+
+
 
         #region 字段
 
         private Bitmap _splashBitmap;
+
+        private Size _displaySize = Size.Empty;
 
         #endregion
 
@@ -52,13 +63,26 @@ namespace System.Windows.Forms
             }
         }
 
+        public Size DisplaySize
+        {
+            get
+            {
+                return _displaySize;
+            }
+            set
+            {
+                _displaySize = value;
+            }
+        }
+
         #endregion
 
         #region 事件处理
 
         private void SplashForm_Load(object sender, EventArgs e)
         {
-            SelectBitmap(SplashBitmap);
+            var bitmap = ResizeImage(SplashBitmap, Width, Height);
+            SelectBitmap(bitmap);
         }
 
         #endregion
@@ -96,10 +120,24 @@ namespace System.Windows.Forms
             this.FormBorderStyle = FormBorderStyle.None;
             this.TopMost = true;
             this.ShowInTaskbar = false;
-            this.Size = SplashBitmap.Size;
+            if (DisplaySize == Size.Empty)
+            {
+                Size = SplashBitmap.Size;
+            }
+            else
+            {
+                Size = DisplaySize;
+            }
+
+
+            // 获取当前窗口的DPI值
+            this.SetWindowSizeByDPI();
+
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 
         }
+
+
 
         private void SelectBitmap(Bitmap bitmap)
         {
@@ -120,7 +158,9 @@ namespace System.Windows.Forms
 
                 Size newSize = new Size(bitmap.Width, bitmap.Height);
                 Point sourceLocation = new Point(0, 0);
-                Point newLocation = new Point(this.Left, this.Top);
+                Point newLocation = new Point(
+                    (Screen.PrimaryScreen.WorkingArea.Width - bitmap.Width) / 2,
+                     (Screen.PrimaryScreen.WorkingArea.Height - bitmap.Height) / 2);
                 BlendFunction blend = new BlendFunction();
                 blend.BlendOp = (byte)BlendOperation.AC_SRC_OVER;
                 blend.BlendFlags = 0;
@@ -128,6 +168,7 @@ namespace System.Windows.Forms
                 blend.AlphaFormat = (byte)BlendOperation.AC_SRC_ALPHA;
 
                 Win32.UpdateLayeredWindow(Handle, screenDc, ref newLocation, ref newSize, memDc, ref sourceLocation, 0, ref blend, (int)ULWPara.ULW_ALPHA);
+            
             }
             finally
             {
@@ -141,6 +182,19 @@ namespace System.Windows.Forms
             }
         }
 
+        public static Bitmap ResizeImage(Bitmap image, int targetWidth, int targetHeight)
+        {
+            Bitmap result = new Bitmap(targetWidth, targetHeight);
+            using (Graphics graphics = Graphics.FromImage(result))
+            {
+                graphics.CompositingQuality = CompositingQuality.HighSpeed;
+                graphics.InterpolationMode = InterpolationMode.Low;
+                graphics.SmoothingMode = SmoothingMode.HighSpeed;
+                graphics.DrawImage(image, 0, 0, targetWidth, targetHeight);
+            }
+            return result;
+        }
+
         #endregion
 
         #region 公开方法
@@ -152,10 +206,25 @@ namespace System.Windows.Forms
 
         public void Show(Bitmap splashBitmap)
         {
+            Show(splashBitmap, 1000);
+        }
+
+        public void Show(Bitmap splashBitmap, int time)
+        {
             SplashBitmap = splashBitmap;
             Customization();
 
             base.Show();
+
+
+            Thread th = new Thread(() =>
+            {
+                Thread.Sleep(time);
+            });
+            th.Start();
+            th.Join();
+            
+            this.Close();
         }
 
         #endregion
@@ -176,7 +245,7 @@ namespace System.Windows.Forms
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            //AnimateWindow(Handle, 3000, AW_ACTIVATE);
+            AnimateWindow(Handle, 3000, AW_ACTIVATE);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)

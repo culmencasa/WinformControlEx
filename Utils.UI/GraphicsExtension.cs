@@ -224,6 +224,27 @@ namespace System.Drawing
             }
         }
 
+
+        public static void DrawStringCenterWrap(this Graphics graphic, string text, Font font, Brush textBrush, Rectangle recangle)
+        {
+            List<string> textRows = GetStringRows(graphic, font, text, recangle.Width);
+            int rowHeight = (int)(Math.Ceiling((decimal)TextRenderer.MeasureText("≤‚ ‘", font).Height));
+            int maxRowCount = recangle.Height / rowHeight;
+            int drawRowCount = (maxRowCount < textRows.Count) ? maxRowCount : textRows.Count;
+            int top = (recangle.Height - rowHeight * drawRowCount) / 2;
+
+            StringFormat sf = new StringFormat();
+            sf.Alignment = StringAlignment.Center;
+            sf.LineAlignment = StringAlignment.Center;
+
+            for (int i = 0; i < drawRowCount; i++)
+            {
+                Rectangle fontRectanle = new Rectangle(recangle.Left, recangle.Top + top + rowHeight * i, recangle.Width, rowHeight);
+                graphic.DrawString(textRows[i], font, textBrush, fontRectanle, sf);
+            }
+        }
+
+
         public static void CopyFromScreen(this Graphics g, int sourceX, int sourceY, int destinationX, int destinationY, Size blockRegionSize, CopyPixelOperation copyPixelOperation)
         {
             IntPtr desktopWindow = Win32.GetDesktopWindow();

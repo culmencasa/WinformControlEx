@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace System.Windows.Forms
@@ -115,6 +116,40 @@ namespace System.Windows.Forms
 
             return Single<TForm>(true, null, new object[] { constructorArguments });
         }
+
+
+        public static Form Single(Type formType, params object[] parameters)
+        {
+            Form instance = null;
+
+            foreach (Form form in FixedSingleFormCache)
+            {
+                if (form.GetType().Equals(formType))
+                {
+                    if (form == null || form.IsDisposed)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        instance = form;
+                        break;
+                    }
+                }
+            }
+
+            if (instance == null)
+            {
+                instance = Activator.CreateInstance(formType, parameters) as Form;
+                instance.GotFocus += Form_GotFocus;
+                instance.Activated += Form_Activated;
+                instance.FormClosed += Form_Closed;
+                FormManager.FixedSingleFormCache.Add(instance);
+            }
+
+            return instance;
+        }
+
         #endregion
 
         #region 窗体相关
@@ -315,6 +350,55 @@ namespace System.Windows.Forms
             return outmostForm;
         }
 
+
+        /// <summary>
+        /// 窗体作为子控件添加到指定的父控件上
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="parentControl"></param>
+        public static void AsControlOf(this Form source, Control parentControl)
+        {
+            source.TopLevel = false;
+            source.FormBorderStyle = FormBorderStyle.None;
+            source.ControlBox = false;
+
+            parentControl.Controls.Add(source);
+        }
+
+        /// <summary>
+        /// 将窗体作为MDI子窗体
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="mdiParent"></param>
+        public static void AsMdiChildOf(this Form source, Form mdiParent)
+        {
+            source.MdiParent = mdiParent;
+            //source.WindowState = FormWindowState.Maximized;
+            source.ControlBox = false;
+            source.ShowIcon = false;
+            source.StartPosition = FormStartPosition.CenterParent;
+            source.WindowState = FormWindowState.Maximized;
+            source.Show();
+            source.BringToFront();
+        }
+
+        public static void SetWindowSizeByDPI(this Form source)
+        {
+            // 获取当前窗口的DPI值
+            uint dpi = Win32.GetDpiForWindow(source.Handle);
+            if (dpi == 96)
+                return;
+
+            double factor = (double)dpi / 96;
+            source.Size = new Size((int)(source.Size.Width * factor), (int)(source.Size.Height * factor));
+
+            if (source.StartPosition == FormStartPosition.CenterScreen)
+            {
+                source.Location = new Point(
+                    (Screen.PrimaryScreen.WorkingArea.Width - source.Size.Width) / 2,
+                    (Screen.PrimaryScreen.WorkingArea.Height - source.Height) / 2);
+            }
+        }
 
         #endregion
 
