@@ -19,7 +19,6 @@ namespace DemoNet46
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-
             // 开启高HDPI支持(Win8以上)
             Win32.SetProcessDPIAware();
 

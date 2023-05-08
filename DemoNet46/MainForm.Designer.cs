@@ -65,11 +65,11 @@ namespace DemoNet46
             this.pnlTaskbar.Controls.Add(this.btnStart);
             this.pnlTaskbar.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlTaskbar.FirstColor = System.Drawing.Color.Gray;
-            this.pnlTaskbar.Location = new System.Drawing.Point(0, 848);
+            this.pnlTaskbar.Location = new System.Drawing.Point(2, 846);
             this.pnlTaskbar.Name = "pnlTaskbar";
             this.pnlTaskbar.RoundBorderRadius = 0;
             this.pnlTaskbar.SecondColor = System.Drawing.Color.Black;
-            this.pnlTaskbar.Size = new System.Drawing.Size(1440, 52);
+            this.pnlTaskbar.Size = new System.Drawing.Size(1436, 52);
             this.pnlTaskbar.TabIndex = 1;
             // 
             // gradientPanel1
@@ -80,7 +80,7 @@ namespace DemoNet46
             this.gradientPanel1.Controls.Add(this.lblTime);
             this.gradientPanel1.Dock = System.Windows.Forms.DockStyle.Right;
             this.gradientPanel1.FirstColor = System.Drawing.Color.Black;
-            this.gradientPanel1.Location = new System.Drawing.Point(1353, 0);
+            this.gradientPanel1.Location = new System.Drawing.Point(1349, 0);
             this.gradientPanel1.Name = "gradientPanel1";
             this.gradientPanel1.RoundBorderRadius = 0;
             this.gradientPanel1.SecondColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -436,9 +436,11 @@ namespace DemoNet46
             this.Controls.Add(this.btnRecycle);
             this.Controls.Add(this.pnlTaskbar);
             this.Name = "MainForm";
+            this.ShowCaption = false;
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "这是一个窗口标题";
+            this.UseDropShadow = false;
             this.Controls.SetChildIndex(this.pnlTaskbar, 0);
             this.Controls.SetChildIndex(this.btnRecycle, 0);
             this.Controls.SetChildIndex(this.btnShowTestForm, 0);
