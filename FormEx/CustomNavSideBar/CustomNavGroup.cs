@@ -21,7 +21,7 @@ namespace System.Windows.Forms
             ItemListPanel.HeightChanged += ItemListPanel_HeightChanged;
 
             // default scheme
-            this.BackColor = Color.White;
+            this.BackColor = Color.Transparent;
             HoverBackColor = Color.FromArgb(248, 249, 250);
             HoverForeColor = Color.Black;
             GroupTextColor = Color.Black;

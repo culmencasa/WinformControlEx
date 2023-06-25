@@ -189,10 +189,10 @@
 		<Compile Update="CustomIcon\CustomGroupIcon.cs">
 			<SubType>UserControl</SubType>
 		</Compile>
-		<Compile Update="CustomMessageBox\ExceptionMessageBox.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>ExceptionMessageBox.resx</DependentUpon>
+		<Compile Update="CustomMessageBox\CustomMessageBoxResource.Designer.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>CustomMessageBoxResource.resx</DependentUpon>
 		</Compile>
 		<Compile Update="CustomPanel\ClickThroughFlowPanel.cs">
 			<SubType>Component</SubType>
@@ -341,9 +341,13 @@
 		<EmbeddedResource Update="CustomForm\Win7ControlBox - 复制.resx">
 			<DependentUpon>Win7ControlBox.resx</DependentUpon>
 		</EmbeddedResource>
-		<EmbeddedResource Update="CustomMessageBox\ExceptionMessageBox.resx">
-			<Generator>PublicResXFileCodeGenerator</Generator>
-			<LastGenOutput>ExceptionMessageBox.Designer.cs</LastGenOutput>
+		<EmbeddedResource Update="CustomMessageBox\CustomMessageBox.resx">
+		  <CustomToolNamespace>System.Windows.Forms</CustomToolNamespace>
+		</EmbeddedResource>
+		<EmbeddedResource Update="CustomMessageBox\CustomMessageBoxResource.resx">
+		  <Generator>ResXFileCodeGenerator</Generator>
+		  <LastGenOutput>CustomMessageBoxResource.Designer.cs</LastGenOutput>
+		  <CustomToolNamespace>System.Windows.Forms</CustomToolNamespace>
 		</EmbeddedResource>
 		<EmbeddedResource Update="CustomTextBox\RoundTextBox.resx">
 			<DependentUpon>RoundTextBox.cs</DependentUpon>

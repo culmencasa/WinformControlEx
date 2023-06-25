@@ -15,7 +15,7 @@ namespace System.Windows.Forms
     /// <summary>
     /// 无边框窗体
     /// </summary>
-    public partial class NonFrameForm : Form
+    public partial class NonFrameForm : Form, IDpiDefined
     {
 
         #region 构造
@@ -30,9 +30,8 @@ namespace System.Windows.Forms
             this.CaptionFont = this.Font;
             this.CaptionShadowColor = Color.FromArgb(2, 0, 0, 0);
             this.CaptionForeColor = Color.FromArgb(255, 255, 255, 255);
-            this.StyleChanged += new EventHandler(NonFrameForm_StyleChanged);
-            this.PaddingChanged += NonFrameForm_PaddingChanged;
             this.UseDropShadow = true;
+
         }
 
         #endregion
@@ -171,7 +170,7 @@ namespace System.Windows.Forms
             }
         }
 
-        private int TitleBarHeight
+        public int TitleBarHeight
         {
             get;
             set;
@@ -188,6 +187,12 @@ namespace System.Windows.Forms
             get;
             set;
         } = 2;
+
+        public bool FullDraggable
+        {
+            get;
+            set;
+        }
 
         #endregion
 
@@ -237,6 +242,7 @@ namespace System.Windows.Forms
                 return cp;
             }
         }
+
         private bool CheckAeroEnabled()
         {
             if (Environment.OSVersion.Version.Major >= 6)
@@ -247,6 +253,7 @@ namespace System.Windows.Forms
             }
             return false;
         }
+
         protected override void WndProc(ref Message m)
         {
             switch (m.Msg)
@@ -261,11 +268,7 @@ namespace System.Windows.Forms
 					break;
                 case Win32.WM_NCHITTEST:
                     {
-                        // 点击任意位置等于点击标题栏, 需要代码处理支持AeroSnap
-                        if (WindowState == FormWindowState.Normal)
-                        {
-                            WmNcHitTest(ref m);
-                        }
+                        WmNcHitTest(ref m);
                     }
                     return;
                 case Win32.WM_NCLBUTTONDBLCLK:
@@ -294,7 +297,6 @@ namespace System.Windows.Forms
                             cyTopHeight = 1
                         };
                         Win32.DwmExtendFrameIntoClientArea(this.Handle, ref margins);
-
                     }
                     break;
                 default:
@@ -463,8 +465,18 @@ namespace System.Windows.Forms
                 }
             }
 
-            m.Result = new IntPtr(Win32.HTCAPTION);
-            //m.Result = new IntPtr(Win32.HTCLIENT);
+            if (FullDraggable)
+            {
+                m.Result = new IntPtr(Win32.HTCAPTION);
+            }
+            else if (mouseLocation.Y <= TitleBarHeight)
+            {
+                m.Result = new IntPtr(Win32.HTCAPTION);
+            }
+            else
+            {
+                m.Result = new IntPtr(Win32.HTCLIENT);
+            }
         }
 
         #endregion
@@ -523,43 +535,6 @@ namespace System.Windows.Forms
 
         #region 事件处理
 
-        private void NonFrameForm_PaddingChanged(object sender, EventArgs e)
-        {
-            // 避免修改Padding值造成控制按钮位置改变
-            this.flpControlBox.Location = new Point(this.Width - flpControlBox.Width - 2, 0);
-            Invalidate();
-        }
-
-        // 设置是否显示控制按钮
-        private void NonFrameForm_StyleChanged(object sender, EventArgs e)
-        {
-            if (!ControlBox)
-            {
-                btnClose.Visible = false;
-                btnMaximum.Visible = false;
-                btnMinimum.Visible = false;
-            }
-            else
-            {
-                btnMaximum.Visible = MaximizeBox;
-                btnMinimum.Visible = MinimizeBox;
-                btnClose.Visible = true;
-            }
-        }
-
-        private void NonFrameForm_Shown(object sender, EventArgs e)
-        {
-            if (IsHandleCreated)
-            {
-                flpControlBox.Anchor = AnchorStyles.None;
-                int controlBoxWidth = btnClose.Width;
-                controlBoxWidth += MaximizeBox ? btnMaximum.Width : 0;
-                controlBoxWidth += MinimizeBox ? btnMinimum.Width : 0;
-                flpControlBox.Location = new Point(this.Width - controlBoxWidth, 0);
-
-                flpControlBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            }
-        }
         // 窗体调整大小
         private void NonFrameForm_Resize(object sender, EventArgs e)
         {
@@ -574,25 +549,6 @@ namespace System.Windows.Forms
             this.WindowState = FormWindowState.Minimized;
         }
 
-        // 点击最大化/还原按钮
-        private void btnMaximum_Click(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Maximized)
-            {
-                this.WindowState = FormWindowState.Normal;
-                this.btnMaximum.NormalImage = Properties.Resources.btnMaximum_NormalImage;
-                this.btnMaximum.HoverImage = Properties.Resources.btnMaximum_HoverImage;
-                this.btnMaximum.DownImage = Properties.Resources.btnMaximum_DownImage;
-            }
-            else
-            {
-                this.WindowState = FormWindowState.Maximized;
-                this.btnMaximum.NormalImage = Properties.Resources.restore_normal;
-                this.btnMaximum.HoverImage = Properties.Resources.restore_highlight;
-                this.btnMaximum.DownImage = Properties.Resources.restore_down;
-            }
-            
-        }
 
         // 点击关闭按钮
         private void btnClose_Click(object sender, EventArgs e)
@@ -602,5 +558,84 @@ namespace System.Windows.Forms
 
         #endregion
 
+
+        #region DPI支持
+
+        private float factorX;
+        private float factorY;
+
+        [Category("Custom")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public float DesigntimeScaleFactorX { get
+            {
+                return factorX;
+            }
+            set
+            {
+                factorX = value;
+            } 
+        }
+
+        [Category("Custom")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public float DesigntimeScaleFactorY { 
+            get
+            {
+                return factorY;
+            } set
+            {
+                factorY = value;
+            } }
+        public float RuntimeScaleFactorX { get; set; }
+        public float RuntimeScaleFactorY { get; set; }
+
+        public float ScaleFactorRatioX
+        {
+            get
+            {
+                return RuntimeScaleFactorX / Math.Max(DesigntimeScaleFactorX, 1);
+            }
+        }
+        public float ScaleFactorRatioY
+        {
+            get
+            {
+                return RuntimeScaleFactorY / Math.Max(DesigntimeScaleFactorY, 1);
+            }
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+
+            using (Graphics graphics = this.CreateGraphics())
+            {
+                RuntimeScaleFactorX = graphics.DpiX / 96f;
+                RuntimeScaleFactorY = graphics.DpiY / 96f;
+            }
+        }
+        protected override void OnCreateControl()
+        {
+            base.OnCreateControl();
+
+            if (DesignMode)
+            {
+                using (Graphics graphics = this.CreateGraphics())
+                {
+                    DesigntimeScaleFactorX = graphics.DpiX / 96f;
+                    DesigntimeScaleFactorY = graphics.DpiY / 96f;
+                }
+            }
+        }
+
+
+
+        #endregion
     }
+
 }

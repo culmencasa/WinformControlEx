@@ -11,95 +11,232 @@ namespace System.Windows.Forms
 {
     public partial class Win7ControlBox : UserControl
     {
+        #region 字段
+
+        IDpiDefined DpiParent { get; set; }
+
+        #endregion
+
+        #region 构造
+
         public Win7ControlBox()
         {
+            SetStyle(
+                ControlStyles.UserPaint |
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.SupportsTransparentBackColor, true);
+            this.DoubleBuffered = true;
+            UpdateStyles();
+
+            this.BackColor = Color.Transparent;
+
             InitializeComponent();
-            this.ParentChanged += Win7ControlBox_ParentChanged;
+
+
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+
+            this.btnClose.Click += btnClose_Click;
+            this.btnMaximum.Click += btnMaximum_Click;
+            this.btnMinimum.Click += btnMinimum_Click;
+
+            // 将用户控件添加到窗体的Controls集合中时，并不会触发ParentChanged事件。这是因为在添加过程中，窗体被设置为用户控件的父级，而不是通过父级控件的Controls集合添加。
+            ParentChanged += Win7ControlBox_ParentChanged;
+
+            // 因此, ParentChanged事件的操作放到Load事件里
+            Load += Win7ControlBox_Load;
         }
 
+        #endregion
 
+
+
+        #region Win7ControlBox的事件处理
+
+        private void Win7ControlBox_Load(object sender, EventArgs e)
+        {
+            btnClose.NormalImage = ScaleImage(Properties.Resources.btnClose_NormalImage);
+            btnClose.HoverImage = ScaleImage(Properties.Resources.btnClose_HoverImage);
+            btnClose.DownImage = ScaleImage(Properties.Resources.btnClose_DownImage);
+
+            btnMaximum.NormalImage = ScaleImage(Properties.Resources.btnMaximum_NormalImage);
+            btnMaximum.HoverImage = ScaleImage(Properties.Resources.btnMaximum_HoverImage);
+            btnMaximum.DownImage = ScaleImage(Properties.Resources.btnMaximum_DownImage);
+
+
+            btnMinimum.NormalImage = ScaleImage(Properties.Resources.btnMinimum_NormalImage);
+            btnMinimum.HoverImage = ScaleImage(Properties.Resources.btnMinimum_HoverImage);
+            btnMinimum.DownImage = ScaleImage(Properties.Resources.btnMinimum_DownImage);
+
+
+            DpiParent = this.ParentForm as IDpiDefined;
+
+            if (ParentForm != null)
+            {
+                ParentForm.StyleChanged += ParentForm_StyleChanged;
+                ParentForm.Shown += ParentForm_Shown;
+            }
+
+            ApplyLayout();
+            ShrinkOrGrow();
+            AlignRight();
+        }
 
         private void Win7ControlBox_ParentChanged(object sender, EventArgs e)
         {
+            DpiParent = this.ParentForm as IDpiDefined;
 
-        }
-
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            base.OnHandleCreated(e);
-            if (!DesignMode)
+            if (Parent as Form == null)
             {
-                Form parentForm = FormManager.GetTopForm(this) as Form;
-                if (parentForm != null)
-                {
-                    this.btnClose.Click -= new System.EventHandler(this.btnClose_Click);
-                    this.btnMaximum.Click -= new System.EventHandler(this.btnMaximum_Click);
-                    this.btnMinimum.Click -= new System.EventHandler(this.btnMinimum_Click);
-                    this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-                    this.btnMaximum.Click += new System.EventHandler(this.btnMaximum_Click);
-                    this.btnMinimum.Click += new System.EventHandler(this.btnMinimum_Click);
-
-                    parentForm.StyleChanged -= ParentForm_StyleChanged;
-                    parentForm.StyleChanged += ParentForm_StyleChanged;
-
-                    this.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-                }
+                throw new Exception("控件只能添加到窗体上.");
             }
         }
 
-
-        private void ParentForm_StyleChanged(object sender, EventArgs e)
-        {
-            Form form = this.ParentForm;
-            if (!form.ControlBox)
-            {
-                btnClose.Visible = false;
-                btnMaximum.Visible = false;
-                btnMinimum.Visible = false;
-            }
-            else
-            {
-                btnMaximum.Visible = form.MaximizeBox;
-                btnMinimum.Visible = form.MinimizeBox;
-                btnClose.Visible = true;
-            }
-        }
-
-
-        // 点击最小化按钮 
         private void btnMinimum_Click(object sender, EventArgs e)
         {
             Form form = this.ParentForm;
-            form.WindowState = FormWindowState.Minimized;
+            ParentForm.WindowState = FormWindowState.Minimized;
         }
 
-        // 点击最大化/还原按钮
         private void btnMaximum_Click(object sender, EventArgs e)
         {
             Form form = this.ParentForm;
             if (form.WindowState == FormWindowState.Maximized)
             {
                 form.WindowState = FormWindowState.Normal;
-                this.btnMaximum.NormalImage = Properties.Resources.btnMaximum_NormalImage;
-                this.btnMaximum.HoverImage = Properties.Resources.btnMaximum_HoverImage;
-                this.btnMaximum.DownImage = Properties.Resources.btnMaximum_DownImage;
+
+                this.btnMaximum.NormalImage = ScaleImage(Properties.Resources.btnMaximum_NormalImage);
+                this.btnMaximum.HoverImage = ScaleImage(Properties.Resources.btnMaximum_HoverImage);
+                this.btnMaximum.DownImage = ScaleImage(Properties.Resources.btnMaximum_DownImage);
             }
             else
             {
                 form.WindowState = FormWindowState.Maximized;
-                this.btnMaximum.NormalImage = Properties.Resources.restore_normal;
-                this.btnMaximum.HoverImage = Properties.Resources.restore_highlight;
-                this.btnMaximum.DownImage = Properties.Resources.restore_down;
+                this.btnMaximum.NormalImage = ScaleImage(Properties.Resources.restore_normal);
+                this.btnMaximum.HoverImage = ScaleImage(Properties.Resources.restore_highlight);
+                this.btnMaximum.DownImage = ScaleImage(Properties.Resources.restore_down);
             }
 
         }
 
-        // 点击关闭按钮
         private void btnClose_Click(object sender, EventArgs e)
         {
             Form form = this.ParentForm;
             form.Close();
         }
+
+        #endregion
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            
+
+            base.OnPaintBackground(e);
+        }
+
+
+        #region ParentForm的事件处理
+
+        private void ParentForm_Shown(object sender, EventArgs e)
+        {
+            BringToFront();
+        }
+
+
+        private void ParentForm_StyleChanged(object sender, EventArgs e)
+        {
+            ApplyLayout();
+            ShrinkOrGrow();
+            AlignRight();
+        }
+
+        #endregion
+
+        #region 方法
+
+        private void ApplyLayout()
+        {
+            Form form = this.ParentForm;
+            if (form != null)
+            {
+                if (!form.ControlBox)
+                {
+                    btnClose.Visible = false;
+                    btnMaximum.Visible = false;
+                    btnMinimum.Visible = false;
+                }
+                else
+                {
+                    btnMaximum.Visible = form.MaximizeBox;
+                    btnMinimum.Visible = form.MinimizeBox;
+                    btnClose.Visible = true;
+                }
+            }
+        }
+
+        private void ShrinkOrGrow()
+        {
+            int controlBoxWidth = btnClose.Width;
+            if (ParentForm != null)
+            {
+                controlBoxWidth += ParentForm.MaximizeBox ? btnMaximum.Width : 0;
+                controlBoxWidth += ParentForm.MinimizeBox ? btnMinimum.Width : 0;
+            }
+            else
+            {
+                controlBoxWidth += btnMaximum.Width;
+                controlBoxWidth += btnMinimum.Width;
+            }
+
+            this.Width = controlBoxWidth;
+        }
+
+        private void AlignRight()
+        {
+            int border = 1;
+
+            if (Parent != null)
+            {
+                Location = new Point(Parent.Width - this.Width - border, 0);
+            }
+            else if (ParentForm != null)
+            {
+                Location = new Point(ParentForm.Width - Width - border, 0);
+            }
+        }
+
+        private Image ScaleImage(Image originalImage)
+        {
+            float dpiScaleFactorX = 1;
+            float dpiScaleFactorY = 1;
+            if (DpiParent != null)
+            {
+                dpiScaleFactorX = DpiParent.ScaleFactorRatioX;
+                dpiScaleFactorY = DpiParent.ScaleFactorRatioY;
+            }
+
+            if (dpiScaleFactorX > 1 || dpiScaleFactorY > 1)
+            {
+                double ratio = Math.Min(dpiScaleFactorX, dpiScaleFactorY);
+
+                int newWidth = (int)(originalImage.Width * ratio);
+                int newHeight = (int)(originalImage.Height * ratio);
+                Image newImage = new Bitmap(newWidth, newHeight);
+                using (Graphics g = Graphics.FromImage(newImage))
+                {
+                    g.DrawImage(originalImage, 0, 0, newWidth, newHeight);
+                }
+
+                return newImage;
+            }
+            else
+            {
+                return originalImage;
+            }
+        }
+
+        #endregion
 
     }
 }

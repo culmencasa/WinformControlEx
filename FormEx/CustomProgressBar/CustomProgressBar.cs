@@ -330,10 +330,23 @@ namespace System.Windows.Forms
 
         public void Complete()
         {
-            this.Value = MaxValue;
-            _currentSessionValue = MaxValue;
-            ForceRender();
+            Complete(null);
         }
+
+        public void Complete(Action action)
+        {
+            _currentSessionValue = MaxValue;
+            this.Value = MaxValue;
+
+            Thread afterUIFinish = new Thread(() =>
+            {
+                Thread.Sleep(500);
+                action?.Invoke();
+            });
+            afterUIFinish.Start();
+            afterUIFinish.Join();
+        }
+
 
         /// <summary>
         /// 增加到指定百分比进度
@@ -515,7 +528,8 @@ namespace System.Windows.Forms
         private void ForceRender()
         {
             this.BufferImage = DrawProgressBar();
-            Invalidate();
+            Refresh();
+            //Invalidate();
         }
 
         #endregion

@@ -109,6 +109,9 @@ namespace System.Windows.Forms
 
         private Bitmap _boxShadowBitmap;
 
+        Timer fadeInTimer = null;
+        Timer fadeOutTimer = null;
+
 
         #endregion
 
@@ -274,26 +277,8 @@ namespace System.Windows.Forms
 
 
             Opacity = 0;
-            int duration = 300;
-            int steps = 10;
-            Timer timer = new Timer();
-            timer.Interval = duration / steps;
 
-            int currentStep = 1;
-            timer.Tick += (arg1, arg2) =>
-            {
-                Opacity = Opacity + ((double)currentStep / steps);
-                currentStep++;
-
-                if (Opacity >= 1.00)
-                {
-                    timer.Stop();
-                    timer.Dispose();
-                }
-            };
-
-            timer.Start();
-
+            StartFadeInTimer();
 
             BrintSelfToFront();
 
@@ -344,27 +329,7 @@ namespace System.Windows.Forms
 
             pnlCenterBox.Visible = false;
 
-
-            int duration = 300;
-            int steps = 10;
-            Timer timer = new Timer();
-            timer.Interval = duration / steps;
-
-            int currentStep = 1;
-            timer.Tick += (arg1, arg2) =>
-            {
-                Opacity = 1 - ((double)currentStep / steps);
-                currentStep++;
-
-                if (Opacity <= 0.1)
-                {
-                    timer.Stop();
-                    timer.Dispose();
-                    this.Close();                    
-                }
-            };
-
-            timer.Start();
+            StartFadeOutTimer();
         }
 
         #endregion
@@ -874,6 +839,90 @@ namespace System.Windows.Forms
             }
         }
 
+
+        private void StartFadeInTimer()
+        {
+            if (fadeOutTimer != null && fadeOutTimer.Enabled)
+            {
+                fadeOutTimer.Stop();
+                fadeOutTimer.Dispose();
+                fadeOutTimer = null;
+            }
+
+            if (fadeInTimer == null)
+            {
+                int duration = 300;
+                int steps = 10;
+
+                fadeInTimer = new Timer();
+                fadeInTimer.Interval = duration / steps;
+
+                int currentStep = 1;
+                fadeInTimer.Tick += (arg1, arg2) =>
+                {
+                    if (!this.IsHandleCreated || this.IsDisposed)
+                    {
+                        fadeInTimer.Stop();
+                        fadeInTimer = null;
+                        return;
+                    }
+
+                    Opacity = Opacity + ((double)currentStep / steps);
+                    currentStep++;
+
+                    if (Opacity >= 1.00)
+                    {
+                        fadeInTimer.Stop();
+                        fadeInTimer.Dispose();
+                        fadeInTimer = null;
+                    }
+                };
+            }
+            fadeInTimer.Start();
+        }
+
+        private void StartFadeOutTimer()
+        {
+            if (fadeInTimer != null && fadeInTimer.Enabled)
+            {
+                fadeInTimer.Stop();
+                fadeInTimer.Dispose();
+                fadeInTimer = null;
+            }
+
+            if (fadeOutTimer == null)
+            {
+                int duration = 300;
+                int steps = 10;
+                fadeOutTimer = new Timer();
+                fadeOutTimer.Interval = duration / steps;
+
+                int currentStep = 1;
+                fadeOutTimer.Tick += (arg1, arg2) =>
+                {
+                    if (!this.IsHandleCreated || this.IsDisposed)
+                    {
+                        fadeOutTimer.Stop();
+                        fadeOutTimer = null;
+                        return;
+                    }
+
+                    Opacity = 1 - ((double)currentStep / steps);
+                    currentStep++;
+
+                    if (Opacity <= 0.1)
+                    {
+                        fadeOutTimer.Stop();
+                        fadeOutTimer.Dispose();
+                        fadeOutTimer = null;
+                        this.Close();
+                    }
+                };
+            }
+
+
+            fadeOutTimer.Start();
+        }
 
 
 

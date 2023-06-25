@@ -226,8 +226,8 @@ namespace System.Windows.Forms
         {
             InitializeComponent();
 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.AutoScaleMode = AutoScaleMode.None;
+            this.FormBorderStyle = FormBorderStyle.None;
 
             SetStyle(
                 ControlStyles.UserPaint |
@@ -243,8 +243,12 @@ namespace System.Windows.Forms
             TitleFont = new Font(this.Font.FontFamily.Name, 16f, FontStyle.Bold);
             Load += CustomForm_Load;
             Shown += CustomForm_Shown;
-        }
 
+            // 防止覆盖任务栏. MaximizedBounds需要在窗体Maximize之前设置才生效
+            Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
+            MaximizedBounds = new Rectangle(workingArea.Left, workingArea.Top, workingArea.Width, workingArea.Height);
+
+        }
 
         #endregion
 
@@ -611,7 +615,7 @@ namespace System.Windows.Forms
                 RuntimeScaleFactorX = graphics.DpiX / 96f;
                 RuntimeScaleFactorY = graphics.DpiY / 96f;
             }
-        }
+       }
 
         private void CustomForm_Shown(object sender, EventArgs e)
         {

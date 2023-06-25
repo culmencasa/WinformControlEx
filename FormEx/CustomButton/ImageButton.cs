@@ -94,7 +94,6 @@ namespace System.Windows.Forms
 
         #endregion
 
-
         #region 公开属性
 
 
@@ -545,7 +544,6 @@ namespace System.Windows.Forms
 
         #endregion
 
-
         #region 私有方法
 
         #region 增加提示文本功能
@@ -666,7 +664,6 @@ namespace System.Windows.Forms
 
         #endregion
 
-
         #region 保护方法
 
         protected virtual void OnNormalImageChanged()
@@ -675,8 +672,6 @@ namespace System.Windows.Forms
         }
 
         #endregion
-
-
 
         [Flags]
         public enum ButtonMouseStatus

@@ -48,6 +48,7 @@
             this.customPanel2 = new System.Windows.Forms.CustomPanel();
             this.colorGroupBox3 = new System.Windows.Forms.ColorGroupBox();
             this.customLabel4 = new System.Windows.Forms.CustomLabel();
+            this.btnCustomMessage = new System.Windows.Forms.CustomButton();
             this.colorGroupBox1.SuspendLayout();
             this.colorGroupBox2.SuspendLayout();
             this.customPanel2.SuspendLayout();
@@ -127,6 +128,7 @@
             this.colorGroupBox1.CaptionBackColor = System.Drawing.SystemColors.Control;
             this.colorGroupBox1.CaptionPosition = System.Windows.Forms.ColorGroupBox.CaptionPositions.None;
             this.colorGroupBox1.Controls.Add(this.customLabel2);
+            this.colorGroupBox1.Controls.Add(this.btnCustomMessage);
             this.colorGroupBox1.Controls.Add(this.btnShowInfoTip);
             this.colorGroupBox1.Controls.Add(this.btnRoundForm);
             this.colorGroupBox1.Controls.Add(this.btnShowException);
@@ -137,7 +139,7 @@
             this.colorGroupBox1.Location = new System.Drawing.Point(1, 1);
             this.colorGroupBox1.Name = "colorGroupBox1";
             this.colorGroupBox1.Show3DShadow = false;
-            this.colorGroupBox1.Size = new System.Drawing.Size(175, 413);
+            this.colorGroupBox1.Size = new System.Drawing.Size(175, 409);
             this.colorGroupBox1.TabIndex = 1002;
             this.colorGroupBox1.Text = "窗体相关";
             // 
@@ -234,7 +236,7 @@
             this.colorGroupBox2.Location = new System.Drawing.Point(176, 1);
             this.colorGroupBox2.Name = "colorGroupBox2";
             this.colorGroupBox2.Show3DShadow = false;
-            this.colorGroupBox2.Size = new System.Drawing.Size(179, 413);
+            this.colorGroupBox2.Size = new System.Drawing.Size(179, 409);
             this.colorGroupBox2.TabIndex = 1005;
             this.colorGroupBox2.Text = "colorGroupBox2";
             // 
@@ -280,9 +282,9 @@
             this.separator1.Direction = System.Windows.Forms.Separator.SeparationDirections.Vertical;
             this.separator1.Dock = System.Windows.Forms.DockStyle.Left;
             this.separator1.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.separator1.Location = new System.Drawing.Point(203, 40);
+            this.separator1.Location = new System.Drawing.Point(205, 42);
             this.separator1.Name = "separator1";
-            this.separator1.Size = new System.Drawing.Size(10, 415);
+            this.separator1.Size = new System.Drawing.Size(10, 411);
             this.separator1.TabIndex = 1007;
             this.separator1.Text = "separator1";
             // 
@@ -293,11 +295,11 @@
             this.customNavSideBar1.BorderWidth = 1;
             this.customNavSideBar1.Dock = System.Windows.Forms.DockStyle.Left;
             this.customNavSideBar1.FirstColor = System.Drawing.Color.Empty;
-            this.customNavSideBar1.Location = new System.Drawing.Point(0, 40);
+            this.customNavSideBar1.Location = new System.Drawing.Point(2, 42);
             this.customNavSideBar1.Name = "customNavSideBar1";
             this.customNavSideBar1.RoundBorderRadius = 0;
             this.customNavSideBar1.SecondColor = System.Drawing.Color.Empty;
-            this.customNavSideBar1.Size = new System.Drawing.Size(203, 415);
+            this.customNavSideBar1.Size = new System.Drawing.Size(203, 411);
             this.customNavSideBar1.TabIndex = 1008;
             // 
             // customPanel2
@@ -310,11 +312,11 @@
             this.customPanel2.Controls.Add(this.colorGroupBox1);
             this.customPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.customPanel2.FirstColor = System.Drawing.Color.Empty;
-            this.customPanel2.Location = new System.Drawing.Point(213, 40);
+            this.customPanel2.Location = new System.Drawing.Point(215, 42);
             this.customPanel2.Name = "customPanel2";
             this.customPanel2.RoundBorderRadius = 0;
             this.customPanel2.SecondColor = System.Drawing.Color.Empty;
-            this.customPanel2.Size = new System.Drawing.Size(603, 415);
+            this.customPanel2.Size = new System.Drawing.Size(599, 411);
             this.customPanel2.TabIndex = 1009;
             // 
             // colorGroupBox3
@@ -331,7 +333,7 @@
             this.colorGroupBox3.Location = new System.Drawing.Point(355, 1);
             this.colorGroupBox3.Name = "colorGroupBox3";
             this.colorGroupBox3.Show3DShadow = false;
-            this.colorGroupBox3.Size = new System.Drawing.Size(179, 413);
+            this.colorGroupBox3.Size = new System.Drawing.Size(179, 409);
             this.colorGroupBox3.TabIndex = 1006;
             this.colorGroupBox3.Text = "colorGroupBox3";
             // 
@@ -348,6 +350,25 @@
             this.customLabel4.Size = new System.Drawing.Size(62, 31);
             this.customLabel4.TabIndex = 1001;
             this.customLabel4.Text = "其他";
+            // 
+            // btnCustomMessage
+            // 
+            this.btnCustomMessage.BackColor = System.Drawing.Color.Indigo;
+            this.btnCustomMessage.BorderColor = System.Drawing.Color.Indigo;
+            this.btnCustomMessage.CornerRadius = 0;
+            this.btnCustomMessage.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnCustomMessage.ForeColor = System.Drawing.Color.White;
+            this.btnCustomMessage.GradientMode = true;
+            this.btnCustomMessage.Location = new System.Drawing.Point(23, 339);
+            this.btnCustomMessage.Name = "btnCustomMessage";
+            this.btnCustomMessage.RoundCorners = ((System.Windows.Forms.Corners)((((System.Windows.Forms.Corners.TopLeft | System.Windows.Forms.Corners.TopRight) 
+            | System.Windows.Forms.Corners.BottomLeft) 
+            | System.Windows.Forms.Corners.BottomRight)));
+            this.btnCustomMessage.ShadeMode = false;
+            this.btnCustomMessage.Size = new System.Drawing.Size(122, 39);
+            this.btnCustomMessage.TabIndex = 1000;
+            this.btnCustomMessage.Text = "消息窗体";
+            this.btnCustomMessage.Click += new System.EventHandler(this.btnCustomMessage_Click);
             // 
             // ComponentDemo
             // 
@@ -398,5 +419,6 @@
         private System.Windows.Forms.CustomPanel customPanel2;
         private System.Windows.Forms.ColorGroupBox colorGroupBox3;
         private System.Windows.Forms.CustomLabel customLabel4;
+        private System.Windows.Forms.CustomButton btnCustomMessage;
     }
 }

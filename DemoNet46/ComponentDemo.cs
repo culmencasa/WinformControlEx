@@ -24,10 +24,6 @@ namespace DemoNet46
 
         private void ComponentDemo_Load(object sender, EventArgs e)
         {
-            btnMinimum.BringToFront();
-            btnMaximum.BringToFront();
-            btnClose.BringToFront();
-
             CustomNavGroup group1 = new CustomNavGroup();
             group1.GroupText = "导航组1";
             group1.GroupIndent = 12;
@@ -130,6 +126,13 @@ namespace DemoNet46
                 "竹喧归浣女， 莲动下渔舟。 " + Environment.NewLine +  
                 "随意春芳歇， 王孙自可留。", "王维《山居秋暝》", InfoTip.Position.Right, 8000);
         }
+        private void btnCustomMessage_Click(object sender, EventArgs e)
+        {
+            CustomMessageBox.ShowInformation("", "This is a Information");
+            CustomMessageBox.ShowConfirm("", "This is a Question");
+            CustomMessageBox.ShowError("", "This is an Error");
+            CustomMessageBox.ShowWarning("", "This is a Warning");
+        }
 
         private void btnProgressGo_Click(object sender, EventArgs e)
         {
@@ -148,14 +151,16 @@ namespace DemoNet46
                     this.Invoke((Action)delegate
                     {
                         circularProgressBar1.Value++;
+                        circularProgressBar1.TextLine2 = circularProgressBar1.Value.ToString();
                     });
                     i++;
-                    Thread.Sleep(100);
+                    Thread.Sleep(1);
                 } while (i < 100);
 
             });
             t.IsBackground = true;
             t.Start();
         }
+
     }
 }

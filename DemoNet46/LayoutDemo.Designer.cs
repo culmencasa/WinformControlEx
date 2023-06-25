@@ -37,7 +37,6 @@ namespace DemoNet46
             this.pnlHeader = new System.Windows.Forms.ClickThroughPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.btnSwitchSidebar = new System.Windows.Forms.ImageButton();
-            this.win7ControlBox1 = new System.Windows.Forms.Win7ControlBox();
             this.customPanel1 = new System.Windows.Forms.CustomPanel();
             this.ocnTile4 = new FormExCore.OcnTile();
             this.ocnTile5 = new FormExCore.OcnTile();
@@ -140,10 +139,10 @@ namespace DemoNet46
             this.pnlSidebar.Controls.Add(this.btnHome);
             this.pnlSidebar.Controls.Add(this.btnFavorite);
             this.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlSidebar.Location = new System.Drawing.Point(0, 66);
+            this.pnlSidebar.Location = new System.Drawing.Point(2, 48);
             this.pnlSidebar.MaximumSize = new System.Drawing.Size(200, 0);
             this.pnlSidebar.Name = "pnlSidebar";
-            this.pnlSidebar.Size = new System.Drawing.Size(200, 461);
+            this.pnlSidebar.Size = new System.Drawing.Size(200, 477);
             this.pnlSidebar.TabIndex = 1006;
             // 
             // pnlHeader
@@ -151,11 +150,10 @@ namespace DemoNet46
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(77)))), ((int)(((byte)(105)))));
             this.pnlHeader.Controls.Add(this.label1);
             this.pnlHeader.Controls.Add(this.btnSwitchSidebar);
-            this.pnlHeader.Controls.Add(this.win7ControlBox1);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlHeader.Location = new System.Drawing.Point(0, 20);
+            this.pnlHeader.Location = new System.Drawing.Point(2, 2);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(863, 46);
+            this.pnlHeader.Size = new System.Drawing.Size(859, 46);
             this.pnlHeader.TabIndex = 1007;
             // 
             // label1
@@ -187,15 +185,6 @@ namespace DemoNet46
             this.btnSwitchSidebar.ToolTipText = null;
             this.btnSwitchSidebar.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnSwitchSidebar_MouseClick);
             // 
-            // win7ControlBox1
-            // 
-            this.win7ControlBox1.AutoSize = true;
-            this.win7ControlBox1.Location = new System.Drawing.Point(763, 0);
-            this.win7ControlBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.win7ControlBox1.Name = "win7ControlBox1";
-            this.win7ControlBox1.Size = new System.Drawing.Size(96, 21);
-            this.win7ControlBox1.TabIndex = 1006;
-            // 
             // customPanel1
             // 
             this.customPanel1.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -209,7 +198,7 @@ namespace DemoNet46
             this.customPanel1.Controls.Add(this.ocnTile2);
             this.customPanel1.Controls.Add(this.ocnTile1);
             this.customPanel1.FirstColor = System.Drawing.Color.Empty;
-            this.customPanel1.Location = new System.Drawing.Point(112, 30);
+            this.customPanel1.Location = new System.Drawing.Point(110, 38);
             this.customPanel1.Name = "customPanel1";
             this.customPanel1.RoundBorderRadius = 0;
             this.customPanel1.SecondColor = System.Drawing.Color.Empty;
@@ -320,7 +309,7 @@ namespace DemoNet46
             this.btnColorize.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnColorize.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnColorize.GradientMode = false;
-            this.btnColorize.Location = new System.Drawing.Point(112, 359);
+            this.btnColorize.Location = new System.Drawing.Point(110, 375);
             this.btnColorize.Name = "btnColorize";
             this.btnColorize.ShadeMode = false;
             this.btnColorize.Size = new System.Drawing.Size(207, 76);
@@ -336,7 +325,7 @@ namespace DemoNet46
             this.btnAnimate.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnAnimate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btnAnimate.GradientMode = false;
-            this.btnAnimate.Location = new System.Drawing.Point(357, 359);
+            this.btnAnimate.Location = new System.Drawing.Point(355, 375);
             this.btnAnimate.Name = "btnAnimate";
             this.btnAnimate.ShadeMode = false;
             this.btnAnimate.Size = new System.Drawing.Size(207, 76);
@@ -346,25 +335,28 @@ namespace DemoNet46
             // 
             // pnlContent
             // 
+            this.pnlContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(17)))), ((int)(((byte)(40)))));
             this.pnlContent.Controls.Add(this.customPanel1);
             this.pnlContent.Controls.Add(this.btnAnimate);
             this.pnlContent.Controls.Add(this.btnColorize);
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlContent.Location = new System.Drawing.Point(200, 66);
+            this.pnlContent.Location = new System.Drawing.Point(202, 48);
             this.pnlContent.Name = "pnlContent";
-            this.pnlContent.Size = new System.Drawing.Size(663, 461);
+            this.pnlContent.Size = new System.Drawing.Size(659, 477);
             this.pnlContent.TabIndex = 1011;
             // 
             // LayoutDemo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(39)))), ((int)(((byte)(51)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(77)))), ((int)(((byte)(105)))));
             this.BorderColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(863, 527);
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.pnlSidebar);
             this.Controls.Add(this.pnlHeader);
+            this.DesigntimeScaleFactorX = 1F;
+            this.DesigntimeScaleFactorY = 1F;
             this.ForeColor = System.Drawing.Color.White;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(3840, 2160);
@@ -372,8 +364,11 @@ namespace DemoNet46
             this.MinimumSize = new System.Drawing.Size(200, 100);
             this.Name = "LayoutDemo";
             this.Resizable = true;
+            this.RuntimeScaleFactorX = 1F;
+            this.RuntimeScaleFactorY = 1F;
             this.ShowCaptionShadow = true;
             this.Text = "部分功能测试";
+            this.TitleBarHeight = 0;
             this.Controls.SetChildIndex(this.pnlHeader, 0);
             this.Controls.SetChildIndex(this.pnlSidebar, 0);
             this.Controls.SetChildIndex(this.pnlContent, 0);
@@ -394,7 +389,6 @@ namespace DemoNet46
         private System.Windows.Forms.CustomGroupIcon btnHelp;
         private System.Windows.Forms.Panel pnlSidebar;
         private System.Windows.Forms.ClickThroughPanel pnlHeader;
-        private System.Windows.Forms.Win7ControlBox win7ControlBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ImageButton btnSwitchSidebar;
         private System.Windows.Forms.CustomPanel customPanel1;

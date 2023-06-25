@@ -155,6 +155,7 @@ namespace System.Windows.Forms
             set
             {
                 _textLine3 = value;
+                Invalidate();
             }
         }
 

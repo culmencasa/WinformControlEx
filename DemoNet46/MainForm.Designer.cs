@@ -109,7 +109,6 @@ namespace DemoNet46
             this.btnStart.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btnStart.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnStart.DownImage = global::DemoNet46.Properties.Resources.Win7Pressed;
-            this.btnStart.HotTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(243)))));
             this.btnStart.HoverImage = global::DemoNet46.Properties.Resources.Win7Hover;
             this.btnStart.Location = new System.Drawing.Point(0, 0);
             this.btnStart.Name = "btnStart";
@@ -424,8 +423,8 @@ namespace DemoNet46
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackgroundImage = global::DemoNet46.Properties.Resources.earth_mountain;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(1440, 900);
@@ -435,7 +434,11 @@ namespace DemoNet46
             this.Controls.Add(this.btnShowTestForm);
             this.Controls.Add(this.btnRecycle);
             this.Controls.Add(this.pnlTaskbar);
+            this.DesigntimeScaleFactorX = 1F;
+            this.DesigntimeScaleFactorY = 1F;
             this.Name = "MainForm";
+            this.RuntimeScaleFactorX = 1F;
+            this.RuntimeScaleFactorY = 1F;
             this.ShowCaption = false;
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

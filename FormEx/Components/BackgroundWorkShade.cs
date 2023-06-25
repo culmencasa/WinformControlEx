@@ -432,7 +432,7 @@ namespace System.Windows.Forms
                 {
                     // 进度条更新为100%, 因为QuickerInstance模式下任务数不确定
                     pbWorkProgress.Complete();
-                    Application.DoEvents();
+                    //Application.DoEvents();
 
                     OnProcessCompleted(bgw, new ProcedureCompleteEventArgs(e));
 

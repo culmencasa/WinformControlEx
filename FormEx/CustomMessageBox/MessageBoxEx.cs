@@ -6,6 +6,10 @@ using System.Text;
 
 namespace System.Windows.Forms
 {
+    /// <summary>
+    /// 消息框
+    /// <para>相比MessageBox加上了Owner, 以避免弹框后置</para> 
+    /// </summary>
     public class MessageBoxEx
     {
         /// <summary>
@@ -20,6 +24,22 @@ namespace System.Windows.Forms
         {
             // 找到当前活动窗体, 指定为Owner(在Owner之上激活)
             Form owner = FormManager.TryGetLatestActiveForm();
+
+            return ShowMessage(owner, content, caption, buttons, icon);
+        }
+
+
+        /// <summary>
+        /// 显示消息框
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="content"></param>
+        /// <param name="caption"></param>
+        /// <param name="buttons"></param>
+        /// <param name="icon"></param>
+        /// <returns></returns>
+        public static DialogResult ShowMessage(Form owner, string content, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+        {
             if (owner != null)
             {
                 // 判断是否需要线程回调
@@ -42,22 +62,12 @@ namespace System.Windows.Forms
             }
         }
 
-        /// <summary>
-        /// 在当前窗体前显示消息框
-        /// </summary>
-        /// <param name="content"></param>
-        /// <returns></returns>
-        public static DialogResult ShowMessage(string content)
-        {
-            string caption = "提醒";
 
-            CultureInfo ci = CultureInfo.CurrentUICulture;
-            if (ci.Name.Contains("en"))
-            { 
-                caption = "Information";
-            }
-            return MessageBoxEx.ShowMessage(content, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
+        //public static DialogResult ShowMessage(string content, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, int timeout)
+        //{ 
+            
+        //}
+
 
         /// <summary>
         /// 在当前窗体前显示确认消息框
@@ -65,32 +75,52 @@ namespace System.Windows.Forms
         /// <param name="caption"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-        public static DialogResult ShowConfirm(string caption, string content)
+        public static DialogResult ShowConfirm(string content, string caption)
         {
             Form owner = FormManager.TryGetLatestActiveForm();
-            if (owner != null)
-            {
-                if (owner.InvokeRequired)
-                {
-                    return (DialogResult)owner.Invoke((Func<DialogResult>)delegate
-                    {
-                        return MessageBox.Show(owner, content, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    });
-                }
-                else
-                {
-                    return MessageBox.Show(owner, content, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                }
-            }
-            else
-            {
-                return MessageBox.Show(content, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            }
+
+            return ShowMessage(owner, content, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
 
-        public static void ShowExceptionDialog()
+        /// <summary>
+        /// 在当前窗体前显示消息框
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public static DialogResult ShowInformation(string content)
         {
-            //todo:
+            string caption = "提示";
+
+            CultureInfo ci = CultureInfo.CurrentUICulture;
+            if (ci.Name.Contains("en"))
+            {
+                caption = "Information";
+            }
+            return ShowMessage(content, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        public static DialogResult ShowWarning(string content)
+        {
+            string caption = "警告";
+
+            CultureInfo ci = CultureInfo.CurrentUICulture;
+            if (ci.Name.Contains("en"))
+            {
+                caption = "Warning";
+            }
+            return ShowMessage(content, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+
+        public static DialogResult ShowError(string content)
+        {
+            string caption = "错误";
+
+            CultureInfo ci = CultureInfo.CurrentUICulture;
+            if (ci.Name.Contains("en"))
+            {
+                caption = "Error";
+            }
+            return ShowMessage(content, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

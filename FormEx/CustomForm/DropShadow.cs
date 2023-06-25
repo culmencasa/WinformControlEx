@@ -14,8 +14,9 @@ namespace System.Windows.Forms
     {
         #region 字段
 
-        private Bitmap _shadowBitmap;
-        private float _shadowOpacity = 1;
+        private Bitmap shadowBitmap;
+        private float shadowOpacity = 1;
+        bool isResizing = false;
 
         #endregion
 
@@ -38,28 +39,7 @@ namespace System.Windows.Forms
             // 绑定事件
             WireupOwnerEvents();
 
-        }
-
-        private void Owner_FormClosed(object? sender, FormClosedEventArgs e)
-        {
-            if (IsSelfAlive() && !IsOwnerAlive())
-            {
-                UnwireOwnerEvents();
-                Close();
-                Dispose();
-            }
-        }
-
-        private void Owner_VisibleChanged(object? sender, EventArgs e)
-        {
-            if (Owner != null)
-            {
-                Visible = Owner.Visible;
-            }
-            else
-            {
-                Visible = false;
-            }
+            OwnerLastWindowState = Owner.WindowState;
         }
 
 
@@ -83,11 +63,11 @@ namespace System.Windows.Forms
         /// </summary>
         public Bitmap ShadowBitmap
         {
-            get { return _shadowBitmap; }
+            get { return shadowBitmap; }
             set
             {
-                _shadowBitmap = value;
-                SetBitmap(_shadowBitmap, ShadowOpacity);
+                shadowBitmap = value;
+                SetBitmap(shadowBitmap, ShadowOpacity);
             }
         }
 
@@ -112,14 +92,19 @@ namespace System.Windows.Forms
         /// </summary>
         public float ShadowOpacity
         {
-            get { return _shadowOpacity; }
+            get { return shadowOpacity; }
             set
             {
-                _shadowOpacity = value;
+                shadowOpacity = value;
             }
         }
 
         public bool Blur { get; set; } = false;
+
+        protected FormWindowState OwnerLastWindowState { get; set; }
+
+
+
         #endregion
 
         #region 重写的成员
@@ -157,7 +142,7 @@ namespace System.Windows.Forms
             {
                 IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Owner.Width, Owner.Height, 0, 0);
                 Owner.Region = System.Drawing.Region.FromHrgn(hrgn);
-            } 
+            }
 
             // 设置显示区域
             Region shadowRegion = Region.FromHrgn(Win32.CreateRoundRectRgn(0, 0,
@@ -165,7 +150,8 @@ namespace System.Windows.Forms
                 ShadowBitmap.Height,
                 BorderRadius,
                 BorderRadius));
-            
+
+
             Region ownerRegion = Owner.Region.Clone();
             ownerRegion.Translate(ShadowOffset.X, ShadowOffset.Y);
 
@@ -194,35 +180,31 @@ namespace System.Windows.Forms
         {
             if (IsOwnerAlive())
             {
-                //Owner.Move += OnLocationChanged;
+                //Owner.Move += Owner_Move;
                 Owner.Shown += Owner_Shown;
-                Owner.LocationChanged += OnLocationChanged;
+                Owner.LocationChanged += Owner_LocationChanged;
                 Owner.Resize += Owner_Resize; // issue: win11下Resize事件不触发
                 Owner.ResizeBegin += Owner_ResizeBegin;
                 Owner.ResizeEnd += Owner_ResizeEnd;
+                Owner.SizeChanged += Owner_SizeChanged;
                 Owner.FormClosed += Owner_FormClosed;
                 Owner.VisibleChanged += Owner_VisibleChanged;
             }
         }
-
-        private void Owner_Shown(object sender, EventArgs e)
-        {
-            Redraw(true);
-        }
-
-
+        
         private void UnwireOwnerEvents()
         {
             if (IsOwnerAlive())
             {
                 //Owner.Move -= OnLocationChanged;
                 Owner.Shown -= Owner_Shown;
-                Owner.LocationChanged -= OnLocationChanged;
+                Owner.LocationChanged -= Owner_LocationChanged;
                 Owner.Resize -= new EventHandler(Owner_Resize);
                 Owner.ResizeBegin -= Owner_ResizeBegin;
                 Owner.ResizeEnd -= Owner_ResizeEnd;
-                Owner.VisibleChanged -= Owner_VisibleChanged;
+                Owner.SizeChanged -= Owner_SizeChanged;
                 Owner.FormClosed -= Owner_FormClosed;
+                Owner.VisibleChanged -= Owner_VisibleChanged;
             }
         }
 
@@ -265,7 +247,7 @@ namespace System.Windows.Forms
                 RectangleF wrapRect = new RectangleF(
                         (bitmap.Width - Owner.Width) / 2,
                         (bitmap.Height - Owner.Height) / 2,
-                        Owner.Width, 
+                        Owner.Width,
                         Owner.Height);
 
                 // 画10个阴影形成渐变
@@ -315,19 +297,6 @@ namespace System.Windows.Forms
             return reproccessBitmap;
         }
 
-
-
-        private void OnLocationChanged(Object sender = null, EventArgs eventArgs = null)
-        {
-            if (Owner == null)
-                return;
-
-            if (Owner.WindowState == FormWindowState.Normal)
-            {
-                UpdateLocation();
-            }
-        }
-
         private void UpdateLocation()
         {
             Point pos = Owner.Location;
@@ -346,35 +315,48 @@ namespace System.Windows.Forms
                 Location = pos;
             }
         }
-        #endregion
 
-        #region 事件处理
-
-
-        private void Owner_ResizeBegin(object sender, EventArgs e)
+        private bool IsDocking()
         {
-            //this.Visible = false;
+            bool isAeroSnapped = false;
+
+            // win11的停靠方式暂不支持
+
+            if (Owner.WindowState == FormWindowState.Maximized)
+            {
+                isAeroSnapped = true;
+            }
+            else
+            {
+                var workingArea = Screen.GetWorkingArea(Owner);
+                if (workingArea.Contains(Owner.Location)
+                    && (workingArea.Width / 2) == Owner.Width)
+                {
+                    if (Owner.Right == workingArea.Right
+                        && Owner.Bottom == workingArea.Bottom
+                        && Owner.Top == workingArea.Top)
+                    {
+                        // 右停靠
+                        isAeroSnapped = true;
+                    }
+                    else if (Owner.Left == workingArea.Left
+                        && Owner.Top == workingArea.Top
+                        && Owner.Bottom == workingArea.Bottom)
+                    {
+                        // 右停靠
+                        isAeroSnapped = true;
+                    }
+
+                }
+            }
+
+
+
+
+            return isAeroSnapped;
         }
-        private void Owner_ResizeEnd(object sender, EventArgs e)
-        {
-            //if (Owner == null)
-            //    return;
-
-            //if (Owner.WindowState == FormWindowState.Minimized || Owner.WindowState == FormWindowState.Maximized)
-            //{
-            //    this.Visible = false;
-            //    return;
-            //}
-            //else
-            //{
-            //    this.Visible = true;
-            //}
 
 
-            //Redraw(false);
-        }
-
-        protected FormWindowState OwnerLastWindowState { get; set; }
         private bool IsOwnerAlive()
         {
             if (Owner == null || Owner.IsDisposed)
@@ -398,6 +380,100 @@ namespace System.Windows.Forms
         }
 
 
+        #endregion
+
+        #region 事件处理
+
+        #region Owner事件处理
+
+        private void Owner_Move(object sender, EventArgs e)
+        {
+        }
+
+        private void Owner_Shown(object sender, EventArgs e)
+        {
+            Redraw(true);
+        }
+
+        private void Owner_LocationChanged(Object sender = null, EventArgs eventArgs = null)
+        {
+            if (!IsOwnerAlive())
+                return;
+
+            if (Owner.WindowState == FormWindowState.Normal)
+            {
+                UpdateLocation();
+            }
+        }
+
+        private void Owner_FormClosed(object? sender, FormClosedEventArgs e)
+        {
+            if (IsSelfAlive() && IsOwnerAlive())
+            {
+                UnwireOwnerEvents();
+                //Close();
+                //Dispose();
+            }
+        }
+
+        private void Owner_VisibleChanged(object? sender, EventArgs e)
+        {
+            if (Owner != null)
+            {
+                Visible = Owner.Visible;
+            }
+            else
+            {
+                Visible = false;
+            }
+        }
+
+        private void Owner_ResizeBegin(object sender, EventArgs e)
+        {
+
+
+            // 根据鼠标位置判断是否在拉伸
+            var mousepoint = Owner.PointToClient(MousePosition);
+            if (mousepoint.X >= Owner.Width - 8 || mousepoint.Y >= Owner.Height - 8)
+            {
+                isResizing = true;
+
+
+                this.Visible = false;
+            }
+            else if (mousepoint.X <= 3 || mousepoint.Y <= 3)
+            {
+                isResizing = true;
+                this.Visible = false;
+            }
+        }
+
+        private void Owner_ResizeEnd(object sender, EventArgs e)
+        {
+            if (!IsOwnerAlive())
+                return;
+
+            if (Owner.WindowState == FormWindowState.Minimized || Owner.WindowState == FormWindowState.Maximized)
+            {
+                this.Visible = false;
+                return;
+            }
+
+
+            if (isResizing)
+            {
+                isResizing = false;
+                Owner.Region = null;
+                Redraw(true);
+                this.Visible = true;
+            }
+        }
+
+        private void Owner_SizeChanged(object sender, EventArgs e)
+        {
+            OwnerLastWindowState = Owner.WindowState;
+        }
+
         void Owner_Resize(object sender, EventArgs e)
         {
             if (!IsOwnerAlive())
@@ -406,17 +482,19 @@ namespace System.Windows.Forms
                 return;
             }
 
+            //在窗体停靠时不显示阴影
+            if (IsDocking())
+            {
+                this.Visible = false;
+                return;
+            }
 
+            // 对比当前的窗体状态是否有改变
             FormWindowState lastState = OwnerLastWindowState;
             if (Owner.WindowState != lastState)
             {
+                // 记住上次的窗体状态
                 OwnerLastWindowState = Owner.WindowState;
-                //OnFormWindowStateChanged(new FormWindowStateArgs()
-                //{
-                //    LastWindowState = lastState,
-                //    NewWindowState = WindowState
-                //});
-
                 if (OwnerLastWindowState == FormWindowState.Minimized)
                 {
                     this.Visible = false;
@@ -424,11 +502,6 @@ namespace System.Windows.Forms
                 else if (OwnerLastWindowState == FormWindowState.Normal)
                 {
                     this.Visible = true;
-                    //Owner.Region = null;
-                    //Redraw(false);
-
-
-
                     UpdateLocation();
                 }
                 else if (OwnerLastWindowState == FormWindowState.Maximized)
@@ -438,17 +511,27 @@ namespace System.Windows.Forms
             }
             else
             {
+
                 // 在AeroSnap后设为null重新计算Region
-                Owner.Region = null;
-                Redraw(true);
+
+                if (!isResizing)
+                {
+                    Owner.Region = null;
+                    Redraw(true);
+                    this.Visible = true;
+                }
+
             }
         }
 
+
         #endregion
 
+        #endregion
 
     }
 
-
 }
+
+
 

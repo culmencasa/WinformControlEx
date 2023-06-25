@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace System.Windows.Forms.CustomListBox
+namespace System.Windows.Forms
 {
     public class CustomListBox : ListBox
     {
@@ -13,20 +13,18 @@ namespace System.Windows.Forms.CustomListBox
             SelectionForeColor = Color.White;
             SelectionBackColor = Color.RoyalBlue;
 
-            DrawMode = DrawMode.OwnerDrawFixed;
+            DrawMode = DrawMode.OwnerDrawVariable;
             this.ItemHeight = 32;
-            this.DrawItem += ListBoxEx_DrawItem;            
+
+            //issue: 控件Dock之后会在底部留下一块空白, 原ListBox就有这个bug.
+            //       猜测也有可能是设定了ItemHeight的高度造成的.
+
+            this.DrawItem += CustomListBox_DrawItem;
         }
 
-
-
-        public Color SelectionForeColor { get; set; }
-
-        public Color SelectionBackColor { get; set; }
-
-        private void ListBoxEx_DrawItem(object sender, DrawItemEventArgs e)
+        private void CustomListBox_DrawItem(object sender, DrawItemEventArgs e)
         {
-            var control = sender as ListBox;
+            var control = this;
             if (control.Items.Count > 0)
             {
                 var txt = control.GetItemText(control.Items[e.Index]);
@@ -40,7 +38,7 @@ namespace System.Windows.Forms.CustomListBox
                     }
                 }
                 else
-                {     
+                {
                     using (var brush = new SolidBrush(this.BackColor))
                     {
                         e.Graphics.FillRectangle(brush, e.Bounds);
@@ -49,6 +47,14 @@ namespace System.Windows.Forms.CustomListBox
                     }
                 }
             }
+
         }
+
+        public Color SelectionForeColor { get; set; }
+
+        public Color SelectionBackColor { get; set; }
+
+
+
     }
 }

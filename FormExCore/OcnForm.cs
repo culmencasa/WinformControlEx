@@ -36,6 +36,8 @@ namespace FormExCore
             TitleFont = new Font(SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size, FontStyle.Bold);
             Theme = OcnThemes.Primary;
 
+            this.DoubleBuffered = true;
+
             AfterPositionChanged += OcnForm_AfterPositionChanged;
         }
 
@@ -463,7 +465,7 @@ namespace FormExCore
             else
             {
                 // 防止控件撑出窗体
-                IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Width, Height, diameter, diameter);
+                IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Width, Height, diameter / 2, diameter / 2);
                 Region = System.Drawing.Region.FromHrgn(hrgn);
                 this.Update();
                 Win32.DeleteObject(hrgn);
@@ -631,9 +633,9 @@ namespace FormExCore
                 int gap = RoundCornerDiameter / 4; // 半径的一半
                 Rectangle clientArea = new Rectangle();
                 clientArea.X = gap;
-                clientArea.Y = TitleBarHeight;
+                clientArea.Y = Math.Max(TitleBarHeight, btnClose.Height);
                 clientArea.Width = this.Width - gap * 2;
-                clientArea.Height = this.Height - TitleBarHeight - gap;
+                clientArea.Height = this.Height - clientArea.Y - gap;
 
                 return clientArea;
             }
@@ -642,7 +644,6 @@ namespace FormExCore
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-
 
             // 注：不能写到Resize事件里
             if (IsHandleCreated && !DesignMode)
@@ -656,8 +657,10 @@ namespace FormExCore
                     UpdateFormRoundCorner(0);
                 }
             }
+
             //ResumeDrawing(this);
         }
+
 
         protected virtual void FillTitleBarBackground(Graphics g)
         {
@@ -757,38 +760,40 @@ namespace FormExCore
                 return;
             }
 
-            Bitmap cacheBitmap = new Bitmap(this.Width, this.Height);
-
-            Graphics g = Graphics.FromImage(cacheBitmap);
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-
-
-            FillTitleBarBackground(g);
-
-            // 画窗体图标
-            if (ShowFormIcon && TitleIcon != null)
+            using (Bitmap cacheBitmap = new Bitmap(this.Width, this.Height))
             {
-                g.DrawImage(TitleIcon, GetIconRectangle());
+                Graphics g = Graphics.FromImage(cacheBitmap);
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+
+
+                FillTitleBarBackground(g);
+
+                // 画窗体图标
+                if (ShowFormIcon && TitleIcon != null)
+                {
+                    g.DrawImage(TitleIcon, GetIconRectangle());
+                }
+
+                // 画标题   
+                if (!string.IsNullOrEmpty(TitleText))
+                {
+                    TextRenderer.DrawText(
+                        g,
+                        TitleText,
+                        TitleFont,
+                        GetTitleRectangle(),
+                        TitleColor,
+                        TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+                }
+                g.Dispose();
+
+
+                e.Graphics.DrawImage(cacheBitmap, 0, 0);
+
+                e.Graphics.DrawRectangle(Pens.WhiteSmoke, new Rectangle(0, 0, Width -1, Height -1));
             }
-
-            // 画标题   
-            if (!string.IsNullOrEmpty(TitleText))
-            {
-                TextRenderer.DrawText(
-                    g,
-                    TitleText,
-                    TitleFont,
-                    GetTitleRectangle(),
-                    TitleColor,
-                    TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
-            }
-            g.Dispose();
-
-
-            e.Graphics.DrawImage(cacheBitmap, 0, 0);
 
             base.OnPaint(e);
-
         }
 
         protected override void OnShown(EventArgs e)

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,28 +18,22 @@ namespace DemoNet46
             InitializeComponent();
 
             this.CaptionShadowWidth = 5;
+            
             this.Resizable = true;
             this.ShowCaptionShadow = true;
             this.BackgroundImageLayout = ImageLayout.Stretch;
 
             pnlStart.Location = new Point(pnlStart.Left, pnlTaskbar.Top);
-            pnlStart.LostFocus += PnlStart_LostFocus;
-
-            popupTimer = new Timer();
-            popupTimer.Interval = 1;
-            popupTimer.Tick += new EventHandler(PopupTimer_Tick);
-
-            popoffTimer = new Timer();
-            popoffTimer.Interval = 1;
-            popoffTimer.Tick += PopoffTimer_Tick;
-
+            Load += MainForm_DpiPatch;
         }
 
 
         #region 开始菜单弹出
 
-        private Timer popupTimer;
-        private Timer popoffTimer;
+        private Thread popupThread;
+        private Thread popoffThread;
+
+
         public enum StartMenuStates
         {
             Closed = 0,
@@ -48,121 +43,114 @@ namespace DemoNet46
         }
 
 
-        private StartMenuStates startMenuState;
+        private StartMenuStates startMenuState = StartMenuStates.Closed;
 
-        private void PopoffTimer_Tick(object sender, EventArgs e)
+
+        private void PopUpThreadWork()
         {
-            if (startMenuState == StartMenuStates.Closed || startMenuState == StartMenuStates.Opening)
+            if (startMenuState == StartMenuStates.Closing || startMenuState == StartMenuStates.Opening)
             {
-                popoffTimer.Stop();
-                pnlStart.GotFocus += PnlStart_GotFocus;
-                pnlStart.LostFocus += PnlStart_LostFocus;
                 return;
             }
 
+            while (startMenuState != StartMenuStates.Opened)
+            {
+                startMenuState = StartMenuStates.Opening;
 
-            startMenuState = StartMenuStates.Closing;
-            if (pnlStart.Visible == true && pnlStart.Location.Y < pnlTaskbar.Top)
-            {
-                pnlStart.SendToBack();
-            }
-            if (pnlStart.Location.Y > pnlTaskbar.Top)
-            {
-                popoffTimer.Stop();
-                pnlStart.Visible = false;
-                pnlStart.Location = new Point(pnlStart.Left, pnlTaskbar.Top);
-                startMenuState = StartMenuStates.Closed;
-                pnlStart.LostFocus += PnlStart_LostFocus;
-            }
-            else
-            {
-                pnlStart.Location = new Point(
-                    pnlStart.Left,
-                    pnlStart.Top + 30
-                );
+                this.Invoke((Action)delegate
+                {
+                    if (pnlStart.Visible == false && pnlStart.Location.Y <= pnlTaskbar.Top)
+                    {
+                        pnlStart.Visible = true;
+                        pnlStart.BringToFront();
+                    }
+                    
+
+                    if (pnlStart.Location.Y <= pnlTaskbar.Top - pnlStart.Height)
+                    {
+                        pnlStart.Location = new Point(pnlStart.Left, pnlTaskbar.Top - pnlStart.Height);
+
+                        ActiveControl = pnlStart;
+                        pnlStart.BringToFront();
+
+                        startMenuState = StartMenuStates.Opened;
+                    }
+                    else
+                    {
+                        
+                        pnlStart.Location = new Point(
+                            pnlStart.Left,
+                            pnlStart.Top - 60
+                        );
+                        ActiveControl = pnlStart;
+                    }
+                });
+
+                Thread.Sleep(1);
             }
 
         }
 
-        private void PopupTimer_Tick(object sender, EventArgs e)
+        private void PopOffThreadWork()
         {
-            if (startMenuState == StartMenuStates.Opened)
-            {
-                popupTimer.Stop();
-                pnlStart.LostFocus += PnlStart_LostFocus;
-                return;
-            }
-
-            while (startMenuState == StartMenuStates.Closing)
+            if (startMenuState == StartMenuStates.Closing || startMenuState == StartMenuStates.Opening)
             {
                 return;
             }
 
-            startMenuState = StartMenuStates.Opening;
-
-            if (pnlStart.Visible == false && pnlStart.Location.Y < pnlTaskbar.Top)
+            while (startMenuState != StartMenuStates.Closed)
             {
-                pnlStart.Visible = true;
+                startMenuState = StartMenuStates.Closing;
+
+                this.Invoke((Action)delegate
+                {
+                    if (pnlStart.Visible == true && pnlStart.Location.Y > pnlTaskbar.Top)
+                    {
+                        pnlStart.SendToBack();
+                    }
+                    if (pnlStart.Location.Y > pnlTaskbar.Top)
+                    {
+                        pnlStart.Visible = false;
+                        pnlStart.Location = new Point(pnlStart.Left, pnlTaskbar.Top);
+                        startMenuState = StartMenuStates.Closed;
+                        return;
+                    }
+                    else
+                    {
+                        pnlStart.Location = new Point(
+                            pnlStart.Left,
+                            pnlStart.Top + 60
+                        );
+                    }
+                });
+
+                Thread.Sleep(1);
             }
 
-            if (pnlStart.Location.Y <= pnlTaskbar.Top - pnlStart.Height)
-            {
-                pnlStart.BringToFront();
-                popupTimer.Stop();
-                pnlStart.Location = new Point(pnlStart.Left, pnlTaskbar.Top - pnlStart.Height);
-
-                ActiveControl = pnlStart;
-
-                startMenuState = StartMenuStates.Opened;
-                pnlStart.BringToFront();
-                pnlStart.LostFocus += PnlStart_LostFocus;
-            }
-            else
-            {
-                pnlStart.BringToFront();
-                pnlStart.Location = new Point(
-                    pnlStart.Left,
-                    pnlStart.Top - 30
-                );
-            }
-
+            
+            return;
         }
 
-        private void PnlStart_GotFocus(object sender, EventArgs e)
-        {
-            ActiveControl = pnlStart;
-        }
-
-        private void PnlStart_LostFocus(object sender, EventArgs e)
-        {
-            /* 麻烦... 未实现. 实际上开始菜单应该是一个窗体, 而不是一个Panel控件.
-            if (startMenuState != StartMenuStates.Opened)
-            {
-                return;
-            }
-            if (pnlStart.ClientRectangle.Contains(PointToClient(Control.MousePosition)))
-            {
-                pnlStart.Focus();
-                return;
-            }
-
-            startMenuState = StartMenuStates.Closing;
-            popoffTimer.Start();
-            */
-        }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (startMenuState == StartMenuStates.Closing || startMenuState == StartMenuStates.Closed)
+            if (startMenuState == StartMenuStates.Closed)
             {
-                pnlStart.LostFocus -= PnlStart_LostFocus;
-                popupTimer.Start();
+                if (popupThread == null || popupThread.ThreadState != ThreadState.Running)
+                {
+                    popupThread = new Thread(PopUpThreadWork);
+                    popupThread.Start();
+                }
             }
-            else
+            else if (startMenuState == StartMenuStates.Opened)
             {
-                pnlStart.LostFocus -= PnlStart_LostFocus;
-                popoffTimer.Start();
+                if (popoffThread == null || popoffThread.ThreadState != ThreadState.Running)
+                {
+                    popoffThread = new Thread(PopOffThreadWork);
+                    popoffThread.Start();
+                }
             }
+
         }
 
 
@@ -178,10 +166,14 @@ namespace DemoNet46
             pnlTaskbar.BringToFront();
 
             // 模拟开始菜单失焦
-            if (!pnlStart.Focused && !IsMouseHoverStartMenu() && IsLastClickOutsideOfStartMenu())
+            if (startMenuState == StartMenuStates.Opened 
+                && ActiveControl != pnlStart 
+                && IsLastClickOutsideOfStartMenu())
             {
-                startMenuState = StartMenuStates.Closing;
-                popoffTimer.Start();
+                pnlStart.Visible = false;
+                pnlStart.Location = new Point(pnlStart.Left, pnlTaskbar.Top);
+                startMenuState = StartMenuStates.Closed;
+                LastClickPoint = Point.Empty;
             }
 
         }
@@ -207,29 +199,43 @@ namespace DemoNet46
             if (LastClickPoint == Point.Empty)
                 return false;
 
-            Point arrowPosition = pnlStart.PointToClient(LastClickPoint);
+            var clientPos = PointToClient(LastClickPoint);
+            var isInTaskBarArea = pnlTaskbar.Bounds.Contains(clientPos);
+            var isInStartMenuArea = pnlStart.Bounds.Contains(clientPos);
 
-            return !pnlStart.DisplayRectangle.Contains(arrowPosition);
+            if (isInStartMenuArea || isInTaskBarArea)
+            {
+                return false;
+            }
+
+            return true;
         }
 
-
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            LastClickPoint = Cursor.Position;
+            ActiveControl = null;
+        }
 
         protected override void OnControlAdded(ControlEventArgs e)
         {
             base.OnControlAdded(e);
 
-            e.Control.MouseClick += Control_MouseClick;
+            e.Control.MouseDown += Control_MouseClick;
         }
 
         protected override void OnControlRemoved(ControlEventArgs e)
         {
             base.OnControlRemoved(e);
-            e.Control.MouseClick -= Control_MouseClick;
+
+            e.Control.MouseDown -= Control_MouseClick;
         }
 
         private void Control_MouseClick(object sender, MouseEventArgs e)
         {
             LastClickPoint = Cursor.Position;
+            ActiveControl = sender as Control;
         }
 
         Point LastClickPoint { get; set; }
@@ -266,10 +272,23 @@ namespace DemoNet46
             this.Controls.Add(form);
             form.Location = new Point((this.Width - form.Width) / 2, (this.Height - form.Height) / 2);
             form.BringToFront();
-
-
             form.Show();
+
+            AddEventHandlers(form);
         }
+
+        private void AddEventHandlers(Control control)
+        {
+            control.MouseDown -= Control_MouseClick;
+            control.MouseDown += Control_MouseClick;
+
+            // 递归为所有子控件绑定事件处理方法
+            foreach (Control child in control.Controls)
+            {
+                AddEventHandlers(child);
+            }
+        }
+
 
         private void ChildWindow_MouseDown(object sender, MouseEventArgs e)
         {
@@ -346,9 +365,51 @@ namespace DemoNet46
 
 
         #endregion
+
+        #region DPI
+
+        private void MainForm_DpiPatch(object sender, EventArgs e)
+        {
+            btnStart.NormalImage = ScaleImage(Properties.Resources.Win7Normal);
+            btnStart.HoverImage = ScaleImage(Properties.Resources.Win7Hover);
+            btnStart.DownImage = ScaleImage(Properties.Resources.Win7Pressed);
+        }
+
+        private Image ScaleImage(Image originalImage)
+        {
+            float dpiScaleFactorX = this.ScaleFactorRatioX;
+            float dpiScaleFactorY = this.ScaleFactorRatioY;
+
+            if (dpiScaleFactorX > 1 || dpiScaleFactorY > 1)
+            {
+                double ratio = Math.Min(dpiScaleFactorX, dpiScaleFactorY);
+
+                int newWidth = (int)(originalImage.Width * ratio);
+                int newHeight = (int)(originalImage.Height * ratio);
+                Image newImage = new Bitmap(newWidth, newHeight);
+                using (Graphics g = Graphics.FromImage(newImage))
+                {
+                    g.DrawImage(originalImage, 0, 0, newWidth, newHeight);
+                }
+
+                return newImage;
+            }
+            else
+            {
+                return originalImage;
+            }
+        }
+
+        #endregion
+
+        #region TODO
+
+        //todo : 最小化到任务栏
+
+        #endregion
+
     }
 
 
-    //todo : 最小化到任务栏
 
 }

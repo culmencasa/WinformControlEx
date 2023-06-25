@@ -37,8 +37,20 @@
     <Compile Update="CustomListBox\CustomListBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="CustomMessageBox\CustomMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="CustomMessageBox\ExceptionMessageBox.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="CustomNavSideBar\CustomNavGroup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="CustomNavSideBar\CustomNavItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="CustomNavSideBar\CustomNavSideBar.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Update="CustomPanel\ColorGroupBox.cs">
       <SubType>Component</SubType>
@@ -54,15 +66,6 @@
     </Compile>
     <Compile Update="CustomTextBox\RoundTextBox.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomNavSideBar\CustomNavGroup.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomNavSideBar\CustomNavItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="CustomNavSideBar\CustomNavSideBar.cs">
-      <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
