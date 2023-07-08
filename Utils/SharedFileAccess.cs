@@ -9,8 +9,8 @@ using System.Threading;
 
 public class SharedFileAccess<T> : IDisposable where T : class
 {
-    MemoryMappedFile _mmf;
-    MemoryMappedViewStream _mmvs;
+    readonly MemoryMappedFile _mmf;
+    readonly MemoryMappedViewStream _mmvs;
 
     int _fileSize = 1024 * 1024 * 2;
 
@@ -95,7 +95,7 @@ public class SharedFileAccess
         }
 
         Type exhangeUnitType = typeof(SmallExchangeUnit);
-        SmallExchangeUnit defaultUnit = default(SmallExchangeUnit);
+        SmallExchangeUnit defaultUnit = default;
         int dataSize = Marshal.SizeOf(exhangeUnitType);
 
 
@@ -107,44 +107,28 @@ public class SharedFileAccess
             {
                 while (_canelFlag == false)
                 {
-                    SmallExchangeUnit incomingMessage;
 
                     using (var readAccessor = reader.CreateViewAccessor(0, dataSize, MemoryMappedFileAccess.Read))
                     using (var writeAccessor = writer.CreateViewAccessor(0, dataSize, MemoryMappedFileAccess.Write))
                     {
-                        try
+                        readAccessor.Read(0, out SmallExchangeUnit incomingMessage);
+
+                        // 处理的收到消息
+                        if (incomingMessage.Instruction != 0)
                         {
-                            readAccessor.Read(0, out incomingMessage);
-
-                            // 处理的收到消息
-                            if (incomingMessage.Instruction != 0)
+                            if (MessageReceived != null)
                             {
-                                if (MessageReceived != null)
-                                {
-                                    IAsyncResult outcome = MessageReceived.BeginInvoke(incomingMessage, null, null);
-                                    outcome.AsyncWaitHandle.WaitOne();
-                                    MessageReceived.EndInvoke(outcome);
+                                IAsyncResult outcome = MessageReceived.BeginInvoke(incomingMessage, null, null);
+                                outcome.AsyncWaitHandle.WaitOne();
+                                MessageReceived.EndInvoke(outcome);
 
-                                    writeAccessor.Write(0, ref defaultUnit);
-                                }
+                                writeAccessor.Write(0, ref defaultUnit);
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            Console.Write(ex.ToString());
-                        }
-
 
                         if (OutgoingUnit.Instruction != 0)
                         {
-                            try
-                            {
-                                writeAccessor.Write(0, ref OutgoingUnit);
-                            }
-                            catch (Exception ex)
-                            {
-                                throw ex;
-                            }
+                            writeAccessor.Write(0, ref OutgoingUnit);
                         }
                     }
                     Thread.Sleep(1000);

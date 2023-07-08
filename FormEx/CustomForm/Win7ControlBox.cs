@@ -89,7 +89,7 @@ namespace System.Windows.Forms
 
             if (Parent as Form == null)
             {
-                throw new Exception("控件只能添加到窗体上.");
+                //throw new Exception("控件只能添加到窗体上.");
             }
         }
 

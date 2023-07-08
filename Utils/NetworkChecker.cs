@@ -133,8 +133,7 @@ namespace Utils
 
         static InternetConnectionState GetInternetState()
         {
-            int desc = 0;
-            bool result = InternetGetConnectedState(out desc, 0);
+            _ = InternetGetConnectedState(out int desc, 0);
 
             return (InternetConnectionState)desc;
         }

@@ -133,7 +133,7 @@
 		<Reference Include="System.Management" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup>	
 		<Compile Update="AnimationBox.cs" />
 		<Compile Update="BorderHelper.cs">
 			<SubType>Code</SubType>

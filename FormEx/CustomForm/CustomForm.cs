@@ -448,7 +448,7 @@ namespace System.Windows.Forms
         protected virtual void DrawLogoAndTitle(Graphics g)
         {
             int startX = 0;
-            int top = 0;
+            //int top = 0;
             int fullWidth = 0;
             int fullHeight = 0;
             int padding = 6;
