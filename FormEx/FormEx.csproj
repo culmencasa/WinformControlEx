@@ -6,17 +6,25 @@
 		<OutputType>Library</OutputType>
 		<RootNamespace>System.Windows.Forms</RootNamespace>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-
+		<AssemblyVersion>1.0.39.0</AssemblyVersion>
+		<Version>1.0.39.0</Version>
 		<SignAssembly>False</SignAssembly>
 		<LangVersion>latest</LangVersion>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Platforms>AnyCPU;x86</Platforms>
+		<Platforms>AnyCPU;x86;x64</Platforms>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|x64'">
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	  <Optimize>False</Optimize>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|x86'">
@@ -30,6 +38,11 @@
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|x64'">
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|x86'">
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -39,6 +52,12 @@
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|x64'">
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	  <Optimize>False</Optimize>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|x86'">
@@ -52,6 +71,11 @@
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|x64'">
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|x86'">
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -61,6 +85,12 @@
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|x64'">
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	  <Optimize>False</Optimize>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|x86'">
@@ -74,6 +104,11 @@
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|x64'">
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|x86'">
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -85,6 +120,12 @@
 		<Optimize>False</Optimize>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|x64'">
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	  <Optimize>False</Optimize>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|x86'">
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -94,6 +135,11 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|x64'">
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|x86'">
@@ -171,11 +217,8 @@
 		<Compile Update="CustomForm\RoundedCornerForm.Designer.cs">
 			<DependentUpon>RoundedCornerForm.cs</DependentUpon>
 		</Compile>
-		<Compile Update="CustomForm\SlidePopup.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Update="CustomForm\SlidePopup.designer.cs">
-			<DependentUpon>SlidePopup.cs</DependentUpon>
+		<Compile Update="CustomForm\SlidePopup - 复制.designer.cs">
+		  <DependentUpon>SlidePopup.cs</DependentUpon>
 		</Compile>
 		<Compile Update="CustomForm\SplashForm.cs">
 			<SubType>Form</SubType>
@@ -335,8 +378,8 @@
 		<EmbeddedResource Update="CustomForm\RoundedCornerForm.resx">
 			<DependentUpon>RoundedCornerForm.cs</DependentUpon>
 		</EmbeddedResource>
-		<EmbeddedResource Update="CustomForm\SlidePopup.resx">
-			<DependentUpon>SlidePopup.cs</DependentUpon>
+		<EmbeddedResource Update="CustomForm\SlidePopup - 复制.resx">
+		  <DependentUpon>SlidePopup.cs</DependentUpon>
 		</EmbeddedResource>
 		<EmbeddedResource Update="CustomForm\Win7ControlBox - 复制.resx">
 			<DependentUpon>Win7ControlBox.resx</DependentUpon>
@@ -380,6 +423,10 @@
 		<DefineConstants>DEBUG;COMPILE_NET40</DefineConstants>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|x64'">
+	  <DefineConstants>DEBUG;COMPILE_NET40</DefineConstants>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|x86'">
 	  <DefineConstants>DEBUG;COMPILE_NET40</DefineConstants>
 	</PropertyGroup>
@@ -388,11 +435,18 @@
 		<DefineConstants>DEBUG;COMPILE_NET46</DefineConstants>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|x64'">
+	  <DefineConstants>DEBUG;COMPILE_NET46</DefineConstants>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|x86'">
 	  <DefineConstants>DEBUG;COMPILE_NET46</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
 		<DefineConstants>DEBUG;COMPILE_NET48</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|x64'">
+	  <DefineConstants>DEBUG;COMPILE_NET48</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|x86'">
 	  <DefineConstants>DEBUG;COMPILE_NET48</DefineConstants>
@@ -400,11 +454,17 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
 		<DefineConstants>DEBUG;COMPILE_NET60</DefineConstants>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|x64'">
+	  <DefineConstants>DEBUG;COMPILE_NET60</DefineConstants>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|x86'">
 	  <DefineConstants>DEBUG;COMPILE_NET60</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
 		<DefineConstants>TRACE;COMPILE_NET40</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|x64'">
+	  <DefineConstants>TRACE;COMPILE_NET40</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|x86'">
 	  <DefineConstants>TRACE;COMPILE_NET40</DefineConstants>
@@ -412,11 +472,17 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
 		<DefineConstants>TRACE;COMPILE_NET46</DefineConstants>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|x64'">
+	  <DefineConstants>TRACE;COMPILE_NET46</DefineConstants>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|x86'">
 	  <DefineConstants>TRACE;COMPILE_NET46</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
 		<DefineConstants>TRACE;COMPILE_NET48</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|x64'">
+	  <DefineConstants>TRACE;COMPILE_NET48</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|x86'">
 	  <DefineConstants>TRACE;COMPILE_NET48</DefineConstants>
@@ -424,9 +490,15 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
 		<DefineConstants>TRACE;COMPILE_NET60</DefineConstants>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|x64'">
+	  <DefineConstants>TRACE;COMPILE_NET60</DefineConstants>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|x86'">
 	  <DefineConstants>TRACE;COMPILE_NET60</DefineConstants>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<None Include="docs\readme.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 </Project>

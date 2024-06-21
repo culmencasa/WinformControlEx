@@ -14,6 +14,10 @@ namespace FormExCore
 
         public OcnLabel()
         {
+            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            BackColor = Color.Transparent;
+
+
             this.ClientSizeChanged += OcnLabel_ClientSizeChanged;
         }
 
@@ -47,9 +51,9 @@ namespace FormExCore
         private bool _multiline = true;
         private bool _ellipsis = false;
         private bool _alignCenter = false;
+        private Control _parentControl;
 
         #endregion
-
 
         #region 属性
 
@@ -165,6 +169,19 @@ namespace FormExCore
                 Invalidate();
             }
         }
+
+
+        /// <summary>
+        /// 是否点击穿透
+        /// </summary>
+        [Category("Custom")]
+        public bool ClickThrough
+        {
+            get;
+            set;
+        }
+
+
 
         #endregion
 
@@ -387,17 +404,56 @@ namespace FormExCore
 
         #endregion
 
-        #region 重写自绘
+        #region 重写
+
+
+        protected override void WndProc(ref Message m)
+        {
+            if (!DesignMode && ClickThrough)
+            {
+                if (m.Msg == Win32.WM_NCHITTEST)
+                {
+                    m.Result = new IntPtr(Win32.HTTRANSPARENT);
+                    return;
+                }
+            }
+
+            base.WndProc(ref m);
+        }
+
 
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
+
+            g.SetSlowRendering();
 
             DrawIcon(g);
 
             DrawText(g);
 
             base.OnPaint(e);
+        }
+
+
+        protected override void OnParentChanged(EventArgs e)
+        {
+            base.OnParentChanged(e);
+
+            if (!DesignMode)
+            {
+                _parentControl = Parent;
+                _parentControl.BackColorChanged -= ParentControl_BackColorChanged;
+                _parentControl.BackColorChanged += ParentControl_BackColorChanged;
+            }
+        }
+
+        private void ParentControl_BackColorChanged(object sender, EventArgs e)
+        {
+            if (!DesignMode)
+            {
+                BackColor = _parentControl.BackColor;
+            }
         }
 
         #endregion

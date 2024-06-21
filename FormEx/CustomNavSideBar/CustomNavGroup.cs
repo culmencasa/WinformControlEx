@@ -12,6 +12,7 @@ using System.Windows.Forms.Design;
 
 namespace System.Windows.Forms
 {
+    [Browsable(false)]
     public partial class CustomNavGroup : UserControl
     {
         public CustomNavGroup()

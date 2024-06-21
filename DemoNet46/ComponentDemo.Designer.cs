@@ -36,6 +36,7 @@
             this.btnRoundForm = new System.Windows.Forms.CustomButton();
             this.colorGroupBox1 = new System.Windows.Forms.ColorGroupBox();
             this.customLabel2 = new System.Windows.Forms.CustomLabel();
+            this.btnCustomMessage = new System.Windows.Forms.CustomButton();
             this.btnShowInfoTip = new System.Windows.Forms.CustomButton();
             this.circularProgressBar1 = new System.Windows.Forms.CircularProgressBar();
             this.roundButton1 = new System.Windows.Forms.RoundButton();
@@ -48,7 +49,6 @@
             this.customPanel2 = new System.Windows.Forms.CustomPanel();
             this.colorGroupBox3 = new System.Windows.Forms.ColorGroupBox();
             this.customLabel4 = new System.Windows.Forms.CustomLabel();
-            this.btnCustomMessage = new System.Windows.Forms.CustomButton();
             this.colorGroupBox1.SuspendLayout();
             this.colorGroupBox2.SuspendLayout();
             this.customPanel2.SuspendLayout();
@@ -147,15 +147,32 @@
             // 
             this.customLabel2.AutoSize = true;
             this.customLabel2.BorderColor = System.Drawing.Color.Empty;
-            this.customLabel2.FirstColor = System.Drawing.Color.Empty;
             this.customLabel2.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.customLabel2.ForeColor = System.Drawing.Color.Gray;
             this.customLabel2.Location = new System.Drawing.Point(17, 54);
             this.customLabel2.Name = "customLabel2";
-            this.customLabel2.SecondColor = System.Drawing.Color.Empty;
             this.customLabel2.Size = new System.Drawing.Size(110, 31);
             this.customLabel2.TabIndex = 1001;
             this.customLabel2.Text = "窗体例子";
+            // 
+            // btnCustomMessage
+            // 
+            this.btnCustomMessage.BackColor = System.Drawing.Color.Indigo;
+            this.btnCustomMessage.BorderColor = System.Drawing.Color.Indigo;
+            this.btnCustomMessage.CornerRadius = 0;
+            this.btnCustomMessage.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnCustomMessage.ForeColor = System.Drawing.Color.White;
+            this.btnCustomMessage.GradientMode = true;
+            this.btnCustomMessage.Location = new System.Drawing.Point(23, 339);
+            this.btnCustomMessage.Name = "btnCustomMessage";
+            this.btnCustomMessage.RoundCorners = ((System.Windows.Forms.Corners)((((System.Windows.Forms.Corners.TopLeft | System.Windows.Forms.Corners.TopRight) 
+            | System.Windows.Forms.Corners.BottomLeft) 
+            | System.Windows.Forms.Corners.BottomRight)));
+            this.btnCustomMessage.ShadeMode = false;
+            this.btnCustomMessage.Size = new System.Drawing.Size(122, 39);
+            this.btnCustomMessage.TabIndex = 1000;
+            this.btnCustomMessage.Text = "消息窗体";
+            this.btnCustomMessage.Click += new System.EventHandler(this.btnCustomMessage_Click);
             // 
             // btnShowInfoTip
             // 
@@ -197,9 +214,9 @@
             this.circularProgressBar1.TextFont1 = new System.Drawing.Font("Arial", 14F);
             this.circularProgressBar1.TextFont2 = new System.Drawing.Font("Arial", 20F);
             this.circularProgressBar1.TextFont3 = new System.Drawing.Font("Arial", 14F);
-            this.circularProgressBar1.TextLine1 = "怒气";
+            this.circularProgressBar1.TextLine1 = "NaN";
             this.circularProgressBar1.TextLine2 = "100";
-            this.circularProgressBar1.TextLine3 = "%";
+            this.circularProgressBar1.TextLine3 = "/";
             this.circularProgressBar1.Value = 100F;
             // 
             // roundButton1
@@ -244,12 +261,10 @@
             // 
             this.customLabel3.AutoSize = true;
             this.customLabel3.BorderColor = System.Drawing.Color.Empty;
-            this.customLabel3.FirstColor = System.Drawing.Color.Empty;
             this.customLabel3.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.customLabel3.ForeColor = System.Drawing.Color.Gray;
             this.customLabel3.Location = new System.Drawing.Point(22, 54);
             this.customLabel3.Name = "customLabel3";
-            this.customLabel3.SecondColor = System.Drawing.Color.Empty;
             this.customLabel3.Size = new System.Drawing.Size(86, 31);
             this.customLabel3.TabIndex = 1001;
             this.customLabel3.Text = "进度条";
@@ -341,34 +356,13 @@
             // 
             this.customLabel4.AutoSize = true;
             this.customLabel4.BorderColor = System.Drawing.Color.Empty;
-            this.customLabel4.FirstColor = System.Drawing.Color.Empty;
             this.customLabel4.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.customLabel4.ForeColor = System.Drawing.Color.Gray;
             this.customLabel4.Location = new System.Drawing.Point(22, 54);
             this.customLabel4.Name = "customLabel4";
-            this.customLabel4.SecondColor = System.Drawing.Color.Empty;
             this.customLabel4.Size = new System.Drawing.Size(62, 31);
             this.customLabel4.TabIndex = 1001;
             this.customLabel4.Text = "其他";
-            // 
-            // btnCustomMessage
-            // 
-            this.btnCustomMessage.BackColor = System.Drawing.Color.Indigo;
-            this.btnCustomMessage.BorderColor = System.Drawing.Color.Indigo;
-            this.btnCustomMessage.CornerRadius = 0;
-            this.btnCustomMessage.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnCustomMessage.ForeColor = System.Drawing.Color.White;
-            this.btnCustomMessage.GradientMode = true;
-            this.btnCustomMessage.Location = new System.Drawing.Point(23, 339);
-            this.btnCustomMessage.Name = "btnCustomMessage";
-            this.btnCustomMessage.RoundCorners = ((System.Windows.Forms.Corners)((((System.Windows.Forms.Corners.TopLeft | System.Windows.Forms.Corners.TopRight) 
-            | System.Windows.Forms.Corners.BottomLeft) 
-            | System.Windows.Forms.Corners.BottomRight)));
-            this.btnCustomMessage.ShadeMode = false;
-            this.btnCustomMessage.Size = new System.Drawing.Size(122, 39);
-            this.btnCustomMessage.TabIndex = 1000;
-            this.btnCustomMessage.Text = "消息窗体";
-            this.btnCustomMessage.Click += new System.EventHandler(this.btnCustomMessage_Click);
             // 
             // ComponentDemo
             // 
@@ -378,11 +372,15 @@
             this.Controls.Add(this.customPanel2);
             this.Controls.Add(this.separator1);
             this.Controls.Add(this.customNavSideBar1);
+            this.DesigntimeScaleFactorX = 1F;
+            this.DesigntimeScaleFactorY = 1F;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(2240, 1400);
             this.MinimizeBox = false;
             this.Name = "ComponentDemo";
             this.Resizable = true;
+            this.RuntimeScaleFactorX = 1F;
+            this.RuntimeScaleFactorY = 1F;
             this.Text = "组件窗口";
             this.UseDropShadow = false;
             this.Controls.SetChildIndex(this.customNavSideBar1, 0);

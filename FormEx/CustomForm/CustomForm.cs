@@ -307,8 +307,27 @@ namespace System.Windows.Forms
 
             if (m.Msg == 0xa3)
             {
+                if (this.AllowResize && this.ControlBox && this.MaximizeBox)
+                {
+                    if (WindowState == FormWindowState.Maximized)
+                    {
+                        WindowState = FormWindowState.Normal;
+                    }
+                    else if (WindowState == FormWindowState.Normal)
+                    {
+                        WindowState = FormWindowState.Maximized;
+                    }
+                    m.Result = IntPtr.Zero;
+                    return;
+                }
                 return;
             }
+            else
+            { 
+            
+            }
+
+
 
 
             if (m.Msg == Win32.WM_SYSCOMMAND)

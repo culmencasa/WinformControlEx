@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,29 +13,33 @@ namespace FormExCore
     [DefaultEvent("Click")]
     public class OcnSvgButton : Control, ISupportInitialize
     {
+
         #region 字段
 
-        private string _sourcePath = string.Empty;
-        private string _fullSourcePath = string.Empty;
-        private string _sourceName = string.Empty;
-        private bool _useSourcePath = true;
+        string _sourcePath = string.Empty;
+        string _fullSourcePath = string.Empty;
+        string _sourceName = string.Empty;
+        bool _useSourcePath = true;
+        bool _initilized = false;
 
-        private Color _hoverColor = Color.Empty;
-        private Color _normalColor = Color.Empty;
-        private Color _backColor = Color.Empty;
-        private Color _hoverBackColor = Color.Empty;
+        Color _hoverColor = Color.Empty;
+        Color _normalColor = Color.Empty;
+        Color _backColor = Color.Empty;
+        Color _hoverBackColor = Color.Empty;
 
-        private Image? _normalCache = null;
-        private Image? _hoverCache = null;
-        private Image? _image = null;
+        Image? _normalCache = null;
+        Image? _hoverCache = null;
+        Image? _image = null;
 
-        private PictureBoxSizeMode _sizeMode = PictureBoxSizeMode.Zoom;
+        PictureBoxSizeMode _sizeMode = PictureBoxSizeMode.Zoom;
+
 
         #endregion
 
         #region 属性
 
-        [Category("Look")]
+        [Category("Custom")]
+        [Description("是否使用全路径的方式加载SVG文件")]
         public bool UseSourcePath
         {
             get
@@ -50,7 +55,8 @@ namespace FormExCore
         }
 
 
-        [Category("Look")]
+        [Category("Custom")]
+        [Description(@"类似 YourNamespace.Properties.Resources.YourSvgResourceName 的路径形式")]
         public string SourcePath
         {
             get
@@ -71,7 +77,8 @@ namespace FormExCore
             }
         }
 
-        [Category("Look")]
+        [Category("Custom")]
+        [Description("SVG文件在资源中的名称")]
         public string SourceName
         {
             get
@@ -91,7 +98,7 @@ namespace FormExCore
             }
         }
 
-        [Category("Look")]
+        [Category("Custom")]
         public Color NormalColor
         {
             get
@@ -106,7 +113,7 @@ namespace FormExCore
             }
         }
 
-        [Category("Look")]
+        [Category("Custom")]
         public Color HoverColor
         {
             get
@@ -120,7 +127,7 @@ namespace FormExCore
             }
         }
 
-        [Category("Look")]
+        [Category("Custom")]
         public Color HoverBackColor
         {
             get
@@ -132,8 +139,8 @@ namespace FormExCore
                 _hoverBackColor = value;
             }
         }
-        
 
+        [Category("Custom")]
         protected Image RenderedImage
         {
             get
@@ -148,6 +155,7 @@ namespace FormExCore
         }
 
 
+        [Category("Custom")]
         public PictureBoxSizeMode SizeMode
         {
             get
@@ -166,11 +174,32 @@ namespace FormExCore
         }
 
 
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            base.OnSizeChanged(e);
 
-            Redraw();
+        /// <summary>
+        /// 控件的实际区域（滚动容器中）
+        /// </summary>
+        public Rectangle ActualBounds
+        {
+            get
+            {
+                Rectangle actualBounds = this.Bounds;
+
+                // 如果是在可滚动的容器内， 计算控件实际偏移后的位置
+                if (this.Parent as ScrollableControl != null)
+                {
+                    ScrollableControl? parent = this.Parent as ScrollableControl;
+                    if (parent != null)
+                    {
+                        actualBounds = new Rectangle(
+                            this.Bounds.X - parent.HorizontalScroll.Value,
+                            this.Bounds.Y - parent.VerticalScroll.Value,
+                            this.Bounds.Width,
+                            this.Bounds.Height);
+                    }
+                }
+
+                return actualBounds;
+            }
         }
 
         #endregion
@@ -188,7 +217,7 @@ namespace FormExCore
             this.MouseLeave += OcnSvgButton_MouseLeave;
             this.Resize += OcnSvgButton_Resize;
             this.BackColor = Color.Transparent;
-            
+
         }
 
         private void OcnSvgButton_Resize(object? sender, EventArgs e)
@@ -206,7 +235,24 @@ namespace FormExCore
 
         #endregion
 
-        #region 方法
+        #region 公开的方法
+
+
+        public void BeginInit()
+        {
+            _initilized = false;
+        }
+
+        public void EndInit()
+        {
+            _initilized = true;
+
+            Redraw();
+        }
+
+        #endregion
+
+        #region 私有的方法
 
         private SvgDocument CreateSvgDocument()
         {
@@ -218,8 +264,23 @@ namespace FormExCore
             else
             {
                 // 增加修改资源需要重新生成
-                byte[]? imageBytes = Properties.Resources.ResourceManager.GetObject(SourceName) as byte[];                
-                svgDoc = SvgDocument.Open<SvgDocument>(new MemoryStream(imageBytes));
+                try
+                {
+                    Assembly assembly = Assembly.GetEntryAssembly();
+                    // 如果设计器在单独的进程中运行，则无法获取当前程序集
+                    if (assembly.GetName().Name == "DesignToolsServer")
+                    {
+                        return null;
+                    }
+
+                    System.Resources.ResourceManager rm = new System.Resources.ResourceManager($"{assembly.GetName().Name}.Properties.Resources", assembly);
+
+                    byte[]? imageBytes = rm.GetObject(SourceName) as byte[];
+                    svgDoc = SvgDocument.Open<SvgDocument>(new MemoryStream(imageBytes));
+                }
+                catch
+                {
+                }
             }
 
             return svgDoc;
@@ -231,15 +292,21 @@ namespace FormExCore
             if (CheckSourceProperties())
             {
                 var svgDoc = CreateSvgDocument();
-                SetInitialSize(svgDoc);
-
-                if (newColor != Color.Empty)
+                if (svgDoc != null)
                 {
-                    ChangeColor(svgDoc.Children, newColor);
-                } 
+                    SetInitialSize(svgDoc);
 
-                return svgDoc.Draw();
+                    if (newColor != Color.Empty)
+                    {
+                        ChangeColor(svgDoc.Children, newColor);
+                    }
 
+                    return svgDoc.Draw();
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
@@ -351,7 +418,7 @@ namespace FormExCore
             }
             //return document;
         }
-        
+
 
         private void ChangeColor(IList<SvgElement> children, Color newColor)
         {
@@ -379,9 +446,9 @@ namespace FormExCore
 
 
 
-
         #endregion
 
+        #region 事件处理
 
         private void OcnSvgButton_MouseLeave(object? sender, EventArgs e)
         {
@@ -390,8 +457,9 @@ namespace FormExCore
             if (_backColor != Color.Empty)
             {
                 BackColor = _backColor;
+                Invalidate();
             }
-            
+
         }
 
         private void OcnSvgButton_MouseEnter(object? sender, EventArgs e)
@@ -407,50 +475,22 @@ namespace FormExCore
                 }
 
                 this.BackColor = HoverBackColor;
-                
+                Invalidate();
+
             }
         }
 
-        bool _initilized = false;
-        public void BeginInit()
-        {
-            _initilized = false;
-        }
+        #endregion
 
-        public void EndInit()
+        #region 重写的方法
+
+
+        protected override void OnSizeChanged(EventArgs e)
         {
-            _initilized = true;
+            base.OnSizeChanged(e);
 
             Redraw();
         }
-
-        /// <summary>
-        /// 控件的实际区域（滚动容器中）
-        /// </summary>
-        public Rectangle ActualBounds
-        {
-            get
-            {
-                Rectangle actualBounds = this.Bounds;
-
-                // 如果是在可滚动的容器内， 计算控件实际偏移后的位置
-                if (this.Parent as ScrollableControl != null)
-                {
-                    ScrollableControl? parent = this.Parent as ScrollableControl;
-                    if (parent != null)
-                    {
-                        actualBounds = new Rectangle(
-                            this.Bounds.X - parent.HorizontalScroll.Value,
-                            this.Bounds.Y - parent.VerticalScroll.Value,
-                            this.Bounds.Width,
-                            this.Bounds.Height);
-                    }
-                }
-
-                return actualBounds;
-            }
-        }
-
 
         protected override void OnPaint(PaintEventArgs pe)
         {
@@ -459,11 +499,34 @@ namespace FormExCore
 
             if (this.RenderedImage != null)
             {
-                g.DrawImage(this.RenderedImage, (this.Width - RenderedImage.Width) / 2, (Height - RenderedImage.Height) / 2);
+                switch (SizeMode)
+                {
+                    case PictureBoxSizeMode.AutoSize:
+                    case PictureBoxSizeMode.Normal:
+                        g.DrawImage(this.RenderedImage, 0, 0);
+                        break;
+                    case PictureBoxSizeMode.CenterImage:
+                        g.DrawImage(this.RenderedImage, (this.Width - RenderedImage.Width) / 2, (Height - RenderedImage.Height) / 2);
+                        break;
+                    case PictureBoxSizeMode.StretchImage:
+                        g.DrawImage(this.RenderedImage, 0, 0, this.Width, this.Height);
+                        break;
+                    case PictureBoxSizeMode.Zoom:
+                        float widthRatio = (float)this.Width / this.RenderedImage.Width;
+                        float heightRatio = (float)this.Height / this.RenderedImage.Height;
+                        float scaleFactor = Math.Min(widthRatio, heightRatio);
+                        int newWidth = (int)(this.RenderedImage.Width * scaleFactor);
+                        int newHeight = (int)(this.RenderedImage.Height * scaleFactor);
+                        g.DrawImage(this.RenderedImage, (this.Width - newWidth) / 2, (this.Height - newHeight) / 2, newWidth, newHeight);
+                        break;
+                }
+
             }
 
             base.OnPaint(pe);
         }
+
+        #endregion
 
     }
 }

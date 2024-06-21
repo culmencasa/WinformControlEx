@@ -14,6 +14,9 @@
     <Compile Update="OcnMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="OcnRectangle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="OcnSvgButton.cs">
       <SubType>Component</SubType>
     </Compile>

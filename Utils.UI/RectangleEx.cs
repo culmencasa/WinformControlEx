@@ -18,7 +18,8 @@ namespace System.Drawing
          * License information:   Microsoft Public License (Ms-PL) [http://www.opensource.org/licenses/ms-pl.html]
          */
 
-        public static GraphicsPath GenerateRoundedRectangle( this Graphics graphics, RectangleF rectangle, float radius, RectangleEdgeFilter filter)
+        [Obsolete]
+        public static GraphicsPath GenerateRoundedRectangleOld( this Graphics graphics, RectangleF rectangle, float radius, RectangleEdgeFilter filter)
         {
             float diameter;
             GraphicsPath path = new GraphicsPath();
@@ -78,6 +79,77 @@ namespace System.Drawing
             }
             return path;
         }
+
+        public static GraphicsPath GenerateRoundedRectangle(this Graphics graphics, RectangleF rectangle, float radius, RectangleEdgeFilter filter)
+        {
+            var path = new GraphicsPath();
+            if (radius <= 0.0F || filter == RectangleEdgeFilter.None)
+            {
+                path.AddRectangle(rectangle);
+                path.CloseFigure();
+                return path;
+            }
+
+
+            if (radius >= (Math.Min(rectangle.Width, rectangle.Height)) / 2.0)
+                return graphics.GenerateCapsule(rectangle);
+
+            float maxRadius = Math.Min(rectangle.Width / 2, rectangle.Height / 2);
+            float diameter = Math.Min(2 * maxRadius, radius) * 2.0F;
+
+
+            float x = rectangle.X;
+            float y = rectangle.Y;
+            float width = rectangle.Width;
+            float height = rectangle.Height;
+
+
+            if ((RectangleEdgeFilter.TopLeft & filter) == RectangleEdgeFilter.TopLeft)
+            {
+                path.AddArc(x, y, diameter, diameter, 180, 90);
+            }
+            else
+            {
+                path.AddLine(x, y + radius, x, y);
+                path.AddLine(x, y, x + radius, y);
+            }
+
+            if ((RectangleEdgeFilter.TopRight & filter) == RectangleEdgeFilter.TopRight)
+            {
+                path.AddArc(x + width - diameter, y, diameter, diameter, 270, 90);
+            }
+            else
+            {
+                path.AddLine(x + width - radius, y, x + width, y);
+                path.AddLine(x + width, y, x + width, y + radius);
+            }
+
+            if ((RectangleEdgeFilter.BottomRight & filter) == RectangleEdgeFilter.BottomRight)
+            {
+                path.AddArc(x + width - diameter, y + height - diameter, diameter, diameter, 0, 90);
+            }
+            else
+            {
+                path.AddLine(x + width, y + height - radius, x + width, y + height);
+                path.AddLine(x + width, y + height, x + width - radius, y + height);
+            }
+
+            if ((RectangleEdgeFilter.BottomLeft & filter) == RectangleEdgeFilter.BottomLeft)
+            {
+                path.AddArc(x, y + height - diameter, diameter, diameter, 90, 90);
+            }
+            else
+            {
+                path.AddLine(x + radius, y + height, x, y + height);
+                path.AddLine(x, y + height, x, y + height - radius);
+            }
+
+            path.CloseFigure();
+            return path;
+        }
+
+
+
         private static GraphicsPath GenerateCapsule( this Graphics graphics, RectangleF rectangle)
         {
             float diameter;

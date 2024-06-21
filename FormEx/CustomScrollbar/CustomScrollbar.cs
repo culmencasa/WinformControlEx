@@ -86,6 +86,32 @@ namespace System.Windows.Forms
 
             this.Width = UpArrowImage.Width;
             base.MinimumSize = new Size(UpArrowImage.Width, UpArrowImage.Height + DownArrowImage.Height + GetThumbHeight());
+
+
+            this.MouseWheel += CustomScrollBar_MouseWheel;
+        }
+
+
+
+        private void CustomScrollBar_MouseWheel(object sender, MouseEventArgs e)
+        {
+            // 获取鼠标滚轮滚动的方向，e.Delta > 0 表示向上滚动，e.Delta < 0 表示向下滚动
+            int scrollDirection = Math.Sign(e.Delta);
+
+            // 根据滚动方向调整滚动条的值
+            if (scrollDirection > 0)
+            {
+                // 向上滚动
+                this.Value = Math.Max(this.Value - this.SmallChange, this.Minimum);
+            }
+            else if (scrollDirection < 0)
+            {
+                // 向下滚动
+                this.Value = Math.Min(this.Value + this.SmallChange, this.Maximum - this.LargeChange + 1);
+            }
+
+            // 触发滚动事件
+            OnScroll(new ScrollEventArgs(ScrollEventType.ThumbPosition, this.Value));
         }
 
         [EditorBrowsable(EditorBrowsableState.Always), Browsable(true), DefaultValue(false), Category("滚动条属性"), Description("LargeChange")]

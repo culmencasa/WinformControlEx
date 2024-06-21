@@ -210,7 +210,7 @@ namespace DemoNet46
             this.ocnTile4.BackColor = System.Drawing.Color.Black;
             this.ocnTile4.DrawingBackColor = System.Drawing.Color.Black;
             this.ocnTile4.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ocnTile4.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ocnTile4.ForeColor = System.Drawing.Color.Silver;
             this.ocnTile4.Location = new System.Drawing.Point(302, 151);
             this.ocnTile4.MouseOverBackColor = System.Drawing.Color.SaddleBrown;
@@ -226,7 +226,7 @@ namespace DemoNet46
             this.ocnTile5.BackColor = System.Drawing.Color.Black;
             this.ocnTile5.DrawingBackColor = System.Drawing.Color.Black;
             this.ocnTile5.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ocnTile5.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ocnTile5.ForeColor = System.Drawing.Color.Silver;
             this.ocnTile5.Location = new System.Drawing.Point(151, 151);
             this.ocnTile5.MouseOverBackColor = System.Drawing.Color.Olive;
@@ -242,7 +242,7 @@ namespace DemoNet46
             this.ocnTile6.BackColor = System.Drawing.Color.Black;
             this.ocnTile6.DrawingBackColor = System.Drawing.Color.Black;
             this.ocnTile6.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ocnTile6.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ocnTile6.ForeColor = System.Drawing.Color.Silver;
             this.ocnTile6.Location = new System.Drawing.Point(0, 151);
             this.ocnTile6.MouseOverBackColor = System.Drawing.Color.CadetBlue;
@@ -258,7 +258,7 @@ namespace DemoNet46
             this.ocnTile3.BackColor = System.Drawing.Color.Black;
             this.ocnTile3.DrawingBackColor = System.Drawing.Color.Black;
             this.ocnTile3.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ocnTile3.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ocnTile3.ForeColor = System.Drawing.Color.Silver;
             this.ocnTile3.Location = new System.Drawing.Point(302, 0);
             this.ocnTile3.MouseOverBackColor = System.Drawing.Color.Navy;
@@ -274,7 +274,7 @@ namespace DemoNet46
             this.ocnTile2.BackColor = System.Drawing.Color.Black;
             this.ocnTile2.DrawingBackColor = System.Drawing.Color.Black;
             this.ocnTile2.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ocnTile2.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ocnTile2.ForeColor = System.Drawing.Color.Silver;
             this.ocnTile2.Location = new System.Drawing.Point(151, 0);
             this.ocnTile2.MouseOverBackColor = System.Drawing.Color.BlueViolet;
@@ -290,7 +290,7 @@ namespace DemoNet46
             this.ocnTile1.BackColor = System.Drawing.Color.Black;
             this.ocnTile1.DrawingBackColor = System.Drawing.Color.Black;
             this.ocnTile1.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ocnTile1.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ocnTile1.ForeColor = System.Drawing.Color.Silver;
             this.ocnTile1.Location = new System.Drawing.Point(0, 0);
             this.ocnTile1.MouseOverBackColor = System.Drawing.Color.Crimson;

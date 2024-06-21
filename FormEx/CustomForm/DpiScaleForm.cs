@@ -18,39 +18,64 @@ namespace System.Windows.Forms
     /// <summary>
     /// DpiScaleForm 缩放窗体
     /// 实现思路: 计算当前DPI比例获得factor值, 调用Form的Scale()传入factor值. 调整控件字体.
-    /// 
-    /// 使用说明:
-    /// 1. 窗体继承DpiScaleForm
-    /// 2. 保证窗体设计器是在VisualStudio 100%缩放比例下运行的.或者Windows显示设置为100%(96 DPI).
-    /// 3. 如果窗体AutoScaleMode默认是Font, 系统会自动根据字体缩放. 效果因系统而异.
-    /// 4. 在窗体构造的InitializeComponent()之后, 调用UseDpiScale=true或AutoDpiScale=true.
-    /// 5. UseDpiScale=true 将强制按照当前DPI比例缩放.
-    /// 6. AutoDpiScale=true 仅当AutoScaleMode属性不等于Font时才会按照DPI比例缩放.
-    /// 
-    /// 备注: DpiScaleForm类只做了简单布局的缩放测试. 
-    ///      较复杂的窗体布局可能不正常. 特殊控件也未做处理. 
-    ///      显示器切换的情况未考虑.
-    ///      仅作参考.
-    ///      
-    /// 对于.NET framework 4.7以上Winform 关于DPI的处理, 参见文章 https://docs.telerik.com/devtools/winforms/telerik-presentation-framework/dpi-support?_ga=2.20289336.1856590203.1623301720-198642324.1623301720
-    /// 更多: https://www.telerik.com/blogs/winforms-scaling-at-large-dpi-settings-is-it-even-possible-
-    /// 
-    /// 补充:  2022-05-05 
-    ///       1.在Visual Studio自动缩放关闭的条件下设计Winform程序
-    ///       "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe" /noScale
-    ///       
-    ///       2.Windows10缩放200%的环境下, Winform程序运行时窗体变得很小且布局错乱
-    ///         在app.manifest中禁用所有dpiAware相关的
-    ///         <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
-    ///         则窗体会以200%放大,布局正常
-    ///         
-    ///       3.在app.manifest中启用
-    ///         <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true</dpiAware>
-    ///         则窗体会缩放至正常比例
-    ///         
     /// </summary>
     public class DpiScaleForm : Form
     {
+
+        /// 
+        /// 使用说明:
+        ///     1. 窗体继承DpiScaleForm
+        ///     2. 保证窗体设计器是在VisualStudio 100%缩放比例(或dpiUnAware)下运行的.或者Windows显示设置为100%(96 DPI).
+        ///     3. 如果窗体AutoScaleMode默认是Font, 系统会自动根据字体缩放. 效果因系统而异.
+        ///     4. 在窗体构造的InitializeComponent()之后, 调用UseDpiScale=true或AutoDpiScale=true.
+        ///     5. UseDpiScale=true 将强制按照当前DPI比例缩放. 
+        ///     6. UseDpiScale=true 时，继承的窗体中需要设置DesignFactor属性.
+        ///     7. AutoDpiScale=true 仅当AutoScaleMode属性不等于Font时才会按照DPI比例缩放.
+        /// 
+        /// 备注: DpiScaleForm类只做了简单布局的缩放测试. 
+        /// 
+        ///      较复杂的窗体布局可能不正常. 特殊控件也未做处理. 
+        ///      2024-04-26 引用："
+        ///         每个容器控件负责使用自己的比例因子（而不是其父容器的比例因子）缩放其子控件。
+        ///         
+        ///         子控件可通过多种方式修改其缩放行为：
+        ///         1. 可重写 ScaleChildren 属性以确定是否应缩放其子控件。
+        ///         2. 可重写 GetScaledBounds 方法以调整控件缩放到的边界，但不是调整缩放逻辑。
+        ///         3. 重写 ScaleControl 方法以更改当前控件的缩放逻辑。
+        ///     "
+        ///         
+        ///      程序在多个显示器实时切换的情况未考虑.
+        ///      仅作参考.
+        ///      
+        /// 对于.NET framework 4.7以上Winform 关于DPI的处理, 参见文章 https://docs.telerik.com/devtools/winforms/telerik-presentation-framework/dpi-support?_ga=2.20289336.1856590203.1623301720-198642324.1623301720
+        /// 更多: https://www.telerik.com/blogs/winforms-scaling-at-large-dpi-settings-is-it-even-possible-
+        /// 
+        /// 补充:  2022-05-05 
+        ///       1.在Visual Studio自动缩放关闭的条件下设计Winform程序
+        ///       "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe" /noScale
+        ///       
+        ///       2.Windows10缩放200%的环境下, Winform程序运行时窗体变得很小且布局错乱
+        ///         在app.manifest中禁用所有dpiAware相关的
+        ///         <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+        ///         则窗体会以200%放大,布局正常
+        ///         
+        ///       3.在app.manifest中启用
+        ///         <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true</dpiAware>
+        ///         则窗体会缩放至正常比例
+        /// 
+        /// 补充： 2024-04-26 最近又开始写winform(framework)...
+        ///       开启.net4.6以上DPI支持(原项目为.net4.0)，效果更好. 按以下步骤配置
+        ///       1. app.manifest中启用
+        ///       <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true</dpiAware>
+        ///       2. app.config中添加
+        ///       <appSettings> 
+        ///         <add key="EnableWindowsFormsHighDpiAutoResizing" value="true" /> 
+        ///       </appSettings>
+        ///       3. 主窗体的IntializeComponents()方法前中添加AutoScaleMode = AutoScaleMode.Dpi;
+        ///       4. 控件不要使用Ancher布局, 而应使用Dock布局
+        ///       以上方法仅适用原生控件.如果是自绘的自定义控件, 则需要重写OnPaint方法, 调用Graphics.ScaleTransform()方法.
+        ///       
+
         #region 常量
 
         public const int WM_CREATE = 0x0001;
@@ -61,6 +86,7 @@ namespace System.Windows.Forms
 
         private bool _useDpiScale;
         private bool _autoDpiScale;
+        private bool _dpiScaleApplied;
         private SizeF currentScaleFactor = new SizeF(1f, 1f);
 
         private Dictionary<string, Point> originalLocations = new Dictionary<string, Point>();
@@ -93,7 +119,7 @@ namespace System.Windows.Forms
 
                 if (changing)
                 {
-                    OnApplyUseDpiScale();
+                    OnUseDpiScalePropertyChanged();
                 }
             }
         }
@@ -111,9 +137,16 @@ namespace System.Windows.Forms
             {
                 bool changing = _autoDpiScale != value;
                 _autoDpiScale = value;
+
+                // 与UseDpiScale互斥
+                if (value)
+                {
+                    _useDpiScale = false;
+                }
+
                 if (changing)
                 {
-                    OnApplyAutoDpiScale();
+                    OnAutoDpiScalePropertyChanged();
                 }
             }
         }
@@ -178,24 +211,39 @@ namespace System.Windows.Forms
 
         #endregion
 
+
+
         #region 属性变更器
 
-        protected virtual void OnApplyAutoDpiScale()
+        protected virtual void OnAutoDpiScalePropertyChanged()
         {
             if (DesignMode)
                 return;
 
+            // 不根据用户指定的DesignFactor缩放
+            // 如果希望不使用AutoDpiScale，则需要设置同时DesignFactor和UseDpiScale
             if (AutoDpiScale)
             {
-                // Font模式下, 使用Window的缩放
-                if (this.AutoScaleMode == AutoScaleMode.Font)
+                // Font模式下, 使用.netframework2.0的缩放
+                // https://learn.microsoft.com/zh-cn/dotnet/desktop/winforms/automatic-scaling-in-windows-forms?view=netframeworkdesktop-4.8
+                if (this.AutoScaleMode == AutoScaleMode.Font || AutoScaleMode == AutoScaleMode.None)
                 {
                     return;
                 }
-                else
+                
+                // Dpi模式下，通过AutoScaleDimensions计算
+                if (AutoScaleMode == AutoScaleMode.Dpi)
+                {
+                    DesignFactor = Math.Max(AutoScaleDimensions.Width / 96, 1);
+
+                    ApplyDpiScale();
+                    return;
+                }
+
+                // 使用WINAPI来设置DPI支持
+                if (AutoScaleMode == AutoScaleMode.Inherit)
                 {
                     var factor = GetCurrentScaleFactor();
-
                     if (factor > 1)
                     {
                         bool dpiAwareSupport = Environment.OSVersion.Version.Major >= 6;
@@ -205,47 +253,56 @@ namespace System.Windows.Forms
                             //SetThreadAwarenessContext();
                             //SetProcessDpiAwareness(PROCESS_DPI_AWARENESS.PROCESS_SYSTEM_DPI_AWARE);
                         }
-                        else
-                        {
-                            DesignFactor = AutoScaleDimensions.Width / 96;
-                            UseDpiScale = true;
-                        }
-
-                    }                    
-
+                    }
                 }
             }
         }
 
-        protected virtual void OnApplyUseDpiScale()
+        protected virtual void OnUseDpiScalePropertyChanged()
+        {
+            ApplyDpiScale();
+        }
+
+        protected virtual void ApplyDpiScale()
         {
             if (DesignMode)
                 return;
 
-            if (UseDpiScale)
+            if (_dpiScaleApplied == false)
             {
-				// 更改AutoScaleMode属性会触发窗体的ScaleControl方法
-				//this.AutoScaleMode = AutoScaleMode.Dpi;
+                // 更改AutoScaleMode属性会触发窗体的ScaleControl方法
+                //this.AutoScaleMode = AutoScaleMode.Dpi;
 
-				//if (!this.IsHandleCreated)
-				//{
-				//	this.HandleCreated += (a, b) => { OnApplyUseDpiScale(); };
-				//	return;
-				//}
+                //if (!this.IsHandleCreated)
+                //{
+                //	this.HandleCreated += (a, b) => { OnApplyUseDpiScale(); };
+                //	return;
+                //}
+
+                var factor = GetCurrentScaleFactor();
 
 
-				var factor = GetCurrentScaleFactor();
-                factor = (DesignFactor / factor);
-                CurrentScaleFactor = new SizeF(factor, factor);
+                float scaleFactor = 1f;
+                if (DesignFactor > factor)
+                {
+                    scaleFactor = (DesignFactor - factor) / DesignFactor;
+                }
+                else if (DesignFactor < factor)
+                {
+                    scaleFactor = factor / DesignFactor;
+                }
+                 
+                CurrentScaleFactor = new SizeF(scaleFactor, scaleFactor);
 
                 //SetScaleDimension(CurrentScaleFactor);
 
-                this.Scale(CurrentScaleFactor);
-                this.ScaleFonts(factor);
-                this.ScaleSpecialControl(this, factor);
+                //this.Scale(CurrentScaleFactor);
+                //this.ScaleFonts(scaleFactor);
+                //this.ScaleSpecialControl(this, scaleFactor);
+
+                UpdateScalingFlag();
             }
         }
-         
 
 		#endregion
 
@@ -285,6 +342,12 @@ namespace System.Windows.Forms
                 return;
             }
 
+            if (factor == new SizeF(1, 1))
+            {
+                base.ScaleControl(factor, specified);
+                return;
+            }
+
             // 自动模式
             if (AutoDpiScale)
             {
@@ -296,19 +359,33 @@ namespace System.Windows.Forms
                 else
                 {
                     base.ScaleControl(factor, specified);
+                    // 如果已开启.NET框架的DPI感知,则不再重复缩放
+                    UpdateScalingFlag();
                 }
+
             }
             // 强制模式
             else if (UseDpiScale)
             {
                 base.ScaleControl(this.CurrentScaleFactor, specified);
+                UpdateScalingFlag();
             }
             else
             {
                 base.ScaleControl(factor, specified);
+                UpdateScalingFlag();
             }
+             
         }
 
+
+        private void UpdateScalingFlag()
+        {
+            if (_dpiScaleApplied == false)
+            {
+                _dpiScaleApplied = true;
+            }
+        }
 
         /// <summary>
         /// 缩放字体
@@ -352,6 +429,9 @@ namespace System.Windows.Forms
 
         /// <summary>
         /// 缩放个别控件
+        /// 
+        /// 
+        /// 
         /// </summary>
         /// <param name="control"></param>
         /// <param name="factor"></param>
@@ -433,7 +513,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 获取缩放值, 使用ManagementClass类 （备用）
         /// 测试1: 在分辨率为3840x2160的显示器，Win10系统，DPI缩放为100%和200%时，该方法都返回192(即96的2倍)
-        /// 测试2: 在分辨率为
+        /// 测试2: 
         /// </summary>
         /// <returns></returns>
         private float GetScalingFactorUseMC()
@@ -503,19 +583,18 @@ namespace System.Windows.Forms
         public float GetCurrentScaleFactor()
         {
             // 在调用user32的SetProcessDPIAware()函数后, 能正常获取DPI
-            float factor = GetScalingFactor();
-            // 再次检查
-            if (factor == 1)
+            float factor1 = GetScalingFactor();
+            // 再次检查, 有点慢, 所以仅在factor1为1时才调用
+            if (factor1 == 1)
             {
-                factor = GetScalingFactorUseMC();
+                factor1 = GetScalingFactorUseMC();
             }
             // 再次检查
-            if (factor == 1)
-            {
-                factor = GetScaleFactorUseGDI();
-            }
+            var factor2 =  GetScaleFactorUseGDI();
 
-            return factor;
+
+
+            return Math.Max(factor1, factor2);
         }
 
         #endregion
@@ -572,7 +651,7 @@ namespace System.Windows.Forms
 
         #endregion
 
-        #region Win10 APIs
+        #region 仅Win10支持的 APIs
 
         /// <summary>
         /// DPI_AWARENESS_CONTEXT

@@ -48,11 +48,9 @@
             // 
             this.GroupTextLabel.BorderColor = System.Drawing.Color.Empty;
             this.GroupTextLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.GroupTextLabel.FirstColor = System.Drawing.Color.Empty;
             this.GroupTextLabel.Font = new System.Drawing.Font("微软雅黑", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.GroupTextLabel.Location = new System.Drawing.Point(3, 3);
             this.GroupTextLabel.Name = "GroupTextLabel";
-            this.GroupTextLabel.SecondColor = System.Drawing.Color.Empty;
             this.GroupTextLabel.Size = new System.Drawing.Size(220, 32);
             this.GroupTextLabel.TabIndex = 1;
             this.GroupTextLabel.Text = "组名";

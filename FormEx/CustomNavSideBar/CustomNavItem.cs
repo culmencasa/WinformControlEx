@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace System.Windows.Forms
 {
+    [Browsable(false)]
     [DefaultEvent("SingleClick")]
     public partial class CustomNavItem : NonFlickerUserControl
     {

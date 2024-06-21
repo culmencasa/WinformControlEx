@@ -366,7 +366,7 @@
             this.colorGroupBox1.Location = new System.Drawing.Point(0, 32);
             this.colorGroupBox1.Name = "colorGroupBox1";
             this.colorGroupBox1.Show3DShadow = false;
-            this.colorGroupBox1.Size = new System.Drawing.Size(816, 239);
+            this.colorGroupBox1.Size = new System.Drawing.Size(816, 145);
             this.colorGroupBox1.TabIndex = 8;
             this.colorGroupBox1.Text = "colorGroupBox1";
             // 

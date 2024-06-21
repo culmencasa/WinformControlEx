@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Management;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Windows.Forms;
-using static System.Windows.Forms.BackgroundWorkShade;
 
 namespace System.Windows.Forms
 {
@@ -59,11 +52,6 @@ namespace System.Windows.Forms
         /// <param name="e"></param>
         public delegate void ProcedureReportEventHandler(AbortableBackgroundWorker worker, ProgressChangedEventArgs e);
         /// <summary>
-        /// 进度报告事件
-        /// </summary>
-        public event ProcedureReportEventHandler ProcessReported;
-
-        /// <summary>
         /// 用于指定后台任务的委托
         /// </summary>
         /// <param name="worker"></param>
@@ -77,6 +65,11 @@ namespace System.Windows.Forms
 
         public delegate void ProcedureCompletedEventHandler(AbortableBackgroundWorker worker, ProcedureCompleteEventArgs e);
 
+
+        /// <summary>
+        /// 进度报告事件
+        /// </summary>
+        public event ProcedureReportEventHandler ProcessReported;
         /// <summary>
         /// 任务完成事件
         /// </summary>
@@ -188,6 +181,7 @@ namespace System.Windows.Forms
 
 
         protected object procedureLockObject = new object();
+
         static AutoResetEvent loopContinueSignal = new AutoResetEvent(false);
 
         protected Dictionary<GivenPrediction, ProcedureEventHandler> ProcedureList
@@ -203,7 +197,8 @@ namespace System.Windows.Forms
 
         protected bool IsQuickerInstance
         {
-            get; set;
+            get;
+            set;
         }
 
         protected AutoResetEvent LoopContinueSignal
@@ -222,6 +217,7 @@ namespace System.Windows.Forms
 
         #region 暴露的方法
 
+
         /// <summary>
         /// 设置任务
         /// </summary>
@@ -238,6 +234,13 @@ namespace System.Windows.Forms
 
                 if (!ProcedureList.ContainsKey(prediction))
                 {
+                    // 外部设置为0
+                    if (userSpecificedCloseDueTime == 0)
+                    {
+                        userSpecificedCloseDueTime += prediction().HowLongWillItTake;
+                    }
+
+
                     ProcedureList.Add(prediction, procedure);
                     LoopContinueSignal.Set();
                 }
@@ -268,6 +271,8 @@ namespace System.Windows.Forms
         private void bgwJob_DoWork(object sender, DoWorkEventArgs e)
         {
             AbortableBackgroundWorker bgw = sender as AbortableBackgroundWorker;
+
+
             while (true)
             {
                 // 任务前检测取消
@@ -275,7 +280,8 @@ namespace System.Windows.Forms
                 {
                     e.Cancel = true;
                     return;
-                }                
+                }
+
 
                 if (this.ProcedureList != null && ProcedureList.Count > 0)
                 {
@@ -291,21 +297,17 @@ namespace System.Windows.Forms
                     var process = kvPair.Value;
                     if (process != null)
                     {
-                        process.Invoke(bgw, conversation);
+                        // 在线程中处理任务
+                        //process.Invoke(bgw, conversation);
 
+                        process(bgw, conversation);
                     }
 
                     lock (procedureLockObject)
                     {
-                        ProcedureList.Remove(prediction);
+                        ProcedureList.Remove(kvPair.Key);
                     }
 
-                    // 任务后检测取消
-                    if (bgw.CancellationPending)
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
 
                     if (conversation.CompleteInAdvance)
                     {
@@ -320,7 +322,7 @@ namespace System.Windows.Forms
                         }
                         break;
                     }
-                    else if (!conversation.Continue)
+                    else if (false == conversation.Continue)
                     {
                         ProcedureList.Clear();
                         if (conversation.UserResult != null)
@@ -356,8 +358,10 @@ namespace System.Windows.Forms
                     {
                         return;
                     }
+
                     loopContinueSignal.WaitOne();
                 }
+
             }
         }
 
@@ -366,6 +370,25 @@ namespace System.Windows.Forms
             AbortableBackgroundWorker bgw = sender as AbortableBackgroundWorker;
             if (e.ProgressPercentage == 0)
             {
+                if (userSpecificedCloseDueTime >= 1000)
+                {
+                    System.Threading.Timer t = null;
+                    t = new Threading.Timer((a) =>
+                    {
+
+                        bgw.Abort();
+                        if (IsQuickerInstance)
+                        {
+                            this.Invoke(() =>
+                            {
+                                quicker.Clean();
+                                quicker.Hide();
+                            });
+                        }
+                        t?.Dispose();
+                    }, null, userSpecificedCloseDueTime, Timeout.Infinite);
+                }
+
                 var predictionInfo = e.UserState as PredictionInfo;
                 if (predictionInfo != null)
                 {
@@ -450,6 +473,7 @@ namespace System.Windows.Forms
             if (ProcessReported != null)
             {
                 ProcessReported(worker, e);
+
             }
         }
 
@@ -457,7 +481,7 @@ namespace System.Windows.Forms
         {
             if (ProcessCompleted != null)
             {
-                ProcessCompleted(worker, e);
+                ProcessCompleted(worker, e); 
             }
         }
 
@@ -549,6 +573,23 @@ namespace System.Windows.Forms
             set;
         }
 
+        /// <summary>
+        /// 用户设置的自动关闭时间
+        /// </summary>
+        int userSpecificedCloseDueTime = -1;
+
+
+        /// <summary>
+        /// 设置超时关闭时间
+        /// </summary>
+        /// <param name="millsecond"></param>
+        public void SetCloseDueTime(int millsecond = 0)
+        {
+            if (millsecond > 0)
+            {
+                userSpecificedCloseDueTime = millsecond;
+            }
+        }
 
         #endregion
 
@@ -576,6 +617,7 @@ namespace System.Windows.Forms
             this.Paint += WorkShade_PaintDialogBoxShadow;
 
             ShadeState = ShadeStates.Created;
+
         }
 
         #endregion
@@ -657,9 +699,6 @@ namespace System.Windows.Forms
                 this.Hide();
             }
         }
-
-
-
 
         private void WorkShade_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -786,38 +825,62 @@ namespace System.Windows.Forms
         }
 
 
+
+
         /// <summary>
-        /// 显示窗体
+        /// 显示窗体. 需要在
         /// </summary>
         public new void Show()
         {
             Opacity = 1;
 
+
+            // 优先执行任务，再显示界面
             if (IsQuickerInstance)
             {
-                if (ShadeState >= ShadeStates.ShownFirstTime)
+                // 2024-04-11 QuickerInstance不再取消之前的BackgroundWorker
+                //if (ShadeState >= ShadeStates.ShownFirstTime)
+                //{
+                //    lblProgressText.Text = "准备取消当前操作...";
+                //    lblProgressText.ForeColor = Color.Red;
+
+                //    Stop();
+                //    InitBackgroundWorker();
+
+                //    bgwJob.RunWorkerAsync();
+                //    ShadeState = ShadeStates.Running;
+                //}
+
+                if (bgwJob.IsBusy)
                 {
-                    lblProgressText.Text = "准备取消当前操作...";
-                    lblProgressText.ForeColor = Color.Red;
-
-                    Stop();
-                    InitBackgroundWorker();
-
+                    if (loopContinueSignal != null && !loopContinueSignal.SafeWaitHandle.IsClosed)
+                    {
+                        loopContinueSignal.Set();
+                    }
+                }
+                else
+                {
+                    if (loopContinueSignal == null)
+                    {
+                        loopContinueSignal = new AutoResetEvent(false);
+                    }
                     bgwJob.RunWorkerAsync();
                 }
+
             }
             else
             {
                 if (bgwJob == null)
                 {
                     InitBackgroundWorker();
+                    ShadeState = ShadeStates.Running;
                 }
             }
-
 
             base.Show(); // onLoad事件
             BrintSelfToFront();
         }
+
 
         private void InitBackgroundWorker()
         {
@@ -881,7 +944,7 @@ namespace System.Windows.Forms
             Clean();
         }
 
-        
+
         /// <summary>
         /// 取消关联的事件
         /// </summary>
@@ -1238,13 +1301,18 @@ namespace System.Windows.Forms
                 if (bgwJob != null)
                 {
                     bgwJob.CancelAsync();
-                    Thread.Sleep(100);
+
+                    if (loopContinueSignal != null && !loopContinueSignal.SafeWaitHandle.IsClosed)
+                    {
+                        loopContinueSignal.Set();
+                    }
+                    Thread.Sleep(200);
                     if (bgwJob.IsBusy)
                     {
                         bgwJob.Abort();
                     }
                     bgwJob = null;
-                }
+                } 
             }
 
             lock (procedureLockObject)
@@ -1257,6 +1325,16 @@ namespace System.Windows.Forms
 
             ShadeState = ShadeStates.Cleaned;
             pbWorkProgress.Reset();
+
+            if (loopContinueSignal != null && !loopContinueSignal.SafeWaitHandle.IsClosed)
+            {
+                loopContinueSignal.Close();
+                loopContinueSignal.Dispose();
+            }
+            loopContinueSignal = null;
+            ProcessCompleted = null;
+            ProcessReported = null;
+            userSpecificedCloseDueTime = -1;
         }
 
         private bool IsOwnerAlive()
@@ -1269,7 +1347,8 @@ namespace System.Windows.Forms
 
             return true;
         }
-        public void UpdateFormRoundCorner()
+
+        private void UpdateFormRoundCorner()
         {
             if (Diameter == 0)
             {
@@ -1287,7 +1366,7 @@ namespace System.Windows.Forms
 
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr GetWindowDC(IntPtr hWnd);
+        static extern IntPtr GetWindowDC(IntPtr hWnd);
 
 
         /// <summary>

@@ -210,7 +210,9 @@ namespace System.Windows.Forms
         {
             float dpiScaleFactorX = 1;
             float dpiScaleFactorY = 1;
-            if (DpiParent != null)
+            if (DpiParent != null
+                && (DpiParent.ScaleFactorRatioX != float.PositiveInfinity && DpiParent.ScaleFactorRatioX != float.NegativeInfinity)
+                && (DpiParent.ScaleFactorRatioY != float.PositiveInfinity && DpiParent.ScaleFactorRatioY != float.NegativeInfinity))
             {
                 dpiScaleFactorX = DpiParent.ScaleFactorRatioX;
                 dpiScaleFactorY = DpiParent.ScaleFactorRatioY;

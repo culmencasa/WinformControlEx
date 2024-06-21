@@ -30,7 +30,7 @@
 		<DelaySign>False</DelaySign>
 		<AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
 		<IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-		<Platforms>AnyCPU;x86</Platforms>
+		<Platforms>AnyCPU;x86;x64;</Platforms>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">

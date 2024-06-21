@@ -52,6 +52,9 @@
     <Compile Update="CustomNavSideBar\CustomNavSideBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="CustomNotification\CustomNotification.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="CustomPanel\ColorGroupBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -63,6 +66,9 @@
     </Compile>
     <Compile Update="CustomProgressBar\CustomProgressBar.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="CustomRadioButton\CustomRadioButton.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Update="CustomTextBox\RoundTextBox.cs">
       <SubType>UserControl</SubType>

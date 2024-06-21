@@ -40,7 +40,7 @@ namespace System.Windows.Forms
         /// <returns></returns>
         public static DialogResult ShowMessage(Form owner, string content, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
-            if (owner != null)
+            if (owner != null && !owner.IsDisposed)
             {
                 // 判断是否需要线程回调
                 if (owner.InvokeRequired)
@@ -48,7 +48,7 @@ namespace System.Windows.Forms
                     return (DialogResult)owner.Invoke((Func<DialogResult>)delegate
                     {
                         return MessageBox.Show(owner, content, caption, buttons, icon);
-                    });
+                    }); 
                 }
                 else
                 {
@@ -61,12 +61,6 @@ namespace System.Windows.Forms
                 return MessageBox.Show(content, caption, buttons, icon);
             }
         }
-
-
-        //public static DialogResult ShowMessage(string content, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, int timeout)
-        //{ 
-            
-        //}
 
 
         /// <summary>

@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 namespace System.Windows.Forms
 {
 
+    [Browsable(false)]
     //[Designer(typeof(MyControlDesigner))]
     public class CustomNavSideBar : CustomPanel
     {

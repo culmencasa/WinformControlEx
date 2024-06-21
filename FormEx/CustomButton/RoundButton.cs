@@ -316,7 +316,7 @@ namespace System.Windows.Forms
                 sf.LineAlignment = StringAlignment.Center;
                 sf.Trimming = StringTrimming.Character;
 
-                RectangleF fontRectanle = new RectangleF(posX + 1, posY + 1, stringSize.Width, stringSize.Height);
+                RectangleF fontRectanle = new RectangleF(posX, posY, stringSize.Width, stringSize.Height);
                 g.DrawString(this.Text, this.Font, brush, fontRectanle, sf);
             }
         }

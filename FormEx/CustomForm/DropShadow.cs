@@ -101,6 +101,8 @@ namespace System.Windows.Forms
 
         public bool Blur { get; set; } = false;
 
+        public bool DrawOwnerOutline { get; set; } = false;
+
         protected FormWindowState OwnerLastWindowState { get; set; }
 
 
@@ -261,7 +263,7 @@ namespace System.Windows.Forms
                 for (int i = 0; i < repeat; i++)
                 {
                     wrapRect.Inflate(1, 1);
-                    fadeColor = Color.FromArgb(alpha - i, 0, 0, 0);
+                    fadeColor = Color.FromArgb(alpha - i, fadeColor.R, fadeColor.G, fadeColor.B);
                     DrawFadeRectangle(g, wrapRect, fadeColor, this.ShadowRadius + i * 2);
                 }
 
@@ -279,18 +281,21 @@ namespace System.Windows.Forms
             }
 
             // 画上边框
-            using (var g = Graphics.FromImage(reproccessBitmap))
+            if (DrawOwnerOutline)
             {
-                // issue: 当borderSize大于1时, 计算有点问题
-                int borderSize = 1;
-                using (Pen borderPen = new Pen(BorderColor, borderSize))
+                using (var g = Graphics.FromImage(reproccessBitmap))
                 {
-                    g.DrawRoundedRectangle(borderPen,
-                        (bitmap.Width - Owner.Width) / 2f - borderSize - 0.25f,
-                        (bitmap.Height - Owner.Height) / 2f - borderSize - 0.25f,
-                        Owner.Width * 1f + 0.25f,
-                        Owner.Height * 1f + 0.25f,
-                        ShadowRadius);
+                    // issue: 当borderSize大于1时, 计算有点问题
+                    int borderSize = 1;
+                    using (Pen borderPen = new Pen(BorderColor, borderSize))
+                    {
+                        g.DrawRoundedRectangle(borderPen,
+                            (bitmap.Width - Owner.Width) / 2f - borderSize - 0.25f,
+                            (bitmap.Height - Owner.Height) / 2f - borderSize - 0.25f,
+                            Owner.Width * 1f + 0.25f,
+                            Owner.Height * 1f + 0.25f,
+                            ShadowRadius);
+                    }
                 }
             }
 

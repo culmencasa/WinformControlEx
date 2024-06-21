@@ -91,11 +91,9 @@ namespace DemoNet46
             // 
             this.lblTime.BorderColor = System.Drawing.Color.Empty;
             this.lblTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTime.FirstColor = System.Drawing.Color.Empty;
             this.lblTime.ForeColor = System.Drawing.Color.White;
             this.lblTime.Location = new System.Drawing.Point(0, 0);
             this.lblTime.Name = "lblTime";
-            this.lblTime.SecondColor = System.Drawing.Color.Empty;
             this.lblTime.Size = new System.Drawing.Size(87, 52);
             this.lblTime.TabIndex = 0;
             this.lblTime.Text = "时间";

@@ -118,6 +118,5 @@ namespace System
         /// <returns>如果函数执行成功，那么返回值为TRUE；如果函数执行失败，则返回值为FALSE</returns>
         [DllImport("msimg32.dll", SetLastError = true, EntryPoint = "GradientFill")]
         public extern static bool GradientFill(IntPtr hdc, TRIVERTEX[] pVertex, uint dwNumVertex, GRADIENT_RECT[] pMesh, uint dwNumMesh, uint dwMode);
-
     }
 }

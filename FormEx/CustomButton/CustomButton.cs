@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
-using System.Windows.Forms;
-using System.Windows.Forms.Design;
-using System.Security.Permissions;
 using System.Drawing.Drawing2D;
+using System.Security.Permissions;
+using System.Windows.Forms.Design;
 
 
 namespace System.Windows.Forms
@@ -47,6 +45,7 @@ namespace System.Windows.Forms
 
         private bool keyPressed;
         private Rectangle contentRect;
+        private bool imageCloseToText;
 
         #endregion
 
@@ -226,6 +225,20 @@ namespace System.Windows.Forms
         [Category("Custom"), DefaultValue(typeof(Color), "Gray")]
         [Description("边框颜色")]
         public virtual Color BorderColor { get; set; }
+
+        [Category("Custom"), DefaultValue(typeof(bool), "False")]
+        [Description("图片紧靠文本")]
+        public bool ImageCloseToText
+        {
+            get
+            {
+                return imageCloseToText;
+            }
+            set
+            {
+                imageCloseToText = value;
+            }
+        }
 
         #endregion
 
@@ -442,7 +455,7 @@ namespace System.Windows.Forms
             {
                 path = RoundRectangle(r, this.CornerRadius, this.RoundCorners);
             }
-            else 
+            else
             {
                 path = new GraphicsPath(FillMode.Winding);
                 path.AddRectangle(new Rectangle(0, 0, Width - 1, Height - 1));
@@ -553,6 +566,12 @@ namespace System.Windows.Forms
                 case ContentAlignment.MiddleLeft:
                     pt.X = contentRect.Left;
                     pt.Y = (Height - _Image.Height) / 2;
+
+                    if (imageCloseToText)
+                    {
+                        var textPosition = GetTextPosition();
+                        pt.X = (int)(textPosition.X - _Image.Width - 8); 
+                    }
                     break;
 
                 case ContentAlignment.MiddleCenter:
@@ -591,17 +610,70 @@ namespace System.Windows.Forms
 
         }
 
-
-        private void DrawText(Graphics g)
+        private Size GetImageSize()
         {
-            SolidBrush TextBrush = new SolidBrush(this.ForeColor);
+            Size size = new Size(0, 0);
+            if (this.ImageList == null || this.ImageIndex == -1)
+                return size;
+            if (this.ImageIndex < 0 || this.ImageIndex >= this.ImageList.Images.Count)
+                return size;
 
-            // 因字体不同可能会发生偏移
-            RectangleF R = new RectangleF(contentRect.X, contentRect.Y, contentRect.Width, contentRect.Height);
+            Image _Image = this.ImageList.Images[this.ImageIndex];
+            size = new Size(_Image.Width, _Image.Height);
 
-            if (!this.Enabled)
-                TextBrush.Color = SystemColors.GrayText;
+            return size;
+        }
 
+        private RectangleF GetTextPosition()
+        {
+            RectangleF rectangle = new RectangleF(contentRect.X, contentRect.Y, contentRect.Width, contentRect.Height);
+            StringFormat stringFormat = GetStringFormat();
+
+            Graphics graphics = CreateGraphics();
+            SizeF textSize = graphics.MeasureString(this.Text, this.Font, rectangle.Size, stringFormat);
+
+            // 计算文字的实际绘制位置
+            PointF textPosition = PointF.Empty;
+
+            // 根据StringFormat的位置设置来确定文字在矩形内部的位置
+            if (stringFormat.Alignment == StringAlignment.Center)
+            {
+                textPosition.X = rectangle.X + (rectangle.Width - textSize.Width) / 2;
+                
+                // 2024-03-28
+                if (ImageCloseToText)
+                {
+                    var imgsize = GetImageSize();
+                    textPosition.X = rectangle.X + (rectangle.Width - textSize.Width + imgsize.Width + 8) / 2;
+                }
+            }
+            else if (stringFormat.Alignment == StringAlignment.Far)
+            {
+                textPosition.X = rectangle.Right - textSize.Width;
+            }
+            else
+            {
+                textPosition.X = rectangle.X;
+            }
+
+            if (stringFormat.LineAlignment == StringAlignment.Center)
+            {
+                textPosition.Y = rectangle.Y + (rectangle.Height - textSize.Height) / 2;
+            }
+            else if (stringFormat.LineAlignment == StringAlignment.Far)
+            {
+                textPosition.Y = rectangle.Bottom - textSize.Height;
+            }
+            else
+            {
+                textPosition.Y = rectangle.Y;
+            }
+
+            return new RectangleF(textPosition.X, textPosition.Y, textSize.Width, textSize.Height);
+        }
+
+        private StringFormat GetStringFormat()
+        {
             StringFormat sf = new StringFormat(StringFormatFlags.NoWrap | StringFormatFlags.NoClip);
 
             if (ShowKeyboardCues)
@@ -657,13 +729,62 @@ namespace System.Windows.Forms
                     break;
             }
 
-            if (this.ButtonState == CustomButtonState.Pressed)
-                R.Offset(1, 1);
 
-            if (this.Enabled)
-                g.DrawString(this.Text, this.Font, TextBrush, R, sf);
+            return sf;
+        }
+
+
+        private void DrawText(Graphics g)
+        {
+            // 2024-03-28 
+            if (ImageCloseToText)
+            {
+                SolidBrush TextBrush = new SolidBrush(this.ForeColor);
+                
+                if (!this.Enabled)
+                    TextBrush.Color = SystemColors.GrayText;
+
+
+                RectangleF R = GetTextPosition();
+               
+                
+                if (this.ButtonState == CustomButtonState.Pressed)
+                    R.Offset(1, 1);
+
+
+                if (this.Enabled)
+                { 
+                        g.DrawString(this.Text, this.Font, TextBrush, R); 
+                } 
+                else
+                {
+                    ControlPaint.DrawStringDisabled(g, this.Text, this.Font, this.BackColor, 
+                        new Rectangle((int)R.X, (int)R.Y, (int)R.Width, (int)R.Height)
+                        , TextFormatFlags.Default);
+                }
+
+                TextBrush.Dispose();
+            }
             else
-                ControlPaint.DrawStringDisabled(g, this.Text, this.Font, this.BackColor, R, sf);
+            {
+                SolidBrush TextBrush = new SolidBrush(this.ForeColor);
+
+                // 因字体不同可能会发生偏移
+                RectangleF R = new RectangleF(contentRect.X, contentRect.Y, contentRect.Width, contentRect.Height);
+
+                if (!this.Enabled)
+                    TextBrush.Color = SystemColors.GrayText;
+
+                StringFormat sf = GetStringFormat();
+
+                if (this.ButtonState == CustomButtonState.Pressed)
+                    R.Offset(1, 1);
+
+                if (this.Enabled)
+                    g.DrawString(this.Text, this.Font, TextBrush, R, sf);
+                else
+                    ControlPaint.DrawStringDisabled(g, this.Text, this.Font, this.BackColor, R, sf);
+            }
 
         }
 
@@ -783,8 +904,8 @@ namespace System.Windows.Forms
         BottomRight = 8,
         Left = TopLeft | BottomLeft,
         Right = TopRight | BottomRight,
-        Top = TopLeft| TopRight,
-        Bottom = BottomLeft| BottomRight,
+        Top = TopLeft | TopRight,
+        Bottom = BottomLeft | BottomRight,
         All = TopLeft | TopRight | BottomLeft | BottomRight
     }
 

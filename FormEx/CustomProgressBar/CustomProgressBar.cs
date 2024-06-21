@@ -6,6 +6,8 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Threading.Tasks;
 
 namespace System.Windows.Forms
 {
@@ -28,6 +30,8 @@ namespace System.Windows.Forms
 
         private bool _isWorking;
         private Timer _animateTimer;
+
+
 
         /// <summary>
         /// 控件宽度和总进度的比值
@@ -330,6 +334,11 @@ namespace System.Windows.Forms
 
         public void Complete()
         {
+            if (Value >= MaxValue)
+            {
+                return;
+            }
+
             Complete(null);
         }
 
@@ -338,13 +347,13 @@ namespace System.Windows.Forms
             _currentSessionValue = MaxValue;
             this.Value = MaxValue;
 
-            Thread afterUIFinish = new Thread(() =>
-            {
-                Thread.Sleep(500);
-                action?.Invoke();
-            });
-            afterUIFinish.Start();
-            afterUIFinish.Join();
+            //Thread afterUIFinish = new Thread(() =>
+            //{
+            //    Thread.Sleep(500);
+            //    action?.Invoke();
+            //});
+            //afterUIFinish.Start();
+            //afterUIFinish.Join();
         }
 
 
@@ -376,18 +385,51 @@ namespace System.Windows.Forms
                 float increament = (addUpValue - LastSessionTotal);
                 LastSessionTotal = increament;
 
-                if (increament <= 0)
+                if (increament <= 0 || (int)(estimateTime / increament) < 10)
                 {
-                    AnimateTimer.Interval = 10;
+                    CompleteProgressBarInstantly(); 
+
                 }
                 else
                 {
                     AnimateTimer.Interval = (int)(estimateTime / increament);
+                    AnimateTimer.Tick += new EventHandler(this.AnimateTimer_Tick);
+                    AnimateTimer.Start();
                 }
-                AnimateTimer.Tick += new EventHandler(this.AnimateTimer_Tick);
-                AnimateTimer.Start();
+
+
             }
         }
+
+        public void CompleteProgressBarInstantly()
+        {
+            for (double t = 0.0; t <= 1.0; t += 0.02) // 调整步长以控制速度
+            {
+                int value = (int)(t * 100);
+                _currentSessionValue = value;
+                Value = value;
+                ForceRender();
+
+                if (t + 0.02 >= 1.0)
+                {
+                    _currentSessionValue = 100;
+                    Value = 100;
+                    ForceRender();
+
+                }
+            }
+        }
+
+        ManualResetEvent mre = new ManualResetEvent(true);
+
+        private Task Delay(int milliseconds)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            new System.Threading.Timer(_ => tcs.SetResult(null), null, milliseconds, Timeout.Infinite);
+            return tcs.Task;
+        }
+
+
 
         /// <summary>
         /// 未实现
@@ -527,14 +569,22 @@ namespace System.Windows.Forms
         /// </summary>
         private void ForceRender()
         {
-            this.BufferImage = DrawProgressBar();
-            Refresh();
-            //Invalidate();
+            if (this.InvokeRequired)
+            {
+                this.Invoke(ForceRender);
+            }
+            else
+            {
+                this.BufferImage = DrawProgressBar(); 
+                Refresh();
+                //Invalidate();
+            }
         }
 
         #endregion
 
         #region 动画事件
+
 
         private void AnimateTimer_Tick(object sender, EventArgs e)
         {

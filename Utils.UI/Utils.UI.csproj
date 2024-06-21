@@ -5,11 +5,11 @@
     <UseWindowsForms>true</UseWindowsForms>
     <LangVersion>preview</LangVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Platforms>AnyCPU;x86</Platforms>
+    <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup Condition="('$(TargetFramework)'=='net6.0-windows')">
-    <PackageReference Include="System.Management" Version="5.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition="('$(TargetFramework)'=='net40')  Or ('$(TargetFramework)'=='net46')  Or ('$(TargetFramework)'=='net48')">
@@ -18,13 +18,13 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <PackageReference Include="System.Drawing.Common">
-      <Version>5.0.2</Version>
+      <Version>8.0.4</Version>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
     <PackageReference Include="System.Drawing.Common">
-      <Version>5.0.2</Version>
+      <Version>8.0.4</Version>
     </PackageReference>
   </ItemGroup>
 

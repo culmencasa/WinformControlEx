@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using Utils;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace System.Windows.Forms
 {
@@ -466,6 +467,12 @@ namespace System.Windows.Forms
             }
         }
 
+        public bool UseUpperCase
+        {
+            get;
+            set;
+        }
+
 
         #endregion
 
@@ -550,6 +557,12 @@ namespace System.Windows.Forms
             t.Interval = 500;
             t.Tick += (a, b) =>
             {
+                if (!this.IsHandleCreated || this.IsDisposed)
+                {
+                    t.Stop();
+                    t.Dispose();
+                    return;
+                }
                 bool hittest = _innerTextBox.Bounds.Contains(PointToClient(new Point(Control.MousePosition.X, Control.MousePosition.Y)));
                 if (!hittest)
                 {
@@ -647,6 +660,18 @@ namespace System.Windows.Forms
 
             if (_innerTextBox.Text != EmptyTooltipText)
             {
+                if (UseUpperCase)
+                {
+                    string inputText = _innerTextBox.Text;
+                    if (inputText != null && inputText.Length > 0)
+                    {
+                        string upperCaseText = inputText.ToUpper();
+                        _innerTextBox.Text = upperCaseText;
+                        // 将光标移动到文本末尾以确保用户可以继续输入
+                        _innerTextBox.SelectionStart = _innerTextBox.Text.Length;
+                    }
+                }
+
                 TextChanged?.Invoke(this, EventArgs.Empty);
             }
         }
