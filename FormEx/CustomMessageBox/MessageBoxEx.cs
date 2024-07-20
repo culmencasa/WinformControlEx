@@ -63,27 +63,15 @@ namespace System.Windows.Forms
         }
 
 
-        /// <summary>
-        /// 在当前窗体前显示确认消息框
-        /// </summary>
-        /// <param name="caption"></param>
-        /// <param name="content"></param>
-        /// <returns></returns>
         public static DialogResult ShowConfirm(string content, string caption)
         {
             Form owner = FormManager.TryGetLatestActiveForm();
 
             return ShowMessage(owner, content, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
-
-        /// <summary>
-        /// 在当前窗体前显示消息框
-        /// </summary>
-        /// <param name="content"></param>
-        /// <returns></returns>
         public static DialogResult ShowInformation(string content)
         {
-            string caption = "提示";
+            string caption = "通知";
 
             CultureInfo ci = CultureInfo.CurrentUICulture;
             if (ci.Name.Contains("en"))
@@ -103,8 +91,6 @@ namespace System.Windows.Forms
             }
             return ShowMessage(content, caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
-
-
         public static DialogResult ShowError(string content)
         {
             string caption = "错误";
@@ -116,5 +102,39 @@ namespace System.Windows.Forms
             }
             return ShowMessage(content, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+        public static DialogResult ShowStop(string content)
+        {
+            string caption = "停止";
+
+            CultureInfo ci = CultureInfo.CurrentUICulture;
+            if (ci.Name.Contains("en"))
+            {
+                caption = "Stop";
+            }
+            return ShowMessage(content, caption, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+        }
+        public static DialogResult ShowExclamation(string content)
+        {
+            string caption = "感叹号";
+
+            CultureInfo ci = CultureInfo.CurrentUICulture;
+            if (ci.Name.Contains("en"))
+            {
+                caption = "Exclamation";
+            }
+            return ShowMessage(content, caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+        public static DialogResult ShowAsterisk(string content)
+        {
+            string caption = "星号";
+
+            CultureInfo ci = CultureInfo.CurrentUICulture;
+            if (ci.Name.Contains("en"))
+            {
+                caption = "Asterisk";
+            }
+            return ShowMessage(content, caption, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+        }
     }
+
 }

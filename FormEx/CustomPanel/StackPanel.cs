@@ -411,6 +411,12 @@ namespace System.Windows.Forms
                 base.Remove(value);
             }
 
+            public override System.Collections.IEnumerator GetEnumerator()
+            {
+                return Items.GetEnumerator();
+            }
+
+
             #endregion
         }
 
