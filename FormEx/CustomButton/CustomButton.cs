@@ -401,15 +401,25 @@ namespace System.Windows.Forms
 
         protected override void OnPaintBackground(PaintEventArgs pevent)
         {
-            //Simulate Transparency
-            GraphicsContainer g = pevent.Graphics.BeginContainer();
-            Rectangle translateRect = this.Bounds;
-            pevent.Graphics.TranslateTransform(-this.Left, -this.Top);
-            PaintEventArgs pe = new PaintEventArgs(pevent.Graphics, translateRect);
-            this.InvokePaintBackground(this.Parent, pe);
-            this.InvokePaint(this.Parent, pe);
-            pevent.Graphics.ResetTransform();
-            pevent.Graphics.EndContainer(g);
+            if (CornerRadius > 0 && this.RoundCorners != Corners.None)
+            {
+                // 在.net8.0下这段代码会异常: System.ArgumentException:“Parameter is not valid.”
+                //    GraphicsContainer g = pevent.Graphics.BeginContainer();
+                //    Rectangle translateRect = this.Bounds;
+                //    pevent.Graphics.TranslateTransform(-this.Left, -this.Top);
+                //    PaintEventArgs pe = new PaintEventArgs(pevent.Graphics, translateRect);
+                //    this.InvokePaintBackground(this.Parent, pe);
+                //    this.InvokePaint(this.Parent, pe);
+                //    pevent.Graphics.ResetTransform();
+                //    pevent.Graphics.EndContainer(g);
+
+                // 改为复制父控件贴图实现（未测试）
+                using (Graphics parentGraphics = this.Parent.CreateGraphics())
+                {
+                    Win32.BitBlt(pevent.Graphics.GetHdc(), 0, 0, this.Width, this.Height, parentGraphics.GetHdc(), this.Left, this.Top, TernaryRasterOperations.SRCCOPY);
+                    pevent.Graphics.ReleaseHdc();
+                }
+            }
 
             pevent.Graphics.SmoothingMode = SmoothingMode.HighQuality;
 
