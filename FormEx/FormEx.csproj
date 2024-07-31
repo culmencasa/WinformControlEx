@@ -148,6 +148,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Remove="CustomButton\CustomButton - 副本.cs" />
 		<Compile Remove="CustomTextBox\PaddingTextBox.cs" />
 		<Compile Remove="CustomTextBox\PaddingTextBox.Designer.cs" />
 	</ItemGroup>

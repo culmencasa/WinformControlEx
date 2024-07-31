@@ -16,8 +16,7 @@ namespace System.Drawing
          * Current version:       1.0.0.4 (12b)
          * Release documentation: http://www.codeproject.com
          * License information:   Microsoft Public License (Ms-PL) [http://www.opensource.org/licenses/ms-pl.html]
-         */
-
+         */ 
         [Obsolete]
         public static GraphicsPath GenerateRoundedRectangleOld( this Graphics graphics, RectangleF rectangle, float radius, RectangleEdgeFilter filter)
         {
@@ -83,26 +82,20 @@ namespace System.Drawing
         public static GraphicsPath GenerateRoundedRectangle(this Graphics graphics, RectangleF rectangle, float radius, RectangleEdgeFilter filter)
         {
             var path = new GraphicsPath();
+
             if (radius <= 0.0F || filter == RectangleEdgeFilter.None)
             {
                 path.AddRectangle(rectangle);
-                path.CloseFigure();
                 return path;
             }
 
-
-            if (radius >= (Math.Min(rectangle.Width, rectangle.Height)) / 2.0)
-                return graphics.GenerateCapsule(rectangle);
-
-            float maxRadius = Math.Min(rectangle.Width / 2, rectangle.Height / 2);
-            float diameter = Math.Min(2 * maxRadius, radius) * 2.0F;
-
+            radius = Math.Min(radius, Math.Min(rectangle.Width, rectangle.Height) / 2);
+            float diameter = radius * 2.0F;
 
             float x = rectangle.X;
             float y = rectangle.Y;
             float width = rectangle.Width;
             float height = rectangle.Height;
-
 
             if ((RectangleEdgeFilter.TopLeft & filter) == RectangleEdgeFilter.TopLeft)
             {
@@ -147,8 +140,6 @@ namespace System.Drawing
             path.CloseFigure();
             return path;
         }
-
-
 
         private static GraphicsPath GenerateCapsule( this Graphics graphics, RectangleF rectangle)
         {
