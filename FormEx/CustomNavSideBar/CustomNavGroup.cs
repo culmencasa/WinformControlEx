@@ -30,7 +30,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int GroupIndent
         {
             get
@@ -47,7 +47,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string GroupText
         {
             get
@@ -60,21 +60,21 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color HoverBackColor
         {
             get;
             set;
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color HoverForeColor
         {
             get;
             set;
         } 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color GroupTextColor
         {
             get
@@ -89,7 +89,7 @@ namespace System.Windows.Forms
 
         private Color _groupItemColor;
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color GroupItemColor
         {
             get

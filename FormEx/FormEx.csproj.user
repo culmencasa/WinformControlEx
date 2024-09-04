@@ -7,6 +7,12 @@
     <Compile Update="AnimationBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="CustomButton\CustomDropDownButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="CustomButton\GlossryButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="CustomButton\RoundButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -17,6 +23,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="CustomForm\BasicDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="CustomForm\CustomForm2024.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="CustomForm\DpiScaleForm.cs">
@@ -73,8 +82,14 @@
     <Compile Update="CustomRadioButton\CustomRadioButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="CustomTabControl\StealthTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="CustomTextBox\RoundTextBox.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Separator\ThreeDLine.cs">
+      <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>

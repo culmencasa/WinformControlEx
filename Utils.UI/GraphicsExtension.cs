@@ -209,7 +209,7 @@ namespace System.Drawing
         {
             List<string> textRows = GetStringRows(graphic, font, text, recangle.Width);
             int rowHeight = (int)(Math.Ceiling((decimal)TextRenderer.MeasureText("≤‚ ‘", font).Height));
-            int maxRowCount = recangle.Height / rowHeight;
+            int maxRowCount = Math.Max(recangle.Height / rowHeight, 1);
             int drawRowCount = (maxRowCount < textRows.Count) ? maxRowCount : textRows.Count;
             int top = (recangle.Height - rowHeight * drawRowCount) / 2;
 

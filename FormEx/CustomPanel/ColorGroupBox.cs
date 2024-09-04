@@ -99,7 +99,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(12)]
         public int BorderRadius
         {
@@ -115,7 +115,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int BorderSize
         {
             get;
@@ -130,7 +130,7 @@ namespace System.Windows.Forms
         } = 1;
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "DarkRed")]
         public Color BoxBorderColor
         {
@@ -146,7 +146,7 @@ namespace System.Windows.Forms
 
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "IndianRed")]
         public Color BoxColor
         {
@@ -161,7 +161,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "LightCoral")]
         public Color LineColor
         {
@@ -178,7 +178,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool Show3DShadow
         {
             get;
@@ -186,7 +186,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Localizable(true)]
@@ -339,7 +339,7 @@ namespace System.Windows.Forms
 
         protected Color _captionBackColor;
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color CaptionBackColor
         {
             get

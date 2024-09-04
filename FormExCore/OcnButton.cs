@@ -86,15 +86,6 @@ namespace FormExCore
             }
         }
 
-        public override Color BackColor
-        {
-            get => base.BackColor;
-            set
-            {
-                base.BackColor = value;
-            }
-        }
-
         [Category("Custom")]
         public Color MouseOverBackColor
         {

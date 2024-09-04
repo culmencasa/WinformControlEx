@@ -36,7 +36,7 @@ namespace System.Windows.Forms
 
         #region 属性
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int BorderSize
         {
             get
@@ -49,7 +49,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "Color.Empty")]
         public Color BorderColor { get; set; }
 

@@ -117,27 +117,27 @@ namespace System.Windows.Forms
 
         #region 属性
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Font CaptionFont { get; set; }
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Font ContentFont { get; set; }
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Font TimeFont { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color NormalTitleColor { get; set; } = Color.FromArgb(21, 66, 139);
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color NormalContentColor { get; set; } = Color.FromArgb(21, 66, 139);
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool FadeInOut { get; set; } = true;
 
         /// <summary>
         ///  显示延时 (毫秒)
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int AppearingDelay
         {
             get
@@ -168,7 +168,7 @@ namespace System.Windows.Forms
         /// <summary>
         ///  消失延时 (毫秒)
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int DisappearingDelay
         {
             get
@@ -198,7 +198,7 @@ namespace System.Windows.Forms
         /// <summary>
         ///  停留延时 (毫秒)
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int StayDelay
         {
             get
@@ -213,7 +213,7 @@ namespace System.Windows.Forms
         /// <summary>
         ///  初始位置
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Point InitialPos
         {
             get
@@ -246,7 +246,7 @@ namespace System.Windows.Forms
         /// <summary>
         ///  窗体大小
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Size PopupSize
         {
             get
@@ -257,7 +257,7 @@ namespace System.Windows.Forms
         /// <summary>
         ///  当前窗体状态
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public PopupStatus CurrentStatus
         {
             get
@@ -268,7 +268,7 @@ namespace System.Windows.Forms
         /// <summary>
         ///  弹出的方向
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Spread SpreadDirection
         {
             get

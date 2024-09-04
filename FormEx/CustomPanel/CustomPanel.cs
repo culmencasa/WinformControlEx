@@ -22,7 +22,7 @@ namespace System.Windows.Forms
 
         #region 事件
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public event SelectStatusChangedHandler SelectStatusChanged;
 
         #endregion
@@ -30,36 +30,36 @@ namespace System.Windows.Forms
         #region 属性
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "Color.Empty")]
         public Color FirstColor { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "Color.Empty")]
         public Color SecondColor { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(FillDirection), "TopToBottom")]
         public FillDirection GradientDirection { 
             get => _gradientDirection;
             set { _gradientDirection = value; Invalidate(); }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "Color.Empty")]
         public Color BorderColor { get; set; }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int BorderWidth { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int RoundBorderRadius { get; set; }
 
         /// <summary>
         /// 没有用
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -98,19 +98,19 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color MouseHoverBgColor { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color MouseHoverBorderColor { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool MouseHoverShowFocus { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool MouseClickSwitchSelectStatus { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color SelectedBorderColor { get; set; }
 
 
@@ -415,11 +415,12 @@ namespace System.Windows.Forms
         {
             get
             {
-                int x = BorderWidth + Padding.Left + RoundBorderRadius;
-                int y = BorderWidth + Padding.Top + RoundBorderRadius;
-                int width = Width - BorderWidth * 2 - RoundBorderRadius * 2  - Padding.Left - Padding.Right;
-                int height = Height - BorderWidth * 2 - RoundBorderRadius  * 2- Padding.Top - Padding.Bottom;
-                     
+                int boderWidth = BorderWidth > 0 && BorderColor != Color.Empty ? BorderWidth : 0;
+                int x = boderWidth + Padding.Left + RoundBorderRadius;
+                int y = boderWidth + Padding.Top + RoundBorderRadius;
+                int width = Width - boderWidth * 2 - RoundBorderRadius * 2 - Padding.Left - Padding.Right;
+                int height = Height - boderWidth * 2 - RoundBorderRadius * 2 - Padding.Top - Padding.Bottom;
+
                 return new Rectangle(x, y, width, height);
             }
         }

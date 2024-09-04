@@ -16,119 +16,36 @@ namespace FormExCore
     [DefaultEvent("TextChanged")]
     public partial class OcnTextBox : UserControl
     {
+
         #region 构造
 
         public OcnTextBox()
         {
-            InitializeComponent();
-
+            Initialize();
             Theme = OcnThemes.Primary;
-
-            innerTextBox.KeyDown += InnerTextBox_KeyDown;
-            innerTextBox.GotFocus += InnerTextBox_GotFocus;
-            innerTextBox.LostFocus += InnerTextBox_LostFocus;
-            innerTextBox.Enter += InnerTextBox_Enter;
-            innerTextBox.Leave += InnerTextBox_Leave;
-        }
-
-
-        TextBoxStates innerTextBoxState = TextBoxStates.Normal;
-        private void InnerTextBox_Enter(object? sender, EventArgs e)
-        {
-            if (innerTextBox.Text != string.Empty)
-            {
-                if (IsTextEqualPlaceholderText())
-                {
-                    // 获得焦点时，清除提示文字
-                    innerTextBox.Text = string.Empty;
-                    innerTextBox.ForeColor = this.ForeColor;
-                }
-            }
-
-            if (IsTextEqualPlaceholderText())
-            {
-                innerTextBox.UseSystemPasswordChar = false;
-                if (this.UsePasswordChar)
-                {
-                    innerTextBox.ForeColor = this.PlaceholderForeColor;
-                }
-            }
-            else
-            {
-                innerTextBox.UseSystemPasswordChar = this.UsePasswordChar;
-                if (this.UsePasswordChar)
-                {
-                    innerTextBox.ForeColor = this.PlaceholderForeColor;
-                }
-                else
-                {
-                    innerTextBox.ForeColor = this.ForeColor;
-                }
-            }
-
-        }
-        private void InnerTextBox_Leave(object? sender, EventArgs e)
-        {
-            if (innerTextBox.Text != string.Empty)
-            {
-                if (IsTextEqualPlaceholderText())
-                {
-                    innerTextBox.ForeColor = this.PlaceholderForeColor;
-                }
-                else
-                {
-                    innerTextBox.ForeColor = this.ForeColor;
-                }
-            }
-            else
-            {
-                innerTextBox.Text = this.PlaceholderText;
-                innerTextBox.ForeColor = this.PlaceholderForeColor;
-                this.BeginInvoke((MethodInvoker)delegate
-                {
-                    innerTextBox.UseSystemPasswordChar = false;
-                });
-            }
-
-            innerTextBoxState = TextBoxStates.Normal;
-            this.Invalidate();
-
-            this.OnLeave(e);
-        }
-
-        private void InnerTextBox_GotFocus(object? sender, EventArgs e)
-        {
-            innerTextBoxState = TextBoxStates.Highlight;
-            if (IsTextEqualPlaceholderText())
-            {
-                innerTextBox.UseSystemPasswordChar = false;
-                innerTextBox.ForeColor = this.PlaceholderForeColor;
-            }
-            else
-            {
-                innerTextBox.UseSystemPasswordChar = UsePasswordChar;
-                innerTextBox.ForeColor = this.ForeColor;
-            }
-            this.Invalidate();
-        }
-
-        private void InnerTextBox_LostFocus(object? sender, EventArgs e)
-        {
-            if (IsTextEqualPlaceholderText())
-            {
-                innerTextBox.UseSystemPasswordChar = false;
-                innerTextBox.ForeColor = this.PlaceholderForeColor;
-            }
-            else
-            {
-                innerTextBox.UseSystemPasswordChar = this.UsePasswordChar;
-
-                innerTextBox.ForeColor = this.ForeColor;
-            }
-
         }
 
         #endregion
+
+        #region 枚举
+
+        public enum TextBoxStates
+        {
+            /// <summary>
+            /// 正常状态
+            /// </summary>
+            Normal = 0,
+            /// <summary>
+            ///  /鼠标进入
+            /// </summary>
+            Highlight = 1,
+            /// <summary>
+            /// 控件禁止
+            /// </summary>
+            Disabled = 2
+        }
+
+        #endregion 
 
         #region 事件
 
@@ -139,24 +56,29 @@ namespace FormExCore
 
         #region 字段
 
+        private TextBox _innerTextBox = new TextBox();
+        private TextBoxStates _innerTextBoxState = TextBoxStates.Normal;
         private Color _borderColor = Color.MediumSlateBlue;
         private Color _borderFocusColor = Color.Empty;
         private int _borderSize = 1;
         private bool _underlinedStyle = false;
-        private bool _isFocused = false;
+
+        private bool _readOnly = false;
+        private bool _enabled = true;
 
         private int _borderRadius = 8;
         private Color _placeholderColor = Color.DarkGray;
         private string _placeholderText = "";
         private bool _isPlaceholder = false;
         private bool _usePasswordChar = false;
+        private string _text;
 
 
         private OcnThemes _theme;
 
         #endregion
 
-        #region 属性
+        #region 设计器属性
 
         /// <summary>
         /// 
@@ -175,21 +97,29 @@ namespace FormExCore
                 OnThemeChanged();
             }
         }
-        protected bool ThemeApplied
-        {
-            get;
-            set;
-        }
 
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public OceanPresets Presets
+        public OceanPresets Preset
         {
             get;
             private set;
         } = OceanPresets.Instance;
 
 
+        [Category("Custom")]
+        [DefaultValue(typeof(Padding), "10, 5, 10, 5")]
+        public new Padding Padding
+        {
+            get
+            {
+                return base.Padding;
+            }
+            set
+            {
+                base.Padding = value;
+            }
+        }
 
         [Category("Custom")]
         public Color BorderColor
@@ -208,6 +138,13 @@ namespace FormExCore
             get { return _borderFocusColor; }
             set { _borderFocusColor = value; }
         }
+
+        [Category("Custom"), DefaultValue(typeof(Color), "Gray")]
+        public Color DisabledColor
+        {
+            get;
+            set;
+        } = Color.Gray;
 
         [Category("Custom")]
         public int BorderSize
@@ -242,19 +179,16 @@ namespace FormExCore
             {
                 _usePasswordChar = value;
 
-
-                innerTextBox.UseSystemPasswordChar = value;
+                _innerTextBox.UseSystemPasswordChar = value;
             }
         }
 
-        [Category("Custom")]
-        public Color PlaceholderForeColor { get; set; } = Color.Gray;
 
         [Category("Custom")]
         public bool Multiline
         {
-            get { return innerTextBox.Multiline; }
-            set { innerTextBox.Multiline = value; }
+            get { return _innerTextBox.Multiline; }
+            set { _innerTextBox.Multiline = value; }
         }
 
         [Category("Custom")]
@@ -264,7 +198,7 @@ namespace FormExCore
             set
             {
                 base.BackColor = value;
-                innerTextBox.BackColor = value;
+                _innerTextBox.BackColor = value;
             }
         }
 
@@ -275,7 +209,7 @@ namespace FormExCore
             set
             {
                 base.ForeColor = value;
-                innerTextBox.ForeColor = value;
+                _innerTextBox.ForeColor = value;
             }
         }
 
@@ -286,28 +220,30 @@ namespace FormExCore
             set
             {
                 base.Font = value;
-                innerTextBox.Font = value;
+                _innerTextBox.Font = value;
                 if (DesignMode)
-                    UpdateControlHeight();
+                    UpdateTextBoxLocation();
             }
         }
 
         [Category("Custom")]
         [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Localizable(true)]
+        [Bindable(true)]
         public override string Text
         {
             get
             {
-                if (_isPlaceholder)
-                {
-                    return "";
-                }
-                else return innerTextBox.Text;
+                return _text;
             }
             set
             {
-                innerTextBox.Text = value;
-                //SetPlaceholder();
+                _text = value;
+                _innerTextBox.Text = value;
+                SetPlaceholder();
+                Invalidate();
             }
         }
 
@@ -338,8 +274,6 @@ namespace FormExCore
             set
             {
                 _placeholderColor = value;
-                if (_isPlaceholder)
-                    innerTextBox.ForeColor = value;
             }
         }
 
@@ -354,9 +288,35 @@ namespace FormExCore
             {
                 _placeholderText = value;
                 SetPlaceholder();
+                Invalidate();
             }
         }
 
+
+        [Category("Custom")]
+        public bool ReadOnly
+        {
+            get
+            {
+                return _readOnly;
+            }
+            set
+            {
+                _readOnly = value;
+                OnReadOnlyChanged();
+            }
+        }
+
+
+        #endregion
+
+        #region 属性
+
+        protected bool ThemeApplied
+        {
+            get;
+            set;
+        }
 
         #endregion
 
@@ -364,34 +324,55 @@ namespace FormExCore
 
         public new void Focus()
         {
-            innerTextBox.Select();
+            _innerTextBox.Select();
         }
 
         public void Clear()
         {
-            innerTextBox.Text = string.Empty;
+            _innerTextBox.Text = string.Empty;
         }
 
         #endregion
 
-        #region 重写的方法
+        #region 可重写的方法
+
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
             if (DesignMode)
             {
-                UpdateControlHeight();
+                UpdateTextBoxLocation();
             }
         }
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            UpdateControlHeight();
+            UpdateTextBoxLocation();
         }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             Graphics graph = e.Graphics;
+
+
+            var borderPenColor = Color.Empty;
+            switch (_innerTextBoxState)
+            {
+                case TextBoxStates.Normal:
+                    borderPenColor = BorderColor;
+                    break;
+                case TextBoxStates.Highlight:
+                    borderPenColor = BorderFocusColor;
+                    break;
+                case TextBoxStates.Disabled:
+                    borderPenColor = DisabledColor;
+                    break;
+                default:
+                    break;
+            }
+
 
             if (_borderRadius > 1)
             {
@@ -399,10 +380,13 @@ namespace FormExCore
                 var rectBorder = Rectangle.Inflate(rectBorderSmooth, -_borderSize, -_borderSize);
                 int smoothSize = _borderSize > 0 ? _borderSize : 1;
 
+
+
+
                 using (GraphicsPath pathBorderSmooth = GetFigurePath(rectBorderSmooth, _borderRadius))
                 using (GraphicsPath pathBorder = GetFigurePath(rectBorder, _borderRadius - _borderSize))
                 using (Pen penBorderSmooth = new Pen(Parent.BackColor, smoothSize))
-                using (Pen penBorder = new Pen(_borderColor, _borderSize))
+                using (Pen penBorder = new Pen(borderPenColor, _borderSize))
                 {
                     Region = new Region(pathBorderSmooth);
                     if (_borderRadius > 15)
@@ -411,16 +395,13 @@ namespace FormExCore
                     }
                     graph.SmoothingMode = SmoothingMode.AntiAlias;
                     penBorder.Alignment = PenAlignment.Center;
-                    if (_isFocused)
-                    {
-                        penBorder.Color = _borderFocusColor;
-                    }
+
 
                     if (_underlinedStyle)
                     {
                         graph.DrawPath(penBorderSmooth, pathBorderSmooth);
                         graph.SmoothingMode = SmoothingMode.None;
-                        graph.DrawLine(penBorder, 0, Height - 1, Width, Height - 1);
+                        graph.DrawLine(penBorder, 0, Height - _borderSize, Width, Height - _borderSize);
                     }
                     else
                     {
@@ -431,24 +412,71 @@ namespace FormExCore
             }
             else
             {
-                using (Pen penBorder = new Pen(_borderColor, _borderSize))
+                using (Pen penBorder = new Pen(borderPenColor, _borderSize))
                 {
                     Region = new Region(ClientRectangle);
                     penBorder.Alignment = PenAlignment.Inset;
-                    if (_isFocused)
-                    {
-                        penBorder.Color = _borderFocusColor;
-                    }
 
                     if (_underlinedStyle)
                     {
-                        graph.DrawLine(penBorder, 0, Height - 1, Width, Height - 1);
+                        graph.DrawLine(penBorder, 0, Height - _borderSize, Width, Height - _borderSize);
                     }
                     else
                     {
-                        graph.DrawRectangle(penBorder, 0, 0, Width - 0.5F, Height - 0.5F);
+                        graph.DrawRectangle(penBorder, 0, 0, Width - _borderSize, Height - _borderSize);
                     }
                 }
+            }
+
+
+            // 绘制占位符文本
+            if (_isPlaceholder)
+            {
+                using (Brush placeholderBrush = new SolidBrush(_placeholderColor))
+                {
+                    SizeF textSize = graph.MeasureString(_placeholderText, Font);
+                    float verticalPosition = (Height - textSize.Height) / 2;
+
+                    graph.DrawString(_placeholderText, Font, placeholderBrush, new PointF(this.Padding.Left + this.BorderSize, verticalPosition)); // 水平位置固定为10
+                }
+            }
+
+        }
+
+
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            if (Enabled)
+            {
+                _innerTextBoxState = TextBoxStates.Normal;
+                _innerTextBox.Enabled = true;
+            }
+            else
+            {
+                _innerTextBoxState = TextBoxStates.Disabled;
+                _innerTextBox.Enabled = false;
+            }
+            this.Invalidate();
+            base.OnEnabledChanged(e);
+        }
+
+        protected virtual void OnTextChanged()
+        {
+            if (TextChanged != null)
+            {
+                TextChanged.Invoke(_innerTextBox, EventArgs.Empty);
+            }
+        }
+
+        protected virtual void OnReadOnlyChanged()
+        {
+            if (ReadOnly)
+            {
+                _innerTextBox.ReadOnly = true;
+            }
+            else
+            {
+                _innerTextBox.ReadOnly = false;
             }
         }
 
@@ -457,14 +485,126 @@ namespace FormExCore
 
         #endregion
 
+        #region 自身事件
+
+        private void OcnTextBox_Enter(object? sender, EventArgs e)
+        {
+            _innerTextBox.Visible = true;
+            _innerTextBox.Focus();
+            Invalidate();
+        }
+        private void OcnTextBox_Leave(object? sender, EventArgs e)
+        {
+            _innerTextBoxState = TextBoxStates.Normal;
+            SetPlaceholder();
+            Invalidate();
+        }
+
+        private void OcnTextBox_MouseEnter(object? sender, EventArgs e)
+        {
+
+        }
+
+        private void OcnTextBox_GotFocus(object? sender, EventArgs e)
+        {
+            _innerTextBoxState = TextBoxStates.Highlight;
+            this.Invalidate();
+        }
+
+
+        #endregion
+
+        #region InnertTextBox事件
+
+
+        private void InnerTextBox_TextChanged(object sender, EventArgs e)
+        {
+            OnTextChanged();
+        }
+        private void InnerTextBox_Click(object sender, EventArgs e)
+        {
+            OnClick(e);
+        }
+        private void InnerTextBox_MouseEnter(object sender, EventArgs e)
+        {
+            OnMouseEnter(e);
+        }
+        private void InnerTextBox_MouseLeave(object sender, EventArgs e)
+        {
+            OnMouseLeave(e);
+        }
+        private void InnerTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            OnKeyPress(e);
+        }
+
+        private void InnerTextBox_KeyDown(object? sender, KeyEventArgs e)
+        {
+            OnKeyDown(e);
+        }
+
+        private void InnerTextBox_Enter(object? sender, EventArgs e)
+        {
+            _innerTextBoxState = TextBoxStates.Highlight;
+            RemovePlaceholder();
+            Invalidate();
+        }
+
+        private void InnerTextBox_Leave(object? sender, EventArgs e)
+        {
+            _innerTextBoxState = TextBoxStates.Normal;
+            Invalidate();
+        }
+
+        private void InnerTextBox_GotFocus(object? sender, EventArgs e)
+        {
+            this.OnGotFocus(e);
+        }
+
+        private void InnerTextBox_LostFocus(object? sender, EventArgs e)
+        {
+        }
+
+        #endregion
+
         #region 私有方法
+
+        private void Initialize()
+        {
+            this.SuspendLayout();
+            Padding = new Padding(10, 5, 10, 5);
+            MinimumSize = new Size(30, 22);
+
+            MouseEnter += OcnTextBox_MouseEnter;
+            Enter += OcnTextBox_Enter;
+            Leave += OcnTextBox_Leave;
+            GotFocus += OcnTextBox_GotFocus;
+
+            _innerTextBox.BorderStyle = BorderStyle.None;
+            _innerTextBox.Anchor = AnchorStyles.Left;
+            _innerTextBox.Size = new Size(230, 17);
+            _innerTextBox.Click += InnerTextBox_Click;
+            _innerTextBox.TextChanged += InnerTextBox_TextChanged;
+            _innerTextBox.Enter += InnerTextBox_Enter;
+            _innerTextBox.KeyPress += InnerTextBox_KeyPress;
+            _innerTextBox.Leave += InnerTextBox_Leave;
+            _innerTextBox.MouseEnter += InnerTextBox_MouseEnter;
+            _innerTextBox.MouseLeave += InnerTextBox_MouseLeave;
+
+            _innerTextBox.KeyDown += InnerTextBox_KeyDown;
+            _innerTextBox.GotFocus += InnerTextBox_GotFocus;
+            _innerTextBox.LostFocus += InnerTextBox_LostFocus;
+            this.Controls.Add(_innerTextBox);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+        }
 
         private bool IsTextEqualPlaceholderText()
         {
             bool result = false;
-            if (!string.IsNullOrWhiteSpace(innerTextBox.Text))
+            if (!string.IsNullOrWhiteSpace(_innerTextBox.Text))
             {
-                if (innerTextBox.Text == this.PlaceholderText)
+                if (_innerTextBox.Text == this.PlaceholderText)
                 {
                     return true;
                 }
@@ -472,52 +612,24 @@ namespace FormExCore
 
             return result;
         }
+
         private void SetPlaceholder()
         {
-            if (UsePasswordChar)
+            if (_innerTextBox.Text.Length == 0 && _placeholderText.Length > 0)
             {
-                if (IsTextEqualPlaceholderText())
-                {
-                    _isPlaceholder = true;
-                    innerTextBox.Text = _placeholderText;
-                    innerTextBox.ForeColor = _placeholderColor;
-                    innerTextBox.UseSystemPasswordChar = false;
-                }
-                else
-                {
-                    innerTextBox.UseSystemPasswordChar = UsePasswordChar;
-                }
+                _isPlaceholder = true;
+                _innerTextBox.Visible = false;
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(innerTextBox.Text) && _placeholderText != "")
-                {
-                    _isPlaceholder = true;
-                    innerTextBox.Text = _placeholderText;
-                    innerTextBox.ForeColor = _placeholderColor;
-                }
-                else
-                {
-                    _isPlaceholder = false;
-                    innerTextBox.Text = _placeholderText;
-                    innerTextBox.ForeColor = _placeholderColor;
-                }
+                _isPlaceholder = false;
+                _innerTextBox.Visible = true;
             }
-
         }
 
         private void RemovePlaceholder()
         {
-            if (_isPlaceholder && _placeholderText != "")
-            {
-                _isPlaceholder = false;
-                innerTextBox.Text = "";
-                innerTextBox.ForeColor = ForeColor;
-                if (_usePasswordChar)
-                {
-                    innerTextBox.UseSystemPasswordChar = true;
-                }
-            }
+            _isPlaceholder = false;
         }
 
         private GraphicsPath GetFigurePath(Rectangle rect, int radius)
@@ -539,38 +651,27 @@ namespace FormExCore
             GraphicsPath pathTxt;
             if (Multiline)
             {
-                pathTxt = GetFigurePath(innerTextBox.ClientRectangle, _borderRadius - _borderSize);
-                innerTextBox.Region = new Region(pathTxt);
+                pathTxt = GetFigurePath(_innerTextBox.ClientRectangle, _borderRadius - _borderSize);
+                _innerTextBox.Region = new Region(pathTxt);
             }
             else
             {
-                pathTxt = GetFigurePath(innerTextBox.ClientRectangle, _borderSize * 2);
-                innerTextBox.Region = new Region(pathTxt);
+                pathTxt = GetFigurePath(_innerTextBox.ClientRectangle, _borderSize * 2);
+                _innerTextBox.Region = new Region(pathTxt);
             }
             pathTxt.Dispose();
         }
 
-        private void UpdateControlHeight()
+        private void UpdateTextBoxLocation()
         {
-            if (innerTextBox.Multiline == false)
-            {
-                int txtHeight = TextRenderer.MeasureText("Text", Font).Height + 1;
-                innerTextBox.Multiline = true;
-                innerTextBox.MinimumSize = new Size(0, txtHeight);
-                innerTextBox.Multiline = false;
+            int txtHeight = TextRenderer.MeasureText("Text", Font).Height + 1;
+            _innerTextBox.Location = new Point(Padding.Left + BorderSize + 1, (Height - txtHeight) / 2);
+            _innerTextBox.Width = this.Width - Padding.Left - Padding.Right - BorderSize * 2;
 
-                Height = innerTextBox.Height + Padding.Top + Padding.Bottom;
-            }
         }
 
-        protected virtual void OnTextChanged()
-        {
-            if (TextChanged != null)
-            {
-                TextChanged.Invoke(innerTextBox, EventArgs.Empty);
-            }
-        }
 
+        #endregion
 
         #region 主题改变
 
@@ -611,7 +712,6 @@ namespace FormExCore
                     ThemeApplied = true;
                     break;
                 default:
-
                     ThemeApplied = false;
                     break;
             }
@@ -619,116 +719,69 @@ namespace FormExCore
 
         private void ApplyPrimary()
         {
-            BorderColor = Presets.PrimaryColor;
+            BorderColor = Preset.PrimaryColor;
             BackColor = Color.White;
-            ForeColor = Presets.PrimaryColor;
-            BorderFocusColor = ColorEx.DarkenColor(Presets.PrimaryColor, 20);
+            ForeColor = Preset.PrimaryColor;
+            BorderFocusColor = ColorEx.DarkenColor(Preset.PrimaryColor, 20);
         }
 
         private void ApplySecondary()
         {
-            BorderColor = Presets.SecondaryColor;
+            BorderColor = Preset.SecondaryColor;
             BackColor = Color.White;
-            ForeColor = Presets.SecondaryColor;
-            BorderFocusColor = ColorEx.DarkenColor(Presets.SecondaryColor, 20);
+            ForeColor = Preset.SecondaryColor;
+            BorderFocusColor = ColorEx.DarkenColor(Preset.SecondaryColor, 20);
         }
         private void ApplySuccess()
         {
-            BorderColor = Presets.SuccessColor;
+            BorderColor = Preset.SuccessColor;
             BackColor = Color.White;
-            ForeColor = Presets.SuccessColor;
-            BorderFocusColor = ColorEx.DarkenColor(Presets.SuccessColor, 20);
+            ForeColor = Preset.SuccessColor;
+            BorderFocusColor = ColorEx.DarkenColor(Preset.SuccessColor, 20);
         }
 
         private void ApplyDanger()
         {
-            BorderColor = Presets.DangerColor;
+            BorderColor = Preset.DangerColor;
             BackColor = Color.White;
-            ForeColor = Presets.DangerColor;
-            BorderFocusColor = ColorEx.DarkenColor(Presets.DangerColor, 20);
+            ForeColor = Preset.DangerColor;
+            BorderFocusColor = ColorEx.DarkenColor(Preset.DangerColor, 20);
         }
         private void ApplyWarning()
         {
-            BorderColor = Presets.WarningColor;
+            BorderColor = Preset.WarningColor;
             BackColor = Color.White;
-            ForeColor = Presets.WarningColor;
-            BorderFocusColor = ColorEx.DarkenColor(Presets.WarningColor, 20);
+            ForeColor = Preset.WarningColor;
+            BorderFocusColor = ColorEx.DarkenColor(Preset.WarningColor, 20);
         }
 
         private void ApplyInfo()
         {
-            BorderColor = Presets.InfoColor;
+            BorderColor = Preset.InfoColor;
             BackColor = Color.White;
-            ForeColor = Presets.InfoColor;
-            BorderFocusColor = ColorEx.DarkenColor(Presets.InfoColor, 20);
+            ForeColor = Preset.InfoColor;
+            BorderFocusColor = ColorEx.DarkenColor(Preset.InfoColor, 20);
         }
 
         private void ApplyLight()
         {
-            BorderColor = ColorEx.DarkenColor(Presets.LightColor, 20);
+            BorderColor = ColorEx.DarkenColor(Preset.LightColor, 20);
             BackColor = Color.White;
             ForeColor = Color.Black;
-            BorderFocusColor = ColorEx.DarkenColor(Presets.InfoColor, 20);
+            BorderFocusColor = ColorEx.DarkenColor(Preset.InfoColor, 20);
         }
 
         private void ApplyDark()
         {
-            BorderColor = Presets.DarkColor;
+            BorderColor = Preset.DarkColor;
             BackColor = Color.White;
-            ForeColor = Presets.DarkColor;
-            BorderFocusColor = ColorEx.DarkenColor(Presets.DarkColor, 20);
+            ForeColor = Preset.DarkColor;
+            BorderFocusColor = ColorEx.DarkenColor(Preset.DarkColor, 20);
         }
 
 
         #endregion
 
 
-
-        #endregion
-
-
-        #region innertTextBox事件
-
-
-        private void innerTextBox_TextChanged(object sender, EventArgs e)
-        {
-            OnTextChanged();
-        }
-        private void innerTextBox_Click(object sender, EventArgs e)
-        {
-            OnClick(e);
-        }
-        private void innerTextBox_MouseEnter(object sender, EventArgs e)
-        {
-            OnMouseEnter(e);
-        }
-        private void innerTextBox_MouseLeave(object sender, EventArgs e)
-        {
-            OnMouseLeave(e);
-        }
-        private void innerTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            OnKeyPress(e);
-        }
-
-        private void innerTextBox_Enter(object sender, EventArgs e)
-        {
-            _isFocused = true;
-            Invalidate();
-            RemovePlaceholder();
-        }
-        private void innerTextBox_Leave(object sender, EventArgs e)
-        {
-            _isFocused = false;
-            Invalidate();
-            //SetPlaceholder();
-        }
-
-        private void InnerTextBox_KeyDown(object? sender, KeyEventArgs e)
-        {
-            OnKeyDown(e);
-        }
-
-        #endregion
     }
 }

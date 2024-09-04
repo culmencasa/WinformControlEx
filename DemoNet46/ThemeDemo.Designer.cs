@@ -43,6 +43,7 @@
             this.ocnButton13 = new FormExCore.OcnButton();
             this.ocnButton14 = new FormExCore.OcnButton();
             this.colorGroupBox1 = new System.Windows.Forms.ColorGroupBox();
+            this.ocnTextBox1 = new FormExCore.OcnTextBox();
             this.colorGroupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,6 +54,7 @@
             this.ocnButton1.CornerRadius = 8;
             this.ocnButton1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(121)))), ((int)(((byte)(82)))), ((int)(((byte)(179)))));
             this.ocnButton1.GradientMode = false;
+            this.ocnButton1.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton1.IsOutline = true;
             this.ocnButton1.Location = new System.Drawing.Point(27, 33);
             this.ocnButton1.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(108)))), ((int)(((byte)(17)))), ((int)(((byte)(150)))));
@@ -74,6 +76,7 @@
             this.ocnButton2.CornerRadius = 8;
             this.ocnButton2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(116)))), ((int)(((byte)(126)))));
             this.ocnButton2.GradientMode = false;
+            this.ocnButton2.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton2.IsOutline = true;
             this.ocnButton2.Location = new System.Drawing.Point(130, 33);
             this.ocnButton2.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(116)))), ((int)(((byte)(126)))));
@@ -95,6 +98,7 @@
             this.ocnButton3.CornerRadius = 8;
             this.ocnButton3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(145)))), ((int)(((byte)(86)))));
             this.ocnButton3.GradientMode = false;
+            this.ocnButton3.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton3.IsOutline = true;
             this.ocnButton3.Location = new System.Drawing.Point(233, 33);
             this.ocnButton3.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(145)))), ((int)(((byte)(86)))));
@@ -116,6 +120,7 @@
             this.ocnButton4.CornerRadius = 8;
             this.ocnButton4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(0)))), ((int)(((byte)(26)))));
             this.ocnButton4.GradientMode = false;
+            this.ocnButton4.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton4.IsOutline = true;
             this.ocnButton4.Location = new System.Drawing.Point(337, 33);
             this.ocnButton4.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(0)))), ((int)(((byte)(26)))));
@@ -137,6 +142,7 @@
             this.ocnButton5.CornerRadius = 8;
             this.ocnButton5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(203)))), ((int)(((byte)(0)))));
             this.ocnButton5.GradientMode = false;
+            this.ocnButton5.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton5.IsOutline = true;
             this.ocnButton5.Location = new System.Drawing.Point(441, 33);
             this.ocnButton5.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(203)))), ((int)(((byte)(0)))));
@@ -158,6 +164,7 @@
             this.ocnButton6.CornerRadius = 8;
             this.ocnButton6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(200)))), ((int)(((byte)(248)))));
             this.ocnButton6.GradientMode = false;
+            this.ocnButton6.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton6.IsOutline = true;
             this.ocnButton6.Location = new System.Drawing.Point(544, 33);
             this.ocnButton6.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(200)))), ((int)(((byte)(248)))));
@@ -179,6 +186,7 @@
             this.ocnButton7.CornerRadius = 8;
             this.ocnButton7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(36)))), ((int)(((byte)(42)))));
             this.ocnButton7.GradientMode = false;
+            this.ocnButton7.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton7.IsOutline = true;
             this.ocnButton7.Location = new System.Drawing.Point(648, 33);
             this.ocnButton7.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(36)))), ((int)(((byte)(42)))));
@@ -200,6 +208,7 @@
             this.ocnButton8.CornerRadius = 8;
             this.ocnButton8.ForeColor = System.Drawing.Color.White;
             this.ocnButton8.GradientMode = false;
+            this.ocnButton8.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton8.IsOutline = false;
             this.ocnButton8.Location = new System.Drawing.Point(27, 74);
             this.ocnButton8.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(66)))), ((int)(((byte)(144)))));
@@ -221,6 +230,7 @@
             this.ocnButton9.CornerRadius = 8;
             this.ocnButton9.ForeColor = System.Drawing.Color.White;
             this.ocnButton9.GradientMode = false;
+            this.ocnButton9.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton9.IsOutline = false;
             this.ocnButton9.Location = new System.Drawing.Point(130, 74);
             this.ocnButton9.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(86)))), ((int)(((byte)(93)))), ((int)(((byte)(101)))));
@@ -242,6 +252,7 @@
             this.ocnButton10.CornerRadius = 8;
             this.ocnButton10.ForeColor = System.Drawing.Color.White;
             this.ocnButton10.GradientMode = false;
+            this.ocnButton10.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton10.IsOutline = false;
             this.ocnButton10.Location = new System.Drawing.Point(233, 74);
             this.ocnButton10.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(116)))), ((int)(((byte)(69)))));
@@ -263,6 +274,7 @@
             this.ocnButton11.CornerRadius = 8;
             this.ocnButton11.ForeColor = System.Drawing.Color.White;
             this.ocnButton11.GradientMode = false;
+            this.ocnButton11.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton11.IsOutline = false;
             this.ocnButton11.Location = new System.Drawing.Point(337, 74);
             this.ocnButton11.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(188)))), ((int)(((byte)(0)))), ((int)(((byte)(21)))));
@@ -284,6 +296,7 @@
             this.ocnButton12.CornerRadius = 8;
             this.ocnButton12.ForeColor = System.Drawing.Color.Black;
             this.ocnButton12.GradientMode = false;
+            this.ocnButton12.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton12.IsOutline = false;
             this.ocnButton12.Location = new System.Drawing.Point(544, 74);
             this.ocnButton12.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(211)))), ((int)(((byte)(249)))));
@@ -305,6 +318,7 @@
             this.ocnButton13.CornerRadius = 8;
             this.ocnButton13.ForeColor = System.Drawing.Color.Black;
             this.ocnButton13.GradientMode = false;
+            this.ocnButton13.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton13.IsOutline = false;
             this.ocnButton13.Location = new System.Drawing.Point(441, 74);
             this.ocnButton13.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(213)))), ((int)(((byte)(51)))));
@@ -326,6 +340,7 @@
             this.ocnButton14.CornerRadius = 8;
             this.ocnButton14.ForeColor = System.Drawing.Color.White;
             this.ocnButton14.GradientMode = false;
+            this.ocnButton14.HoverColor = System.Drawing.Color.Empty;
             this.ocnButton14.IsOutline = false;
             this.ocnButton14.Location = new System.Drawing.Point(648, 74);
             this.ocnButton14.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(29)))), ((int)(((byte)(34)))));
@@ -370,17 +385,42 @@
             this.colorGroupBox1.TabIndex = 8;
             this.colorGroupBox1.Text = "colorGroupBox1";
             // 
+            // ocnTextBox1
+            // 
+            this.ocnTextBox1.BackColor = System.Drawing.Color.White;
+            this.ocnTextBox1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(121)))), ((int)(((byte)(82)))), ((int)(((byte)(179)))));
+            this.ocnTextBox1.BorderFocusColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(66)))), ((int)(((byte)(144)))));
+            this.ocnTextBox1.BorderRadius = 8;
+            this.ocnTextBox1.BorderSize = 1;
+            this.ocnTextBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(121)))), ((int)(((byte)(82)))), ((int)(((byte)(179)))));
+            this.ocnTextBox1.Location = new System.Drawing.Point(130, 198);
+            this.ocnTextBox1.MinimumSize = new System.Drawing.Size(30, 22);
+            this.ocnTextBox1.Multiline = false;
+            this.ocnTextBox1.Name = "ocnTextBox1";
+            this.ocnTextBox1.PlaceholderColor = System.Drawing.Color.DarkGray;
+            this.ocnTextBox1.PlaceholderText = "";
+            this.ocnTextBox1.ReadOnly = false;
+            this.ocnTextBox1.Size = new System.Drawing.Size(151, 36);
+            this.ocnTextBox1.TabIndex = 9;
+            this.ocnTextBox1.Text = "ocnTextBox1";
+            this.ocnTextBox1.Theme = FormExCore.OcnThemes.Primary;
+            this.ocnTextBox1.UnderlinedStyle = false;
+            this.ocnTextBox1.UsePasswordChar = false;
+            // 
             // ThemeDemo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.ocnTextBox1);
             this.Controls.Add(this.colorGroupBox1);
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Location = new System.Drawing.Point(0, 0);
             this.Name = "ThemeDemo";
+            this.Padding = new System.Windows.Forms.Padding(8);
             this.Text = "ThemeDemo";
             this.Controls.SetChildIndex(this.colorGroupBox1, 0);
+            this.Controls.SetChildIndex(this.ocnTextBox1, 0);
             this.colorGroupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -403,5 +443,6 @@
         private FormExCore.OcnButton ocnButton13;
         private FormExCore.OcnButton ocnButton14;
         private System.Windows.Forms.ColorGroupBox colorGroupBox1;
+        private FormExCore.OcnTextBox ocnTextBox1;
     }
 }

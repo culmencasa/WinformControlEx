@@ -147,7 +147,7 @@ namespace System.Windows.Forms
         /// 窗体边框大小.
         /// 如果窗体中的控件有Dock或者位置与边框重合，将遮挡边框。
         /// </summary>
-        //[Category("Custom")]
+        //[Category(Consts.DefaultCategory)]
         public int BorderSize
         {
             get
@@ -165,7 +165,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 圆角直径
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int RoundCornerDiameter
         {
             get
@@ -186,7 +186,7 @@ namespace System.Windows.Forms
         /// 窗体边框颜色
         /// </summary>
         [DefaultValue(typeof(Color), "157,157,157")]
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BorderColor
         {
             get
@@ -203,7 +203,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 背景渐变色1
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BackGradientLightColor
         {
             get
@@ -221,7 +221,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 背景渐变色2
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BackGradientDarkColor
         {
             get
@@ -238,7 +238,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 阴影面颜色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color ShadeColor
         {
             get
@@ -256,7 +256,7 @@ namespace System.Windows.Forms
         /// 显示阴影分割
         /// </summary>
         [DefaultValue(true)]
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowShade
         {
             get
@@ -274,7 +274,7 @@ namespace System.Windows.Forms
         /// 是否可以拉伸
         /// </summary>
         [DefaultValue(true)]
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool AllowResize
         {
             get; set;
@@ -283,7 +283,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 允许窗体移动
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool AllowMove
         {
             get; set;
@@ -293,7 +293,7 @@ namespace System.Windows.Forms
         /// 显示窗体阴影
         /// </summary>
         [DefaultValue(true)]
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowFormShadow
         {
             get; set;
@@ -302,7 +302,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 标题栏高度
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int TitleBarHeight
         {
             get
@@ -319,7 +319,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 标题栏文字
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string TitleText
         {
             get
@@ -335,7 +335,7 @@ namespace System.Windows.Forms
         }
 
         [Description("用于绘制窗体标题的颜色")]
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color TitleForeColor
         {
             get
@@ -349,7 +349,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowTitleText
         {
             get
@@ -370,7 +370,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 显示Logo图标
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowLogo
         {
             get
@@ -387,7 +387,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 标题居中显示
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowTitleCenter
         {
             get
@@ -400,7 +400,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Font TitleFont
         {
             get
@@ -414,7 +414,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int LogoSize
         {
             get
@@ -427,7 +427,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Image Logo
         {
             get

@@ -23,7 +23,7 @@ namespace System.Windows.Forms
         #region 属性
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "Color.Green")]
         public Color BorderColor 
         { 
@@ -35,7 +35,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(1)]
         public int BorderWidth
         {
@@ -47,7 +47,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(50)]
         public int Radius {
             
@@ -59,7 +59,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(false)]
         public bool BadgeAlike
         {
@@ -88,7 +88,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "Color.Empty")]
         public Color BadgeColor
         {

@@ -42,7 +42,7 @@ namespace System.Windows.Forms
 
         #region 属性
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Orientation Orientation
         {
             get { return _orientation; }
@@ -53,7 +53,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int Spacing
         {
             get { return _spacing; }
@@ -64,7 +64,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool WrapContent
         {
             get
@@ -79,7 +79,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public HAligns HorizontalAlignment
         {
             get { return _horizontalAlignment; }
@@ -90,7 +90,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public VAligns VerticalAlignment
         {
             get { return _verticalAlignment; }

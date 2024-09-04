@@ -156,6 +156,9 @@ namespace System
         [DllImport("user32.dll")]
         public static extern bool SetProcessDPIAware();
 
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr LoadCursorFromFile(string path);
+
 
         /// <summary>
         /// 自定义的结构

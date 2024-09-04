@@ -58,8 +58,8 @@ namespace FormExCore
         #region 属性
 
         [Category("Custom")]
-        public override string Text 
-        { 
+        public override string Text
+        {
             get => _text;
             set
             {
@@ -149,7 +149,7 @@ namespace FormExCore
                 return _textAlign;
             }
             set
-            { 
+            {
                 _textAlign = value;
                 Invalidate();
             }
@@ -208,7 +208,7 @@ namespace FormExCore
                 height = IconSize;
                 left = marginToLeftSide;
                 top = (this.Height - height) / 2;
-                
+
                 if (AlignCenter)
                 {
                     SizeF textSize = TextRenderer.MeasureText(Text, Font);
@@ -443,8 +443,11 @@ namespace FormExCore
             if (!DesignMode)
             {
                 _parentControl = Parent;
-                _parentControl.BackColorChanged -= ParentControl_BackColorChanged;
-                _parentControl.BackColorChanged += ParentControl_BackColorChanged;
+                if (_parentControl != null)
+                {
+                    _parentControl.BackColorChanged -= ParentControl_BackColorChanged;
+                    _parentControl.BackColorChanged += ParentControl_BackColorChanged;
+                }
             }
         }
 
@@ -452,7 +455,11 @@ namespace FormExCore
         {
             if (!DesignMode)
             {
-                BackColor = _parentControl.BackColor;
+                if (_parentControl != null)
+                {
+                    BackColor = _parentControl.BackColor;
+                }
+
             }
         }
 

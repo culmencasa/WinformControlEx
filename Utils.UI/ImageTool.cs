@@ -5,6 +5,8 @@ using System.Text;
 using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
+using System.Windows.Forms;
+using System.Reflection;
 
 namespace System.Drawing
 {
@@ -156,7 +158,27 @@ namespace System.Drawing
 			}
 		}
 
-	}
+		/// <summary>
+		/// 加载自定义光标（避免加载成黑色）
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		/// <exception cref="ComponentModel.Win32Exception"></exception>
+        public static Cursor LoadCustomCursor(string path)
+        {
+            IntPtr handle = Win32.LoadCursorFromFile(path);
+			if (handle == IntPtr.Zero)
+			{
+				throw new ComponentModel.Win32Exception();
+			}
+			
+			var cursor = new Cursor(handle); 
+            var fi = typeof(Cursor).GetField("ownHandle", BindingFlags.NonPublic | BindingFlags.Instance);
+            fi.SetValue(cursor, true);
+
+            return cursor;
+        }
+    }
 
 
     public class MetafileCreator

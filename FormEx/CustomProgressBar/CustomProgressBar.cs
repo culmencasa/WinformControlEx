@@ -77,7 +77,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 控件背景色, 不包含进度条
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public override Color BackColor 
         { 
             get => base.BackColor;
@@ -88,7 +88,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color),"#FFFFFF")]
         public override Color ForeColor         
         {
@@ -106,7 +106,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 边框色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BorderColor
         {
             get
@@ -124,7 +124,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 进度条前景色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color ProgressBarColor { get
             {
                 return _progressBarColor;
@@ -139,7 +139,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 进度条背景色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color ProgressBackColor { get
             {
                 return _progressBackColor;
@@ -155,7 +155,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 边框圆角
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(20)]
         public int BorderRadius
         {
@@ -174,7 +174,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 进度条值
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(0)]
         public float Value
         {
@@ -192,14 +192,14 @@ namespace System.Windows.Forms
         /// <summary>
         /// 进度条最小值
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(0)]
         public float MinValue { get; set; }
 
         /// <summary>
         /// 进度条最大值
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(100)]
         public float MaxValue { get; set; }
 
@@ -240,7 +240,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(true)]
         public bool ShowPercentText
         {

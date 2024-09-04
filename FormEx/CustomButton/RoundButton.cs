@@ -75,7 +75,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 覆盖掉这个属性
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(false)]
         public new Image BackgroundImage
         {
@@ -88,7 +88,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(false)]
         public new Size Size
         {
@@ -104,22 +104,22 @@ namespace System.Windows.Forms
         /// <summary>
         /// 边框大小
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int OutlineWidth { get { return _outlineWidth; } set { _outlineWidth = value; Invalidate(); } }
         /// <summary>
         /// 边框颜色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color OutlineColor
         {
             get { return _outlineColor; }
             set { _outlineColor = value; Invalidate(); }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color OutlineHoverColor { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color ButtonColor
         {
             get
@@ -135,7 +135,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public override Font Font
         {
             get
@@ -176,7 +176,7 @@ namespace System.Windows.Forms
 
         #region 重写的成员
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]

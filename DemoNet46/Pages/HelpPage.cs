@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DemoNet46.UserControls
+namespace DemoNet46.Pages
 {
-    public partial class GridPanel : UserControl
+    public partial class HelpPage : UserControl
     {
-        public GridPanel()
+        public HelpPage()
         {
             InitializeComponent();
         }

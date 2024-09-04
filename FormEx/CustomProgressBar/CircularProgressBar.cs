@@ -34,7 +34,7 @@ namespace System.Windows.Forms
 
         #region 属性
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("进度条的最大值")]
         public float Maximum
         {
@@ -48,7 +48,7 @@ namespace System.Windows.Forms
             }
         }
           
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("进度条的当前值")]
         public float Value
         {
@@ -68,7 +68,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("进度条的当前值")]
         public Color ProgressBackColor
         {
@@ -84,7 +84,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(140)]
         [Description("设置圆弧的起始角度. 范围0-360.")]
         public int StartAngle
@@ -100,7 +100,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(260)]
         [Description("设置圆弧的终止角度. 范围0-360.")]
         public int SweepAngle
@@ -117,7 +117,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string TextLine1
         {
             get
@@ -130,7 +130,7 @@ namespace System.Windows.Forms
                 Invalidate();
             }
         }
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string TextLine2
 
         {
@@ -144,7 +144,7 @@ namespace System.Windows.Forms
                 Invalidate();
             }
         }
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string TextLine3
 
         {
@@ -159,7 +159,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Font TextFont1
         {
             get
@@ -172,7 +172,7 @@ namespace System.Windows.Forms
                 Invalidate();
             }
         }
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Font TextFont2
         {
             get
@@ -185,7 +185,7 @@ namespace System.Windows.Forms
                 Invalidate();
             }
         }
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Font TextFont3
         {
             get
@@ -200,7 +200,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color ProgressBeginColor
         {
             get
@@ -214,7 +214,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color ProgressEndColor
         {
             get
@@ -229,7 +229,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color TextColor1
         {
             get
@@ -242,7 +242,7 @@ namespace System.Windows.Forms
                 Invalidate();
             }
         }
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color TextColor2
         {
             get
@@ -256,7 +256,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color TextColor3
         {
             get
@@ -271,7 +271,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("进度条颜色")]
         public Color ProgressValueColor
         {
@@ -288,7 +288,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("进度条的宽度")]
         public float ProgressWidth
         {

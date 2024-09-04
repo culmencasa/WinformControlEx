@@ -36,7 +36,7 @@ namespace System.Windows.Forms
 
         #region 属性
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue("")]
         public string Caption {
             get => CaptionLabel.Text;
@@ -56,7 +56,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue("")]
         public string HeadLine
         {
@@ -76,7 +76,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue("")]
         public string Subheadline
         {
@@ -96,7 +96,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(null)]
         public Image Icon
         {
@@ -119,7 +119,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(12)]
         public int IndentSize
         {
@@ -138,7 +138,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue("Color.Empty")]
         public Color HotTrackBgColor
         {
@@ -146,7 +146,7 @@ namespace System.Windows.Forms
             set;
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue("Color.Empty")]
         public Color HotTrackForeColor
         {

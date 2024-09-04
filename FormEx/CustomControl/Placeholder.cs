@@ -13,7 +13,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否点击穿透
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ClickThrough
         {
             get;

@@ -60,12 +60,12 @@ namespace System.Windows.Forms
 
         public event Action ActionBegin;
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(true)]
         public new event EventHandler TextChanged;
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public event EventHandler CancelButtonClick;
 
         #endregion
@@ -106,7 +106,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 内容为空时的提示文字
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string EmptyTooltipText
         {
             get
@@ -124,13 +124,13 @@ namespace System.Windows.Forms
         /// <summary>
         /// 内容为空时提示文字的颜色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color EmptyTooltipForeColor { get; set; }
 
         /// <summary>
         /// 文本框的内容
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public override string Text
@@ -174,14 +174,14 @@ namespace System.Windows.Forms
         /// <summary>
         /// 文本框状态
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public TextBoxStates TextBoxState
         {
             get { return _innerTextBoxState; }
             set { _innerTextBoxState = value; this.Invalidate(); }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color TextContentBackColor
         {
             get
@@ -196,7 +196,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color TextContentForeColor
         {
             get
@@ -226,25 +226,25 @@ namespace System.Windows.Forms
         /// <summary>
         /// 边框色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BorderColor { get; set; }
 
         /// <summary>
         /// 边框悬浮色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BorderHoverColor { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BorderHoverColor2 { get; set; }
 
         /// <summary>
         /// 获得焦点后的边框色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BorderFocusColor { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BorderFocusColor2 { get; set; }
 
 
@@ -252,7 +252,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否自动缩放字体
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool AutoSizeFont
         {
             get
@@ -276,7 +276,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 内容显示为密码字符
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool UseSystemPasswordChar
         {
             get
@@ -302,7 +302,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 圆角半径
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(6)]
         public int BorderRadius
         {
@@ -317,7 +317,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "Transparent")]
         public override Color BackColor
         {
@@ -327,7 +327,7 @@ namespace System.Windows.Forms
 
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ReadOnly
         {
             get
@@ -342,14 +342,14 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool EnterSendTab
         {
             get;
             set;
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool AutoScrollbar
         {
             get
@@ -364,7 +364,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int MaxLength
         {
             get
@@ -378,7 +378,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public AutoCompleteStringCollection AutoCompleteSource
         {
             get
@@ -393,7 +393,7 @@ namespace System.Windows.Forms
         }
 
         private bool _showClearButton;
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowClearButton
         {
             get
@@ -414,7 +414,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 前景色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(false)]
         public override Color ForeColor
         {
@@ -440,7 +440,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 停靠方式
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool Multiline
         {
             get
@@ -454,7 +454,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int CustumLeftIndent
         {
             get

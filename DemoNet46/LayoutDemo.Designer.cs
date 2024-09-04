@@ -30,107 +30,23 @@ namespace DemoNet46
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutDemo));
-            this.btnFavorite = new System.Windows.Forms.CustomGroupIcon();
-            this.btnHome = new System.Windows.Forms.CustomGroupIcon();
-            this.btnHelp = new System.Windows.Forms.CustomGroupIcon();
             this.pnlSidebar = new System.Windows.Forms.Panel();
+            this.btnHelp = new System.Windows.Forms.CustomGroupIcon();
+            this.btnHome = new System.Windows.Forms.CustomGroupIcon();
+            this.btnFavorite = new System.Windows.Forms.CustomGroupIcon();
             this.pnlHeader = new System.Windows.Forms.ClickThroughPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.btnSwitchSidebar = new System.Windows.Forms.ImageButton();
-            this.customPanel1 = new System.Windows.Forms.CustomPanel();
-            this.ocnTile4 = new FormExCore.OcnTile();
-            this.ocnTile5 = new FormExCore.OcnTile();
-            this.ocnTile6 = new FormExCore.OcnTile();
-            this.ocnTile3 = new FormExCore.OcnTile();
-            this.ocnTile2 = new FormExCore.OcnTile();
-            this.ocnTile1 = new FormExCore.OcnTile();
-            this.btnColorize = new System.Windows.Forms.CustomButton();
-            this.btnAnimate = new System.Windows.Forms.CustomButton();
             this.pnlContent = new System.Windows.Forms.Panel();
+            this.ContentSwitcher = new System.Windows.Forms.StealthTabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.pnlSidebar.SuspendLayout();
             this.pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSwitchSidebar)).BeginInit();
-            this.customPanel1.SuspendLayout();
             this.pnlContent.SuspendLayout();
+            this.ContentSwitcher.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnFavorite
-            // 
-            this.btnFavorite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFavorite.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(49)))), ((int)(((byte)(68)))));
-            this.btnFavorite.Font = new System.Drawing.Font("Arial", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFavorite.ForeColor = System.Drawing.Color.White;
-            this.btnFavorite.GroupName = "test";
-            this.btnFavorite.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(92)))), ((int)(((byte)(143)))));
-            this.btnFavorite.IconText = "Favorite";
-            this.btnFavorite.Image = global::DemoNet46.Properties.Resources.love;
-            this.btnFavorite.IsSelected = false;
-            this.btnFavorite.KeepSelected = true;
-            this.btnFavorite.Location = new System.Drawing.Point(1, 202);
-            this.btnFavorite.Margin = new System.Windows.Forms.Padding(0);
-            this.btnFavorite.Name = "btnFavorite";
-            this.btnFavorite.Padding = new System.Windows.Forms.Padding(18, 8, 8, 8);
-            this.btnFavorite.SelectedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(202)))), ((int)(((byte)(176)))));
-            this.btnFavorite.SelectionStyle = System.Windows.Forms.CustomGroupIcon.SelectionStyles.AccentBar;
-            this.btnFavorite.ShowIconBorder = false;
-            this.btnFavorite.Size = new System.Drawing.Size(198, 40);
-            this.btnFavorite.TabIndex = 1004;
-            this.btnFavorite.Text = "Favorite";
-            this.btnFavorite.WrapText = false;
-            this.btnFavorite.SingleClick += new System.Windows.Forms.MouseEventHandler(this.btnFavorite_SingleClick);
-            // 
-            // btnHome
-            // 
-            this.btnHome.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnHome.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(49)))), ((int)(((byte)(68)))));
-            this.btnHome.Font = new System.Drawing.Font("Arial", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHome.ForeColor = System.Drawing.Color.White;
-            this.btnHome.GroupName = "test";
-            this.btnHome.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(92)))), ((int)(((byte)(143)))));
-            this.btnHome.IconText = "Home";
-            this.btnHome.Image = global::DemoNet46.Properties.Resources.home;
-            this.btnHome.IsSelected = false;
-            this.btnHome.KeepSelected = true;
-            this.btnHome.Location = new System.Drawing.Point(1, 162);
-            this.btnHome.Margin = new System.Windows.Forms.Padding(0);
-            this.btnHome.Name = "btnHome";
-            this.btnHome.Padding = new System.Windows.Forms.Padding(18, 8, 8, 8);
-            this.btnHome.SelectedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(202)))), ((int)(((byte)(176)))));
-            this.btnHome.SelectionStyle = System.Windows.Forms.CustomGroupIcon.SelectionStyles.AccentBar;
-            this.btnHome.ShowIconBorder = false;
-            this.btnHome.Size = new System.Drawing.Size(198, 40);
-            this.btnHome.TabIndex = 1005;
-            this.btnHome.Text = "Home";
-            this.btnHome.WrapText = false;
-            this.btnHome.SingleClick += new System.Windows.Forms.MouseEventHandler(this.btnHome_SingleClick);
-            // 
-            // btnHelp
-            // 
-            this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnHelp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(49)))), ((int)(((byte)(68)))));
-            this.btnHelp.Font = new System.Drawing.Font("Arial", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHelp.ForeColor = System.Drawing.Color.White;
-            this.btnHelp.GroupName = "test";
-            this.btnHelp.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(92)))), ((int)(((byte)(143)))));
-            this.btnHelp.IconText = "Help";
-            this.btnHelp.Image = global::DemoNet46.Properties.Resources.help;
-            this.btnHelp.IsSelected = false;
-            this.btnHelp.KeepSelected = true;
-            this.btnHelp.Location = new System.Drawing.Point(1, 242);
-            this.btnHelp.Margin = new System.Windows.Forms.Padding(0);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Padding = new System.Windows.Forms.Padding(18, 8, 8, 8);
-            this.btnHelp.SelectedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(202)))), ((int)(((byte)(176)))));
-            this.btnHelp.SelectionStyle = System.Windows.Forms.CustomGroupIcon.SelectionStyles.AccentBar;
-            this.btnHelp.ShowIconBorder = false;
-            this.btnHelp.Size = new System.Drawing.Size(198, 40);
-            this.btnHelp.TabIndex = 1001;
-            this.btnHelp.Text = "Help";
-            this.btnHelp.WrapText = false;
-            this.btnHelp.SingleClick += new System.Windows.Forms.MouseEventHandler(this.btnHelp_SingleClick);
             // 
             // pnlSidebar
             // 
@@ -144,6 +60,87 @@ namespace DemoNet46
             this.pnlSidebar.Name = "pnlSidebar";
             this.pnlSidebar.Size = new System.Drawing.Size(200, 477);
             this.pnlSidebar.TabIndex = 1006;
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnHelp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(49)))), ((int)(((byte)(68)))));
+            this.btnHelp.Font = new System.Drawing.Font("Arial", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHelp.ForeColor = System.Drawing.Color.White;
+            this.btnHelp.GroupName = "test";
+            this.btnHelp.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(123)))), ((int)(((byte)(152)))));
+            this.btnHelp.IconText = "Help";
+            this.btnHelp.Image = global::DemoNet46.Properties.Resources.help;
+            this.btnHelp.ImageSize = 32;
+            this.btnHelp.IsSelected = false;
+            this.btnHelp.KeepSelected = true;
+            this.btnHelp.Location = new System.Drawing.Point(1, 242);
+            this.btnHelp.Margin = new System.Windows.Forms.Padding(0);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Padding = new System.Windows.Forms.Padding(18, 8, 8, 8);
+            this.btnHelp.SelectedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(123)))), ((int)(((byte)(152)))));
+            this.btnHelp.SelectionStyle = System.Windows.Forms.CustomGroupIcon.SelectionStyles.AccentBar;
+            this.btnHelp.ShowIconBorder = false;
+            this.btnHelp.Size = new System.Drawing.Size(198, 40);
+            this.btnHelp.TabIndex = 1001;
+            this.btnHelp.Text = "Help";
+            this.btnHelp.WrapText = false;
+            this.btnHelp.SingleClick += new System.Windows.Forms.MouseEventHandler(this.btnHelp_SingleClick);
+            // 
+            // btnHome
+            // 
+            this.btnHome.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnHome.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(49)))), ((int)(((byte)(68)))));
+            this.btnHome.Font = new System.Drawing.Font("Arial", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHome.ForeColor = System.Drawing.Color.White;
+            this.btnHome.GroupName = "test";
+            this.btnHome.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(123)))), ((int)(((byte)(152)))));
+            this.btnHome.IconText = "Home";
+            this.btnHome.Image = global::DemoNet46.Properties.Resources.home;
+            this.btnHome.ImageSize = 32;
+            this.btnHome.IsSelected = false;
+            this.btnHome.KeepSelected = true;
+            this.btnHome.Location = new System.Drawing.Point(1, 162);
+            this.btnHome.Margin = new System.Windows.Forms.Padding(0);
+            this.btnHome.Name = "btnHome";
+            this.btnHome.Padding = new System.Windows.Forms.Padding(18, 8, 8, 8);
+            this.btnHome.SelectedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(123)))), ((int)(((byte)(152)))));
+            this.btnHome.SelectionStyle = System.Windows.Forms.CustomGroupIcon.SelectionStyles.AccentBar;
+            this.btnHome.ShowIconBorder = false;
+            this.btnHome.Size = new System.Drawing.Size(198, 40);
+            this.btnHome.TabIndex = 1005;
+            this.btnHome.Text = "Home";
+            this.btnHome.WrapText = false;
+            this.btnHome.SingleClick += new System.Windows.Forms.MouseEventHandler(this.btnHome_SingleClick);
+            // 
+            // btnFavorite
+            // 
+            this.btnFavorite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFavorite.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(49)))), ((int)(((byte)(68)))));
+            this.btnFavorite.Font = new System.Drawing.Font("Arial", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFavorite.ForeColor = System.Drawing.Color.White;
+            this.btnFavorite.GroupName = "test";
+            this.btnFavorite.HoverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(123)))), ((int)(((byte)(152)))));
+            this.btnFavorite.IconText = "Favorite";
+            this.btnFavorite.Image = global::DemoNet46.Properties.Resources.love;
+            this.btnFavorite.ImageSize = 32;
+            this.btnFavorite.IsSelected = false;
+            this.btnFavorite.KeepSelected = true;
+            this.btnFavorite.Location = new System.Drawing.Point(1, 202);
+            this.btnFavorite.Margin = new System.Windows.Forms.Padding(0);
+            this.btnFavorite.Name = "btnFavorite";
+            this.btnFavorite.Padding = new System.Windows.Forms.Padding(18, 8, 8, 8);
+            this.btnFavorite.SelectedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(123)))), ((int)(((byte)(152)))));
+            this.btnFavorite.SelectionStyle = System.Windows.Forms.CustomGroupIcon.SelectionStyles.AccentBar;
+            this.btnFavorite.ShowIconBorder = false;
+            this.btnFavorite.Size = new System.Drawing.Size(198, 40);
+            this.btnFavorite.TabIndex = 1004;
+            this.btnFavorite.Text = "Favorite";
+            this.btnFavorite.WrapText = false;
+            this.btnFavorite.SingleClick += new System.Windows.Forms.MouseEventHandler(this.btnFavorite_SingleClick);
             // 
             // pnlHeader
             // 
@@ -185,165 +182,47 @@ namespace DemoNet46
             this.btnSwitchSidebar.ToolTipText = null;
             this.btnSwitchSidebar.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnSwitchSidebar_MouseClick);
             // 
-            // customPanel1
-            // 
-            this.customPanel1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.customPanel1.BackColor = System.Drawing.Color.Black;
-            this.customPanel1.BorderColor = System.Drawing.Color.Empty;
-            this.customPanel1.BorderWidth = 1;
-            this.customPanel1.Controls.Add(this.ocnTile4);
-            this.customPanel1.Controls.Add(this.ocnTile5);
-            this.customPanel1.Controls.Add(this.ocnTile6);
-            this.customPanel1.Controls.Add(this.ocnTile3);
-            this.customPanel1.Controls.Add(this.ocnTile2);
-            this.customPanel1.Controls.Add(this.ocnTile1);
-            this.customPanel1.FirstColor = System.Drawing.Color.Empty;
-            this.customPanel1.Location = new System.Drawing.Point(110, 38);
-            this.customPanel1.Name = "customPanel1";
-            this.customPanel1.RoundBorderRadius = 0;
-            this.customPanel1.SecondColor = System.Drawing.Color.Empty;
-            this.customPanel1.Size = new System.Drawing.Size(452, 301);
-            this.customPanel1.TabIndex = 1008;
-            // 
-            // ocnTile4
-            // 
-            this.ocnTile4.BackColor = System.Drawing.Color.Black;
-            this.ocnTile4.DrawingBackColor = System.Drawing.Color.Black;
-            this.ocnTile4.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile4.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ocnTile4.ForeColor = System.Drawing.Color.Silver;
-            this.ocnTile4.Location = new System.Drawing.Point(302, 151);
-            this.ocnTile4.MouseOverBackColor = System.Drawing.Color.SaddleBrown;
-            this.ocnTile4.MouseOverForeColor = System.Drawing.Color.White;
-            this.ocnTile4.Name = "ocnTile4";
-            this.ocnTile4.Opacity = 1F;
-            this.ocnTile4.Size = new System.Drawing.Size(150, 150);
-            this.ocnTile4.TabIndex = 5;
-            this.ocnTile4.Text = "TIME";
-            // 
-            // ocnTile5
-            // 
-            this.ocnTile5.BackColor = System.Drawing.Color.Black;
-            this.ocnTile5.DrawingBackColor = System.Drawing.Color.Black;
-            this.ocnTile5.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile5.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ocnTile5.ForeColor = System.Drawing.Color.Silver;
-            this.ocnTile5.Location = new System.Drawing.Point(151, 151);
-            this.ocnTile5.MouseOverBackColor = System.Drawing.Color.Olive;
-            this.ocnTile5.MouseOverForeColor = System.Drawing.Color.White;
-            this.ocnTile5.Name = "ocnTile5";
-            this.ocnTile5.Opacity = 1F;
-            this.ocnTile5.Size = new System.Drawing.Size(150, 150);
-            this.ocnTile5.TabIndex = 4;
-            this.ocnTile5.Text = "OF";
-            // 
-            // ocnTile6
-            // 
-            this.ocnTile6.BackColor = System.Drawing.Color.Black;
-            this.ocnTile6.DrawingBackColor = System.Drawing.Color.Black;
-            this.ocnTile6.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile6.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ocnTile6.ForeColor = System.Drawing.Color.Silver;
-            this.ocnTile6.Location = new System.Drawing.Point(0, 151);
-            this.ocnTile6.MouseOverBackColor = System.Drawing.Color.CadetBlue;
-            this.ocnTile6.MouseOverForeColor = System.Drawing.Color.White;
-            this.ocnTile6.Name = "ocnTile6";
-            this.ocnTile6.Opacity = 1F;
-            this.ocnTile6.Size = new System.Drawing.Size(150, 150);
-            this.ocnTile6.TabIndex = 3;
-            this.ocnTile6.Text = "WASTE";
-            // 
-            // ocnTile3
-            // 
-            this.ocnTile3.BackColor = System.Drawing.Color.Black;
-            this.ocnTile3.DrawingBackColor = System.Drawing.Color.Black;
-            this.ocnTile3.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile3.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ocnTile3.ForeColor = System.Drawing.Color.Silver;
-            this.ocnTile3.Location = new System.Drawing.Point(302, 0);
-            this.ocnTile3.MouseOverBackColor = System.Drawing.Color.Navy;
-            this.ocnTile3.MouseOverForeColor = System.Drawing.Color.White;
-            this.ocnTile3.Name = "ocnTile3";
-            this.ocnTile3.Opacity = 1F;
-            this.ocnTile3.Size = new System.Drawing.Size(150, 150);
-            this.ocnTile3.TabIndex = 2;
-            this.ocnTile3.Text = "A";
-            // 
-            // ocnTile2
-            // 
-            this.ocnTile2.BackColor = System.Drawing.Color.Black;
-            this.ocnTile2.DrawingBackColor = System.Drawing.Color.Black;
-            this.ocnTile2.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile2.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ocnTile2.ForeColor = System.Drawing.Color.Silver;
-            this.ocnTile2.Location = new System.Drawing.Point(151, 0);
-            this.ocnTile2.MouseOverBackColor = System.Drawing.Color.BlueViolet;
-            this.ocnTile2.MouseOverForeColor = System.Drawing.Color.Black;
-            this.ocnTile2.Name = "ocnTile2";
-            this.ocnTile2.Opacity = 1F;
-            this.ocnTile2.Size = new System.Drawing.Size(150, 150);
-            this.ocnTile2.TabIndex = 1;
-            this.ocnTile2.Text = "IS";
-            // 
-            // ocnTile1
-            // 
-            this.ocnTile1.BackColor = System.Drawing.Color.Black;
-            this.ocnTile1.DrawingBackColor = System.Drawing.Color.Black;
-            this.ocnTile1.DrawingForeColor = System.Drawing.Color.Silver;
-            this.ocnTile1.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.ocnTile1.ForeColor = System.Drawing.Color.Silver;
-            this.ocnTile1.Location = new System.Drawing.Point(0, 0);
-            this.ocnTile1.MouseOverBackColor = System.Drawing.Color.Crimson;
-            this.ocnTile1.MouseOverForeColor = System.Drawing.Color.Black;
-            this.ocnTile1.Name = "ocnTile1";
-            this.ocnTile1.Opacity = 1F;
-            this.ocnTile1.Size = new System.Drawing.Size(150, 150);
-            this.ocnTile1.TabIndex = 0;
-            this.ocnTile1.Text = "LOVE";
-            // 
-            // btnColorize
-            // 
-            this.btnColorize.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnColorize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.btnColorize.CornerRadius = 8;
-            this.btnColorize.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnColorize.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btnColorize.GradientMode = false;
-            this.btnColorize.Location = new System.Drawing.Point(110, 375);
-            this.btnColorize.Name = "btnColorize";
-            this.btnColorize.ShadeMode = false;
-            this.btnColorize.Size = new System.Drawing.Size(207, 76);
-            this.btnColorize.TabIndex = 1009;
-            this.btnColorize.Text = "COLORIZE";
-            this.btnColorize.Click += new System.EventHandler(this.btnColorize_Click);
-            // 
-            // btnAnimate
-            // 
-            this.btnAnimate.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnAnimate.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.btnAnimate.CornerRadius = 8;
-            this.btnAnimate.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnAnimate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.btnAnimate.GradientMode = false;
-            this.btnAnimate.Location = new System.Drawing.Point(355, 375);
-            this.btnAnimate.Name = "btnAnimate";
-            this.btnAnimate.ShadeMode = false;
-            this.btnAnimate.Size = new System.Drawing.Size(207, 76);
-            this.btnAnimate.TabIndex = 1010;
-            this.btnAnimate.Text = "ANIMATE";
-            this.btnAnimate.Click += new System.EventHandler(this.btnAnimate_Click);
-            // 
             // pnlContent
             // 
             this.pnlContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(17)))), ((int)(((byte)(40)))));
-            this.pnlContent.Controls.Add(this.customPanel1);
-            this.pnlContent.Controls.Add(this.btnAnimate);
-            this.pnlContent.Controls.Add(this.btnColorize);
+            this.pnlContent.Controls.Add(this.ContentSwitcher);
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(202, 48);
             this.pnlContent.Name = "pnlContent";
             this.pnlContent.Size = new System.Drawing.Size(659, 477);
             this.pnlContent.TabIndex = 1011;
+            // 
+            // ContentSwitcher
+            // 
+            this.ContentSwitcher.Controls.Add(this.tabPage1);
+            this.ContentSwitcher.Controls.Add(this.tabPage2);
+            this.ContentSwitcher.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ContentSwitcher.Location = new System.Drawing.Point(0, 0);
+            this.ContentSwitcher.Multiline = true;
+            this.ContentSwitcher.Name = "ContentSwitcher";
+            this.ContentSwitcher.SelectedIndex = 0;
+            this.ContentSwitcher.Size = new System.Drawing.Size(659, 477);
+            this.ContentSwitcher.TabIndex = 0;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(651, 451);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(651, 451);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // LayoutDemo
             // 
@@ -376,8 +255,8 @@ namespace DemoNet46
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSwitchSidebar)).EndInit();
-            this.customPanel1.ResumeLayout(false);
             this.pnlContent.ResumeLayout(false);
+            this.ContentSwitcher.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -391,15 +270,9 @@ namespace DemoNet46
         private System.Windows.Forms.ClickThroughPanel pnlHeader;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ImageButton btnSwitchSidebar;
-        private System.Windows.Forms.CustomPanel customPanel1;
-        private FormExCore.OcnTile ocnTile4;
-        private FormExCore.OcnTile ocnTile5;
-        private FormExCore.OcnTile ocnTile6;
-        private FormExCore.OcnTile ocnTile3;
-        private FormExCore.OcnTile ocnTile2;
-        private FormExCore.OcnTile ocnTile1;
-        private System.Windows.Forms.CustomButton btnColorize;
-        private System.Windows.Forms.CustomButton btnAnimate;
         private System.Windows.Forms.Panel pnlContent;
+        private System.Windows.Forms.StealthTabControl ContentSwitcher;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
     }
 }

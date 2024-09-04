@@ -48,6 +48,7 @@
             this.customNavSideBar1 = new System.Windows.Forms.CustomNavSideBar();
             this.customPanel2 = new System.Windows.Forms.CustomPanel();
             this.colorGroupBox3 = new System.Windows.Forms.ColorGroupBox();
+            this.threeDLine1 = new System.Windows.Forms.ThreeDLine();
             this.customLabel4 = new System.Windows.Forms.CustomLabel();
             this.colorGroupBox1.SuspendLayout();
             this.colorGroupBox2.SuspendLayout();
@@ -57,12 +58,12 @@
             // 
             // btnWorkShade
             // 
-            this.btnWorkShade.BackColor = System.Drawing.Color.LightSeaGreen;
-            this.btnWorkShade.BorderColor = System.Drawing.Color.Teal;
+            this.btnWorkShade.BackColor = System.Drawing.Color.Empty;
+            this.btnWorkShade.BorderColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnWorkShade.CornerRadius = 8;
             this.btnWorkShade.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnWorkShade.ForeColor = System.Drawing.Color.White;
             this.btnWorkShade.GradientMode = true;
+            this.btnWorkShade.HoverColor = System.Drawing.Color.Empty;
             this.btnWorkShade.Location = new System.Drawing.Point(23, 150);
             this.btnWorkShade.Name = "btnWorkShade";
             this.btnWorkShade.ShadeMode = false;
@@ -73,12 +74,12 @@
             // 
             // btnShowException
             // 
-            this.btnShowException.BackColor = System.Drawing.Color.ForestGreen;
-            this.btnShowException.BorderColor = System.Drawing.Color.DarkGreen;
+            this.btnShowException.BackColor = System.Drawing.Color.Empty;
+            this.btnShowException.BorderColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnShowException.CornerRadius = 8;
             this.btnShowException.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnShowException.ForeColor = System.Drawing.Color.White;
             this.btnShowException.GradientMode = true;
+            this.btnShowException.HoverColor = System.Drawing.Color.Empty;
             this.btnShowException.Location = new System.Drawing.Point(23, 103);
             this.btnShowException.Name = "btnShowException";
             this.btnShowException.ShadeMode = false;
@@ -89,12 +90,12 @@
             // 
             // btnBackgroundWorkShade
             // 
-            this.btnBackgroundWorkShade.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.btnBackgroundWorkShade.BorderColor = System.Drawing.Color.DodgerBlue;
+            this.btnBackgroundWorkShade.BackColor = System.Drawing.Color.Empty;
+            this.btnBackgroundWorkShade.BorderColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnBackgroundWorkShade.CornerRadius = 8;
             this.btnBackgroundWorkShade.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnBackgroundWorkShade.ForeColor = System.Drawing.Color.White;
             this.btnBackgroundWorkShade.GradientMode = true;
+            this.btnBackgroundWorkShade.HoverColor = System.Drawing.Color.Empty;
             this.btnBackgroundWorkShade.Location = new System.Drawing.Point(23, 197);
             this.btnBackgroundWorkShade.Name = "btnBackgroundWorkShade";
             this.btnBackgroundWorkShade.ShadeMode = false;
@@ -105,12 +106,12 @@
             // 
             // btnRoundForm
             // 
-            this.btnRoundForm.BackColor = System.Drawing.Color.RoyalBlue;
-            this.btnRoundForm.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.btnRoundForm.BackColor = System.Drawing.Color.Empty;
+            this.btnRoundForm.BorderColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnRoundForm.CornerRadius = 0;
             this.btnRoundForm.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnRoundForm.ForeColor = System.Drawing.Color.White;
             this.btnRoundForm.GradientMode = true;
+            this.btnRoundForm.HoverColor = System.Drawing.Color.Empty;
             this.btnRoundForm.Location = new System.Drawing.Point(23, 244);
             this.btnRoundForm.Name = "btnRoundForm";
             this.btnRoundForm.ShadeMode = false;
@@ -136,16 +137,17 @@
             this.colorGroupBox1.Controls.Add(this.btnBackgroundWorkShade);
             this.colorGroupBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.colorGroupBox1.LineColor = System.Drawing.Color.DimGray;
-            this.colorGroupBox1.Location = new System.Drawing.Point(1, 1);
+            this.colorGroupBox1.Location = new System.Drawing.Point(0, 0);
             this.colorGroupBox1.Name = "colorGroupBox1";
             this.colorGroupBox1.Show3DShadow = false;
-            this.colorGroupBox1.Size = new System.Drawing.Size(175, 409);
+            this.colorGroupBox1.Size = new System.Drawing.Size(175, 411);
             this.colorGroupBox1.TabIndex = 1002;
             this.colorGroupBox1.Text = "窗体相关";
             // 
             // customLabel2
             // 
             this.customLabel2.AutoSize = true;
+            this.customLabel2.BadgeColor = System.Drawing.Color.SlateBlue;
             this.customLabel2.BorderColor = System.Drawing.Color.Empty;
             this.customLabel2.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.customLabel2.ForeColor = System.Drawing.Color.Gray;
@@ -157,12 +159,12 @@
             // 
             // btnCustomMessage
             // 
-            this.btnCustomMessage.BackColor = System.Drawing.Color.Indigo;
-            this.btnCustomMessage.BorderColor = System.Drawing.Color.Indigo;
+            this.btnCustomMessage.BackColor = System.Drawing.Color.Empty;
+            this.btnCustomMessage.BorderColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnCustomMessage.CornerRadius = 0;
             this.btnCustomMessage.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnCustomMessage.ForeColor = System.Drawing.Color.White;
             this.btnCustomMessage.GradientMode = true;
+            this.btnCustomMessage.HoverColor = System.Drawing.Color.Empty;
             this.btnCustomMessage.Location = new System.Drawing.Point(23, 339);
             this.btnCustomMessage.Name = "btnCustomMessage";
             this.btnCustomMessage.RoundCorners = ((System.Windows.Forms.Corners)((((System.Windows.Forms.Corners.TopLeft | System.Windows.Forms.Corners.TopRight) 
@@ -176,12 +178,12 @@
             // 
             // btnShowInfoTip
             // 
-            this.btnShowInfoTip.BackColor = System.Drawing.Color.MediumSlateBlue;
-            this.btnShowInfoTip.BorderColor = System.Drawing.Color.Indigo;
+            this.btnShowInfoTip.BackColor = System.Drawing.Color.Empty;
+            this.btnShowInfoTip.BorderColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnShowInfoTip.CornerRadius = 0;
             this.btnShowInfoTip.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnShowInfoTip.ForeColor = System.Drawing.Color.White;
             this.btnShowInfoTip.GradientMode = true;
+            this.btnShowInfoTip.HoverColor = System.Drawing.Color.Empty;
             this.btnShowInfoTip.Location = new System.Drawing.Point(23, 291);
             this.btnShowInfoTip.Name = "btnShowInfoTip";
             this.btnShowInfoTip.RoundCorners = ((System.Windows.Forms.Corners)((((System.Windows.Forms.Corners.TopLeft | System.Windows.Forms.Corners.TopRight) 
@@ -250,16 +252,17 @@
             this.colorGroupBox2.Controls.Add(this.circularProgressBar1);
             this.colorGroupBox2.Controls.Add(this.btnProgressGo);
             this.colorGroupBox2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.colorGroupBox2.Location = new System.Drawing.Point(176, 1);
+            this.colorGroupBox2.Location = new System.Drawing.Point(175, 0);
             this.colorGroupBox2.Name = "colorGroupBox2";
             this.colorGroupBox2.Show3DShadow = false;
-            this.colorGroupBox2.Size = new System.Drawing.Size(179, 409);
+            this.colorGroupBox2.Size = new System.Drawing.Size(179, 411);
             this.colorGroupBox2.TabIndex = 1005;
             this.colorGroupBox2.Text = "colorGroupBox2";
             // 
             // customLabel3
             // 
             this.customLabel3.AutoSize = true;
+            this.customLabel3.BadgeColor = System.Drawing.Color.SlateBlue;
             this.customLabel3.BorderColor = System.Drawing.Color.Empty;
             this.customLabel3.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.customLabel3.ForeColor = System.Drawing.Color.Gray;
@@ -276,6 +279,7 @@
             this.btnProgressGo.CornerRadius = 0;
             this.btnProgressGo.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnProgressGo.GradientMode = true;
+            this.btnProgressGo.HoverColor = System.Drawing.Color.Empty;
             this.btnProgressGo.Location = new System.Drawing.Point(28, 244);
             this.btnProgressGo.Name = "btnProgressGo";
             this.btnProgressGo.ShadeMode = false;
@@ -310,10 +314,16 @@
             this.customNavSideBar1.BorderWidth = 1;
             this.customNavSideBar1.Dock = System.Windows.Forms.DockStyle.Left;
             this.customNavSideBar1.FirstColor = System.Drawing.Color.Empty;
+            this.customNavSideBar1.IsSelected = false;
             this.customNavSideBar1.Location = new System.Drawing.Point(2, 42);
+            this.customNavSideBar1.MouseClickSwitchSelectStatus = false;
+            this.customNavSideBar1.MouseHoverBgColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(232)))), ((int)(((byte)(255)))));
+            this.customNavSideBar1.MouseHoverBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(209)))), ((int)(((byte)(255)))));
+            this.customNavSideBar1.MouseHoverShowFocus = false;
             this.customNavSideBar1.Name = "customNavSideBar1";
             this.customNavSideBar1.RoundBorderRadius = 0;
             this.customNavSideBar1.SecondColor = System.Drawing.Color.Empty;
+            this.customNavSideBar1.SelectedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(209)))), ((int)(((byte)(255)))));
             this.customNavSideBar1.Size = new System.Drawing.Size(203, 411);
             this.customNavSideBar1.TabIndex = 1008;
             // 
@@ -327,10 +337,16 @@
             this.customPanel2.Controls.Add(this.colorGroupBox1);
             this.customPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.customPanel2.FirstColor = System.Drawing.Color.Empty;
+            this.customPanel2.IsSelected = false;
             this.customPanel2.Location = new System.Drawing.Point(215, 42);
+            this.customPanel2.MouseClickSwitchSelectStatus = false;
+            this.customPanel2.MouseHoverBgColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(232)))), ((int)(((byte)(255)))));
+            this.customPanel2.MouseHoverBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(209)))), ((int)(((byte)(255)))));
+            this.customPanel2.MouseHoverShowFocus = false;
             this.customPanel2.Name = "customPanel2";
             this.customPanel2.RoundBorderRadius = 0;
             this.customPanel2.SecondColor = System.Drawing.Color.Empty;
+            this.customPanel2.SelectedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(209)))), ((int)(((byte)(255)))));
             this.customPanel2.Size = new System.Drawing.Size(599, 411);
             this.customPanel2.TabIndex = 1009;
             // 
@@ -339,22 +355,33 @@
             this.colorGroupBox3.BackColor = System.Drawing.Color.Transparent;
             this.colorGroupBox3.BorderSize = 0;
             this.colorGroupBox3.BoxBorderColor = System.Drawing.Color.CornflowerBlue;
-            this.colorGroupBox3.BoxColor = System.Drawing.Color.White;
+            this.colorGroupBox3.BoxColor = System.Drawing.Color.Black;
             this.colorGroupBox3.CaptionBackColor = System.Drawing.SystemColors.Control;
             this.colorGroupBox3.CaptionPosition = System.Windows.Forms.ColorGroupBox.CaptionPositions.None;
+            this.colorGroupBox3.Controls.Add(this.threeDLine1);
             this.colorGroupBox3.Controls.Add(this.customLabel4);
             this.colorGroupBox3.Controls.Add(this.roundButton1);
             this.colorGroupBox3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.colorGroupBox3.Location = new System.Drawing.Point(355, 1);
+            this.colorGroupBox3.Location = new System.Drawing.Point(354, 0);
             this.colorGroupBox3.Name = "colorGroupBox3";
             this.colorGroupBox3.Show3DShadow = false;
-            this.colorGroupBox3.Size = new System.Drawing.Size(179, 409);
+            this.colorGroupBox3.Size = new System.Drawing.Size(179, 411);
             this.colorGroupBox3.TabIndex = 1006;
-            this.colorGroupBox3.Text = "colorGroupBox3";
+            // 
+            // threeDLine1
+            // 
+            this.threeDLine1.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
+            this.threeDLine1.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.threeDLine1.Location = new System.Drawing.Point(17, 174);
+            this.threeDLine1.Name = "threeDLine1";
+            this.threeDLine1.Size = new System.Drawing.Size(145, 2);
+            this.threeDLine1.TabIndex = 1005;
+            this.threeDLine1.Text = "threeDLine1";
             // 
             // customLabel4
             // 
             this.customLabel4.AutoSize = true;
+            this.customLabel4.BadgeColor = System.Drawing.Color.SlateBlue;
             this.customLabel4.BorderColor = System.Drawing.Color.Empty;
             this.customLabel4.Font = new System.Drawing.Font("微软雅黑", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.customLabel4.ForeColor = System.Drawing.Color.Gray;
@@ -418,5 +445,6 @@
         private System.Windows.Forms.ColorGroupBox colorGroupBox3;
         private System.Windows.Forms.CustomLabel customLabel4;
         private System.Windows.Forms.CustomButton btnCustomMessage;
+        private System.Windows.Forms.ThreeDLine threeDLine1;
     }
 }

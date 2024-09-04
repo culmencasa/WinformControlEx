@@ -67,7 +67,7 @@ namespace System.Windows.Forms
 
         #region 属性
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string DialogCaption
         {
             get
@@ -80,7 +80,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string DialogContent
         {
             get => lblContent.Text;
@@ -90,7 +90,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string OKButtonText
         {
             get
@@ -104,7 +104,7 @@ namespace System.Windows.Forms
 
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Image ExceptionIcon
         {
             get
@@ -117,7 +117,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Exception ExceptionObject
         {
             get;

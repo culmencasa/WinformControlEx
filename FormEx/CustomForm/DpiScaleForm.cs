@@ -738,7 +738,7 @@ namespace System.Windows.Forms
                 //{
                 //    uint? windowDpi = null;
 
-                //    if (Process.GetCurrentProcess().MainWindowHandle != IntPtr.Zero)
+                //    if (Process.GetCurrentProcess().MainWindowHandle != IntPtr.CanvasCenterPoint)
                 //    {
                 //        windowDpi = GetDpiForWindow(Process.GetCurrentProcess().MainWindowHandle);
                 //    }

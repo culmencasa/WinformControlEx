@@ -46,7 +46,7 @@ namespace System.Windows.Forms
 
         #region 属性
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "184, 183, 188")]
         public Color LineColor
         {
@@ -61,7 +61,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(SeparationDirections.Horizontal)]
         public SeparationDirections Direction
         {
@@ -84,7 +84,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(DashStyle.Solid)]
         public DashStyle PenStyle
         {
@@ -99,7 +99,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(1)]
         public int PenWeight
         {

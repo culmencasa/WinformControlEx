@@ -177,7 +177,7 @@ namespace System.Windows.Forms
 
         #region 属性
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string Caption
         {
             get
@@ -191,7 +191,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string Content
         {
             get => lblContent.Text;
@@ -201,7 +201,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string OKButtonText
         {
             get
@@ -218,7 +218,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 按钮类型
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public MessageBoxButtons BoxButton
         {
             get
@@ -236,7 +236,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 消息图标
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public MessageBoxIcon BoxIcon
         {
             get;

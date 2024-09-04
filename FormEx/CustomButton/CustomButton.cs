@@ -43,9 +43,11 @@ namespace System.Windows.Forms
         private ImageList m_ImageList;
         private int m_ImageIndex = -1;
 
-        private bool keyPressed;
-        private Rectangle contentRect;
-        private bool imageCloseToText;
+        private bool _keyPressed;
+        private Rectangle _contentRect;
+        private bool _imageCloseToText;
+
+        private Color _backColor;
 
         #endregion
 
@@ -83,6 +85,24 @@ namespace System.Windows.Forms
 
         #region 属性
 
+        [DefaultValue(typeof(Color), "Control")] 
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Localizable(true)]
+        [Bindable(true)]
+        public new virtual Color BackColor
+        {
+            get
+            {
+                return _backColor;
+            }
+            set
+            {
+                _backColor = value;
+                Invalidate();
+            }
+        }
+
 
         /// <summary>
         /// 按钮状态
@@ -104,7 +124,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 圆角
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(14)]
         [Description("圆角大小")]
         public int CornerRadius
@@ -120,13 +140,13 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         protected override System.Drawing.Size DefaultSize
         {
             get { return new Size(75, 23); }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("背景色是否显渐变.")]
         public bool GradientMode
         {
@@ -134,7 +154,7 @@ namespace System.Windows.Forms
             set;
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("背景色是否显示阴影模式.")]
         public bool ShadeMode
         {
@@ -188,7 +208,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Corners), "None")]
         [Description("设置几边圆角")]
         [Editor(typeof(RoundCornersEditor), typeof(UITypeEditor))]
@@ -232,13 +252,21 @@ namespace System.Windows.Forms
         {
             get
             {
-                return imageCloseToText;
+                return _imageCloseToText;
             }
             set
             {
-                imageCloseToText = value;
+                _imageCloseToText = value;
             }
         }
+
+        [Category(Consts.DefaultCategory)]
+        public Color HoverColor
+        {
+            get;
+            set;
+        }
+
 
         #endregion
 
@@ -249,7 +277,7 @@ namespace System.Windows.Forms
             base.OnKeyDown(e);
             if (e.KeyCode == Keys.Space)
             {
-                keyPressed = true;
+                _keyPressed = true;
                 m_ButtonState = CustomButtonState.Pressed;
             }
             OnStateChange(EventArgs.Empty);
@@ -263,7 +291,7 @@ namespace System.Windows.Forms
             {
                 if (this.ButtonState == CustomButtonState.Pressed)
                     this.PerformClick();
-                keyPressed = false;
+                _keyPressed = false;
                 m_ButtonState = CustomButtonState.Focused;
             }
             OnStateChange(EventArgs.Empty);
@@ -273,7 +301,7 @@ namespace System.Windows.Forms
         protected override void OnMouseEnter(EventArgs e)
         {
             base.OnMouseEnter(e);
-            if (!keyPressed)
+            if (!_keyPressed)
                 m_ButtonState = CustomButtonState.Hot;
             OnStateChange(EventArgs.Empty);
         }
@@ -282,7 +310,7 @@ namespace System.Windows.Forms
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
-            if (!keyPressed)
+            if (!_keyPressed)
             {
                 if (this.IsDefault)
                     m_ButtonState = CustomButtonState.Focused;
@@ -320,7 +348,7 @@ namespace System.Windows.Forms
                 m_ButtonState = CustomButtonState.Pressed;
             else
             {
-                if (keyPressed)
+                if (_keyPressed)
                     return;
                 m_ButtonState = CustomButtonState.Hot;
             }
@@ -399,122 +427,52 @@ namespace System.Windows.Forms
         }
 
 
-        protected override void OnPaintBackground(PaintEventArgs pevent)
+
+
+        protected override void OnPaintBackground(PaintEventArgs e)
         {
-            //Simulate Transparency
+            Graphics g = e.Graphics;
+            g.SetSlowRendering();
+
+            #region 模拟透明度
+
+            GraphicsContainer gc = g.BeginContainer();
             try
             {
-                GraphicsContainer g = pevent.Graphics.BeginContainer();
-                Rectangle translateRect = this.Bounds;
-                pevent.Graphics.TranslateTransform(-this.Left, -this.Top);
-                PaintEventArgs pe = new PaintEventArgs(pevent.Graphics, translateRect);
+                // 平移图形以模拟透明度   
+                g.TranslateTransform(-this.Left, -this.Top);
+                PaintEventArgs pe = new PaintEventArgs(g, this.Bounds);
                 this.InvokePaintBackground(this.Parent, pe);
                 this.InvokePaint(this.Parent, pe);
-                pevent.Graphics.ResetTransform();
-                pevent.Graphics.EndContainer(g);
             }
             catch
             {
-                base.OnPaintBackground(pevent);
+                // 处理异常（例如在 GroupBox 控件中）  
             }
-
-
-
-            pevent.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-
-            Color shadeColor, fillColor;
-            Color darkColor = DarkenColor(this.BackColor, 10);
-            Color darkDarkColor = DarkenColor(this.BackColor, 15);
-            Color lightColor = LightenColor(this.BackColor, 25);
-            Color lightLightColor = LightenColor(this.BackColor, 60);
-
-            // 不显示渐变
-            if (!GradientMode)
+            finally
             {
-                darkColor = this.BackColor;
-                darkDarkColor = this.BackColor;
-                lightColor = this.BackColor;
-                lightLightColor = this.BackColor;
-            }
-            else
-            {
-
+                g.ResetTransform();
+                g.EndContainer(gc);
             }
 
+            #endregion
 
-            if (this.ButtonState == CustomButtonState.Hot)
-            {
-                fillColor = lightColor;
-                shadeColor = darkDarkColor;
-            }
-            else if (this.ButtonState == CustomButtonState.Pressed)
-            {
-                fillColor = this.BackColor;
-                shadeColor = this.BackColor;
-            }
-            else
-            {
-                fillColor = this.BackColor;
-                shadeColor = darkDarkColor;
-            }
+            Color fillColor, shadeColor;
+            CalculateColors(out fillColor, out shadeColor);
+             
 
-            GraphicsPath path;
-            Rectangle r = ClientRectangle;
-            if (CornerRadius > 0)
-            {
-                path = RoundRectangle(r, this.CornerRadius, this.RoundCorners);
-            }
-            else
-            {
-                path = new GraphicsPath(FillMode.Winding);
-                path.AddRectangle(new Rectangle(0, 0, Width - 1, Height - 1));
-                path.CloseFigure();
-            }
+            // 创建图形路径  
+            GraphicsPath path = CreateGraphicsPath(ClientRectangle);
+            FillPath(g, path, fillColor, shadeColor);
 
-            if (this.Enabled)
-            {
-                LinearGradientBrush paintBrush = new LinearGradientBrush(r, fillColor, shadeColor, LinearGradientMode.Vertical);
+             
+            DrawBorder(g, path);
 
-                if (ShadeMode)
-                {
-                    Blend b = new Blend();
-                    b.Positions = new float[] { 0, 0.45F, 0.55F, 1 };
-                    b.Factors = new float[] { 0, 0, 1, 1 };
-                    paintBrush.Blend = b;
-                }
-
-                pevent.Graphics.FillPath(paintBrush, path);
-                paintBrush.Dispose();
-            }
-            else
-            {
-                using (Brush solidBrush = new SolidBrush(darkDarkColor))
-                {
-                    pevent.Graphics.FillPath(solidBrush, path);
-                }
-            }
-
-            //...and border
-            Pen drawingPen = new Pen(BorderColor);
-            pevent.Graphics.DrawPath(drawingPen, path);
-            drawingPen.Dispose();
-
-            //Get the Rectangle to be used for Content
-            bool inBounds = false;
-            //We could use some Math to get this from the radius but I'm 
-            //not great at Math so for the example this hack will suffice.
-            while (!inBounds && r.Width >= 1 && r.Height >= 1)
-            {
-                inBounds = path.IsVisible(r.Left, r.Top) &&
-                            path.IsVisible(r.Right, r.Top) &&
-                            path.IsVisible(r.Left, r.Bottom) &&
-                            path.IsVisible(r.Right, r.Bottom);
-                r.Inflate(-1, -1);
-
-            }
-
-            contentRect = r;
+            // 计算内容矩形  
+            _contentRect = CalculateContentRectangle(path, ClientRectangle);
         }
+
+
 
 
         protected override void OnPaint(PaintEventArgs e)
@@ -558,25 +516,25 @@ namespace System.Windows.Forms
             switch (this.ImageAlign)
             {
                 case ContentAlignment.TopLeft:
-                    pt.X = contentRect.Left;
-                    pt.Y = contentRect.Top;
+                    pt.X = _contentRect.Left;
+                    pt.Y = _contentRect.Top;
                     break;
 
                 case ContentAlignment.TopCenter:
                     pt.X = (Width - _Image.Width) / 2;
-                    pt.Y = contentRect.Top;
+                    pt.Y = _contentRect.Top;
                     break;
 
                 case ContentAlignment.TopRight:
-                    pt.X = contentRect.Right - _Image.Width;
-                    pt.Y = contentRect.Top;
+                    pt.X = _contentRect.Right - _Image.Width;
+                    pt.Y = _contentRect.Top;
                     break;
 
                 case ContentAlignment.MiddleLeft:
-                    pt.X = contentRect.Left;
+                    pt.X = _contentRect.Left;
                     pt.Y = (Height - _Image.Height) / 2;
 
-                    if (imageCloseToText)
+                    if (_imageCloseToText)
                     {
                         var textPosition = GetTextPosition();
                         pt.X = (int)(textPosition.X - _Image.Width - 8); 
@@ -589,23 +547,23 @@ namespace System.Windows.Forms
                     break;
 
                 case ContentAlignment.MiddleRight:
-                    pt.X = contentRect.Right - _Image.Width;
+                    pt.X = _contentRect.Right - _Image.Width;
                     pt.Y = (Height - _Image.Height) / 2;
                     break;
 
                 case ContentAlignment.BottomLeft:
-                    pt.X = contentRect.Left;
-                    pt.Y = contentRect.Bottom - _Image.Height;
+                    pt.X = _contentRect.Left;
+                    pt.Y = _contentRect.Bottom - _Image.Height;
                     break;
 
                 case ContentAlignment.BottomCenter:
                     pt.X = (Width - _Image.Width) / 2;
-                    pt.Y = contentRect.Bottom - _Image.Height;
+                    pt.Y = _contentRect.Bottom - _Image.Height;
                     break;
 
                 case ContentAlignment.BottomRight:
-                    pt.X = contentRect.Right - _Image.Width;
-                    pt.Y = contentRect.Bottom - _Image.Height;
+                    pt.X = _contentRect.Right - _Image.Width;
+                    pt.Y = _contentRect.Bottom - _Image.Height;
                     break;
             }
 
@@ -635,7 +593,7 @@ namespace System.Windows.Forms
 
         private RectangleF GetTextPosition()
         {
-            RectangleF rectangle = new RectangleF(contentRect.X, contentRect.Y, contentRect.Width, contentRect.Height);
+            RectangleF rectangle = new RectangleF(_contentRect.X, _contentRect.Y, _contentRect.Width, _contentRect.Height);
             StringFormat stringFormat = GetStringFormat();
 
             Graphics graphics = CreateGraphics();
@@ -779,7 +737,7 @@ namespace System.Windows.Forms
                 SolidBrush TextBrush = new SolidBrush(this.ForeColor);
 
                 // 因字体不同可能会发生偏移
-                RectangleF R = new RectangleF(contentRect.X, contentRect.Y, contentRect.Width, contentRect.Height);
+                RectangleF R = new RectangleF(_contentRect.X, _contentRect.Y, _contentRect.Width, _contentRect.Height);
 
                 if (!this.Enabled)
                     TextBrush.Color = SystemColors.GrayText;
@@ -800,7 +758,7 @@ namespace System.Windows.Forms
 
         private void DrawFocus(Graphics g)
         {
-            Rectangle r = contentRect;
+            Rectangle r = _contentRect;
             r.Inflate(1, 1);
             if (this.Focused && this.ShowFocusCues && this.TabStop)
                 ControlPaint.DrawFocusRectangle(g, r, this.ForeColor, this.BackColor);
@@ -888,6 +846,109 @@ namespace System.Windows.Forms
         }
 
 
+        // 创建图形路径  
+        private GraphicsPath CreateGraphicsPath(Rectangle rect)
+        {
+            return (CornerRadius > 0)
+                ? RoundRectangle(rect, this.CornerRadius, this.RoundCorners)
+                : CreateRectanglePath(rect);
+        }
+        // 创建标准矩形路径  
+        private GraphicsPath CreateRectanglePath(Rectangle rect)
+        {
+            GraphicsPath path = new GraphicsPath(FillMode.Winding);
+            path.AddRectangle(new Rectangle(0, 0, rect.Width, rect.Height));
+            path.CloseFigure();
+            return path;
+        }
+
+        // 计算填充颜色和阴影颜色  
+        private void CalculateColors(out Color color1, out Color color2)
+        {
+            switch (this.ButtonState)
+            {
+                case CustomButtonState.Hot:
+                case CustomButtonState.Pressed:
+                    {
+                        color1 = HoverColor != Color.Empty ? HoverColor : BackColor;
+                        color2 = HoverColor != Color.Empty ? HoverColor : BackColor;
+                        if (GradientMode)
+                        {
+                            color1 = LightenColor(color1, 25);
+                            color2 = DarkenColor(color2, 15);
+                        }
+                    }
+                    break;
+                default:
+                    {
+                        color1 = this.BackColor;
+                        color2 = this.BackColor;
+                        if (GradientMode)
+                        {
+                            color1 = LightenColor(color1, 25);
+                            color2 = DarkenColor(color2, 15);
+                        }
+
+                    }
+                    break;
+            }
+        }
+        // 填充路径  
+        private void FillPath(Graphics g, GraphicsPath path, Color fillColor, Color shadeColor)
+        {
+            if (this.Enabled)
+            {
+                using (LinearGradientBrush paintBrush = new LinearGradientBrush(ClientRectangle, fillColor, shadeColor, LinearGradientMode.Vertical))
+                {
+                    if (ShadeMode)
+                    {
+                        Blend blend = new Blend
+                        {
+                            Positions = new float[] { 0, 0.5F, 0.55F, 1 },
+                            Factors = new float[] { 0, 0, 1, 1 }
+                        };
+                        paintBrush.Blend = blend;
+                    }
+                    g.FillPath(paintBrush, path);
+                }
+            }
+            else
+            {
+                using (Brush solidBrush = new SolidBrush(fillColor))
+                {
+                    g.FillPath(solidBrush, path);
+                }
+            }
+        }
+        // 绘制边框  
+        private void DrawBorder(Graphics g, GraphicsPath path)
+        {
+            using (Pen drawingPen = new Pen(BorderColor))
+            {
+                g.DrawRectangle(drawingPen, this.ClientRectangle);
+            }
+
+        }
+
+        // 计算内容矩形
+        private Rectangle CalculateContentRectangle(GraphicsPath path, Rectangle originalRect)
+        {
+            Rectangle r = originalRect;
+            bool inBounds = false;
+
+            while (!inBounds && r.Width >= 1 && r.Height >= 1)
+            {
+                inBounds = path.IsVisible(r.Left, r.Top) &&
+                            path.IsVisible(r.Right, r.Top) &&
+                            path.IsVisible(r.Left, r.Bottom) &&
+                            path.IsVisible(r.Right, r.Bottom);
+                r.Inflate(-1, -1);
+            }
+
+            return r;
+        }
+
+
         #endregion
 
         private CustomButtonState currentState;
@@ -895,12 +956,12 @@ namespace System.Windows.Forms
         {
             //Repaint the button only if the state has actually changed
             if (this.ButtonState == currentState)
+            {
                 return;
+            }
             currentState = this.ButtonState;
             this.Invalidate();
         }
-
-
     }
 
     [System.Flags]

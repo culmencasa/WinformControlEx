@@ -223,7 +223,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("当鼠标放在控件可见处的提示文本")]
         public string ToolTipText { get; set; }
 
@@ -571,7 +571,7 @@ namespace System.Windows.Forms
 
         #region 使控件支持焦点
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(true), EditorBrowsable()]
         public new bool TabStop
         {
@@ -585,7 +585,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(true), EditorBrowsable()]
         public new int TabIndex
         {

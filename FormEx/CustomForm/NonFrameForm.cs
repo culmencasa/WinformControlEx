@@ -47,7 +47,7 @@ namespace System.Windows.Forms
         #region 属性
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool FullScreen
         {
             get
@@ -72,10 +72,10 @@ namespace System.Windows.Forms
         /// <summary>
         /// 边框颜色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BorderColor { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("用于绘制窗体标题的字体")]
         public Font CaptionFont
         {
@@ -84,7 +84,7 @@ namespace System.Windows.Forms
 
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("用于绘制窗体标题的颜色")]
         public Color CaptionForeColor
         {
@@ -92,7 +92,7 @@ namespace System.Windows.Forms
             set;
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("如果TextWithShadow属性为True,则使用该属性绘制阴影")]
         public Color CaptionShadowColor
         {
@@ -100,7 +100,7 @@ namespace System.Windows.Forms
             set;
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("如果TextWithShadow属性为True,则使用该属性获取或色泽阴影的宽度")]
         public int CaptionShadowWidth
         {
@@ -141,7 +141,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否显示标题阴影
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowCaptionShadow
         {
             get;
@@ -151,10 +151,10 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否可以拉伸
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool Resizable { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool UseDropShadow { get; set; }
 
         private bool IsAeroEnabled { get; set; }
@@ -564,7 +564,7 @@ namespace System.Windows.Forms
         private float factorX;
         private float factorY;
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
@@ -578,7 +578,7 @@ namespace System.Windows.Forms
             } 
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]

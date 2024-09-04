@@ -912,7 +912,7 @@ namespace System.Windows.Forms
             if (bgwJob != null && bgwJob.IsBusy)
             {
                 //ManualResetEvent timeoutObject = new ManualResetEvent(false);
-                //timeoutObject.Reset();
+                //timeoutObject.ResetOffset();
 
                 //try
                 //{

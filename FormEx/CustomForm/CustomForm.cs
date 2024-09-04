@@ -38,7 +38,7 @@ namespace System.Windows.Forms
         /// 窗体边框大小. 
         /// 如果窗体中的控件有Dock或者位置与边框重合，将遮挡边框。 
         /// </summary>
-        [Category("Custom")]        
+        [Category(Consts.DefaultCategory)]        
         public int BorderSize
         {
             get
@@ -60,7 +60,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 窗体边框颜色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "157,157,157")]
         public Color BorderColor
         {
@@ -77,33 +77,33 @@ namespace System.Windows.Forms
         /// <summary>
         /// 背景渐变色1
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BackGradientLightColor { get; set; }
         /// <summary>
         /// 背景渐变色2
         /// </summary>   
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color BackGradientDarkColor { get; set; }
 
 
         /// <summary>
         /// 是否可以拉伸
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(true)]
         public bool AllowResize { get; set; }
 
         /// <summary>
         /// 允许窗体移动
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool AllowMove { get; set; }
 
 
         /// <summary>
         /// 标题栏高度
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int TitleBarHeight
         {
             get;
@@ -113,7 +113,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 标题栏文字
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string TitleText
         {
             get
@@ -128,7 +128,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Description("用于绘制窗体标题的颜色")]
         public Color TitleForeColor
         {
@@ -136,7 +136,7 @@ namespace System.Windows.Forms
             set;
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowTitleText
         {
             get
@@ -157,24 +157,24 @@ namespace System.Windows.Forms
         /// <summary>
         /// 显示Logo图标
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowLogo { get; set; }
 
         /// <summary>
         /// 标题居中显示
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowTitleCenter { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Font TitleFont
         {
             get;
             set;
         }
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int LogoSize { get; set; }
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Image Logo { get; set; }
 
 
@@ -190,10 +190,10 @@ namespace System.Windows.Forms
             get
             {
                 Rectangle clientArea = new Rectangle();
-                clientArea.X = this.BorderSize;
-                clientArea.Y = this.BorderSize + TitleBarHeight;
-                clientArea.Width = this.Width - BorderSize * 2;
-                clientArea.Height = this.Height - BorderSize * 2 - TitleBarHeight;
+                clientArea.X = WindowState == FormWindowState.Maximized ? 0 : this.BorderSize;
+                clientArea.Y = (WindowState == FormWindowState.Maximized ? 0 : this.BorderSize) + TitleBarHeight;
+                clientArea.Width = this.Width - (WindowState == FormWindowState.Maximized ? 0 : BorderSize * 2);
+                clientArea.Height = this.Height - (WindowState == FormWindowState.Maximized ? 0 : BorderSize * 2) - TitleBarHeight;
 
                 return clientArea;
             }
@@ -248,6 +248,19 @@ namespace System.Windows.Forms
             Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
             MaximizedBounds = new Rectangle(workingArea.Left, workingArea.Top, workingArea.Width, workingArea.Height);
 
+
+            // Load事件会在子控件加载后触发, 所以DPI计算不能放在Load事件中
+#if COMPILE_NET40 || COMPILE_NET46 || COMPILE_NET48
+            using (Graphics graphics = this.CreateGraphics())
+            {
+                RuntimeScaleFactorX = graphics.DpiX / 96f;
+                RuntimeScaleFactorY = graphics.DpiY / 96f;
+            }
+
+#else
+            RuntimeScaleFactorX = DeviceDpi / 96F;
+            RuntimeScaleFactorY = DeviceDpi / 96F;
+#endif
         }
 
         #endregion
@@ -629,11 +642,6 @@ namespace System.Windows.Forms
         // 窗体加载
         private void CustomForm_Load(object sender, EventArgs e)
         {
-            using (Graphics graphics = this.CreateGraphics())
-            {
-                RuntimeScaleFactorX = graphics.DpiX / 96f;
-                RuntimeScaleFactorY = graphics.DpiY / 96f;
-            }
        }
 
         private void CustomForm_Shown(object sender, EventArgs e)
@@ -646,8 +654,8 @@ namespace System.Windows.Forms
 
         #endregion
 
-        public float DesigntimeScaleFactorX { get; set; }
-        public float DesigntimeScaleFactorY { get; set; }
+        public float DesigntimeScaleFactorX { get; set; } = 1;
+        public float DesigntimeScaleFactorY { get; set; } = 1;
         public float RuntimeScaleFactorX { get; set; }
         public float RuntimeScaleFactorY { get; set; }
 

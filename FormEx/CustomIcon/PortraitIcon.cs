@@ -62,7 +62,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 文本
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public new string Text
         {
             get
@@ -78,7 +78,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 控件显示的标题文本
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue("")]
         public string Caption 
         {
@@ -100,51 +100,51 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否显示标题
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowCaption { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowIconBorder { get; set; }
 
         /// <summary>
         /// 是否允许拖动
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool AllowDrag { get; set; }
 
         /// <summary>
         /// 圆角
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int RoundedCornerAngle { get; set; }
 
         /// <summary>
         /// 选中后的背景色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color FocusBackgroundColor { get; set; }
         /// <summary>
         /// 悬浮的背景色
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color HoverBackgroundColor { get; set; }
 
         /// <summary>
         /// 背景色1
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color FirstColor { get; set; }
 
         /// <summary>
         /// 背景色2
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color SecondColor { get; set; }
 
         /// <summary>
         /// 图像
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Image), "null")]
         public Image Image
         {
@@ -197,7 +197,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否选中 (外部容器使用)
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool IsSelected { get; set; }
 
         [Browsable(false)]
@@ -212,11 +212,11 @@ namespace System.Windows.Forms
         /// <summary>
         /// 是否显示为灰色图像
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public bool ShowGrayImage { get; set; }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         protected Padding CaptionMargin
         {
             get { return _captionMargin; }
@@ -229,7 +229,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 图像的大小模式
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public IconSizeMode SizeMode
         {
             get 
@@ -243,7 +243,7 @@ namespace System.Windows.Forms
                 this.Refresh();
             }
         }
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public int FillDegree
         {
             get { return _FillDegree; }
@@ -273,7 +273,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Color), "Transparent")]
         public override Color BackColor 
         { 

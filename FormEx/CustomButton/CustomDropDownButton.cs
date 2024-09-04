@@ -11,6 +11,7 @@ namespace System.Windows.Forms
     /// <summary>
     /// 下拉按钮类
     /// </summary>
+    [ToolboxItem(false)]
     public class CustomDropDownButton : CustomButton
     {
         public float BorderWidth { get; set; }

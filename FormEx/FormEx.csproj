@@ -148,6 +148,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="VisualElements\**" />
+	  <EmbeddedResource Remove="VisualElements\**" />
+	  <None Remove="VisualElements\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Compile Remove="CustomButton\CustomButton - 副本.cs" />
 		<Compile Remove="CustomTextBox\PaddingTextBox.cs" />
 		<Compile Remove="CustomTextBox\PaddingTextBox.Designer.cs" />
@@ -185,15 +191,16 @@
 		<Compile Update="BorderHelper.cs">
 			<SubType>Code</SubType>
 		</Compile>
+		<Compile Update="CustomCanvas\CustomCanvas.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
 		<Compile Update="Components\AbortableBackgroundWorker.cs">
 			<SubType>Component</SubType>
 		</Compile>
 		<Compile Update="CustomButton\CustomButton.cs">
 			<SubType>Component</SubType>
 		</Compile>
-		<Compile Update="CustomButton\CustomDropDownButton.cs">
-			<SubType>Component</SubType>
-		</Compile>
+		<Compile Update="CustomButton\CustomDropDownButton.cs" />
 		<Compile Update="CustomButton\RoundButton.cs">
 			<SubType>Component</SubType>
 		</Compile>
@@ -357,12 +364,6 @@
 		<Compile Update="CustomIcon\TileIconList.cs">
 			<SubType>Component</SubType>
 		</Compile>
-		<Compile Update="VisualElements\UIFormCanvas.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Update="VisualElements\UIUserControlCanvas.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -500,6 +501,12 @@
 
 	<ItemGroup>
 		<None Include="docs\readme.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Resources\CustomCanvas\grip-hand.cur">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

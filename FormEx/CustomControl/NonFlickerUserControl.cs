@@ -54,7 +54,7 @@ namespace System.Windows.Forms
 
         protected string _text;
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(true)] 
         [EditorBrowsable(EditorBrowsableState.Always)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]

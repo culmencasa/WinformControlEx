@@ -319,7 +319,7 @@ namespace System.Windows.Forms
             Graphics gxRounded = Graphics.FromImage(roundedImage);            
             Rectangle roundedRect = new Rectangle(0, 0, rc.Width, rc.Height);            
             DrawRoundedRectangle(gxRounded, borderColor, backColor, roundedRect, size);
-            //DrawRoundedRect(gxRounded, borderPen, backColor, new Rectangle(0, 0, rc.Width, rc.Width), size);
+            //DrawRoundedRect(gxRounded, borderPen, _backColor, new Rectangle(0, 0, rc.Width, rc.Width), size);
 
             using (Bitmap tempBitmap = new Bitmap(rc.Width, rc.Height))
             {

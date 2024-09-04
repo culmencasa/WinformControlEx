@@ -66,18 +66,18 @@ namespace System.Windows.Forms
         #region 属性
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color HoverBackColor { get; set; }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public Color SelectedBackColor
         {
             get { return _selectedBackColor; }
             set { _selectedBackColor = value; }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(null)]
         public Image Image
         {
@@ -92,7 +92,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(null)]
         public Drawing.Image DefaultImage
         {
@@ -111,7 +111,7 @@ namespace System.Windows.Forms
         /// <summary>
         /// 这个Text属性无法在设计器中保存下来. 请使用IconText替代.
         /// </summary>
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         public override string Text
@@ -127,7 +127,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public string IconText
         {
             get
@@ -142,7 +142,7 @@ namespace System.Windows.Forms
         }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Boolean), "True")]
         public bool ShowImage
         {
@@ -150,28 +150,31 @@ namespace System.Windows.Forms
             set;
         }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Boolean), "True")]
         public bool ShowSplitter { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Boolean), "True")]
         public bool ShowIconBorder { get; set; }
 
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Boolean), "True")]
         public bool WrapText { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         [DefaultValue(typeof(Boolean), "True")]
         public bool HotTrack { get; set; }
 
-        [Category("Custom")]
+        /// <summary>
+        /// 是否保持选中状态（仅影响显示）
+        /// </summary>
+        [Category(Consts.DefaultCategory)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         public bool KeepSelected { get; set; }
 
-        [Category("Custom")]
+        [Category(Consts.DefaultCategory)]
         public virtual bool IsSelected
         {
             get
@@ -274,6 +277,10 @@ namespace System.Windows.Forms
             borderPen.Dispose();
         }
 
+        /// <summary>
+        /// 图标显示区域。根据控件的高度自适应大小。
+        /// </summary>
+        /// <returns></returns>
         protected virtual Rectangle GetImageArea()
         {
             int x, y, width, height;
@@ -343,22 +350,20 @@ namespace System.Windows.Forms
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            if (KeepSelected)
-            {
-                IsSelected = !IsSelected;
-            }
+
+            IsSelected = !IsSelected;
         }
 
         protected override void OnMouseClick(MouseEventArgs e)
         {
-            base.OnMouseClick(e);
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left && e.Clicks == 1)
             {
                 if (SingleClick != null)
                 {
                     SingleClick(this, e);
                 }
             }
+            base.OnMouseClick(e);
         }
 
         #endregion
@@ -393,9 +398,8 @@ namespace System.Windows.Forms
             }
             Invalidate();
         }
-
-
-        private void TileIcon_MouseHover(object sender, EventArgs e)
+        
+        protected virtual void TileIcon_MouseHover(object sender, EventArgs e)
         {
             Rectangle iconArea = this.GetImageArea();
             if (this.RectangleToScreen(iconArea).Contains(MousePosition))

@@ -1,4 +1,5 @@
-﻿using FormExCore;
+﻿using DemoNet46.Pages;
+using FormExCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,16 +20,32 @@ namespace DemoNet46
         public LayoutDemo()
         {
             InitializeComponent();
+            Load += LayoutDemo_Load;
+        }
+
+        private void LayoutDemo_Load(object sender, EventArgs e)
+        {
+            OpenTabPage<HomePage>();
         }
 
         private void btnHome_SingleClick(object sender, MouseEventArgs e)
         {
-
+            if (IsTabPageOpen<HomePage>())
+            {
+                return;
+            }
+            //CloseCurrentPage();
+            OpenTabPage<HomePage>();
         }
 
         private void btnFavorite_SingleClick(object sender, MouseEventArgs e)
         {
-
+            if (IsTabPageOpen<FavoritePage>())
+            {
+                return;
+            }
+            //CloseCurrentPage();
+            OpenTabPage<FavoritePage>();
         }
 
         private void btnHelp_SingleClick(object sender, MouseEventArgs e)
@@ -103,110 +120,100 @@ namespace DemoNet46
 
 
 
-        private void btnAnimate_Click(object sender, EventArgs e)
+
+
+        public bool IsTabPageOpen<T>() where T : UserControl
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            int frameCount = 0;
-
-            //btnAnimate.Enabled = false;
-
-            var originalSize = new Size(150, 150);
-            var loopControls = new List<OcnTile>();
-            loopControls.AddRange(customPanel1.Controls.OfType<OcnTile>().ToArray());
-
-            loopControls.ForEach((item) =>
+            var container = ContentSwitcher;
+            if (container.SelectedTab != null)
             {
-                item.Opacity = 0;
-                item.Visible = false;
-                item.Width = (int)(originalSize.Width * 0.5f);
-                item.Height = (int)(originalSize.Height * 0.3f);
-            });
+                return container.SelectedTab.Controls.OfType<T>().Any();
+            }
 
-            //loopControls.Reverse();
+            return false;
+        }
 
 
-            int interval = 50;
-            var timer = new System.Windows.Forms.Timer();
-            timer.Tick += (a, b) =>
+        public void CloseCurrentPage()
+        {
+            var container = this.ContentSwitcher;
+            if (container.SelectedTab != null)
             {
-                if (loopControls.Count > 0)
+                var childControls = container.SelectedTab.Controls.OfType<UserControl>();
+                foreach (var item in childControls)
                 {
-                    for (var i = loopControls.Count - 1; i >= 0; i--)
-                    {
-                        var control = loopControls[i] as OcnTile;
+                    container.SelectedTab.Controls.Remove(item);
+                    item.Dispose();
+                }
+            }
+        }
 
-                        // 仅在一定条件下才开始下一个控件的动画
-                        if (i + 1 < (loopControls.Count - 1) && loopControls[i + 1].Opacity <= 0.3f)
-                        {
-                            continue;
-                        }
-                        else if (control.Opacity >= 1 && control.Width >= originalSize.Width && control.Height >= originalSize.Height)
-                        {
-                            control.Opacity = 1;
-                            control.Width = originalSize.Width;
-                            control.Height = originalSize.Height;
+        /// <summary>
+        /// 创新或打开一个TabPage
+        /// </summary>
+        /// <typeparam name="T">控件的类型，一个用户控件占用一个TabPage</typeparam>
+        /// <param name="tabPageKey">指定要打开的标签栏Key</param>
+        public T OpenTabPage<T>(string? tabPageKey = null, object args = null) where T : UserControl, new()
+        {
+            T contentControl = default(T);
+            var container = this.ContentSwitcher;
 
-                            // 直到0, Tick结束
-                            loopControls.Remove(control);
-                            continue;
-                        }
+            int countOfT = 0;
+            if (tabPageKey == null)
+            {
+                tabPageKey = $"uc_{typeof(T).Name}_{countOfT + 1}";// 新TabPage的Key, 同时也是控件的Name
+            }
 
-                        control.Visible = true;
+            countOfT = container.TabPages
+                    .Cast<TabPage>()
+                    .SelectMany(page => page.Controls.OfType<T>().Where(control => control.Name == tabPageKey))
+                    .Count();
 
-                        var increment = (int)(0.2 * originalSize.Width);
-                        if (control.Width + increment <= originalSize.Width)
-                        {
-                            control.Width += increment;
-                        }
-                        else
-                        {
-                            control.Width = originalSize.Width;
-                        }
-                        increment = (int)(0.2 * originalSize.Height);
-                        if (control.Height + increment <= originalSize.Height)
-                        {
-                            control.Height += increment;
-                        }
-                        else
-                        {
-                            control.Height = originalSize.Height;
-                        }
 
-                        control.Opacity += 0.1f;
-                        control.Refresh();
-
-                        // 计算fps
-                        frameCount++;
-                        double elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
-                        double fps = frameCount / elapsedSeconds;
-                        //customLabel1.Text = $"FPS: {fps:N0}";
-                    }
+            // 如果不存在，则创建一个
+            if (countOfT == 0)
+            {
+                if (args == null)
+                {
+                    contentControl = new T();
                 }
                 else
                 {
-                    timer.Stop();
-                    timer.Dispose();
-                    timer = null;
-                    //btnAnimate.Enabled = true;
-                    return;
+                    contentControl = (T)Activator.CreateInstance(typeof(T), args);
                 }
 
-                timer.Interval = interval;
-            };
+                contentControl.Name = tabPageKey; 
+                contentControl.Dock = DockStyle.Fill; 
 
+                contentControl.Disposed += (sender, e) =>
+                {
+                    var contentControl = sender as Form;
+                    if (contentControl != null && contentControl.Name != null)
+                    {
+                        var tabPageKey = contentControl.Name;
+                        if (container.TabPages.ContainsKey(tabPageKey))
+                        {
+                            container.TabPages.RemoveByKey(tabPageKey);
+                        }
+                    }
+                };
 
-            timer.Start();
-        }
-
-        private void btnColorize_Click(object sender, EventArgs e)
-        {
-            foreach (OcnTile item in customPanel1.Controls)
-            {
-                item.DrawingBackColor = item.MouseOverBackColor;
-                item.Refresh();
+                container.TabPages.Insert(0, tabPageKey, contentControl.Text);
+                var targetPage = container.TabPages[0];
+                targetPage.Controls.Add(contentControl);
+                container.SelectTab(targetPage);
+                contentControl.Show();
             }
+            else
+            {
+                var targetPage = container.TabPages[tabPageKey];
+                contentControl = targetPage.Controls.OfType<T>().First();
+                container.SelectTab(targetPage);
+            }
+
+            return contentControl;
         }
+
+
     }
 }

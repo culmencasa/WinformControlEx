@@ -16,7 +16,7 @@ namespace System.Windows.Forms
         IDpiDefined DpiParent { get; set; }
 
         #endregion
-
+        
         #region 构造
 
         public Win7ControlBox()
@@ -56,6 +56,8 @@ namespace System.Windows.Forms
 
         private void Win7ControlBox_Load(object sender, EventArgs e)
         {
+            DpiParent = this.ParentForm as IDpiDefined;
+
             btnClose.NormalImage = ScaleImage(Properties.Resources.btnClose_NormalImage);
             btnClose.HoverImage = ScaleImage(Properties.Resources.btnClose_HoverImage);
             btnClose.DownImage = ScaleImage(Properties.Resources.btnClose_DownImage);
@@ -70,14 +72,23 @@ namespace System.Windows.Forms
             btnMinimum.DownImage = ScaleImage(Properties.Resources.btnMinimum_DownImage);
 
 
-            DpiParent = this.ParentForm as IDpiDefined;
 
             if (ParentForm != null)
             {
+                ParentForm.Resize += ParentForm_Resize;
                 ParentForm.StyleChanged += ParentForm_StyleChanged;
                 ParentForm.Shown += ParentForm_Shown;
             }
 
+            ReloadButtonImage();
+            ApplyLayout();
+            ShrinkOrGrow();
+            AlignRight();
+        }
+
+        private void ParentForm_Resize(object? sender, EventArgs e)
+        {
+            ReloadButtonImage();
             ApplyLayout();
             ShrinkOrGrow();
             AlignRight();
@@ -105,19 +116,31 @@ namespace System.Windows.Forms
             if (form.WindowState == FormWindowState.Maximized)
             {
                 form.WindowState = FormWindowState.Normal;
-
-                this.btnMaximum.NormalImage = ScaleImage(Properties.Resources.btnMaximum_NormalImage);
-                this.btnMaximum.HoverImage = ScaleImage(Properties.Resources.btnMaximum_HoverImage);
-                this.btnMaximum.DownImage = ScaleImage(Properties.Resources.btnMaximum_DownImage);
             }
             else
             {
                 form.WindowState = FormWindowState.Maximized;
+            }
+
+            ReloadButtonImage();
+
+        }
+
+        private void ReloadButtonImage()
+        {
+            Form form = this.ParentForm;
+            if (form.WindowState == FormWindowState.Normal)
+            {
+                this.btnMaximum.NormalImage = ScaleImage(Properties.Resources.btnMaximum_NormalImage);
+                this.btnMaximum.HoverImage = ScaleImage(Properties.Resources.btnMaximum_HoverImage);
+                this.btnMaximum.DownImage = ScaleImage(Properties.Resources.btnMaximum_DownImage);
+            }
+            else if (form.WindowState == FormWindowState.Maximized)
+            {
                 this.btnMaximum.NormalImage = ScaleImage(Properties.Resources.restore_normal);
                 this.btnMaximum.HoverImage = ScaleImage(Properties.Resources.restore_highlight);
                 this.btnMaximum.DownImage = ScaleImage(Properties.Resources.restore_down);
             }
-
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -130,8 +153,6 @@ namespace System.Windows.Forms
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            
-
             base.OnPaintBackground(e);
         }
 
@@ -146,6 +167,7 @@ namespace System.Windows.Forms
 
         private void ParentForm_StyleChanged(object sender, EventArgs e)
         {
+            ReloadButtonImage();
             ApplyLayout();
             ShrinkOrGrow();
             AlignRight();
@@ -194,15 +216,15 @@ namespace System.Windows.Forms
 
         private void AlignRight()
         {
-            int border = 1;
+            int border = 2;
 
             if (Parent != null)
             {
-                Location = new Point(Parent.Width - this.Width - border, 0);
+                Location = new Point(Parent.Width - Parent.Padding.Right - this.Width - border, Parent.Padding.Top);
             }
             else if (ParentForm != null)
             {
-                Location = new Point(ParentForm.Width - Width - border, 0);
+                Location = new Point(ParentForm.Width - Parent.Padding.Right - Width - border, Parent.Padding.Top);
             }
         }
 
