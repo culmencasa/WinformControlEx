@@ -425,7 +425,7 @@ namespace System.Windows.Forms
             //Color innerBorder = Color.FromArgb(100, 157, 157, 157);
             //using (Pen borderPen = new Pen(innerBorder, 2))
             //{
-            //    g.DrawRoundedRectangle(borderPen, 1, 1, this.Width - 5, this.Height - 5, radius);
+            //    g.DrawRoundedRectangle(borderPen, 1, 1, this.Width - 5, this.Height - 5, _circleRadius);
             //}
 
 

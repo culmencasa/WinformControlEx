@@ -612,7 +612,7 @@ namespace System.Windows.Forms
 
             if (UnderlayerImage != null)
             {
-                //g.DrawImageOpacity(UnderlayerImage, (float)Opacity, new Point(0, 0));
+                //g.DrawImageOpacity(_ownerScreenshot, (float)Opacity, new Point(0, 0));
                 g.DrawImageOpacity(UnderlayerImage, 1, new Point(0, 0));
             }
 
@@ -806,11 +806,11 @@ namespace System.Windows.Forms
             if (UseBlur)
             {
                 // 换成另一个开源类GaussianBlur
-                // byte[] bgMeta = ImageTool.ToArray(UnderlayerImage);
+                // byte[] bgMeta = ImageTool.ToArray(_ownerScreenshot);
                 //using (var magicker = new ImageMagick.MagickImage(bgMeta))
                 //{
                 //    magicker.Blur(100,2.5);
-                //    UnderlayerImage = new Bitmap(ImageTool.FromArray(magicker.ToByteArray()));
+                //    _ownerScreenshot = new Bitmap(ImageTool.FromArray(magicker.ToByteArray()));
                 //}
                 var blur = new SuperfastBlur.GaussianBlur(UnderlayerImage);
                 this.UnderlayerImage = blur.Process(10);

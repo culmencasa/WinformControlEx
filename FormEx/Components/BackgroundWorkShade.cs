@@ -1418,6 +1418,7 @@ namespace System.Windows.Forms
                 g.Clear(System.Drawing.SystemColors.Control);
             }
             g.ReleaseHdc();
+            Win32.ReleaseDC(Owner.Handle, windowDC);
 
             /****** 模糊图像 ********/
             if (UseBlur)

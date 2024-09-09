@@ -127,7 +127,7 @@ namespace System.Windows.Forms
                 //MessageLoopUtil.Stop();
             };
             box.Show(DefaultOwner);
-            //MessageLoopUtil.Start();
+            //MessageLoopUtil.Show();
 
             Application.DoEvents();
         }

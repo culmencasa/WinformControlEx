@@ -158,7 +158,7 @@ namespace System.Windows.Forms
                 SolidBrush brush = new SolidBrush(Color.Red);
 
                 var radius = this.Radius;
-                // 限制 radius 值， 防止AddArc变形
+                // 限制 _circleRadius 值， 防止AddArc变形
                 radius = (int)Math.Min(radius, Math.Min(BadgeArea.Width, BadgeArea.Height) / 2.0F);
 
                 if (BadgeColor != Color.Empty)

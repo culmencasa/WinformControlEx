@@ -213,6 +213,7 @@ namespace System.Windows.Forms
         [Description("设置几边圆角")]
         [Editor(typeof(RoundCornersEditor), typeof(UITypeEditor))]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Obsolete("不再使用此属性.")]
         public Corners RoundCorners
         {
             get { return m_RoundCorners; }
@@ -465,15 +466,37 @@ namespace System.Windows.Forms
             GraphicsPath path = CreateGraphicsPath(ClientRectangle);
             FillPath(g, path, fillColor, shadeColor);
 
-             
+            // 绘制边框
             DrawBorder(g, path);
+
 
             // 计算内容矩形  
             _contentRect = CalculateContentRectangle(path, ClientRectangle);
         }
 
-
-
+        private void DrawBorder(Graphics g, GraphicsPath path)
+        {
+            if (CornerRadius > 0)
+            {
+                Rectangle adjustedRectangle = Rectangle.Inflate(ClientRectangle, -1, -1);
+                using (GraphicsPath outerPath = CreateRoundedRectanglePath(ClientRectangle, CornerRadius))
+                using (GraphicsPath innerPath = CreateRoundedRectanglePath(adjustedRectangle, CornerRadius - 1))
+                using (Pen outerPen = new Pen(Parent.BackColor, 1))
+                using (Pen innerPen = new Pen(BorderColor, 1))
+                {
+                    innerPen.Alignment = PenAlignment.Center;
+                    g.DrawPath(outerPen, outerPath);
+                    g.DrawPath(innerPen, innerPath);
+                }
+            }
+            else
+            {
+                using (Pen borderPen = new Pen(BorderColor, 1))
+                {
+                    g.DrawPath(borderPen, path);
+                }
+            }
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -764,18 +787,15 @@ namespace System.Windows.Forms
                 ControlPaint.DrawFocusRectangle(g, r, this.ForeColor, this.BackColor);
         }
 
-
-        #endregion
-
-        #region 辅助方法
-
+        
+        
         private GraphicsPath RoundRectangle(Rectangle r, int radius, Corners corners)
         {
             //Make sure the Path fits inside the rectangle
-            r.Width -= 1;
-            r.Height -= 1;
+            //r.Width -= 1;
+            //r.Height -= 1;
 
-            //Scale the radius if it's too large to fit.
+            //Scale the _circleRadius if it's too large to fit.
             if (radius > (r.Width))
                 radius = r.Width;
             if (radius > (r.Height))
@@ -810,7 +830,7 @@ namespace System.Windows.Forms
 
             return path;
         }
-
+        
 
         private Color DarkenColor(Color colorIn, int percent)
         {
@@ -849,9 +869,18 @@ namespace System.Windows.Forms
         // 创建图形路径  
         private GraphicsPath CreateGraphicsPath(Rectangle rect)
         {
-            return (CornerRadius > 0)
-                ? RoundRectangle(rect, this.CornerRadius, this.RoundCorners)
-                : CreateRectanglePath(rect);
+            if (CornerRadius > 0)
+            {
+                return CreateRoundedRectanglePath(rect, CornerRadius);
+            }
+            else
+            { 
+                return CreateRectanglePath(rect);
+            }
+
+            //return (CornerRadius > 0)
+            //    ? RoundRectangle(rect, this.CornerRadius, this.RoundCorners)
+            //    : CreateRectanglePath(rect);
         }
         // 创建标准矩形路径  
         private GraphicsPath CreateRectanglePath(Rectangle rect)
@@ -920,15 +949,44 @@ namespace System.Windows.Forms
                 }
             }
         }
-        // 绘制边框  
-        private void DrawBorder(Graphics g, GraphicsPath path)
+
+
+        private GraphicsPath CreateRoundedRectanglePath(Rectangle bounds, int cornerRadius)
         {
-            using (Pen drawingPen = new Pen(BorderColor))
+            GraphicsPath roundedRectPath = new GraphicsPath();
+
+
+            // 检查并确保矩形宽度和高度有效
+            if (bounds.Width <= 1 || bounds.Height <= 1)
             {
-                g.DrawRectangle(drawingPen, this.ClientRectangle);
+                // 如果宽度或高度太小，直接添加一个简单的矩形路径
+                roundedRectPath.AddRectangle(bounds);
+                return roundedRectPath;
             }
 
+            // 限制 cornerRadius，不超过宽度或高度的一半
+            cornerRadius = Math.Max(0, Math.Min(cornerRadius, Math.Min(bounds.Width, bounds.Height) / 2));
+            float diameter = cornerRadius * 2F;
+
+            // 如果 cornerRadius 为 0，处理为普通矩形
+            if (cornerRadius == 0)
+            {
+                roundedRectPath.AddRectangle(bounds);
+                return roundedRectPath;
+            }
+
+
+            // 添加圆角的四个弧形
+            roundedRectPath.StartFigure();
+            roundedRectPath.AddArc(bounds.X, bounds.Y, diameter, diameter, 180, 90); // 左上角
+            roundedRectPath.AddArc(bounds.Right - diameter, bounds.Y, diameter, diameter, 270, 90); // 右上角
+            roundedRectPath.AddArc(bounds.Right - diameter, bounds.Bottom - diameter, diameter, diameter, 0, 90); // 右下角
+            roundedRectPath.AddArc(bounds.X, bounds.Bottom - diameter, diameter, diameter, 90, 90); // 左下角
+            roundedRectPath.CloseFigure();
+
+            return roundedRectPath;
         }
+
 
         // 计算内容矩形
         private Rectangle CalculateContentRectangle(GraphicsPath path, Rectangle originalRect)

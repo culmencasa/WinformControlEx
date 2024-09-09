@@ -7,6 +7,12 @@
     <Compile Update="AnimationBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Components\DrawerControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Components\MaskedLayer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="CustomButton\CustomDropDownButton.cs">
       <SubType>Component</SubType>
     </Compile>

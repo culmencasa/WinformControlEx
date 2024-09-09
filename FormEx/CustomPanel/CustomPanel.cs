@@ -291,8 +291,8 @@ namespace System.Windows.Forms
 
 
                     Rectangle innerRectangle = new Rectangle(
-                        ClientRectangle.X + borderWidth,
-                        ClientRectangle.Y + borderWidth,
+                        ClientRectangle.X,
+                        ClientRectangle.Y,
                         ClientRectangle.Width - 2 * borderWidth,
                         ClientRectangle.Height - 2 * borderWidth);
 

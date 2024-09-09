@@ -22,6 +22,7 @@ namespace DemoNet46
             // 开启高HDPI支持(Win8以上)
             Win32.SetProcessDPIAware();
 
+
             //var screenSize = Screen.PrimaryScreen.WorkingArea.Size;
             var screenSize = new Size(1080, 720);
             var splashForm = new SplashForm(screenSize.Width, screenSize.Height)

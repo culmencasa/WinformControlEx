@@ -352,7 +352,7 @@ namespace System.Windows.Forms
             //    Thread.Sleep(500);
             //    action?.Invoke();
             //});
-            //afterUIFinish.Start();
+            //afterUIFinish.Show();
             //afterUIFinish.Join();
         }
 

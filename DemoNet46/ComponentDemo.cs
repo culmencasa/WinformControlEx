@@ -161,5 +161,10 @@ namespace DemoNet46
             t.IsBackground = true;
             t.Start();
         }
+
+        private void BtnMaskedLayer_Click(object sender, EventArgs e)
+        {
+            new MaskedLayerDemo().ShowDialog();
+        }
     }
 }

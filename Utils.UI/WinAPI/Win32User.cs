@@ -160,6 +160,10 @@ namespace System
         public static extern IntPtr LoadCursorFromFile(string path);
 
 
+        [DllImport("user32.dll", EntryPoint = "GetWindowDC", SetLastError = true)]
+        public static extern IntPtr User32GetWindowDC(IntPtr hWnd);
+
+
         /// <summary>
         /// 自定义的结构
         /// </summary>

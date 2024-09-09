@@ -48,8 +48,10 @@
             this.customNavSideBar1 = new System.Windows.Forms.CustomNavSideBar();
             this.customPanel2 = new System.Windows.Forms.CustomPanel();
             this.colorGroupBox3 = new System.Windows.Forms.ColorGroupBox();
+            this.btnMaskedLayer = new System.Windows.Forms.CustomButton();
             this.threeDLine1 = new System.Windows.Forms.ThreeDLine();
             this.customLabel4 = new System.Windows.Forms.CustomLabel();
+            this.customPanel1 = new System.Windows.Forms.CustomPanel();
             this.colorGroupBox1.SuspendLayout();
             this.colorGroupBox2.SuspendLayout();
             this.customPanel2.SuspendLayout();
@@ -60,11 +62,11 @@
             // 
             this.btnWorkShade.BackColor = System.Drawing.Color.Empty;
             this.btnWorkShade.BorderColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btnWorkShade.CornerRadius = 8;
+            this.btnWorkShade.CornerRadius = 0;
             this.btnWorkShade.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnWorkShade.GradientMode = true;
             this.btnWorkShade.HoverColor = System.Drawing.Color.Empty;
-            this.btnWorkShade.Location = new System.Drawing.Point(23, 150);
+            this.btnWorkShade.Location = new System.Drawing.Point(23, 151);
             this.btnWorkShade.Name = "btnWorkShade";
             this.btnWorkShade.ShadeMode = false;
             this.btnWorkShade.Size = new System.Drawing.Size(122, 39);
@@ -76,7 +78,7 @@
             // 
             this.btnShowException.BackColor = System.Drawing.Color.Empty;
             this.btnShowException.BorderColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btnShowException.CornerRadius = 8;
+            this.btnShowException.CornerRadius = 0;
             this.btnShowException.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnShowException.GradientMode = true;
             this.btnShowException.HoverColor = System.Drawing.Color.Empty;
@@ -92,11 +94,11 @@
             // 
             this.btnBackgroundWorkShade.BackColor = System.Drawing.Color.Empty;
             this.btnBackgroundWorkShade.BorderColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btnBackgroundWorkShade.CornerRadius = 8;
+            this.btnBackgroundWorkShade.CornerRadius = 0;
             this.btnBackgroundWorkShade.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnBackgroundWorkShade.GradientMode = true;
             this.btnBackgroundWorkShade.HoverColor = System.Drawing.Color.Empty;
-            this.btnBackgroundWorkShade.Location = new System.Drawing.Point(23, 197);
+            this.btnBackgroundWorkShade.Location = new System.Drawing.Point(23, 199);
             this.btnBackgroundWorkShade.Name = "btnBackgroundWorkShade";
             this.btnBackgroundWorkShade.ShadeMode = false;
             this.btnBackgroundWorkShade.Size = new System.Drawing.Size(122, 39);
@@ -112,7 +114,7 @@
             this.btnRoundForm.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnRoundForm.GradientMode = true;
             this.btnRoundForm.HoverColor = System.Drawing.Color.Empty;
-            this.btnRoundForm.Location = new System.Drawing.Point(23, 244);
+            this.btnRoundForm.Location = new System.Drawing.Point(23, 247);
             this.btnRoundForm.Name = "btnRoundForm";
             this.btnRoundForm.ShadeMode = false;
             this.btnRoundForm.Size = new System.Drawing.Size(122, 39);
@@ -140,7 +142,7 @@
             this.colorGroupBox1.Location = new System.Drawing.Point(0, 0);
             this.colorGroupBox1.Name = "colorGroupBox1";
             this.colorGroupBox1.Show3DShadow = false;
-            this.colorGroupBox1.Size = new System.Drawing.Size(175, 411);
+            this.colorGroupBox1.Size = new System.Drawing.Size(175, 486);
             this.colorGroupBox1.TabIndex = 1002;
             this.colorGroupBox1.Text = "窗体相关";
             // 
@@ -153,9 +155,9 @@
             this.customLabel2.ForeColor = System.Drawing.Color.Gray;
             this.customLabel2.Location = new System.Drawing.Point(17, 54);
             this.customLabel2.Name = "customLabel2";
-            this.customLabel2.Size = new System.Drawing.Size(110, 31);
+            this.customLabel2.Size = new System.Drawing.Size(62, 31);
             this.customLabel2.TabIndex = 1001;
-            this.customLabel2.Text = "窗体例子";
+            this.customLabel2.Text = "窗体";
             // 
             // btnCustomMessage
             // 
@@ -165,7 +167,7 @@
             this.btnCustomMessage.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnCustomMessage.GradientMode = true;
             this.btnCustomMessage.HoverColor = System.Drawing.Color.Empty;
-            this.btnCustomMessage.Location = new System.Drawing.Point(23, 339);
+            this.btnCustomMessage.Location = new System.Drawing.Point(23, 343);
             this.btnCustomMessage.Name = "btnCustomMessage";
             this.btnCustomMessage.RoundCorners = ((System.Windows.Forms.Corners)((((System.Windows.Forms.Corners.TopLeft | System.Windows.Forms.Corners.TopRight) 
             | System.Windows.Forms.Corners.BottomLeft) 
@@ -184,7 +186,7 @@
             this.btnShowInfoTip.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnShowInfoTip.GradientMode = true;
             this.btnShowInfoTip.HoverColor = System.Drawing.Color.Empty;
-            this.btnShowInfoTip.Location = new System.Drawing.Point(23, 291);
+            this.btnShowInfoTip.Location = new System.Drawing.Point(23, 295);
             this.btnShowInfoTip.Name = "btnShowInfoTip";
             this.btnShowInfoTip.RoundCorners = ((System.Windows.Forms.Corners)((((System.Windows.Forms.Corners.TopLeft | System.Windows.Forms.Corners.TopRight) 
             | System.Windows.Forms.Corners.BottomLeft) 
@@ -238,7 +240,7 @@
             this.roundButton1.OutlineWidth = 4;
             this.roundButton1.Size = new System.Drawing.Size(54, 54);
             this.roundButton1.TabIndex = 1004;
-            this.roundButton1.Text = "99";
+            this.roundButton1.Text = "100";
             // 
             // colorGroupBox2
             // 
@@ -255,7 +257,7 @@
             this.colorGroupBox2.Location = new System.Drawing.Point(175, 0);
             this.colorGroupBox2.Name = "colorGroupBox2";
             this.colorGroupBox2.Show3DShadow = false;
-            this.colorGroupBox2.Size = new System.Drawing.Size(179, 411);
+            this.colorGroupBox2.Size = new System.Drawing.Size(179, 486);
             this.colorGroupBox2.TabIndex = 1005;
             this.colorGroupBox2.Text = "colorGroupBox2";
             // 
@@ -303,7 +305,7 @@
             this.separator1.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.separator1.Location = new System.Drawing.Point(205, 42);
             this.separator1.Name = "separator1";
-            this.separator1.Size = new System.Drawing.Size(10, 411);
+            this.separator1.Size = new System.Drawing.Size(10, 691);
             this.separator1.TabIndex = 1007;
             this.separator1.Text = "separator1";
             // 
@@ -324,7 +326,7 @@
             this.customNavSideBar1.RoundBorderRadius = 0;
             this.customNavSideBar1.SecondColor = System.Drawing.Color.Empty;
             this.customNavSideBar1.SelectedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(209)))), ((int)(((byte)(255)))));
-            this.customNavSideBar1.Size = new System.Drawing.Size(203, 411);
+            this.customNavSideBar1.Size = new System.Drawing.Size(203, 691);
             this.customNavSideBar1.TabIndex = 1008;
             // 
             // customPanel2
@@ -335,7 +337,7 @@
             this.customPanel2.Controls.Add(this.colorGroupBox3);
             this.customPanel2.Controls.Add(this.colorGroupBox2);
             this.customPanel2.Controls.Add(this.colorGroupBox1);
-            this.customPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.customPanel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.customPanel2.FirstColor = System.Drawing.Color.Empty;
             this.customPanel2.IsSelected = false;
             this.customPanel2.Location = new System.Drawing.Point(215, 42);
@@ -347,7 +349,7 @@
             this.customPanel2.RoundBorderRadius = 0;
             this.customPanel2.SecondColor = System.Drawing.Color.Empty;
             this.customPanel2.SelectedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(209)))), ((int)(((byte)(255)))));
-            this.customPanel2.Size = new System.Drawing.Size(599, 411);
+            this.customPanel2.Size = new System.Drawing.Size(599, 486);
             this.customPanel2.TabIndex = 1009;
             // 
             // colorGroupBox3
@@ -358,20 +360,41 @@
             this.colorGroupBox3.BoxColor = System.Drawing.Color.Black;
             this.colorGroupBox3.CaptionBackColor = System.Drawing.SystemColors.Control;
             this.colorGroupBox3.CaptionPosition = System.Windows.Forms.ColorGroupBox.CaptionPositions.None;
+            this.colorGroupBox3.Controls.Add(this.btnMaskedLayer);
             this.colorGroupBox3.Controls.Add(this.threeDLine1);
             this.colorGroupBox3.Controls.Add(this.customLabel4);
             this.colorGroupBox3.Controls.Add(this.roundButton1);
             this.colorGroupBox3.Dock = System.Windows.Forms.DockStyle.Left;
+            this.colorGroupBox3.ForeColor = System.Drawing.Color.Gray;
             this.colorGroupBox3.Location = new System.Drawing.Point(354, 0);
             this.colorGroupBox3.Name = "colorGroupBox3";
             this.colorGroupBox3.Show3DShadow = false;
-            this.colorGroupBox3.Size = new System.Drawing.Size(179, 411);
+            this.colorGroupBox3.Size = new System.Drawing.Size(179, 486);
             this.colorGroupBox3.TabIndex = 1006;
+            // 
+            // btnMaskedLayer
+            // 
+            this.btnMaskedLayer.BackColor = System.Drawing.Color.Empty;
+            this.btnMaskedLayer.BorderColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnMaskedLayer.CornerRadius = 0;
+            this.btnMaskedLayer.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnMaskedLayer.GradientMode = true;
+            this.btnMaskedLayer.HoverColor = System.Drawing.Color.Empty;
+            this.btnMaskedLayer.Location = new System.Drawing.Point(28, 198);
+            this.btnMaskedLayer.Name = "btnMaskedLayer";
+            this.btnMaskedLayer.RoundCorners = ((System.Windows.Forms.Corners)((((System.Windows.Forms.Corners.TopLeft | System.Windows.Forms.Corners.TopRight) 
+            | System.Windows.Forms.Corners.BottomLeft) 
+            | System.Windows.Forms.Corners.BottomRight)));
+            this.btnMaskedLayer.ShadeMode = false;
+            this.btnMaskedLayer.Size = new System.Drawing.Size(122, 39);
+            this.btnMaskedLayer.TabIndex = 1000;
+            this.btnMaskedLayer.Text = "遮罩层";
+            this.btnMaskedLayer.Click += new System.EventHandler(this.BtnMaskedLayer_Click);
             // 
             // threeDLine1
             // 
             this.threeDLine1.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
-            this.threeDLine1.Color2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.threeDLine1.Color2 = System.Drawing.Color.Black;
             this.threeDLine1.Location = new System.Drawing.Point(17, 174);
             this.threeDLine1.Name = "threeDLine1";
             this.threeDLine1.Size = new System.Drawing.Size(145, 2);
@@ -391,11 +414,32 @@
             this.customLabel4.TabIndex = 1001;
             this.customLabel4.Text = "其他";
             // 
+            // customPanel1
+            // 
+            this.customPanel1.BackColor = System.Drawing.Color.Transparent;
+            this.customPanel1.BorderColor = System.Drawing.Color.Empty;
+            this.customPanel1.BorderWidth = 1;
+            this.customPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.customPanel1.FirstColor = System.Drawing.Color.Empty;
+            this.customPanel1.IsSelected = false;
+            this.customPanel1.Location = new System.Drawing.Point(215, 528);
+            this.customPanel1.MouseClickSwitchSelectStatus = false;
+            this.customPanel1.MouseHoverBgColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(232)))), ((int)(((byte)(255)))));
+            this.customPanel1.MouseHoverBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(209)))), ((int)(((byte)(255)))));
+            this.customPanel1.MouseHoverShowFocus = false;
+            this.customPanel1.Name = "customPanel1";
+            this.customPanel1.RoundBorderRadius = 0;
+            this.customPanel1.SecondColor = System.Drawing.Color.Empty;
+            this.customPanel1.SelectedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(209)))), ((int)(((byte)(255)))));
+            this.customPanel1.Size = new System.Drawing.Size(599, 211);
+            this.customPanel1.TabIndex = 1010;
+            // 
             // ComponentDemo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(816, 455);
+            this.ClientSize = new System.Drawing.Size(816, 735);
+            this.Controls.Add(this.customPanel1);
             this.Controls.Add(this.customPanel2);
             this.Controls.Add(this.separator1);
             this.Controls.Add(this.customNavSideBar1);
@@ -413,6 +457,7 @@
             this.Controls.SetChildIndex(this.customNavSideBar1, 0);
             this.Controls.SetChildIndex(this.separator1, 0);
             this.Controls.SetChildIndex(this.customPanel2, 0);
+            this.Controls.SetChildIndex(this.customPanel1, 0);
             this.colorGroupBox1.ResumeLayout(false);
             this.colorGroupBox1.PerformLayout();
             this.colorGroupBox2.ResumeLayout(false);
@@ -446,5 +491,7 @@
         private System.Windows.Forms.CustomLabel customLabel4;
         private System.Windows.Forms.CustomButton btnCustomMessage;
         private System.Windows.Forms.ThreeDLine threeDLine1;
+        private System.Windows.Forms.CustomPanel customPanel1;
+        private System.Windows.Forms.CustomButton btnMaskedLayer;
     }
 }

@@ -46,10 +46,16 @@ namespace System.Windows.Forms
             this.pnlCenterBox.Controls.Add(this.btnClose);
             this.pnlCenterBox.Controls.Add(this.lblProgressText);
             this.pnlCenterBox.FirstColor = System.Drawing.Color.White;
+            this.pnlCenterBox.IsSelected = false;
             this.pnlCenterBox.Location = new System.Drawing.Point(220, 103);
+            this.pnlCenterBox.MouseClickSwitchSelectStatus = false;
+            this.pnlCenterBox.MouseHoverBgColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(232)))), ((int)(((byte)(255)))));
+            this.pnlCenterBox.MouseHoverBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(209)))), ((int)(((byte)(255)))));
+            this.pnlCenterBox.MouseHoverShowFocus = false;
             this.pnlCenterBox.Name = "pnlCenterBox";
             this.pnlCenterBox.RoundBorderRadius = 20;
             this.pnlCenterBox.SecondColor = System.Drawing.Color.White;
+            this.pnlCenterBox.SelectedBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(209)))), ((int)(((byte)(255)))));
             this.pnlCenterBox.Size = new System.Drawing.Size(324, 168);
             this.pnlCenterBox.TabIndex = 2;
             // 
@@ -67,6 +73,7 @@ namespace System.Windows.Forms
             this.pbWorkProgress.ProgressBarColor = System.Drawing.Color.RoyalBlue;
             this.pbWorkProgress.Size = new System.Drawing.Size(279, 23);
             this.pbWorkProgress.TabIndex = 0;
+            this.pbWorkProgress.Text = null;
             this.pbWorkProgress.Value = 0F;
             // 
             // btnClose
@@ -76,6 +83,7 @@ namespace System.Windows.Forms
             this.btnClose.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.btnClose.CornerRadius = 16;
             this.btnClose.GradientMode = true;
+            this.btnClose.HoverColor = System.Drawing.Color.Empty;
             this.btnClose.Location = new System.Drawing.Point(110, 113);
             this.btnClose.Name = "btnClose";
             this.btnClose.RoundCorners = ((System.Windows.Forms.Corners)((((System.Windows.Forms.Corners.TopLeft | System.Windows.Forms.Corners.TopRight) 

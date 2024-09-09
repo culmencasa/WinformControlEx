@@ -519,6 +519,7 @@ namespace FormExCore
 
         private void InnerTextBox_TextChanged(object sender, EventArgs e)
         {
+            _text = _innerTextBox.Text;
             OnTextChanged();
         }
         private void InnerTextBox_Click(object sender, EventArgs e)

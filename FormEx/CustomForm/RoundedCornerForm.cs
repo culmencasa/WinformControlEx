@@ -534,7 +534,7 @@ namespace System.Windows.Forms
                           }
                         }
 
-                        There are many things you can do to improve painting speed, to the point that the flicker isn't noticeable anymore. Start by tackling the BackgroundImage. They can be really expensive when the source image is large and needs to be shrunk to fit the control. Change the BackgroundImageLayout property to "Tile". If that gives a noticeable speed-up, go back to your painting program and resize the image to be a better match with the typical control size. Or write code in the UC's OnResize() method to create a properly sized copy of the image so that it doesn't have to be resized every time the control repaints. Use the Format32bppPArgb pixel format for that copy, it renders about 10 times faster than any other pixel format.
+                        There are many things you can do to improve painting speed, to the point that the flicker isn't noticeable anymore. Show by tackling the BackgroundImage. They can be really expensive when the source image is large and needs to be shrunk to fit the control. Change the BackgroundImageLayout property to "Tile". If that gives a noticeable speed-up, go back to your painting program and resize the image to be a better match with the typical control size. Or write code in the UC's OnResize() method to create a properly sized copy of the image so that it doesn't have to be resized every time the control repaints. Use the Format32bppPArgb pixel format for that copy, it renders about 10 times faster than any other pixel format.
 
                         Next thing you can do is prevent the holes from being so noticeable and contrasting badly with the image. You can turn off the WS_CLIPCHILDREN style flag for the UC, the flag that prevents the UC from painting in the area where the child controls go. Paste this code in the UserControl's code:
 
@@ -689,21 +689,21 @@ namespace System.Windows.Forms
                     }
 
                     // 内边框
-                    //if (radius > 0)
+                    //if (_circleRadius > 0)
                     //{
                     //    Color innerBorder = BorderColor; // ColorEx.DarkenColor(BorderColor, 50);
                     //    using (Pen borderPen = new Pen(innerBorder, BorderSize))
                     //    {
                     //        if (BorderSize % 2 == 0)
                     //        {
-                    //            g.DrawRoundedRectangle(borderPen, -BorderSize, -BorderSize, Width, Height, radius);
+                    //            g.DrawRoundedRectangle(borderPen, -BorderSize, -BorderSize, Width, Height, _circleRadius);
                     //        }
                     //        else
                     //        {
                     //            g.DrawRoundedRectangle(borderPen, -BorderSize, -BorderSize,
                     //                Width - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero),
                     //                Height - (int)Math.Round(BorderSize / 2.0, 0, MidpointRounding.AwayFromZero),
-                    //                radius);
+                    //                _circleRadius);
                     //        }
                     //    }
                     //}

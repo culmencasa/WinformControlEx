@@ -53,6 +53,12 @@
     <Compile Include="ComponentDemo.Designer.cs">
       <DependentUpon>ComponentDemo.cs</DependentUpon>
     </Compile>
+    <Compile Include="MaskedLayerDemo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MaskedLayerDemo.Designer.cs">
+      <DependentUpon>MaskedLayerDemo.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +106,9 @@
     </Compile>
     <EmbeddedResource Include="ComponentDemo.resx">
       <DependentUpon>ComponentDemo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MaskedLayerDemo.resx">
+      <DependentUpon>MaskedLayerDemo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
