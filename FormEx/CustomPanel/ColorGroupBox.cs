@@ -364,6 +364,12 @@ namespace System.Windows.Forms
             Graphics g = e.Graphics;
             g.SetSlowRendering();
 
+            if (this.Width <= 0 || this.Height <= 0)
+            {
+                base.OnPaint(e);
+                return;
+            }
+
             var parentBackColor = Color.Gray;
             if (Parent != null && Parent.BackColor != Color.Transparent)
             {
@@ -450,6 +456,7 @@ namespace System.Windows.Forms
                 // 画边框
                 if (BorderSize > 0)
                 {
+                    // 2024-09-10 当窗体最小化后再还原，Height为0，导致绘制边框失败
                     g.DrawRoundedRectangle(outterBorderPen, GetBorderRectangle(), BorderRadius);
                 }
 

@@ -26,6 +26,10 @@ namespace DemoNet46
             mask.Show();
 
             DrawerControl drawer = new DrawerControl(this);
+            drawer.Controls.Add(new Label() { Text = "Hello World", Location = new Point(10, 10) });
+            drawer.Controls.Add(new Label() { Text = "Paragraph 2Paragraph 2Paragraph 2Paragraph 2", Location = new Point(10, 30) });
+            drawer.Controls.Add(new Button() { Text = "Click Me", Location = new Point(10, 150) });
+            
             drawer.Show();
         }
          

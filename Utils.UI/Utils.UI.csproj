@@ -8,7 +8,14 @@
     <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
 
-  <ItemGroup Condition="('$(TargetFramework)'=='net6.0-windows')">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
+		<DefineConstants>DEBUG;COMPILE_NET40</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
+		<DefineConstants>TRACE;COMPILE_NET40</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup Condition="('$(TargetFramework)'=='net6.0-windows')">
     <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
 

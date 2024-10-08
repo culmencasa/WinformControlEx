@@ -289,13 +289,11 @@ namespace System.Windows.Forms
                     //    1, 1, (float)this.Width - BorderWidth * 2, (float)this.Height - BorderWidth * 2, 
                     //    this.RoundBorderRadius);
 
-
                     Rectangle innerRectangle = new Rectangle(
                         ClientRectangle.X,
                         ClientRectangle.Y,
-                        ClientRectangle.Width - 2 * borderWidth,
-                        ClientRectangle.Height - 2 * borderWidth);
-
+                        ClientRectangle.Width -  borderWidth,
+                        ClientRectangle.Height -  borderWidth);
 
                     using (GraphicsPath innerPath = CreateRoundedRectangle(innerRectangle, RoundBorderRadius))
                     {

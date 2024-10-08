@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.IO;
+﻿using System.ComponentModel;
 using System.Drawing.Imaging;
-using System.Windows.Forms;
+using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace System.Drawing
 {
-	public class ImageTool {
+    public class ImageTool {
 
 		public static byte[] ToArray(Image img) {
 			if (img == null)
@@ -158,25 +155,57 @@ namespace System.Drawing
 			}
 		}
 
-		/// <summary>
-		/// 加载自定义光标（避免加载成黑色）
-		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
-		/// <exception cref="ComponentModel.Win32Exception"></exception>
+
+
+#if COMPILE_NET40
+        private static readonly Type CursorType = typeof(Cursor);
+#else
+    private const uint IMAGE_CURSOR = 2;
+    private const uint LR_LOADFROMFILE = 0x00000010;
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType, int cx, int cy, uint fuLoad);
+#endif
+
+        /// <summary>
+        /// 加载自定义光标（避免加载成黑色）
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        /// <exception cref="ComponentModel.Win32Exception"></exception>
         public static Cursor LoadCustomCursor(string path)
         {
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException("Cursor file not found.", path);
+            }
+
+
+
+#if COMPILE_NET40
             IntPtr handle = Win32.LoadCursorFromFile(path);
-			if (handle == IntPtr.Zero)
-			{
-				throw new ComponentModel.Win32Exception();
-			}
-			
-			var cursor = new Cursor(handle); 
-            var fi = typeof(Cursor).GetField("ownHandle", BindingFlags.NonPublic | BindingFlags.Instance);
-            fi.SetValue(cursor, true);
+            if (handle == IntPtr.Zero)
+            {
+                throw new Win32Exception();
+            }
+
+            var cursor = new Cursor(handle);
+            var fi = CursorType.GetField("ownHandle", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (fi != null)
+            {
+                fi.SetValue(cursor, true);
+            }
 
             return cursor;
+#else
+            IntPtr handle = LoadImage(IntPtr.Zero, path, IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE);
+			if (handle == IntPtr.Zero)
+			{
+				throw new Win32Exception(Marshal.GetLastWin32Error());
+			}
+
+			return new Cursor(handle);
+#endif
         }
     }
 

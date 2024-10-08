@@ -100,7 +100,7 @@ namespace System.Windows.Forms
                     {
                         pnlStart.Location = new Point(
                             pnlStart.Left,
-                            pnlStart.Top - 10
+                            pnlStart.Top - 20
                         );
                         pnlStart.BringToFront();
                         //ActiveControl = pnlStart;

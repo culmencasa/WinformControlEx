@@ -191,9 +191,6 @@
 		<Compile Update="BorderHelper.cs">
 			<SubType>Code</SubType>
 		</Compile>
-		<Compile Update="CustomCanvas\CustomCanvas.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
 		<Compile Update="Components\AbortableBackgroundWorker.cs">
 			<SubType>Component</SubType>
 		</Compile>
@@ -201,6 +198,9 @@
 			<SubType>Component</SubType>
 		</Compile>
 		<Compile Update="CustomButton\CustomDropDownButton.cs" />
+		<Compile Update="CustomButton\RippleButton.cs">
+		  <SubType>Component</SubType>
+		</Compile>
 		<Compile Update="CustomButton\RoundButton.cs">
 			<SubType>Component</SubType>
 		</Compile>
@@ -501,12 +501,6 @@
 
 	<ItemGroup>
 		<None Include="docs\readme.md" Pack="true" PackagePath="\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="Resources\CustomCanvas\grip-hand.cur">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
 	</ItemGroup>
 
 </Project>
