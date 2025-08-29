@@ -376,10 +376,11 @@ namespace System.Windows.Forms
             //source.WindowState = FormWindowState.Maximized;
             source.ControlBox = false;
             source.ShowIcon = false;
-            source.StartPosition = FormStartPosition.CenterParent;
+            //source.StartPosition = FormStartPosition.CenterParent;
             source.WindowState = FormWindowState.Maximized;
             source.Show();
             source.BringToFront();
+
         }
 
         public static void SetWindowSizeByDPI(this Form source)
@@ -428,23 +429,28 @@ namespace System.Windows.Forms
 
 
                 // 方法3 (如果动态修改过窗体属性, 有可能找不到)
-                //if (lastActiveForm == null)
-                //{
-                //    for (int index = Application.OpenForms.Count - 1; index >= 0; index--)
-                //    {
-                //        // 一般按索引的先后顺序, 最先遍历到的是最早打开的窗体, 例如index=0可能是主窗体.
-                //        Form item = Application.OpenForms[index];
+                if (lastActiveForm == null)
+                {
 
-                //        if (item == null || !item.IsHandleCreated || item.IsDisposed)
-                //            continue;
+                    if (Application.OpenForms.Count > 0)
+                    {
 
-                //        if (item.TopLevel && item.Visible && item.Focused)
-                //        {
-                //            lastActiveForm = item;
-                //            break;
-                //        }
-                //    }
-                //}
+                        for (int index = Application.OpenForms.Count - 1; index >= 0; index--)
+                        {
+                            // 一般按索引的先后顺序, 最先遍历到的是最早打开的窗体, 例如index=0可能是主窗体.
+                            Form item = Application.OpenForms[index];
+
+                            if (item == null || !item.IsHandleCreated || item.IsDisposed)
+                                continue;
+
+                            if (item.TopLevel && item.Owner == null)
+                            {
+                                lastActiveForm = item;
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
 

@@ -163,6 +163,11 @@ namespace System
         [DllImport("user32.dll", EntryPoint = "GetWindowDC", SetLastError = true)]
         public static extern IntPtr User32GetWindowDC(IntPtr hWnd);
 
+        [DllImport("user32.dll")]
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
+        [DllImport("user32.dll")]
+        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
         /// <summary>
         /// 自定义的结构

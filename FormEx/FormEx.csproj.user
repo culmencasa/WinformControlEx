@@ -94,6 +94,9 @@
     <Compile Update="CustomTextBox\RoundTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="CustomTreeView\CustomTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Separator\ThreeDLine.cs">
       <SubType>Component</SubType>
     </Compile>

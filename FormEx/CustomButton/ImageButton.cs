@@ -340,7 +340,7 @@ namespace System.Windows.Forms
         {
             base.Focus();
 
-            if (e.Button == MouseButtons.Left)
+            if (e != null && e.Button == MouseButtons.Left)
             {
                 _leftClick = true;
                 //OnMouseUp(null);
@@ -381,7 +381,7 @@ namespace System.Windows.Forms
                 _bms = ButtonMouseStatus.FocusLost | ButtonMouseStatus.Released;
             }
 
-            if (e.Button == MouseButtons.Left)
+            if (e != null && e.Button == MouseButtons.Left)
             {
                 if (ButtonKeepPressed)
                 {

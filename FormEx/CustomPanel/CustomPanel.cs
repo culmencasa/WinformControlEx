@@ -8,13 +8,11 @@ using System.Drawing.Drawing2D;
 
 namespace System.Windows.Forms
 {
-    /// <summary>
-    /// 渐变, 圆角, 边框面板
-    /// </summary>
     [DefaultEvent("Click")]
     public class CustomPanel : Panel
     {
         private FillDirection _gradientDirection;
+        private Bitmap backgroundImageCache;
         private bool _isMouseHovering;
         private bool _isSelected;
         public delegate void SelectStatusChangedHandler(CustomPanel sender, bool isActived);
@@ -28,6 +26,13 @@ namespace System.Windows.Forms
         #endregion
 
         #region 属性
+
+        [Category(Consts.DefaultCategory)]
+        [Description("BackColor为透明时，Panel中的控件应用布局时会引起Panel频繁重绘")]
+        public override Color BackColor 
+        { get => base.BackColor; 
+            set => base.BackColor = value; 
+        }
 
 
         [Category(Consts.DefaultCategory)]
@@ -114,6 +119,13 @@ namespace System.Windows.Forms
         public Color SelectedBorderColor { get; set; }
 
 
+        [Category(Consts.DefaultCategory)]
+        public bool Draw3DBorder { get; set; }
+
+        [Category(Consts.DefaultCategory)]
+        public Border3DStyle Border3DStyle { get; set; } = Border3DStyle.Sunken;
+
+
 
         #endregion
 
@@ -131,8 +143,8 @@ namespace System.Windows.Forms
 				ControlStyles.SupportsTransparentBackColor, true);
 			this.DoubleBuffered = true;
 			UpdateStyles();
-
-			this.BackColor = Color.Transparent;
+             
+            this.BackColor = Color.Transparent;
             this.InnerBackColor = Color.Transparent;
             BorderWidth = 1;
 
@@ -145,199 +157,40 @@ namespace System.Windows.Forms
 
         #region 重写的成员
 
-
-        protected override void OnPaintBackground(PaintEventArgs e)
+        protected override void OnHandleCreated(EventArgs e)
         {
-            base.OnPaintBackground(e);
+            base.OnHandleCreated(e);
+
+            RedrawOnDesignTime();
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+
+        protected override void OnResize(EventArgs eventargs)
         {
-            Graphics lazyG = e.Graphics;
-
-            int w = this.Width;
-            int h = this.Height;
-            Bitmap bitmap;
-            Graphics cacheG;
-            if (w > 0 && h > 0)
-            {
-                bitmap = new Bitmap(w, h);
-                cacheG = Graphics.FromImage(bitmap);
-            }
-            else
-            {
-                // 有时候, 例如最小化, Height会变成0
-                base.OnPaint(e);
-                return;
-            }
-
-            if (IsMouseHovering || IsSelected)
-            {
-                using (SolidBrush backgroundBrush = new SolidBrush(MouseHoverBgColor))
+            base.OnResize(eventargs);
+            if (this.IsHandleCreated && !IsDisposed)
+            {   
+                backgroundImageCache = DrawCacheBitmap();
+                if (backgroundImageCache != null)
                 {
-                    if (RoundBorderRadius > 0)
-                    {
-                        cacheG.FillRoundedRectangle(backgroundBrush, BorderWidth / 2, BorderWidth / 2, this.Width - BorderWidth, this.Height - BorderWidth, RoundBorderRadius);
-                    }
-                    else
-                    {
-                        cacheG.FillRectangle(backgroundBrush, new Rectangle(BorderWidth / 2, BorderWidth / 2, this.Width - BorderWidth, this.Height - BorderWidth));
-                    }
+                    Invalidate();
                 }
             }
-            else
+        }
+
+		protected override void OnPaint(PaintEventArgs e)
+        {
+			// 背景为透明时或者子Panel控件或者子控件的背景为透明时，会出现闪烁。
+			if (backgroundImageCache != null)
             {
-
-                #region 背景（如果设置了渐变色）
-
-                if (this.FirstColor != Color.Empty && this.SecondColor != Color.Empty
-                     && FirstColor != SecondColor)
-                {
-                    if (RoundBorderRadius > 0)
-                    {
-                        // 填充圆角矩形
-                        using (LinearGradientBrush brush = new LinearGradientBrush(
-                            new Point(this.Width / 2, 0),
-                            new Point(this.Width / 2, this.Height),
-                            this.FirstColor,
-                            this.SecondColor
-                            ))
-                        {
-                            // 不减1会出现1像素的空白, 原因不明
-                            cacheG.FillRoundedRectangle(brush,
-                                BorderWidth / 2,
-                                BorderWidth / 2,
-                                (this.Width - BorderWidth),
-                                (this.Height - BorderWidth), RoundBorderRadius);
-                        }
-                    }
-                    else
-                    {
-                        // 填充直角矩形
-                        GradientFill.Fill(cacheG,
-                            ClientRectangle,
-                            this.FirstColor, this.SecondColor, this.GradientDirection);
-                    }
-                }
-
-                #endregion
-
-                #region 背景（没有渐变色）
-
-                else
-                {
-                    var backColor = BackColor;
-                    if (FirstColor != Color.Empty)
-                    {
-                        backColor = FirstColor;
-                    }
-                    if (SecondColor != Color.Empty)
-                    {
-                        backColor = SecondColor;
-                    }
-                    using (SolidBrush backgroundBrush = new SolidBrush(backColor))
-                    {
-                        if (RoundBorderRadius > 0)
-                        {
-                            cacheG.FillRoundedRectangle(backgroundBrush, BorderWidth / 2, BorderWidth / 2, this.Width - BorderWidth, this.Height - BorderWidth, RoundBorderRadius);
-                        }
-                        else
-                        {
-                            cacheG.FillRectangle(backgroundBrush, new Rectangle(BorderWidth / 2, BorderWidth / 2, this.Width - BorderWidth, this.Height - BorderWidth));
-                        }
-                    }
-
-                }
-
-                #endregion
+                e.Graphics.DrawImageUnscaled(backgroundImageCache, 0, 0);
             }
-
-
-            #region 边框
-
-            if (IsSelected)
-            {
-                DrawBorder(cacheG, SelectedBorderColor, 2);
-            }
-            else if (IsMouseHovering)
-            {
-                DrawBorder(cacheG, MouseHoverBorderColor, BorderWidth); 
-            } 
-            else if (this.BorderColor != Color.Empty && BorderWidth > 0)
-            {
-                DrawBorder(cacheG, BorderColor, BorderWidth);
-            }
-
-            #endregion
-
-
-            lazyG.DrawImage(bitmap, 0, 0);
-            cacheG.Dispose();
 
             base.OnPaint(e);
         }
 
 
-        private void DrawBorder(Graphics g, Color borderColor, int borderWidth)
-        {
-            if (RoundBorderRadius > 0)
-            {
-                // 画圆角边框   
-                using (Pen borderPen = new Pen(borderColor, borderWidth))
-                {
-                    //cacheG.DrawRoundedRectangle(borderPen,
-                    //    1, 1, (float)this.Width - BorderWidth * 2, (float)this.Height - BorderWidth * 2, 
-                    //    this.RoundBorderRadius);
-
-                    Rectangle innerRectangle = new Rectangle(
-                        ClientRectangle.X,
-                        ClientRectangle.Y,
-                        ClientRectangle.Width -  borderWidth,
-                        ClientRectangle.Height -  borderWidth);
-
-                    using (GraphicsPath innerPath = CreateRoundedRectangle(innerRectangle, RoundBorderRadius))
-                    {
-                        g.SmoothingMode = SmoothingMode.AntiAlias;
-
-                        g.DrawPath(borderPen, innerPath);
-                    }
-                }
-            }
-            else
-            {
-                // 画直角边框
-                using (Pen borderPen = new Pen(borderColor, borderWidth))
-                {
-                    g.DrawRectangle(borderPen,
-                        borderWidth / 2,
-                        borderWidth / 2,
-                        (float)this.Width - borderWidth, (float)this.Height - borderWidth);
-                }
-            }
-        }
-
-        private GraphicsPath CreateRoundedRectangle(RectangleF rectangle, int cornerRadius)
-        {
-            GraphicsPath path = new GraphicsPath();
-
-            float x = rectangle.X;
-            float y = rectangle.Y;
-            float width = rectangle.Width;
-            float height = rectangle.Height;
-
-            path.AddArc(x, y, cornerRadius * 2, cornerRadius * 2, 180, 90);
-            path.AddLine(x + cornerRadius, y, x + width - cornerRadius, y);
-            path.AddArc(x + width - cornerRadius * 2, y, cornerRadius * 2, cornerRadius * 2, 270, 90);
-            path.AddLine(x + width, y + cornerRadius, x + width, y + height - cornerRadius);
-            path.AddArc(x + width - cornerRadius * 2, y + height - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 0, 90);
-            path.AddLine(x + width - cornerRadius, y + height, x + cornerRadius, y + height);
-            path.AddArc(x, y + height - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 90, 90);
-            path.AddLine(x, y + height - cornerRadius, x, y + cornerRadius);
-
-            path.CloseFigure();
-
-            return path;
-        }
+        #region 焦点问题
 
         protected override void OnControlAdded(ControlEventArgs e)
         {
@@ -396,18 +249,7 @@ namespace System.Windows.Forms
             base.OnMouseLeave(e);
         }
 
-		protected override void OnResize(EventArgs eventargs)
-		{
-			base.OnResize(eventargs);
-
-            if (this.RoundBorderRadius > 0)
-            {
-                // 圆角背景效果不好
-                //IntPtr hrgn = Win32.CreateRoundRectRgn(0, 0, Width, Height, RoundBorderRadius + 5 , RoundBorderRadius + 5);
-                //Region = System.Drawing.Region.FromHrgn(hrgn);
-
-            }
-        }
+        #endregion
 
         public override Rectangle DisplayRectangle
         {
@@ -423,7 +265,182 @@ namespace System.Windows.Forms
             }
         }
 
+        #endregion
+
+
+        #region 2025-01-16 改进
+
+        GraphicsPath CreateRoundedRectangle(RectangleF rectangle, int cornerRadius)
+        {
+            GraphicsPath path = new GraphicsPath();
+
+            if (cornerRadius <= 0)
+            {
+                path.AddRectangle(rectangle);
+            }
+            else
+            {
+                float x = rectangle.X;
+                float y = rectangle.Y;
+                float width = rectangle.Width;
+                float height = rectangle.Height;
+
+                path.AddArc(x, y, cornerRadius * 2, cornerRadius * 2, 180, 90);
+                path.AddLine(x + cornerRadius, y, x + width - cornerRadius, y);
+                path.AddArc(x + width - cornerRadius * 2, y, cornerRadius * 2, cornerRadius * 2, 270, 90);
+                path.AddLine(x + width, y + cornerRadius, x + width, y + height - cornerRadius);
+                path.AddArc(x + width - cornerRadius * 2, y + height - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 0, 90);
+                path.AddLine(x + width - cornerRadius, y + height, x + cornerRadius, y + height);
+                path.AddArc(x, y + height - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 90, 90);
+                path.AddLine(x, y + height - cornerRadius, x, y + cornerRadius);
+
+                path.CloseFigure();
+            }
+
+            return path;
+        }
+
+
+        Bitmap DrawCacheBitmap()
+        {
+            Bitmap bitmap;
+            Graphics cacheG;
+            if (Width > 0 && Height > 0)
+            {
+                bitmap = new Bitmap(Width, Height);
+                cacheG = Graphics.FromImage(bitmap);
+            }
+            else
+            {
+                return null;
+            }
+
+
+            Rectangle innerRectangle = new Rectangle(
+                BorderWidth / 2, // Pen是从中心开始画的，所以要减半
+                BorderWidth / 2,
+                ClientRectangle.Width - BorderWidth - 1,
+                ClientRectangle.Height - BorderWidth - 1);
+            var rectanglePath = CreateRoundedRectangle(innerRectangle, RoundBorderRadius);
+
+
+            #region 绘制背景
+
+
+            var color1 = FirstColor;
+            var color2 = SecondColor;
+
+            if (color1 == Color.Empty && color2 == Color.Empty)
+            {
+                color1 = BackColor;
+                color2 = BackColor;
+            }
+            else if (color1 == Color.Empty)
+            {
+                color1 = color2;
+            }
+            else if (color2 == Color.Empty)
+            {
+                color2 = color1;
+            }
+
+            if (IsMouseHovering || IsSelected)
+            {
+                color1 = color2 = MouseHoverBgColor;
+            }
+                
+            using (var brush = new LinearGradientBrush(new Point(Width / 2, 0), new Point(Width / 2, Height), color1, color2))
+            {
+                cacheG.FillPath(brush, rectanglePath);
+            }
+
+            #endregion
+
+            #region 绘制边框
+
+            if (Draw3DBorder)
+            {
+                ControlPaint.DrawBorder3D(cacheG, new Rectangle(0, 0, this.Width - 1, this.Height - 1), Border3DStyle, Border3DSide.All);
+            }
+            else if (BorderColor != Color.Empty && BorderWidth > 0)
+            {
+                var borderColor = BorderColor;
+                var borderWidth = BorderWidth;
+                if (IsSelected)
+                {
+                    borderColor = SelectedBorderColor;
+                    borderWidth = 2;
+                }
+                else if (IsMouseHovering)
+                {
+                    borderColor = MouseHoverBorderColor; 
+                }
+
+
+                using (Pen borderPen = new Pen(borderColor, borderWidth))
+                {
+                    cacheG.SmoothingMode = SmoothingMode.AntiAlias;
+                    cacheG.DrawPath(borderPen, rectanglePath);
+                }
+            }
+
+            #endregion
+
+            rectanglePath.Dispose();
+            cacheG.Dispose();
+            return bitmap;
+        }
+
+
+        void RedrawOnDesignTime()
+        {
+            backgroundImageCache = DrawCacheBitmap();
+            if (backgroundImageCache != null)
+            {
+                Invalidate();
+            }
+        }
 
         #endregion
-    }
+
+        #region 处理设置FirstColor和SecondColor背景未更新问题
+
+        private bool needRedrawBackground;
+
+        public new void Invalidate()
+        {
+            needRedrawBackground = true;
+			base.Invalidate();
+		}
+		public new void Invalidate(bool invalidateChildren)
+		{
+			needRedrawBackground = true;
+			base.Invalidate(invalidateChildren);
+		}
+
+		public new void Invalidate(Rectangle rect)
+		{
+			needRedrawBackground = true;
+			base.Invalidate(rect);
+		}
+
+		public new void Invalidate(Rectangle rect, bool invalidateChildren)
+		{
+			needRedrawBackground = true;
+			base.Invalidate(rect, invalidateChildren);
+		}
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            base.OnPaintBackground(e);
+			if (needRedrawBackground)
+			{
+				needRedrawBackground = false;
+				backgroundImageCache = DrawCacheBitmap();
+			} 
+		}
+
+		#endregion
+
+	}
 }

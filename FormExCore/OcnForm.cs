@@ -6,6 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -21,11 +22,13 @@ namespace FormExCore
     {
         #region 构造
 
+        // 在构造函数中调用
         public OcnForm()
         {
             InitializeComponent();
 
-            SetStyle(
+
+			SetStyle(
                 ControlStyles.UserPaint |
                 ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.OptimizedDoubleBuffer |
@@ -39,12 +42,11 @@ namespace FormExCore
             this.DoubleBuffered = true;
 
             AfterPositionChanged += OcnForm_AfterPositionChanged;
-        }
 
-        private void OcnForm_AfterPositionChanged()
-        {
+            _roundCornerDiameter = 28;
+			InitializeButtonIconsWithFont();
+		}
 
-        }
 
         #endregion
 
@@ -62,17 +64,18 @@ namespace FormExCore
         private bool _showFormIcon = true;
         private bool _showFormTitle = true;
         private DateTime _titleClickTime = DateTime.MinValue;
+		private ToolTip toolTip = new ToolTip();
 
-        #endregion
+		#endregion
 
-        #region 属性
+		#region 属性
 
-        #region 主题
+		#region 主题
 
-        /// <summary>
-        /// 主题
-        /// </summary>
-        [Category("Look")]
+		/// <summary>
+		/// 主题
+		/// </summary>
+		[Category("Look")]
         [Browsable(true)]
         public OcnThemes Theme
         {
@@ -297,22 +300,83 @@ namespace FormExCore
             set;
         }
 
-        public bool Shadow
+		[Category("Custom")] 
+		public bool AllowMove
+		{
+            get;
+            set;
+		}
+		public bool Shadow
         {
             get;
             set;
         } = true;
 
-        #endregion
+		[Category("Custom")]
+		[DefaultValue(typeof(Color), "157,157,157")]
+		public Color BorderColor
+		{
+            get;
+            set;
+		}
 
 
-        #endregion
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams cp = base.CreateParams;
+				if (!DesignMode)
+				{
+					if (MaximizeBox)
+					{
+						cp.Style |= (int)WindowStyle.WS_MAXIMIZEBOX;
+					}
 
-        #region 私有方法
+					if (MinimizeBox)
+					{
+						cp.Style |= (int)WindowStyle.WS_MINIMIZEBOX;
+					}
 
-        #region 主题改变
+					cp.Style |= (int)WindowStyle.WS_SYSMENU;
+					//cp.ExStyle |= 0x02000000;  // 禁用掉窗体的自动重绘功能
+				}
+				return cp;
+			}
+		}
 
-        protected virtual void OnThemeChanged()
+		public override Rectangle DisplayRectangle
+		{
+			get
+			{
+                var gap = 1; // border size
+                if (RoundCornerDiameter > 0)
+                {
+                    gap = RoundCornerDiameter / 4; // 半径的一半
+                }
+
+				Rectangle clientArea = new Rectangle();
+				clientArea.X = gap;
+				clientArea.Y = Math.Max(TitleBarHeight, btnClose.Height);
+				clientArea.Width = this.Width - gap * 2;
+				clientArea.Height = this.Height - clientArea.Y - gap;
+
+
+				return clientArea;
+			}
+		}
+
+
+		#endregion
+
+
+		#endregion
+
+		#region 私有方法
+
+		#region 主题改变
+
+		protected virtual void OnThemeChanged()
         {
             // 防止在调用此方法时, 子类控件还未完全实例化而报空引用异常
             if (!this.IsHandleCreated)
@@ -375,7 +439,7 @@ namespace FormExCore
 
         protected virtual void ApplyPrimary()
         {
-            //BorderColor = Presets.PrimaryColor;
+            BorderColor = Presets.PrimaryColor;
             BackColor = Color.White;
             ForeColor = Presets.PrimaryColor;
             TitleBarBackColor = Color.FromArgb(108, 17, 150);
@@ -384,7 +448,7 @@ namespace FormExCore
 
         protected virtual void ApplySecondary()
         {
-            //BorderColor = Presets.SecondaryColor;
+            BorderColor = Presets.SecondaryColor;
             BackColor = Color.White;
             ForeColor = Presets.SecondaryColor;
             TitleBarBackColor = Presets.SecondaryColor;
@@ -392,7 +456,7 @@ namespace FormExCore
         }
         protected virtual void ApplySuccess()
         {
-            //BorderColor = Presets.SuccessColor;
+            BorderColor = Presets.SuccessColor;
             BackColor = Color.White;
             ForeColor = Presets.SuccessColor;
             TitleBarBackColor = Presets.SuccessColor;
@@ -401,7 +465,7 @@ namespace FormExCore
 
         protected virtual void ApplyDanger()
         {
-            //BorderColor = Presets.DangerColor;
+            BorderColor = Presets.DangerColor;
             BackColor = Color.White;
             ForeColor = Presets.DangerColor;
             TitleBarBackColor = Presets.DangerColor;
@@ -409,7 +473,7 @@ namespace FormExCore
         }
         protected virtual void ApplyWarning()
         {
-            //BorderColor = Presets.WarningColor;
+            BorderColor = Presets.WarningColor;
             BackColor = Color.White;
             ForeColor = Presets.WarningColor;
             TitleBarBackColor = Presets.WarningColor;
@@ -418,7 +482,7 @@ namespace FormExCore
 
         protected virtual void ApplyInfo()
         {
-            //BorderColor = Presets.InfoColor;
+            BorderColor = Presets.InfoColor;
             BackColor = Color.White;
             ForeColor = Presets.InfoColor;
             TitleBarBackColor = Presets.InfoColor;
@@ -427,7 +491,7 @@ namespace FormExCore
 
         protected virtual void ApplyLight()
         {
-            //BorderColor = ColorEx.DarkenColor(Presets.LightColor, 20);
+            BorderColor = ColorEx.DarkenColor(Presets.LightColor, 20);
             BackColor = Color.White;
             ForeColor = Color.Black;
             TitleBarBackColor = Presets.LightColor;
@@ -436,7 +500,7 @@ namespace FormExCore
 
         protected virtual void ApplyDark()
         {
-            //BorderColor = Presets.DarkColor;
+            BorderColor = Presets.DarkColor;
             BackColor = Color.White;
             ForeColor = Presets.DarkColor;
             TitleBarBackColor = Presets.DarkColor;
@@ -523,39 +587,21 @@ namespace FormExCore
             if (IsHandleCreated && this.Visible)
             {
                 LayoutControlButtons();
-            }
+				UpdateMaximizeButtonIcon();
+			}
         }
 
+		private void OcnForm_AfterPositionChanged()
+        {
+
+        }
         #endregion
 
         #region 重写的方法
 
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                CreateParams cp = base.CreateParams;
-                if (!DesignMode)
-                {
-                    if (MaximizeBox)
-                    {
-                        cp.Style |= (int)WindowStyle.WS_MAXIMIZEBOX;
-                    }
-
-                    if (MinimizeBox)
-                    {
-                        cp.Style |= (int)WindowStyle.WS_MINIMIZEBOX;
-                    }
-
-                    cp.Style |= (int)WindowStyle.WS_SYSMENU;
-                    //cp.ExStyle |= 0x02000000;  // 禁用掉窗体的自动重绘功能
-                }
-                return cp;
-            }
-        }
 
 
-        protected override void WndProc(ref Message m)
+		protected override void WndProc(ref Message m)
         {
             #region 标题栏
 
@@ -564,7 +610,7 @@ namespace FormExCore
                 // 点击标题栏
                 Point pos = new Point(m.LParam.ToInt32());
                 pos = this.PointToClient(pos);
-                if (pos.Y > 0 && pos.Y < TitleBarHeight)
+                if (pos.Y > 0 && pos.Y < TitleBarHeight && AllowMove)
                 {
                     m.Result = new IntPtr(Win32.HTCAPTION);
                     return;
@@ -625,21 +671,6 @@ namespace FormExCore
 
         }
 
-
-        public override Rectangle DisplayRectangle
-        {
-            get
-            {
-                int gap = RoundCornerDiameter / 4; // 半径的一半
-                Rectangle clientArea = new Rectangle();
-                clientArea.X = gap;
-                clientArea.Y = Math.Max(TitleBarHeight, btnClose.Height);
-                clientArea.Width = this.Width - gap * 2;
-                clientArea.Height = this.Height - clientArea.Y - gap;
-
-                return clientArea;
-            }
-        }
 
         protected override void OnResize(EventArgs e)
         {
@@ -760,11 +791,14 @@ namespace FormExCore
                 return;
             }
 
-            using (Bitmap cacheBitmap = new Bitmap(this.Width, this.Height))
-            {
-                Graphics g = Graphics.FromImage(cacheBitmap);
-                g.SmoothingMode = SmoothingMode.AntiAlias;
+            Graphics g = e.Graphics;
+            SmoothingMode originalSmoothMode = g.SmoothingMode;
+            TextRenderingHint originalTextRenderingHint = g.TextRenderingHint;
 
+            try
+            {
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.TextRenderingHint = TextRenderingHint.SystemDefault;
 
                 FillTitleBarBackground(g);
 
@@ -774,7 +808,7 @@ namespace FormExCore
                     g.DrawImage(TitleIcon, GetIconRectangle());
                 }
 
-                // 画标题   
+                // 画标题
                 if (!string.IsNullOrEmpty(TitleText))
                 {
                     TextRenderer.DrawText(
@@ -783,14 +817,19 @@ namespace FormExCore
                         TitleFont,
                         GetTitleRectangle(),
                         TitleColor,
-                        TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+                        TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.VerticalCenter);
                 }
-                g.Dispose();
-
-
-                e.Graphics.DrawImage(cacheBitmap, 0, 0);
-
-                e.Graphics.DrawRectangle(Pens.WhiteSmoke, new Rectangle(0, 0, Width -1, Height -1));
+                
+                using (Pen borderPen = new Pen(BorderColor, 1))
+                {
+                    g.DrawRectangle(borderPen, new Rectangle(0, 0, Width -1, Height -1));
+                }
+            }
+            finally
+            {
+                // 恢复原始渲染设置
+                g.SmoothingMode = originalSmoothMode;
+                g.TextRenderingHint = originalTextRenderingHint;
             }
 
             base.OnPaint(e);
@@ -839,9 +878,57 @@ namespace FormExCore
         }
 
 
-        #endregion
+		#endregion
 
-        private void btnClose_MouseClick(object sender, MouseEventArgs e)
+		#region ControlBox
+
+		private void InitializeButtonIconsWithFont()
+		{
+			// 设置按钮使用Segoe MDL2 Assets字体
+			btnClose.Font = new Font("Segoe MDL2 Assets", 8f);
+			btnMax.Font = new Font("Segoe MDL2 Assets", 8f);
+			btnMin.Font = new Font("Segoe MDL2 Assets", 8f);
+
+			btnClose.Text = "\xE711"; // 关闭按钮图标
+			btnMax.Text = "\xE739"; // 最大化按钮图标
+			btnMin.Text = "\xE921"; // 最小化按钮图标
+
+			UpdateMaximizeButtonIcon();
+
+			btnClose.TextAlign = ContentAlignment.MiddleCenter;
+			btnMax.TextAlign = ContentAlignment.MiddleCenter;
+			btnMin.TextAlign = ContentAlignment.MiddleCenter;
+
+			btnClose.FlatStyle = FlatStyle.Flat;
+			btnMax.FlatStyle = FlatStyle.Flat;
+			btnMin.FlatStyle = FlatStyle.Flat;
+
+			btnClose.FlatAppearance.BorderSize = 0;
+			btnMax.FlatAppearance.BorderSize = 0;
+			btnMin.FlatAppearance.BorderSize = 0;
+
+			btnClose.ForeColor = Color.Black;
+			btnMax.ForeColor = Color.Black;
+			btnMin.ForeColor = Color.Black;
+
+			btnClose.MouseEnter += (s, e) => { btnClose.ForeColor = Color.Red; };
+			btnClose.MouseLeave += (s, e) => { btnClose.ForeColor = Color.Black; };
+
+			btnMax.MouseEnter += (s, e) => { btnMax.ForeColor = Color.Blue; };
+			btnMax.MouseLeave += (s, e) => { btnMax.ForeColor = Color.Black; };
+
+			btnMin.MouseEnter += (s, e) => { btnMin.ForeColor = Color.Blue; };
+			btnMin.MouseLeave += (s, e) => { btnMin.ForeColor = Color.Black; };
+
+			btnClose.Visible = true;
+			btnMax.Visible = true;
+			btnMin.Visible = true;
+
+			this.toolTip.SetToolTip(btnMax, "最大化");
+		}
+
+
+		private void btnClose_MouseClick(object sender, MouseEventArgs e)
         {
             this.Close();
         }
@@ -855,19 +942,37 @@ namespace FormExCore
             else
             {
                 WindowState = FormWindowState.Normal;
-            }
-        }
+			}
+			UpdateMaximizeButtonIcon();
+		}
 
         private void btnMin_MouseClick(object sender, MouseEventArgs e)
         {
             WindowState = FormWindowState.Minimized;
         }
 
-        #region WINAPI
+		private void UpdateMaximizeButtonIcon()
+		{
+			if (WindowState == FormWindowState.Maximized)
+			{
+				btnMax.Text = "\xE923"; // 恢复图标
+				this.toolTip.SetToolTip(btnMax, "恢复");
+			}
+			else
+			{
+				btnMax.Text = "\xE739"; // 最大化图标
+				this.toolTip.SetToolTip(btnMax, "最大化");
+			}
+		}
+
+		#endregion
+
+
+		#region WINAPI
 
 
 
-        [DllImport("user32.dll")]
+		[DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
 
         private const int WM_SETREDRAW = 11;

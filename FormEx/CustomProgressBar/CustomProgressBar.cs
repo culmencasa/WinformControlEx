@@ -70,14 +70,51 @@ namespace System.Windows.Forms
         /// </summary>
         private int _borderRadius;
 
-        #endregion
+		#endregion
 
-        #region 属性
+		#region 属性
 
-        /// <summary>
-        /// 控件背景色, 不包含进度条
-        /// </summary>
-        [Category(Consts.DefaultCategory)]
+
+		// 在属性区域添加Width和Height的重写
+		[Category(Consts.DefaultCategory)]
+		public new int Width
+		{
+			get { return base.Width; }
+			set
+			{
+				// 检查设置的宽度是否小于左右内边距之和
+				if (value < Padding.Left + Padding.Right)
+				{
+					// 将Padding设置为0
+					Padding = new Padding(0);
+				}
+				base.Width = value;
+				ForceRender();
+			}
+		}
+
+		[Category(Consts.DefaultCategory)]
+		public new int Height
+		{
+			get { return base.Height; }
+			set
+			{
+				// 检查设置的高度是否小于上下内边距之和
+				if (value < Padding.Top + Padding.Bottom)
+				{
+					// 将Padding设置为0
+					Padding = new Padding(0);
+				}
+				base.Height = value;
+				ForceRender();
+			}
+		}
+
+
+		/// <summary>
+		/// 控件背景色, 不包含进度条
+		/// </summary>
+		[Category(Consts.DefaultCategory)]
         public override Color BackColor 
         { 
             get => base.BackColor;
@@ -485,6 +522,15 @@ namespace System.Windows.Forms
             float width = this.Width - this.Padding.Left - this.Padding.Right;
             float height = this.Height - this.Padding.Top - this.Padding.Bottom;
 
+            if (width < 0)
+            {
+                width = 1;
+            }
+            if (height < 0)
+            {
+                height = 1;
+            }
+
             return new RectangleF(x, y, width, height);
         }
 
@@ -625,3 +671,4 @@ namespace System.Windows.Forms
 
     }
 }
+

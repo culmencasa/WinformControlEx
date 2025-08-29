@@ -153,7 +153,7 @@ namespace System.Windows.Forms
 
         public void Control_LocationChanged(object sender, EventArgs e)
         {
-            UpdateLayout();
+            //UpdateLayout();
         }
 
         public void Control_DockChanged(object sender, EventArgs e)
@@ -173,7 +173,8 @@ namespace System.Windows.Forms
         #region 方法
 
         protected virtual void UpdateLayout()
-        {
+        { 
+
             this.SuspendLayout();
 
             var list = this.Controls as StackPanelControlCollection;
@@ -185,7 +186,7 @@ namespace System.Windows.Forms
                 #endregion
                 if (Orientation == Orientation.Vertical)
                 {
-                    int currentPosition = Padding.Top;
+                    int currentPosition = Padding.Top - this.VerticalScroll.Value + Spacing;
                     int currentColumnLeft = Padding.Left;
                     int maxColumnWidth = 0;
 
@@ -224,7 +225,7 @@ namespace System.Windows.Forms
                 else if (Orientation == Orientation.Horizontal)
                 {
 
-                    int currentPosition = Padding.Left;
+                    int currentPosition = Padding.Left - this.HorizontalScroll.Value + Spacing;
                     int currentRowTop = Padding.Top;
                     int maxRowHeight = 0;
 
@@ -266,8 +267,8 @@ namespace System.Windows.Forms
 
                 if (Orientation == Orientation.Vertical)
                 {
-                    int totalHeight = list.Items.Sum(child => child.Height + Spacing) - Spacing;
-                    int currentPosition = Padding.Top;
+                    int totalHeight = list.Items.Sum(child => child.Height + Spacing) + Padding.Top + Padding.Bottom + Spacing;
+                    int currentPosition = Padding.Top - this.VerticalScroll.Value + Spacing;
                     int currentColumnLeft = Padding.Left;
                     int maxColumnWidth = 0;
 
@@ -304,8 +305,8 @@ namespace System.Windows.Forms
                 }
                 else if (Orientation == Orientation.Horizontal)
                 {
-                    int totalWidth = list.Items.Sum(child => child.Width + Spacing) - Spacing;
-                    int currentPosition = Padding.Left;
+                    int totalWidth = list.Items.Sum(child => child.Width + Spacing) + Padding.Left + Padding.Right + Spacing;
+                    int currentPosition = Padding.Left - this.HorizontalScroll.Value + Spacing;
                     int currentRowTop = Padding.Top;
                     int maxRowHeight = 0;
 

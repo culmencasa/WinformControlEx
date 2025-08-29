@@ -112,11 +112,8 @@ namespace Utils
         #endregion
 
 
-        /// <summary>
-        /// 判断是否存在网络连接
-        /// </summary>
-        /// <returns>返回False表示无网络连接。
-        /// 返回True，表示存在网络连接，但并不保证能与某特定主机建立连接。</returns>
+        #region 方法
+
         public static bool ConnectionAvailable()
         {
             bool isConnected = false;
@@ -139,7 +136,7 @@ namespace Utils
         }
 
 
-        public static bool TestInternetConnectionWithPing(string host= "dns.baidu.com")
+        public static bool TestConnectionWithPing(string host= "dns.baidu.com")
         {
             Ping myPing = new Ping();
             //String host = "dns.baidu.com";//"131.107.255.255"; //dns.msftncsi.com
@@ -233,18 +230,21 @@ namespace Utils
             return false;
         }
 
+		#endregion
 
 
+		#region winapi
 
-        /// <summary>
-        /// 判断网络连接
-        /// </summary>
-        /// <param name="connectionDescription"></param>
-        /// <param name="reservedValue"></param>
-        /// <returns></returns>
-        [DllImport("wininet")]
+		/// <summary>
+		/// 判断网络连接
+		/// </summary>
+		/// <param name="connectionDescription"></param>
+		/// <param name="reservedValue"></param>
+		/// <returns></returns>
+		[DllImport("wininet")]
         public extern static bool InternetGetConnectedState(out int connectionDescription, int reservedValue);
 
+        #endregion
     }
 
 

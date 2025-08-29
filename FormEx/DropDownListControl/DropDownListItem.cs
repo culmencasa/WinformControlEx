@@ -15,14 +15,16 @@ namespace System.Windows.Forms
     {
         public DropDownListItem()
         {
-
             this.BackColor = Color.White;
             this._selectedBackColor = Color.FromArgb(233, 243, 252);
-
             this.ShowImage = false;
             this.ShowSplitter = false;
         }
-
+        
+        /// <summary>
+        /// 存储原始数据源对象
+        /// </summary>
+        public object DataItem { get; set; }
 
         protected override void DrawImageBorder(Graphics g)
         {

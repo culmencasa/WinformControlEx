@@ -84,13 +84,29 @@ namespace System.Windows.Forms
         /// </summary>
         public class ItemCollection : List<DropDownListItem>
         {
-            public void Add(string displayValue, object bindingValue=null, Image icon=null)
-            { 
+            // 存储父级DropDownBox引用
+            private DropDownBox _parent;
+            
+            // 构造函数，接受父级引用
+            public ItemCollection(DropDownBox parent = null)
+            {
+                _parent = parent;
+            }
+            
+            // 在ItemCollection类中
+            public void Add(string displayValue, object bindingValue = null, Image icon = null)
+            {
                 DropDownListItem item = new DropDownListItem();
                 item.Text = displayValue;
                 item.DefaultImage = icon;
                 item.Tag = bindingValue;
-
+                
+                // 只有当父级引用存在时才设置字体
+                if (_parent != null)
+                {
+                    item.Font = _parent.Font;
+                }
+                
                 this.Add(item);
                 OnListChanged(EventArgs.Empty);
             }
@@ -101,8 +117,14 @@ namespace System.Windows.Forms
                 item.Text = displayValue;
                 item.DefaultImage = icon;
                 item.Tag = bindingValue;
-
-                this.Insert(0, item);
+                
+                // 只有当父级引用存在时才设置字体
+                if (_parent != null)
+                {
+                    item.Font = _parent.Font;
+                }
+            
+                this.Insert(index, item); // 注意：这里应该使用传入的index参数，而不是硬编码的0
                 OnListChanged(EventArgs.Empty);
             }
 
@@ -160,8 +182,8 @@ namespace System.Windows.Forms
             get
             {
                 if (dataSource == null)
-                    dataSource = new ItemCollection();
-
+                    dataSource = new ItemCollection(this); // 传递this作为父级引用
+        
                 return dataSource;
             }
             set
@@ -172,6 +194,16 @@ namespace System.Windows.Forms
                     RefreshData();
             }
         }
+
+        /// <summary>
+        /// 要显示的属性名称
+        /// </summary>
+        public string DisplayMember { get; set; }
+
+        /// <summary>
+        /// 要作为值的属性名称
+        /// </summary>
+        public string ValueMember { get; set; }
 
         /// <summary>
         /// 边框色
@@ -233,6 +265,20 @@ namespace System.Windows.Forms
         }
 
         /// <summary>
+        /// 当前选中的原始数据源对象
+        /// </summary>
+        public object SelectedObject
+        {
+            get
+            {
+                if (this.selectedItem == null)
+                    return null;
+                
+                return this.selectedItem.DataItem;
+            }
+        }
+
+        /// <summary>
         /// 当前选中项的值
         /// </summary>
         public object SelectedValue
@@ -250,19 +296,13 @@ namespace System.Windows.Forms
                 {
                     foreach (var item in this.dataSource)
                     {
-                        if (item.Tag.Equals(value))
+                        if (item.Tag != null && item.Tag.Equals(value))
                         {
                             SetSelectedValue(item);
                             break;
                         }
                     }
                 }
-
-                //test
-                //if (string.IsNullOrEmpty(this.Text))
-                //{
-                //    Console.WriteLine("DropDownBox given value: {0}", value);
-                //}
             }
         }
 
@@ -355,6 +395,11 @@ namespace System.Windows.Forms
         void ParentForm_LocationChanged(object sender, EventArgs e)
         {
             Form parentForm = sender as Form;
+            if (!parentForm.IsHandleCreated || parentForm.IsDisposed)
+            {
+                return;
+            }
+
             Point p = parentForm.PointToScreen(this.Location);
             frmDropDownList.Location = new Point(p.X, p.Y + this.Height);
         }
@@ -438,8 +483,80 @@ namespace System.Windows.Forms
             this.SelectedIndex = -1;
         }
 
+        /// <summary>
+        /// 设置数据源为任意类型的列表
+        /// </summary>
+        /// <typeparam name="T">列表项类型</typeparam>
+        /// <param name="list">数据列表</param>
+        /// <param name="displayMember">要显示的属性名称</param>
+        /// <param name="valueMember">要作为值的属性名称</param>
+        public void SetDataSource<T>(List<T> list, string displayMember = null, string valueMember = null)
+        {
+            Clear();
+            
+            // 设置显示和值成员
+            if (!string.IsNullOrEmpty(displayMember))
+                this.DisplayMember = displayMember;
+            if (!string.IsNullOrEmpty(valueMember))
+                this.ValueMember = valueMember;
+            
+            if (list == null || list.Count == 0)
+                return;
+            
+            foreach (T item in list)
+            {
+                // 创建DropDownListItem
+                DropDownListItem dropDownItem = new DropDownListItem();
+                
+                // 设置与DropDownBox相同的字体 - 添加这一行
+                dropDownItem.Font = this.Font;
+                
+                // 设置显示文本
+                if (!string.IsNullOrEmpty(this.DisplayMember))
+                {
+                    // 使用反射获取属性值
+                    var prop = typeof(T).GetProperty(this.DisplayMember);
+                    if (prop != null)
+                    {
+                        var displayValue = prop.GetValue(item, null);
+                        dropDownItem.Text = displayValue?.ToString() ?? string.Empty;
+                    }
+                }
+                else
+                {
+                    // 如果没有指定DisplayMember，使用ToString()
+                    dropDownItem.Text = item?.ToString() ?? string.Empty;
+                }
+                
+                // 设置Tag值（仅存储值字段，不再存储整个对象）
+                if (!string.IsNullOrEmpty(this.ValueMember))
+                {
+                    // 使用反射获取属性值
+                    var prop = typeof(T).GetProperty(this.ValueMember);
+                    if (prop != null)
+                    {
+                        dropDownItem.Tag = prop.GetValue(item, null);
+                    }
+                }
+                else
+                {
+                    // 如果没有指定ValueMember，Tag可以设置为null或保持为空
+                    dropDownItem.Tag = null;
+                }
+                
+                // 使用新的DataItem属性存储原始数据源对象
+                dropDownItem.DataItem = item;
+                
+                // 添加到数据源
+                this.DataSource.Add(dropDownItem);
+            }
+            
+            // 手动刷新下拉框内容，确保数据显示出来
+            RefreshData();
+        }
+        
         #endregion
-
+        
         // 数据源变更处理
         protected virtual void RefreshData()
         {
@@ -526,8 +643,14 @@ namespace System.Windows.Forms
             {
                 string s = this.Text == null ? string.Empty : this.Text;
                 SizeF sf = TextRenderer.MeasureText(s, this.Font);
-                g.DrawString(s, this.Font, foreBrush, this.Padding.Left + textIndent, 
-                    (this.Height - (int)sf.Height) / 2 + 1);
+                
+                // 启用文本抗锯齿和清晰类型渲染
+                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+                
+                // 精确计算文字位置，确保垂直居中
+                float yPos = (this.Height - sf.Height) / 2;
+                
+                g.DrawString(s, this.Font, foreBrush, this.Padding.Left + textIndent, yPos);
             }
         }
 
@@ -544,12 +667,15 @@ namespace System.Windows.Forms
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
+             
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            
+            DrawBorder(g);
             DrawText(g);
+            DrawDropDownButton(g);
 
             base.OnPaint(e);
-
-            DrawDropDownButton(g);
-            DrawBorder(g);
         }
 
         #endregion

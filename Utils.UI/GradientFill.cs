@@ -23,28 +23,41 @@ namespace System
         /// <returns></returns>
         public static bool Fill( Graphics g, Rectangle rc, Color startColor, Color endColor, FillDirection fillDir )
         {
-            TRIVERTEX[] tva = new TRIVERTEX[2];
-            tva[0] = new TRIVERTEX(rc.X, rc.Y, startColor);
-            tva[1] = new TRIVERTEX(rc.Right, rc.Bottom, endColor);
-
-            GRADIENT_RECT[] gra = new GRADIENT_RECT[] 
-            { 
-                new GRADIENT_RECT(0, 1)
-            };
-
-            IntPtr hdc = g.GetHdc();
-
-            bool InvokeResult = Win32.GradientFill(hdc, tva, (uint)tva.Length, gra, (uint)gra.Length, (uint)fillDir);
-            if (!InvokeResult)
+            IntPtr hdc = IntPtr.Zero;
+            try
             {
-                System.Diagnostics.Debug.Assert(
-                    InvokeResult, 
-                    string.Format("GradientFill failed: {0}", System.Runtime.InteropServices.Marshal.GetLastWin32Error()));
+                TRIVERTEX[] tva = new TRIVERTEX[2];
+                tva[0] = new TRIVERTEX(rc.X, rc.Y, startColor);
+                tva[1] = new TRIVERTEX(rc.Right, rc.Bottom, endColor);
+
+                GRADIENT_RECT[] gra = new GRADIENT_RECT[]
+                {
+                    new GRADIENT_RECT(0, 1)
+                };
+
+                hdc = g.GetHdc();
+
+                bool InvokeResult = Win32.GradientFill(hdc, tva, (uint)tva.Length, gra, (uint)gra.Length, (uint)fillDir);
+                if (!InvokeResult)
+                {
+                    System.Diagnostics.Debug.Assert(
+                        InvokeResult,
+                        string.Format("GradientFill failed: {0}", System.Runtime.InteropServices.Marshal.GetLastWin32Error()));
+                }
+                return InvokeResult;
             }
-
-            g.ReleaseHdc(hdc);
-
-            return InvokeResult;
+            catch (ArgumentException)
+            {
+                // ²»Ã÷Òì³££ºParameter is not valid.
+                return false;
+            }
+            finally
+            {
+                if (hdc != IntPtr.Zero)
+                {
+                    g.ReleaseHdc(hdc);
+                }
+            }
         }
     }
 

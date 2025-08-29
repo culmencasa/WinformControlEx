@@ -784,8 +784,9 @@ namespace System.Windows.Forms
             }
             else if (_sizeMode == IconSizeMode.Normal)
             {
+                RectangleF textarea = GetTextArea();
                 x = this.Padding.Left + _borderWidth;
-                y = this.Padding.Top + _borderWidth;
+                y = (this.Height - ImageSize.Height - (int)textarea.Height - this.Padding.Top - Padding.Bottom - _borderWidth * 2) / 2;
                 width = _imageSize.Width;
                 height = _imageSize.Height;
             }
@@ -830,7 +831,7 @@ namespace System.Windows.Forms
         {
             RectangleF rect = RectangleF.Empty;
 
-            if (!String.IsNullOrEmpty(this.Caption))
+            if (ShowCaption && !String.IsNullOrEmpty(this.Caption))
             {
                 string textToDraw = this.Caption;
                 string ellipsisText = "...";
@@ -872,14 +873,15 @@ namespace System.Windows.Forms
                 rect = new RectangleF(stringPosX, stringPosY, stringSize.Width, stringSize.Height);
             }
             else
-            { 
-                SizeF stringSize = SizeF.Empty;
-                using (Graphics g = this.CreateGraphics())
-                {
-                    stringSize = TextRenderer.MeasureText("　", this.Font);
-                }
+            {
+                //SizeF stringSize = SizeF.Empty;
+                //using (Graphics g = this.CreateGraphics())
+                //{
+                //    stringSize = TextRenderer.MeasureText("　", this.Font);
+                //}
+                //rect = new RectangleF(0, 0, stringSize.Width, stringSize.Height);
 
-                rect = new RectangleF(0, 0, stringSize.Width, stringSize.Height);
+                rect = Rectangle.Empty;
             }
 
             return rect;

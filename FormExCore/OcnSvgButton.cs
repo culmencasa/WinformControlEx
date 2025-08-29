@@ -263,26 +263,59 @@ namespace FormExCore
             }
             else
             {
-                // 增加修改资源需要重新生成
                 try
                 {
-                    Assembly assembly = Assembly.GetEntryAssembly();
-                    // 如果设计器在单独的进程中运行，则无法获取当前程序集
-                    if (assembly.GetName().Name == "DesignToolsServer")
+                    Assembly assembly = Assembly.GetAssembly(typeof(OcnSvgButton));
+                    if (assembly == null)
                     {
-                        return null;
+                        assembly = Assembly.Load("FormExCore");
+                    }
+                    
+                    if (assembly == null)
+                    {
+                        assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
                     }
 
+                    if (assembly != null && assembly.GetName().Name == "DesignToolsServer")
+                    {
+                        try
+                        {
+                            // 尝试直接加载FormExCore程序集
+                            assembly = Assembly.Load("FormExCore");
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine("设计器环境下无法加载FormExCore程序集: " + ex.Message);
+                            return null;
+                        }
+                    }
+                    
+                    if (assembly == null)
+                    {
+                        Debug.WriteLine("警告: 无法获取任何有效的程序集来加载SVG资源");
+                        return null;
+                    }
+                    
                     System.Resources.ResourceManager rm = new System.Resources.ResourceManager($"{assembly.GetName().Name}.Properties.Resources", assembly);
-
+                    
+                    // 添加null检查
                     byte[]? imageBytes = rm.GetObject(SourceName) as byte[];
+                    if (imageBytes == null)
+                    {
+                        Debug.WriteLine($"警告: 未找到资源 '{SourceName}' 或资源不是byte[]类型");
+                        return null;
+                    }
+                    
                     svgDoc = SvgDocument.Open<SvgDocument>(new MemoryStream(imageBytes));
                 }
-                catch
+                catch (Exception ex)
                 {
+                    // 添加错误日志记录
+                    Debug.WriteLine($"加载SVG资源 '{SourceName}' 时出错: " + ex.Message);
+                    Debug.WriteLine("堆栈跟踪: " + ex.StackTrace);
                 }
             }
-
+            
             return svgDoc;
         }
 

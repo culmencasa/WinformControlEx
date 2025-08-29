@@ -48,6 +48,7 @@ namespace System.Windows.Forms
         private bool _imageCloseToText;
 
         private Color _backColor;
+        private Color _hoverColor;
 
         #endregion
 
@@ -85,7 +86,7 @@ namespace System.Windows.Forms
 
         #region 属性
 
-        [DefaultValue(typeof(Color), "Control")] 
+        [DefaultValue(typeof(Color), "Control")]
         [EditorBrowsable(EditorBrowsableState.Always)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [Localizable(true)]
@@ -261,11 +262,20 @@ namespace System.Windows.Forms
             }
         }
 
+        /// <summary>
+        /// 鼠标悬浮背景色
+        /// </summary>
         [Category(Consts.DefaultCategory)]
         public Color HoverColor
         {
-            get;
-            set;
+            get
+            {
+                return _hoverColor;
+            }
+            set
+            {
+                _hoverColor = value;
+            }
         }
 
 
@@ -460,10 +470,10 @@ namespace System.Windows.Forms
 
             Color fillColor, shadeColor;
             CalculateColors(out fillColor, out shadeColor);
-             
+
 
             // 创建图形路径  
-            GraphicsPath path = CreateGraphicsPath(ClientRectangle);
+            GraphicsPath path = CreateRoundedRectanglePath(ClientRectangle, CornerRadius);
             FillPath(g, path, fillColor, shadeColor);
 
             // 绘制边框
@@ -525,6 +535,32 @@ namespace System.Windows.Forms
 
         #region 绘制相关
 
+        private Color GetAutoHoverForeColor()
+        {
+            Color hoverForeColor = Color.White;
+            Color backgroundColor = this.HoverColor;
+            if (backgroundColor == Color.Empty || backgroundColor == Color.Transparent)
+            {
+                // 如果未设置HoverColor，则使用ForeColor
+                return this.ForeColor;
+            }
+
+
+            // 计算背景颜色的亮度
+            double brightness = (backgroundColor.R * 0.299 + backgroundColor.G * 0.587 + backgroundColor.B * 0.114) / 255.0;
+
+            // 根据背景颜色的亮度设置字体颜色
+            if (brightness > 0.5)
+            {
+                hoverForeColor = Color.Black;
+            }
+            else
+            {
+                hoverForeColor = Color.White;
+            }
+
+            return hoverForeColor;
+        }
         private void DrawImage(Graphics g)
         {
             if (this.ImageList == null || this.ImageIndex == -1)
@@ -560,7 +596,7 @@ namespace System.Windows.Forms
                     if (_imageCloseToText)
                     {
                         var textPosition = GetTextPosition();
-                        pt.X = (int)(textPosition.X - _Image.Width - 8); 
+                        pt.X = (int)(textPosition.X - _Image.Width - 8);
                     }
                     break;
 
@@ -619,8 +655,8 @@ namespace System.Windows.Forms
             RectangleF rectangle = new RectangleF(_contentRect.X, _contentRect.Y, _contentRect.Width, _contentRect.Height);
             StringFormat stringFormat = GetStringFormat();
 
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(this.Text, this.Font, rectangle.Size, stringFormat);
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(this.Text, this.Font, rectangle.Size);
 
             // 计算文字的实际绘制位置
             PointF textPosition = PointF.Empty;
@@ -629,7 +665,7 @@ namespace System.Windows.Forms
             if (stringFormat.Alignment == StringAlignment.Center)
             {
                 textPosition.X = rectangle.X + (rectangle.Width - textSize.Width) / 2;
-                
+
                 // 2024-03-28
                 if (ImageCloseToText)
                 {
@@ -648,7 +684,7 @@ namespace System.Windows.Forms
 
             if (stringFormat.LineAlignment == StringAlignment.Center)
             {
-                textPosition.Y = rectangle.Y + (rectangle.Height - textSize.Height) / 2;
+                textPosition.Y = rectangle.Y + ((rectangle.Height - textSize.Height) / 2);
             }
             else if (stringFormat.LineAlignment == StringAlignment.Far)
             {
@@ -726,44 +762,55 @@ namespace System.Windows.Forms
 
         private void DrawText(Graphics g)
         {
+            g.SetSlowRendering();
+
+            var foreColor = this.ForeColor;
+            if (ButtonState == CustomButtonState.Hot || ButtonState == CustomButtonState.Pressed)
+            { 
+                foreColor = GetAutoHoverForeColor();
+            }
+            SolidBrush txtBrush = new SolidBrush(foreColor);
+
+
             // 2024-03-28 
             if (ImageCloseToText)
             {
-                SolidBrush TextBrush = new SolidBrush(this.ForeColor);
-                
-                if (!this.Enabled)
-                    TextBrush.Color = SystemColors.GrayText;
 
+
+                if (!this.Enabled)
+                {
+                    txtBrush.Color = SystemColors.GrayText;
+                }
 
                 RectangleF R = GetTextPosition();
-               
-                
-                if (this.ButtonState == CustomButtonState.Pressed)
-                    R.Offset(1, 1);
 
+
+                if (this.ButtonState == CustomButtonState.Pressed)
+                {
+                    R.Offset(1, 1);
+                }
 
                 if (this.Enabled)
-                { 
-                        g.DrawString(this.Text, this.Font, TextBrush, R); 
-                } 
+                {
+                    g.DrawString(this.Text, this.Font, txtBrush, R);
+                }
                 else
                 {
-                    ControlPaint.DrawStringDisabled(g, this.Text, this.Font, this.BackColor, 
+                    ControlPaint.DrawStringDisabled(g, this.Text, this.Font, this.BackColor,
                         new Rectangle((int)R.X, (int)R.Y, (int)R.Width, (int)R.Height)
                         , TextFormatFlags.Default);
                 }
 
-                TextBrush.Dispose();
+                txtBrush.Dispose();
             }
             else
             {
-                SolidBrush TextBrush = new SolidBrush(this.ForeColor);
 
                 // 因字体不同可能会发生偏移
                 RectangleF R = new RectangleF(_contentRect.X, _contentRect.Y, _contentRect.Width, _contentRect.Height);
 
                 if (!this.Enabled)
-                    TextBrush.Color = SystemColors.GrayText;
+                    txtBrush.Color = SystemColors.GrayText;
 
                 StringFormat sf = GetStringFormat();
 
@@ -771,7 +818,7 @@ namespace System.Windows.Forms
                     R.Offset(1, 1);
 
                 if (this.Enabled)
-                    g.DrawString(this.Text, this.Font, TextBrush, R, sf);
+                    g.DrawString(this.Text, this.Font, txtBrush, R, sf);
                 else
                     ControlPaint.DrawStringDisabled(g, this.Text, this.Font, this.BackColor, R, sf);
             }
@@ -787,8 +834,8 @@ namespace System.Windows.Forms
                 ControlPaint.DrawFocusRectangle(g, r, this.ForeColor, this.BackColor);
         }
 
-        
-        
+
+
         private GraphicsPath RoundRectangle(Rectangle r, int radius, Corners corners)
         {
             //Make sure the Path fits inside the rectangle
@@ -830,7 +877,7 @@ namespace System.Windows.Forms
 
             return path;
         }
-        
+
 
         private Color DarkenColor(Color colorIn, int percent)
         {
@@ -866,30 +913,6 @@ namespace System.Windows.Forms
         }
 
 
-        // 创建图形路径  
-        private GraphicsPath CreateGraphicsPath(Rectangle rect)
-        {
-            if (CornerRadius > 0)
-            {
-                return CreateRoundedRectanglePath(rect, CornerRadius);
-            }
-            else
-            { 
-                return CreateRectanglePath(rect);
-            }
-
-            //return (CornerRadius > 0)
-            //    ? RoundRectangle(rect, this.CornerRadius, this.RoundCorners)
-            //    : CreateRectanglePath(rect);
-        }
-        // 创建标准矩形路径  
-        private GraphicsPath CreateRectanglePath(Rectangle rect)
-        {
-            GraphicsPath path = new GraphicsPath(FillMode.Winding);
-            path.AddRectangle(new Rectangle(0, 0, rect.Width, rect.Height));
-            path.CloseFigure();
-            return path;
-        }
 
         // 计算填充颜色和阴影颜色  
         private void CalculateColors(out Color color1, out Color color2)
